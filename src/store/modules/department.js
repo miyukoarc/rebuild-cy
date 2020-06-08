@@ -19,6 +19,9 @@ const mutations = {
   },
   TOGGLE_LOADING(state, current) {
     state.loading = current
+  },
+  SAVE_DETAIL(state, payload){
+      state.currentDepartment = payload
   }
 
 }

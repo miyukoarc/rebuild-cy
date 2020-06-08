@@ -1,91 +1,118 @@
-# vue-admin-template
+# 注意
+样板模块url为/department/list，已在白名单中，直接访问即可
 
-English | [简体中文](./README-zh.md)
+# vue规范
 
-> A minimal vue admin template with Element UI & axios & iconfont & permission control & lint
-
-**Live demo:** http://panjiachen.github.io/vue-admin-template
-
-
-**The current version is `v4.0+` build on `vue-cli`. If you want to use the old version , you can switch branch to [tag/3.11.0](https://github.com/PanJiaChen/vue-admin-template/tree/tag/3.11.0), it does not rely on `vue-cli`**
-
-## Build Setup
+$emit操作必须必须必须在改组件beforeDetroy生命周期中销毁，所有类似操作必须闭环
+无状态（没有单独的data需要管理）组件使用functionnal组件
+抽象的数据处理方法归纳到utils中，随引随用
+******
 
 
-```bash
-# clone the project
-git clone https://github.com/PanJiaChen/vue-admin-template.git
 
-# enter the project directory
-cd vue-admin-template
 
-# install dependency
-npm install
 
-# develop
-npm run dev
-```
 
-This will automatically open http://localhost:9528
+# javascript规范
 
-## Build
+## 语法规范
+尽可能少使用es5语法，统一使用箭头函数处理this指向问题
 
-```bash
-# build for test environment
-npm run build:stage
+## utils
+_除非无替代方法，禁止通过污染prototype的方式绑定方法_
+数据处理方法抽象，并抽取，在utils文件夹下封装，随引随用
+根据功能撰写jsDOC注释
+例如
+	/**
+	*判断是否为空对象
+	*@param {object} obj 
+	*/
+	export const isEmptyObject = (obj)=>{
+		for (let key in obj) {
+			return false
+		} return true
+	}
+******
 
-# build for production environment
-npm run build:prod
-```
 
-## Advanced
 
-```bash
-# preview the release environment effect
-npm run preview
 
-# preview the release environment effect + static resource analysis
-npm run preview -- --report
 
-# code format check
-npm run lint
 
-# code format check and auto fix
-npm run lint -- --fix
-```
+#  store规范
 
-Refer to [Documentation](https://panjiachen.github.io/vue-element-admin-site/guide/essentials/deploy.html) for more information
+## state
+### 列表类
+基本状态：list currentRow loading
+### 其他类别
 
-## Demo
+## mutation
+### 命名 （操作+数据）
+操作（大写）：SET，SAVE，TOGGLE，CHANGE
+下划线
+数据（大写）：DATA。。。
+例如：
+	SAVE_LIST(state,payload){
+		state.list = payload
+	}
 
-![demo](https://github.com/PanJiaChen/PanJiaChen.github.io/blob/master/images/demo.gif)
+## action
+### 命名（小驼峰）
+例如getMyInfo（与api命名相同）
+使用*Promise*对象包裹
+有then有catch，抛出错误打印，
+只在action中进行commit和async操作
+例如：
+	getMyInfo({commit},payload){
+		return new Promise((resolve,reject)=>{
+			getMyInfo(payload).then(()=>{
+				resolve()
+			}).catch(err=>{
+				console.log(err)
+				reject()
+			})
+		})
+	}
+******
 
-## Extra
 
-If you want router permission && generate menu by user roles , you can use this branch [permission-control](https://github.com/PanJiaChen/vue-admin-template/tree/permission-control)
 
-For `typescript` version, you can use [vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template) (Credits: [@Armour](https://github.com/Armour))
 
-## Related Project
 
-- [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
 
-- [electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
+# AJAX规范
+使用axios对接后台
+store统一处理ajax请求，命名与action相同，方便action统一处理,采用函数表达式/声明均可
+返回一个axios对象
+命名可以参考swagger-ui的url
+例如:
+要求写遵循jsDOC规范，写注释
+    /**
+    *获取我的用户信息
+    *@param {object} payload
+    */
+    export const getUserList = (payload)=>{
+    	return request({
+    		url: '/user/getUserList',
+    		method: 'get',
+    		params: payload
+    	})
+    }
+******
 
-- [vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
+# mock数据
+rebuild采用koa2构建了一个假后台，具体写法参考server目录
 
-- [awesome-project](https://github.com/PanJiaChen/vue-element-admin/issues/2312)
 
-## Browsers support
 
-Modern browsers and Internet Explorer 10+.
 
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
-| --------- | --------- | --------- | --------- |
-| IE10, IE11, Edge| last 2 versions| last 2 versions| last 2 versions
-
-## License
-
-[MIT](https://github.com/PanJiaChen/vue-admin-template/blob/master/LICENSE) license.
-
-Copyright (c) 2017-present PanJiaChen
+# 业务抽象
+例如：
+	@components/panel.vue
+	/detail.vue
+	/list.vue
+	/event-create.vue
+	/event-edit.vue
+	/dialog.vue
+页面主体为list，点击对应行弹出panel组件（Global），显示详细信息detail组件（Pravite），
+点击对应create/edit/delete按钮，弹出dialog（Private）。根据按钮不同渲染不同的form表单
