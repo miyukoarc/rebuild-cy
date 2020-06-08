@@ -1,11 +1,12 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { login, logout, getInfo, getMyInfo } from '@/api/user'
+import { getToken, setToken, removeToken} from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
+    roleCode: '',
     avatar: ''
   }
 }
@@ -24,6 +25,12 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_USERINFO: (state, payload) =>{
+      const {name,avatar,roleCode} = payload
+      state.name = name
+      state.avatar = avatar
+      state.roleCode = roleCode
   }
 }
 
@@ -76,6 +83,19 @@ const actions = {
         reject(error)
       })
     })
+  },
+  getMyInfo({commit}){
+      return new Promise((resolve,reject) => {
+        getMyInfo().then((res)=>{
+            console.log(res)
+
+            commit('SET_USERINFO', res)
+
+            resolve(res)
+        }).catch(err => {
+            reject()
+        })
+      })
   },
 
   // remove token

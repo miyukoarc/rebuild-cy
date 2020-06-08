@@ -1,0 +1,147 @@
+{
+    "items": [
+        {
+            "parent": {},
+            "createdAt": "2020-06-06 17:04:58",
+            "deleted": false,
+            "children": [
+                {
+                    "parent": {
+                        "createdAt": "2020-06-06 17:04:58",
+                        "deleted": false,
+                        "wxDepartmentId": 1,
+                        "name": "杭州超盈信息技术有限公司",
+                        "sort": 100000000,
+                        "uuid": 1,
+                        "version": 0,
+                        "updatedAt": "2020-06-06 17:04:58"
+                    },
+                    "createdAt": "2020-06-06 17:04:58",
+                    "deleted": false,
+                    "wxDepartmentId": 3,
+                    "name": "技术部",
+                    "sort": 99999000,
+                    "uuid": 3,
+                    "version": 4,
+                    "users": [
+                        {
+                            "uuid": 8
+                        },
+                        {
+                            "uuid": 9
+                        },
+                        {
+                            "uuid": 10
+                        },
+                        {
+                            "uuid": 11
+                        },
+                        {
+                            "uuid": 12
+                        },
+                        {
+                            "uuid": 13
+                        },
+                        {
+                            "uuid": 14
+                        },
+                        {
+                            "uuid": 15
+                        },
+                        {
+                            "uuid": 16
+                        },
+                        {
+                            "uuid": 17
+                        },
+                        {
+                            "uuid": 18
+                        },
+                        {
+                            "uuid": 19
+                        },
+                        {
+                            "uuid": 20
+                        },
+                        {
+                            "uuid": 21
+                        },
+                        {
+                            "uuid": 23
+                        }
+                    ],
+                    "updatedAt": "2020-06-06 17:04:58"
+                },
+                {
+                    "parent": {
+                        "createdAt": "2020-06-06 17:04:58",
+                        "deleted": false,
+                        "wxDepartmentId": 1,
+                        "name": "杭州超盈信息技术有限公司",
+                        "sort": 100000000,
+                        "uuid": 1,
+                        "version": 0,
+                        "updatedAt": "2020-06-06 17:04:58"
+                    },
+                    "createdAt": "2020-06-06 17:04:58",
+                    "deleted": false,
+                    "wxDepartmentId": 2,
+                    "name": "运营一部",
+                    "sort": 100000000,
+                    "uuid": 2,
+                    "version": 1,
+                    "users": [
+                        {
+                            "uuid": 1
+                        },
+                        {
+                            "uuid": 3
+                        },
+                        {
+                            "uuid": 4
+                        }
+                    ],
+                    "updatedAt": "2020-06-06 17:04:58"
+                }
+            ],
+            "wxDepartmentId": 1,
+            "name": "杭州超盈信息技术有限公司",
+            "sort": 100000000,
+            "uuid": 1,
+            "version": 0,
+            "users": [
+                {
+                    "uuid": 2
+                },
+                {
+                    "uuid": 5
+                },
+                {
+                    "uuid": 6
+                },
+                {
+                    "uuid": 7
+                },
+                {
+                    "uuid": 21
+                },
+                {
+                    "uuid": 22
+                },
+                {
+                    "uuid": 23
+                },
+                {
+                    "uuid": 24
+                },
+                {
+                    "uuid": 25
+                }
+            ],
+            "updatedAt": "2020-06-06 17:04:58"
+        }
+    ],
+    "total": 3,
+    "pageNumber": 0,
+    "pageSize": 20
+}

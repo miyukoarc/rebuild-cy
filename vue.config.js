@@ -27,16 +27,88 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development',
+  lintOnSave: false,
+//   process.env.NODE_ENV === 'development'
   productionSourceMap: false,
   devServer: {
-    port: port,
+    port: 80,
     open: true,
     overlay: {
       warnings: false,
-      errors: true
+      errors: false
     },
-    before: require('./mock/mock-server.js')
+    // host: 'www.sdk.com',
+    disableHostCheck: true,
+    proxy: {
+        /*
+      [process.env.VUE_APP_BASE_API]: {
+        target: 'http://10.10.10.65:9000',//光
+        // target: 'http://10.10.10.84:80', // 杜亮
+        // target: 'http://10.10.10.252:9000', // 骋昊
+        // ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      },
+      '/public': {
+        target: 'http://192.168.1.103:9000',
+        changeOrigin: true,
+      },
+      // "/api": {
+      //   target: "http://localhost:80",
+      //   secure: false,
+      //   autoRewrite: true,
+      //   pathRewrite: {
+      //     "^/api": ""
+      //   }
+      // },
+      "/api": {
+        headers: {
+          Host: 'sidebar.cyscrm.com'
+        },
+        // target: "http://10.10.10.252:9000", //陈浩
+        // target: "http://10.10.10.84:80",  //杜
+        target: 'http://10.10.10.65:9000',//光
+        secure: false,
+        pathRewrite: {
+          "^/api": ""
+        }
+      },
+      '/file': {
+        target: `http://192.168.1.103:9000/file`,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/file': '',
+        },
+      },
+
+      */
+      /**
+     * koa-mock
+     */
+    
+    "/api": {
+        headers: {
+            host: '127.0.0.1:3000'//koa服务在3000端口运行
+        },
+        target: "http://127.0.0.1:8085",//与调试本地node server保持一致
+        changeOrigin: true,
+        pathRewrite: {
+            "^/api": ""
+        }
+    }
+    
+
+    },
+    /**
+     * koa-mock
+     */
+    
+    before: require('./server/index.js')//koa服务路径
+
+    
+    // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
@@ -46,8 +118,10 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
-    }
+    },
+    devtool: 'source-map'
   },
+
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
@@ -81,7 +155,7 @@ module.exports = {
       .end()
 
     config
-    // https://webpack.js.org/configuration/devtool/#development
+      // https://webpack.js.org/configuration/devtool/#development
       .when(process.env.NODE_ENV === 'development',
         config => config.devtool('cheap-source-map')
       )
@@ -93,7 +167,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()

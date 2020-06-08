@@ -1,4 +1,4 @@
-import router from './router'
+import router,{dynamicRoutes} from './router'
 import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login','/department/list'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -20,29 +20,44 @@ router.beforeEach(async(to, from, next) => {
   // determine whether the user has logged in
   const hasToken = getToken()
 
-  if (hasToken) {
+  await store.dispatch('user/getMyInfo')
+
+  console.log(store.getters.name)
+
+  if (Boolean(store.getters.name)) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
-        next()
-      } else {
-        try {
+    //   const hasGetUserInfo = store.getters.name
+    //   if (hasGetUserInfo) {
+    //     next()
+    //   } else {
+        // try {
           // get user info
-          await store.dispatch('user/getInfo')
+        //   await store.dispatch('user/getMyInfo')
+
+        const roleCode = store.getters.roleCode === 'super' ? await store.dispatch('menu/getAllMenuList', roleCode) : await store.dispatch('menu/getMyMenuList', roleCode)//权限菜单
+
+        //   await store.dispatch('permission/getListMy')
+          
+
+          await store.dispatch('permission/getListRole', roleCode) //权限列表
+          
+          router.addRoutes([...dynamicRoutes])
+
+          console.log(router.options.routes,dynamicRoutes)
 
           next()
-        } catch (error) {
-          // remove token and go to login page to re-login
-          await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
-          NProgress.done()
-        }
-      }
+    //     } catch (error) {
+    //       // remove token and go to login page to re-login
+    //       await store.dispatch('user/resetToken')
+    //       Message.error(error || 'Has Error')
+    //       next(`/login?redirect=${to.path}`)
+    //       NProgress.done()
+    //     // }
+    //   }
     }
   } else {
     /* has no token*/

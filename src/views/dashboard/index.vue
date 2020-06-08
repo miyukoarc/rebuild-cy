@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard-container">
+    <el-button @click="handleClick">获取</el-button>
     <div class="dashboard-text">name: {{ name }}</div>
   </div>
 </template>
@@ -10,9 +11,18 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'Dashboard',
   computed: {
-    ...mapGetters([
-      'name'
-    ])
+    ...mapGetters(['name'])
+  },
+  mounted() {},
+  methods: {
+    handleClick() {
+      this.$store
+        .dispatch('permission/getListAll')
+        .then(() => {})
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
 }
 </script>
