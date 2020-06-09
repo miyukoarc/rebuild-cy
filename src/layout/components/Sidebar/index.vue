@@ -11,8 +11,9 @@
         :active-text-color="variables.menuActiveText"
         :collapse-transition="false"
         mode="vertical"
-      >
-        <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
+      > 
+        <!-- <sidebar-item key="/dashboard" :> </sidebar-item> -->
+        <sidebar-item v-for="route in rebuildRoutes" :key="route.code" :item="route" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -28,7 +29,8 @@ export default {
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'rebuildRoutes'
     ]),
     routes() {
       return this.$router.options.routes

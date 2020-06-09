@@ -1,0 +1,18 @@
+{
+    "code": "user_manager",
+    "menuTitle": "员工管理",
+    "needAudit": false,
+    "module": "user",
+    "icon": "user",
+    "sort": 104,
+    "title": "员工管理",
+    "isMenu": true,
+    "version": 0,
+    "uuid": 1,
+    "createdAt": "2020-06-04 19:22:28",
+    "path": null,
+    "component": null,
+    "deleted": false,
+    "route": null,
+    "updatedAt": "2020-06-04 19:22:28"
+}

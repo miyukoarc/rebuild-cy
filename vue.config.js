@@ -31,59 +31,68 @@ module.exports = {
 //   process.env.NODE_ENV === 'development'
   productionSourceMap: false,
   devServer: {
-    port: 80,
-    open: true,
-    overlay: {
-      warnings: false,
-      errors: false
-    },
-    // host: 'www.sdk.com',
-    disableHostCheck: true,
-    proxy: {
-        /*
-      [process.env.VUE_APP_BASE_API]: {
-        target: 'http://10.10.10.65:9000',//光
-        // target: 'http://10.10.10.84:80', // 杜亮
-        // target: 'http://10.10.10.252:9000', // 骋昊
-        // ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
-      },
-      '/public': {
-        target: 'http://192.168.1.103:9000',
-        changeOrigin: true,
-      },
-      // "/api": {
-      //   target: "http://localhost:80",
-      //   secure: false,
-      //   autoRewrite: true,
-      //   pathRewrite: {
-      //     "^/api": ""
-      //   }
-      // },
-      "/api": {
-        headers: {
-          Host: 'sidebar.cyscrm.com'
+    port: 8085,
+        open: true,
+        overlay: {
+            warnings: false,
+            errors: true
         },
-        // target: "http://10.10.10.252:9000", //陈浩
-        // target: "http://10.10.10.84:80",  //杜
-        target: 'http://10.10.10.65:9000',//光
-        secure: false,
-        pathRewrite: {
-          "^/api": ""
-        }
-      },
-      '/file': {
-        target: `http://192.168.1.103:9000/file`,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/file': '',
-        },
-      },
+        // host: 'www.sdk.com',
+        disableHostCheck: true,
+        proxy: {
+            /*
+            [process.env.VUE_APP_BASE_API]: {
+                // target: 'http://10.10.10.65:9000', // 光
+                // target: 'http://10.10.10.84:80', // 杜亮
+                target: 'http://10.10.10.32:9000', // 骋昊
+                // ws: true,
+                changeOrigin: true,
+                pathRewrite: {
+                    ['^' + process.env.VUE_APP_BASE_API]: ''
+                }
+            },
+            '/public': {
+                target: 'http://10.10.10.32:9000',
+                changeOrigin: true,
+            },
+            // "/api": {
+            //   target: "http://localhost:80",
+            //   secure: false,
+            //   autoRewrite: true,
+            //   pathRewrite: {
+            //     "^/api": ""
+            //   }
+            // },
+            "/api": {
+                headers: {
+                    Host: 'sidebar.cyscrm.com'
+                },
+                target: "http://sidebar.cyscrm.com",
+                // target: "http://10.10.10.32:9000", //陈浩
+                // target: "http://10.10.10.84:80", //杜亮
+                // target: 'http://10.10.10.65:9000', //光
+                secure: false,
+                changeOrigin: true,
+                // ws: true,
+                pathRewrite: {
+                    "^/api": ""
+                }
+            },
+            '/file': {
+                target: `http://192.168.1.103:9000/file`,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/file': '',
+                },
+            },
+            '/ws': {
+                target: `http://10.10.10.65:9000`,
+                changeOrigin: true,
+                ws: true,
+            }
+            */
 
-      */
+      
       /**
      * koa-mock
      */
@@ -104,7 +113,6 @@ module.exports = {
     /**
      * koa-mock
      */
-    
     before: require('./server/index.js')//koa服务路径
 
     

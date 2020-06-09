@@ -19,7 +19,7 @@ GET http://{{hostname}}:{{port}}/wxlogin?code=1&state=1 HTTP/1.1
 
 ### myinfo 
 GET http://{{hostname}}:{{port}}/myInfo/detail HTTP/1.1
-Cookie: JSESSIONID=0A3C8DFA30DFE12D44A7BF042EC8C759
+
 
 ### public
 GET http://{{hostname}}:{{port}}/public/addReadTime/{{uuid}} HTTP/1.1

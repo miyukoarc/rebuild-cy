@@ -18,11 +18,11 @@ export default {
     window.removeEventListener('resize', this.$_resizeHandler)
   },
   mounted() {
-    const isMobile = this.$_isMobile()
-    if (isMobile) {
-      store.dispatch('app/toggleDevice', 'mobile')
-      store.dispatch('app/closeSideBar', { withoutAnimation: true })
-    }
+    // const isMobile = this.$_isMobile()
+    // if (isMobile) {
+    //   store.dispatch('app/toggleDevice', 'mobile')
+    //   store.dispatch('app/closeSideBar', { withoutAnimation: true })
+    // }
   },
   methods: {
     // use $_ for mixins properties
@@ -32,14 +32,14 @@ export default {
       return rect.width - 1 < WIDTH
     },
     $_resizeHandler() {
-      if (!document.hidden) {
-        const isMobile = this.$_isMobile()
-        store.dispatch('app/toggleDevice', isMobile ? 'mobile' : 'desktop')
+    //   if (!document.hidden) {
+    //     const isMobile = this.$_isMobile()
+    //     store.dispatch('app/toggleDevice', isMobile ? 'mobile' : 'desktop')
 
-        if (isMobile) {
-          store.dispatch('app/closeSideBar', { withoutAnimation: true })
-        }
-      }
+    //     if (isMobile) {
+    //       store.dispatch('app/closeSideBar', { withoutAnimation: true })
+    //     }
+    //   }
     }
   }
 }

@@ -24,6 +24,17 @@ export function logout() {
     method: 'post'
   })
 }
+
+/**
+ * 微信登录
+ * @param {} 
+ */
+export const wxLogin = () => {
+  return request({
+    url: '/login',
+    method: 'get'
+  })
+}
 /**
  * 员工详细页
  * @param {string} payload 

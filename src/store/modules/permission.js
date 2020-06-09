@@ -5,6 +5,8 @@ import {
   getListRole
 } from '@/api/permission'
 
+import {constantRoutes} from '@/router'
+
 const state = {
   loading: false,
   myList: [],
@@ -20,7 +22,7 @@ const mutations = {
     state.loading = current
   },
   SET_ROUTES(state, payload) {
-    state.routes = payload
+    state.routes = constantRoutes.concat(payload)
   }
 }
 
@@ -40,6 +42,10 @@ const actions = {
       })
     })
   },
+  /**
+   * 权限管理显示全部权限列表
+   * @param {*} param0 
+   */
   getListAll({
     commit
   }) {
@@ -55,6 +61,10 @@ const actions = {
       })
     })
   },
+  /**
+   * 我的权限列表
+   * @param {*} param0 
+   */
   getListMy({
     commit
   }) {

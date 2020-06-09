@@ -5,7 +5,8 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL:"http://sidebar.cyscrm.com/api", // url = base url + request url
+  baseURL:"http://127.0.0.1:3000/api", // url = base url + request url
+//   baseURL:"http://sidebar.cyscrm.com/api",
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -24,6 +25,8 @@ service.interceptors.request.use(
     // console.log(config.baseURL)
     // config.headers['Content-Type'] = 'application/json; charset=utf-8'
     config.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'
+    // const newUrl = ()=> config.baseURL + '/api'
+    // config.baseURL = newUrl
     return config
   },
   error => {
@@ -81,7 +84,7 @@ service.interceptors.response.use(
 //       }
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.status !== 200) {
+    if (res.status !== 200 || res.data.status === 4000) {
       Message({
         message: res.message || 'Error',
         type: 'error',

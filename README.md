@@ -2,10 +2,16 @@
 样板模块url为/department/list，已在白名单中，直接访问即可
 
 # vue规范
-
+## API
 $emit操作必须必须必须在改组件beforeDetroy生命周期中销毁，所有类似操作必须闭环
-无状态（没有单独的data需要管理）组件使用functionnal组件
+## methods
+只包括直接修改data，提交form表单等操作
 抽象的数据处理方法归纳到utils中，随引随用
+## template
+html语句内复杂禁止使用复杂逻辑判断，computed代替
+## component
+无状态（没有单独的data需要管理，纯展示组件）组件使用functionnal组件
+
 ******
 
 
@@ -60,8 +66,8 @@ _除非无替代方法，禁止通过污染prototype的方式绑定方法_
 ### 命名（小驼峰）
 例如getMyInfo（与api命名相同）
 使用*Promise*对象包裹
-有then有catch，抛出错误打印，
-只在action中进行commit和async操作
+有*then*有*catch*，抛出错误打印，
+只在*action*中进行*commit*和*async*操作
 例如：
 	getMyInfo({commit},payload){
 		return new Promise((resolve,reject)=>{

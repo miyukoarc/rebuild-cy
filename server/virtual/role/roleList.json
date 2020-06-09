@@ -1,0 +1,118 @@
+{
+    "items": [
+      {
+        "createdAt": "2020-06-04 19:22:28",
+        "code": "riskControlSpecialist",
+        "deleted": false,
+        "name": "风控专员",
+        "version": 0,
+        "uuid": 4,
+        "users": {},
+        "updatedAt": "2020-06-04 19:22:28"
+      },
+      {
+        "createdAt": "2020-06-04 19:22:28",
+        "code": "employee",
+        "deleted": false,
+        "name": "员工",
+        "version": 0,
+        "uuid": 3,
+        "users": [
+          {
+            "uuid": 1
+          },
+          {
+            "uuid": 2
+          },
+          {
+            "uuid": 3
+          },
+          {
+            "uuid": 4
+          },
+          {
+            "uuid": 5
+          },
+          {
+            "uuid": 6
+          },
+          {
+            "uuid": 7
+          },
+          {
+            "uuid": 8
+          },
+          {
+            "uuid": 9
+          },
+          {
+            "uuid": 10
+          },
+          {
+            "uuid": 12
+          },
+          {
+            "uuid": 13
+          },
+          {
+            "uuid": 14
+          },
+          {
+            "uuid": 15
+          },
+          {
+            "uuid": 16
+          },
+          {
+            "uuid": 17
+          },
+          {
+            "uuid": 18
+          },
+          {
+            "uuid": 19
+          },
+          {
+            "uuid": 20
+          },
+          {
+            "uuid": 21
+          },
+          {
+            "uuid": 22
+          },
+          {
+            "uuid": 23
+          }
+        ],
+        "updatedAt": "2020-06-04 19:22:28"
+      },
+      {
+        "createdAt": "2020-06-04 19:22:28",
+        "code": "admin",
+        "deleted": false,
+        "name": "管理员",
+        "version": 0,
+        "uuid": 2,
+        "users": {},
+        "updatedAt": "2020-06-04 19:22:28"
+      },
+      {
+        "createdAt": "2020-06-04 19:22:28",
+        "code": "super",
+        "deleted": false,
+        "name": "超级管理员",
+        "version": 1,
+        "uuid": 1,
+        "users": [
+          {
+            "uuid": 11
+          }
+        ],
+        "updatedAt": "2020-06-04 19:22:29"
+      }
+    ],
+    "total": 4,
+    "pageNumber": 0,
+    "pageSize": 10000
+  }

@@ -40,7 +40,32 @@ export const getListRole = (roleCode) => {
     url: '/permission/listRole',
     method: 'get',
     params: {
-        roleCode
+      roleCode
     }
+  })
+}
+
+/**
+ * 角色赋予权限
+ * @param {object} payload 
+ */
+export const roleLinkPermission = (payload) => {
+  return request({
+    url: '/permission/listRole',
+    method: 'get',
+    data: payload
+  })
+}
+
+
+/**
+ * 更新权限
+ * @param {object} payload 
+ */
+export const updatePermission = (payload) => {
+  return request({
+    url: '/permission/updatePermission',
+    method: 'get',
+    data: payload
   })
 }
