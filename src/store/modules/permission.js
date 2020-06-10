@@ -5,25 +5,83 @@ import {
   getListRole
 } from '@/api/permission'
 
-import {constantRoutes} from '@/router'
+import {
+  constantRoutes
+} from '@/router'
+import {setPermissionMap} from '@/utils/common'
+import Layout from '@/layout'
+
+/**
+ * 生成权限路由
+ * @param {object}} routes 
+ */
+
+function generatePermissionRoutes(routes) {
+  let temp = []
+  for (let key in routes) {
+
+    let firstObj = {
+      path: '#' ,
+      component: Layout,
+      name: key,
+      meta: {
+        title: routes[key][0].menuTitle,
+      },
+
+      children: []
+    }
+    routes[key].map(item => {
+
+      if (item.path) {
+        const url =  item.code.replace('_','/')
+
+        firstObj.children.push({
+          path: '/'+ url,
+          name: item.code,
+          component: view(url),
+          meta: {
+            title: item.menuTitle
+          }
+
+        })
+
+      }
+
+    })
+    temp.push(firstObj)
+  }
+  return temp
+}
+
+function view (path) {
+    return  (resolve) => {
+      require([`@/views/${path}/index.vue`], resolve)
+    }
+  }
 
 const state = {
   loading: false,
-  myList: [],
   routes: [],
-  permissionList: []
+  permissionList: [],
+  permissionMap: {}
+
 }
 
 const mutations = {
   SAVE_LIST(state, payload) {
-    state.myList = payload
+    state.permissionList = payload
   },
   TOGGLE_LOADING(state, current) {
     state.loading = current
   },
   SET_ROUTES(state, payload) {
-    state.routes = constantRoutes.concat(payload)
+
+    state.routes = payload
+  },
+  SET_PERMISSIONMAP(state,payload){
+    state.permissionMap = payload
   }
+
 }
 
 const actions = {
@@ -71,11 +129,11 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getListMy().then((res) => {
-          console.log(res)
-          if(Object.keys(res.items).length){
-            commit('SAVE_LIST',res.items)
-          }
-        
+        console.log(res)
+        if (Object.keys(res.items).length) {
+          commit('SAVE_LIST', res.items)
+        }
+
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
@@ -92,11 +150,15 @@ const actions = {
    */
   getListRole({
     commit
-  },payload) {
+  }, payload) {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getListRole(payload).then((res) => {
-        commit('SAVE_LIST',res.items)
+        commit('SAVE_LIST', res.items)
+        const filted = generatePermissionRoutes(res.items)
+        const map = setPermissionMap(res.items)
+        commit('SET_ROUTES', filted)
+        commit('SET_PERMISSIONMAP', map)
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
@@ -106,11 +168,7 @@ const actions = {
       })
     })
   },
-  getRotes({commit}){
-      setTimeout(()=>{
-
-      },10)
-  }
+  
 }
 
 export default {

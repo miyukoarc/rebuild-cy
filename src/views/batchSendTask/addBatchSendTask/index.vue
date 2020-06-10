@@ -1,5 +1,7 @@
 <template>
-  
+  <div>
+      src\views\batchSendTask\addBatchSendTask\index.vue
+  </div>
 </template>
 
 <script>

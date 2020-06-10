@@ -11,39 +11,43 @@ import Layout from '@/layout'
  * @param {Array} routes 
  */
 function generateRoutes(routes) {
-  let temp = []
-  routes.map(item => {
-    let firstObj = {
-      path: '#',
-      component: Layout,
-      name: item.code,
-      meta: {
-        title: item.menuTitle,
-        icon: item.icon
-      },
-      children: []
-    }
-    item.children.map(second => {
-        const url = second.component.split('@/views')[1]
-      firstObj.children.push({
-        path: second.route,
-        name: second.code,
-        component: resolve => require([`@/views${url}/index.vue`], resolve),
+    let temp = []
+    routes.map(item => {
+      let firstObj = {
+        path: '#',
+        component: Layout,
+        name: item.code,
         meta: {
-          title: second.menuTitle
-        }
+          title: item.menuTitle,
+          icon: item.icon
+        },
+        children: []
+      }
+      item.children.map(second => {
+        const url = second.component.split('@/views')[1]
+        firstObj.children.push({
+          path: second.route,
+          name: second.code,
+          component: resolve => require([`@/views${url}/index.vue`], resolve),
+        //   component: ()=>{return  (resolve) => require(`${}`) },          // component:()=> import('@/views'+url+'/index.vue'),//why?
+          meta: {
+            title: second.menuTitle
+          }
+        })
       })
+      temp.push(firstObj)
     })
-    temp.push(firstObj)
-  })
-  return temp
-}
+    return temp
+  
+  }
+
 
 
 const state = {
   menuList: [],
   currentMenuDetail: {},
-  rebuildMenu: []
+  rebuildMenu: [], //transfer from
+  rebuildMenuList: []//concat with constantRoutes
 }
 
 const mutations = {
@@ -54,7 +58,9 @@ const mutations = {
     state.currentMenuDetail = payload
   },
   SET_MENU(state, payload) {
-    state.rebuildMenu = constantRoutes.concat(generateRoutes(payload))
+      const filted = generateRoutes(payload)
+    state.rebuildMenu = filted
+    state.rebuildMenuList = constantRoutes.concat(filted)
   }
 }
 

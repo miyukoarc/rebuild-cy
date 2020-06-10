@@ -14,7 +14,7 @@ export default {
   },
   provide() {
     return {
-      reload: this.reload
+      reload: this.reload,
     }
   },
   methods: {
@@ -23,7 +23,7 @@ export default {
       this.$nextTick(() => {
         this.isRouterAlive = true
       })
-    }
+    },
   }
 }
 </script>

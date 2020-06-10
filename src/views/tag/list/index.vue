@@ -1,10 +1,15 @@
 <template>
-  <div>tag/list</div>
+  <div>tag/list
+  </div>
 </template>
 
 <script>
 export default {
-
+    data(){
+        return {
+            value: ''
+        }
+    }
 }
 </script>
 

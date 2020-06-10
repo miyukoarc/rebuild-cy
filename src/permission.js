@@ -79,18 +79,20 @@ router.beforeEach(async (to, from, next) => {
 
       console.log(roleCode)
 
+      await store.dispatch('permission/getListRole', roleCode) //权限列表,注册路由
 
-      await store.dispatch('permission/getListRole', roleCode) //权限列表
-
-      if (roleCode === 'super') {
+      if (roleCode === 'super') {//菜单列表,注册菜单
         await store.dispatch('menu/getAllMenuList', roleCode)
       } else {
         await store.dispatch('menu/getMyMenuList', roleCode)
       }
 
-      const rebuildRoutes = store.getters.rebuildRoutes
+    //   const rebuildRoutes = store.getters.rebuildMenu
 
-      //权限菜单
+      const rebuildRoutes = store.getters.routes
+
+    
+
 
 
 

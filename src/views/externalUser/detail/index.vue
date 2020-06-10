@@ -1,5 +1,7 @@
 <template>
-  
+  <div>
+      src\views\externalUser\detail\index.vue
+  </div>
 </template>
 
 <script>
