@@ -160,7 +160,7 @@ const actions = {
         commit('SET_ROUTES', filted)
         commit('SET_PERMISSIONMAP', map)
         commit('TOGGLE_LOADING', false)
-        resolve()
+        resolve(filted)
       }).catch(err => {
         console.log(err)
         commit('TOGGLE_LOADING', false)
