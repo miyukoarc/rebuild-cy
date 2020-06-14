@@ -5,12 +5,12 @@ import request from '@/utils/request'
  * @param {string} payload
  * @param {string} userId 
  */
-export const getDetail = (payload,userId) => {
+export const getDetail = (payload, userId) => {
   return request({
     url: '/externalUser/' + payload,
     method: 'get',
     params: {
-        userId
+      userId
     }
   })
 }
@@ -66,18 +66,111 @@ export const getListAll = (payload) => {
   })
 }
 
- /**
-  * 所有的客户的列表包含标签筛选,用户筛选，管理员可查看
-  * @param {string} tagIds 
-  * @param {string} uuid 
-  */
-export const getlistExUserByUserId = (tagIds,uuid) => {
+/**
+ * 根据用户uuid查询对应的客户
+ * @param {object} payload 
+ */
+export const getListExUserByUserId = (payload) => {
   return request({
     url: '/externalUser/listExUserByUserId',
     method: 'post',
-    params: {
-        tagIds,
-        uuid
-    }
+    params: payload
+  })
+}
+
+/**
+ * 我的客户的列表
+ * @param {object} payload 
+ */
+export const getExternalUserListMy = (payload) => {
+  return request({
+    url: '/externalUser/listMy',
+    method: 'post',
+    params: payload
+  })
+}
+
+/**
+ * 获取离职成员的客户列表
+ * @param {object} payload 
+ */
+export const getQuitUserRelationExUserList = (payload) => {
+  return request({
+    url: '/externalUser/quitUserRelationExUserList',
+    method: 'post',
+    params: payload
+  })
+}
+
+/**
+ * 离职成员的外部联系人再分配
+ * @param {object} payload 
+ */
+export const redistributionExUser = (payload) => {
+  return request({
+    url: '/externalUser/redistributionExUser',
+    method: 'post',
+    data: payload
+  })
+}
+
+/**
+ * 修改客户备注
+ * @param {object} payload 
+ */
+export const remark = (payload) => {
+  return request({
+    url: '/externalUser/remark',
+    method: 'post',
+    data: payload
+  })
+}
+
+/**
+ * 删除客户标签
+ * @param {object} payload 
+ */
+export const removeTag = (payload) => {
+  return request({
+    url: '/externalUser/removeTag',
+    method: 'post',
+    data: payload
+  })
+}
+
+/**
+ * 我的流失客户列表
+ * @param {object} payload 
+ */
+export const getRunWayList = (payload) => {
+  return request({
+    url: '/externalUser/runWayList',
+    method: 'post',
+    params: payload
+  })
+}
+
+
+/**
+ * 所有流失客户列表
+ * @param {object} payload 
+ */
+export const getRunWayListAll = (payload) => {
+  return request({
+    url: '/externalUser/runWayListAll',
+    method: 'post',
+    params: payload
+  })
+}
+
+/**
+ * 更新客户资料
+ * @param {object} payload 
+ */
+export const update = (payload) => {
+  return request({
+    url: '/externalUser/update',
+    method: 'post',
+    data: payload
   })
 }

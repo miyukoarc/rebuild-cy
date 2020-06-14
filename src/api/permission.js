@@ -69,3 +69,16 @@ export const updatePermission = (payload) => {
     data: payload
   })
 }
+
+
+/**
+ * 角色赋予权限包含是否需要审核
+ * @param {object} payload 
+ */
+export const roleLinkPermissionIsAudit = (payload)=>{
+    return request({
+        url: '',
+        method: 'post',
+        data: payload
+    })
+}

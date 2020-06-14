@@ -1,4 +1,4 @@
-import { login, logout, getInfo, getMyInfo } from '@/api/user'
+import { login, logout, getInfo, getMyInfo,getUserList } from '@/api/user'
 import { getToken, setToken, removeToken} from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -105,6 +105,18 @@ const actions = {
       commit('RESET_STATE')
       resolve()
     })
+  },
+  getUserList(){
+      return new Promise((resolve,reject)=>{
+        getUserList().then((res)=>{
+            commit('SAVE_LIST',res.items)
+            resolve()
+        })
+        .catch(err=>{
+            console.log(err)
+            reject()
+        })
+      })
   }
 }
 

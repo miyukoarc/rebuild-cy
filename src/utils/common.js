@@ -9,7 +9,7 @@ export function setPermissionMap(obj){
     for(let key in obj){
         temp[key] = {}
         obj[key].map(item=>{
-            temp[key][item.code] = 1
+            temp[key][item.code] = item
         })
     }
     return temp

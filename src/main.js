@@ -6,6 +6,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
+import {MessageBox} from 'element-ui'
+
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -34,6 +36,7 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 
 Vue.prototype.$bus = new Vue(); // event Bus 用于无关系组件间的通信。
+Vue.prototype.$confirm = MessageBox.confirm;
 
 Vue.config.productionTip = false
 

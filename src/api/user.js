@@ -71,12 +71,13 @@ export const getQrcode = () => {
 
 /**
  * 员工列表
- * 
+ * @param {object} payload 
  */
-export const getUserList = () => {
+export const getUserList = (payload) => {
   return request({
     url: '/user/list',
-    method: 'get'
+    method: 'get',
+    params: payload
   })
 }
 
