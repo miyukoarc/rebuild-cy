@@ -28,6 +28,8 @@ router.beforeEach(async (to, from, next) => {
 
   const hasToken = getToken()
 
+  console.log(hasToken)
+
   if (hasToken) {
 
     if (to.path === '/login') {
@@ -59,9 +61,13 @@ router.beforeEach(async (to, from, next) => {
 
           const roleCode = store.state.user.roleCode
 
+          console.log(roleCode)
+
           if (roleCode === 'super') {
-            await store.dispatch('menu/getAllMenuList')
+            console.log('超管菜单')
+            await store.dispatch('menu/getAllMenuList').then(()=>{}).catch(err=>{console.log(err)})
           } else {
+            console.log('普通菜单')
             await store.dispatch('menu/getMyMenuList')
           }
 
@@ -95,7 +101,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
 
-  
+  next()
 })
 
 router.afterEach(() => {

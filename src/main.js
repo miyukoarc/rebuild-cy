@@ -17,6 +17,12 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import isElectron from 'is-electron'
+/**
+ * 全局组件
+ */
+import TButton from '@/components/ThrottleButton/index'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -30,6 +36,34 @@ import '@/permission' // permission control
 //   mockXHR()
 // }
 
+
+/**
+ * 
+ * @electron环境判断
+ */
+
+if (isElectron()) {
+    console.log('electron')
+    const electron = window.require('electron')
+    const {
+      BrowserWindow,
+      ipcRenderer,
+      remote
+    } = electron
+    Vue.prototype.$ipcRenderer = ipcRenderer
+    Vue.prototype.$remote = remote
+    Vue.prototype.$isElectron = isElectron
+  
+    console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
+  
+    ipcRenderer.on('asynchronous-reply', (event, arg) => {
+      console.log(arg) // prints "pong"
+    })
+    ipcRenderer.send('asynchronous-message', 'ping')
+  }
+
+Vue.component(TButton.name,TButton)
+
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
@@ -37,6 +71,8 @@ Vue.use(ElementUI, { locale })
 
 Vue.prototype.$bus = new Vue(); // event Bus 用于无关系组件间的通信。
 Vue.prototype.$confirm = MessageBox.confirm;
+
+
 
 Vue.config.productionTip = false
 

@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-    name:"throat-btn",
+    name:"el-t-button",
     computed:{
         evet(){
             if(this.$listeners.click ){

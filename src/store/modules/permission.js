@@ -156,9 +156,9 @@ const actions = {
       getListRole(payload).then((res) => {
         commit('SAVE_LIST', res.items)
         const filted = generatePermissionRoutes(res.items)
-        const map = setPermissionMap(res.items)
+        const accessed = setPermissionMap(res.items)
         commit('SET_ROUTES', filted)
-        commit('SET_PERMISSIONMAP', map)
+        commit('SET_PERMISSIONMAP', accessed)
         commit('TOGGLE_LOADING', false)
         resolve(filted)
       }).catch(err => {

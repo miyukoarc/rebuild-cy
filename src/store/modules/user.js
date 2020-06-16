@@ -7,7 +7,10 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     roleCode: '',
-    avatar: ''
+    avatar: '',
+
+
+    userListAll: []
   }
 }
 

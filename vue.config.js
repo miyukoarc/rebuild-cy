@@ -15,6 +15,111 @@ const name = defaultSettings.title || 'vue Admin Template' // page title
 // port = 9528 npm run dev OR npm run dev --port = 9528
 const port = process.env.port || process.env.npm_config_port || 9528 // dev port
 
+console.log(process.env.VUE_APP_WORK, process.env.NODE_ENV)
+
+
+const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
+  port: 8085,
+  open: true,
+  overlay: {
+    warnings: false,
+    errors: true
+  },
+
+  disableHostCheck: true,
+  proxy: {
+
+
+    "/api": {
+      headers: {
+        host: '127.0.0.1:3000' //koa服务在3000端口运行
+      },
+      target: "http://127.0.0.1:8085", //与调试本地node server保持一致
+      changeOrigin: true,
+      pathRewrite: {
+        "^/api": ""
+      }
+    }
+
+
+  },
+
+  before: require('./server/index.js') //koa服务路径
+
+
+  // before: require('./mock/mock-server.js')
+} : {
+  port: 8085,
+  open: true,
+  overlay: {
+    warnings: false,
+    errors: true
+  },
+  // host: 'www.sdk.com',
+  disableHostCheck: true,
+  proxy: {
+
+    [process.env.VUE_APP_BASE_API]: {
+      // target: 'http://10.10.10.65:9000', // 光
+      // target: 'http://10.10.10.84:80', // 杜亮
+      target: 'http://10.10.10.32:9000', // 骋昊
+      // ws: true,
+      changeOrigin: true,
+      pathRewrite: {
+        ['^' + process.env.VUE_APP_BASE_API]: ''
+      }
+    },
+    '/public': {
+      target: 'http://10.10.10.32:9000',
+      changeOrigin: true,
+    },
+    // "/api": {
+    //   target: "http://localhost:80",
+    //   secure: false,
+    //   autoRewrite: true,
+    //   pathRewrite: {
+    //     "^/api": ""
+    //   }
+    // },
+    "/api": {
+      headers: {
+        Host: 'sidebar.cyscrm.com'
+      },
+      target: "http://sidebar.cyscrm.com",
+      // target: "http://10.10.10.32:9000", //陈浩
+      // target: "http://10.10.10.84:80", //杜亮
+      // target: 'http://10.10.10.65:9000', //光
+      secure: false,
+      changeOrigin: true,
+      // ws: true,
+      pathRewrite: {
+        "^/api": ""
+      }
+    },
+    '/file': {
+      target: `http://192.168.1.103:9000/file`,
+      changeOrigin: true,
+      pathRewrite: {
+        '^/file': '',
+      },
+    },
+    '/ws': {
+      target: `http://10.10.10.65:9000`,
+      changeOrigin: true,
+      ws: true,
+    }
+
+
+
+
+
+
+  }
+
+
+  // before: require('./mock/mock-server.js')
+}
+
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
@@ -28,96 +133,9 @@ module.exports = {
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,
-//   process.env.NODE_ENV === 'development'
+  //   process.env.NODE_ENV === 'development'
   productionSourceMap: false,
-  devServer: {
-    port: 8085,
-        open: true,
-        overlay: {
-            warnings: false,
-            errors: true
-        },
-        // host: 'www.sdk.com',
-        disableHostCheck: true,
-        proxy: {
-            /*
-            [process.env.VUE_APP_BASE_API]: {
-                // target: 'http://10.10.10.65:9000', // 光
-                // target: 'http://10.10.10.84:80', // 杜亮
-                target: 'http://10.10.10.32:9000', // 骋昊
-                // ws: true,
-                changeOrigin: true,
-                pathRewrite: {
-                    ['^' + process.env.VUE_APP_BASE_API]: ''
-                }
-            },
-            '/public': {
-                target: 'http://10.10.10.32:9000',
-                changeOrigin: true,
-            },
-            // "/api": {
-            //   target: "http://localhost:80",
-            //   secure: false,
-            //   autoRewrite: true,
-            //   pathRewrite: {
-            //     "^/api": ""
-            //   }
-            // },
-            "/api": {
-                headers: {
-                    Host: 'sidebar.cyscrm.com'
-                },
-                target: "http://sidebar.cyscrm.com",
-                // target: "http://10.10.10.32:9000", //陈浩
-                // target: "http://10.10.10.84:80", //杜亮
-                // target: 'http://10.10.10.65:9000', //光
-                secure: false,
-                changeOrigin: true,
-                // ws: true,
-                pathRewrite: {
-                    "^/api": ""
-                }
-            },
-            '/file': {
-                target: `http://192.168.1.103:9000/file`,
-                changeOrigin: true,
-                pathRewrite: {
-                    '^/file': '',
-                },
-            },
-            '/ws': {
-                target: `http://10.10.10.65:9000`,
-                changeOrigin: true,
-                ws: true,
-            }
-            */
-
-      
-      /**
-     * koa-mock
-     */
-    
-    "/api": {
-        headers: {
-            host: '127.0.0.1:3000'//koa服务在3000端口运行
-        },
-        target: "http://127.0.0.1:8085",//与调试本地node server保持一致
-        changeOrigin: true,
-        pathRewrite: {
-            "^/api": ""
-        }
-    }
-    
-
-    },
-    /**
-     * koa-mock
-     */
-    before: require('./server/index.js')//koa服务路径
-
-    
-    // before: require('./mock/mock-server.js')
-  },
+  devServer: customizeDevServer,
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.

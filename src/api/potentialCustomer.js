@@ -94,3 +94,16 @@ export const getListMy = (payload) => {
         params: payload
     })
 }
+
+
+/**
+ * 分配潜在客户
+ * @param {object} payload 
+ */
+export const additionFail = (payload)=>{
+    return request({
+        url: '/potentialCustomer/additionFail',
+        method: 'post',
+        data: payload
+    })
+}

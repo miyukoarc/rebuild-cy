@@ -23,13 +23,18 @@
           ></iframe>
         </div>-->
       </el-container>
+
+      <div style="text-align:center;">
+          <el-t-button size="mini" @click="handleVirtualLogin">模拟登录</el-t-button>
+          <!-- <el-button size="mini" @click="handleVirtualLogin">模拟登录</el-button> -->
+      </div>
     </el-form>
   </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
-
+import {setToken} from '@/utils/auth'
 export default {
   name: 'Login',
   data() {
@@ -115,6 +120,13 @@ export default {
           return false
         }
       })
+    },
+    handleVirtualLogin(){
+        this.setToken('123')
+        this.$router.push({path: '/dashboard'})
+    },
+    setToken(token){
+        return setToken(token)
     }
   }
 }
