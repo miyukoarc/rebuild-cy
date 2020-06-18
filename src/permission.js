@@ -10,6 +10,8 @@ import {
 } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
+
+
 NProgress.configure({
   showSpinner: false
 }) // NProgress Configuration

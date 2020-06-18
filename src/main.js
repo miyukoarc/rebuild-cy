@@ -23,6 +23,7 @@ import isElectron from 'is-electron'
  */
 import TButton from '@/components/ThrottleButton/index'
 
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -65,7 +66,7 @@ if (isElectron()) {
 Vue.component(TButton.name,TButton)
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+Vue.use(ElementUI)
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 

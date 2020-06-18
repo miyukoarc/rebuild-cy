@@ -1,0 +1,25 @@
+{
+    "isMessageUser": false,
+    "role": {
+        "name": "超级管理员",
+        "uuid": 1
+    },
+    "gender": 1,
+    "isLeader": 0,
+    "mobile": "13044414558",
+    "telephone": null,
+    "avatar": "http://wework.qpic.cn/bizmail/EJicl34cR65v6RBlHqYkvltWbaZxzRlIdaC6U9kw3NaMYaIOVRXEJDw/0",
+    "userId": "BaiMo",
+    "uuid": 23,
+    "version": 5,
+    "createdAt": "2020-06-16 21:41:38",
+    "onlineCrm": true,
+    "deleted": false,
+    "qrCode": "https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=vccf24a7ec1e29036c",
+    "name": "赵翊",
+    "alias": "",
+    "position": "",
+    "isFollowUser": true,
+    "status": 1,
+    "updatedAt": "2020-06-18 17:48:04"
+}

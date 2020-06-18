@@ -32,7 +32,7 @@ export default {
                     me.$emit(method,...args);
                     me.timer = setTimeout(() => {
                         me.timer = null;
-                    }, me.$attrs.throat || 5000); //默认5s的，节流
+                    }, me.$attrs.throat || 1000); //默认1s的，节流
                 }else{
                     me.$emit("droped",...args); //点击太频繁的事件提示
                 }

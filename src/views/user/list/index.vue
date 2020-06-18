@@ -2,10 +2,13 @@
   <div class="app-container">
     <!-- <el-header height="auto" style="padding:0"> -->
     <el-card class="content-spacing">
-      <list-header></list-header>
+      <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 
     <!-- </el-header> -->
+    <el-card class="content-spacing">
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
+    </el-card>
 
     <el-card class="content-spacing">
       <div>
@@ -17,32 +20,47 @@
           stripe
           lazy
           highlight-current-row
-          @row-click="handleDetail"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column prop="name" label="员工姓名" align="center"></el-table-column>
-          <el-table-column label="部门" align="center">
+          <el-table-column prop="name" label="员工姓名" align="left"></el-table-column>
+          <el-table-column label="部门" align="left">
             <template v-slot="scoped">
               <div>{{scoped.row.departments[0].name}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="角色" align="center">
+          <el-table-column label="角色" align="left">
             <template v-slot="scoped">
               <div>{{scoped.row.role.name}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="授权状态" align="center">
+          <el-table-column label="授权状态" align="left">
             <template v-slot="scoped">
               <div>{{scoped.row.status}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="240">
+          <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button>
-              <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
+              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click.stop="handleDistribute(scope.$index)"
+              >分配部门</el-button>
+              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
+              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
+
+        <el-pagination
+          background
+          class="pager"
+          layout="total,prev, pager, next,jumper"
+          :total="pageConfig.total"
+          :current-page.sync="pageConfig.pageNumber"
+          :page-size="pageConfig.pageSize"
+          @current-change="changePage"
+        />
       </div>
     </el-card>
 
@@ -55,33 +73,51 @@
 import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-
+import ToolBar from './tool-bar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {
     ListHeader,
     UserDetail,
-    FormDialog
+    FormDialog,
+    ToolBar
     // mHeadedr
   },
   data() {
-    return {}
+    return {
+      pageConfig: {
+        total: 0,
+        pageNumber: 0,
+        pageSize: 10
+      },
+
+      query: {
+        page: 0,
+        size: 10,
+        userName: '',
+        departmentsUuid: '',
+        roleUuid: ''
+      }
+    }
   },
   watch: {},
   computed: {
     ...mapState({
       roleList: state => state.role.roleList,
       departmentList: state => state.department.departmentList,
-      loading: state => state.role.loading,
-      userList: state => state.user.userList
+
+      loading: state => state.user.loading,
+      userList: state => state.user.userList,
+      userPage: state => state.user.userPage
     }),
     routesData() {
       return this.routes
     }
   },
   created() {
-    this.initDataList()
+    this.initDataList(this.query)
+    this.initFilter()
   },
   mounted() {
     this.$bus.$on('showFormDialog', target => {
@@ -94,16 +130,15 @@ export default {
     this.$bus.$off('showFormDialog')
   },
   methods: {
-    handleClick(val, e) {
-      e.stopPropagation()
-      this.handleDelete(val.uuid)
-      alert('点击')
+    doExport(val) {
+      console.log(val)
     },
 
-    handleRowClick(value) {
-      this.$store.commit('role/SAVE_DETAIL', value)
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
+    handleDistribute(index) {
+      const payload = this.userList[index]
+      this.$store.commit('user/SAVE_CURRENTROW', payload)
+      this.$refs['formDialog'].event = 'DistributeTemplate'
+      this.$refs['formDialog'].eventType = 'distribute'
       this.$refs['formDialog'].dialogVisible = true
     },
     sortChange(val) {
@@ -112,9 +147,22 @@ export default {
     pageChange() {
       this.initDataList()
     },
-    initDataList() {
+    initFilter() {
       this.$store
-        .dispatch('user/getUserList')
+        .dispatch('role/getRoleList')
+        .then(() => {
+          this.pageConfig.pageNumber = this.userPage.pageNumber + 1
+          this.pageConfig.total = this.userPage.total
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
+
+      this.$store
+        .dispatch('department/getDepartmentList')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -123,58 +171,71 @@ export default {
           })
         })
     },
-    handleEdit(val) {
-      this.$store.commit('role/SAVE_DETAIL', val)
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
-      this.$refs['formDialog'].dialogVisible = true
-    },
-    handleDelete(val) {
-      console.log(val)
-      const payload = { uuid: val.uuid }
-      this.$confirm('是否删除当前部门', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(async () => {
-          await this.$store
-            .dispatch('role/deleteRole', payload)
-            .then(() => {
-              this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.initDataList()
-            })
-            .catch(err => {
-              this.$message({
-                type: 'error',
-                message: err
-              })
-            })
+    initDataList(payload) {
+      this.$store
+        .dispatch('user/getUserList', payload)
+        .then(() => {
+          //初始化分页
+          this.pageConfig.pageNumber = this.userPage.pageNumber + 1
+          this.pageConfig.total = this.userPage.total
         })
         .catch(err => {
-          console.log(err)
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
         })
     },
-    handleDetail() {}
+    handleDetail(val) {
+      const payload = this.userList[val].uuid
+      this.$router.push({
+        path: '/user/detail',
+        query: { uuid: payload }
+      })
+    },
+    handleSearch(val) {
+      const { userName, departmentsUuid, roleUuid } = val
+      this.query.userName = userName ? userName : userName
+      this.query.departmentsUuid = departmentsUuid
+        ? departmentsUuid
+        : departmentsUuid
+      this.query.roleUuid = roleUuid ? roleUuid : roleUuid
+      console.log(val, 'handleSearch')
+      this.initDataList(this.query)
+    },
+    handleRefresh() {
+      console.log('handleRefresh')
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
+    },
+    changePage(key) {
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key - 1
+      this.initDataList(this.query)
+    }
   }
 }
 </script>
 
+<style lang="scss" scoped>
+</style>
+
 <style lang="scss">
-.app-container {
-  border-top: 1px solid #e9e9e9;
-  background: white;
-  .roles-table {
-    margin-top: 30px;
-  }
-  .permission-tree {
-    margin-bottom: 30px;
-  }
+.pager {
+  padding: 20px 0;
+  text-align: center;
 }
-header .el-header button {
-  margin-right: 5px;
-}
+// .app-container {
+//   border-top: 1px solid #e9e9e9;
+//   background: white;
+//   .roles-table {
+//     margin-top: 30px;
+//   }
+//   .permission-tree {
+//     margin-bottom: 30px;
+//   }
+// }
+// header .el-header button {
+//   margin-right: 5px;
+// }
 </style>

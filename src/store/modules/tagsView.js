@@ -28,7 +28,7 @@ const state = {
       }
     },
     DEL_CACHED_VIEW: (state, view) => {
-      console.log(view, 'view==')
+    //   console.log(view, 'view==')
       const index = state.cachedViews.indexOf(view.name)
       if (index > -1 && !view.meta.isCache) {
         state.cachedViews.splice(index, 1)
@@ -113,7 +113,7 @@ const state = {
       commit,
       state
     }, view) {
-      console.log(view, 'view---')
+    //   console.log(view, 'view---')
       return new Promise(resolve => {
         commit('DEL_CACHED_VIEW', view)
         resolve([...state.cachedViews])

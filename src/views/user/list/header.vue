@@ -1,14 +1,6 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="员工姓名">
-      <!-- <el-select v-model="query.handlerId" @change="handleChangeFirst">
-        <el-option
-          v-for="item in userListAll"
-          :key="item.uuid"
-          :label="item.name"
-          :value="item.uuid"
-        ></el-option>
-      </el-select> -->
       <el-input v-model.trim="query.userName"></el-input>
     </el-form-item>
     <el-form-item label="所在部门">
@@ -24,7 +16,7 @@
     <el-form-item label="员工角色">
       <el-select v-model="query.roleUuid" @change="handleChangeThird">
         <el-option
-          v-for="item in userListAll"
+          v-for="item in roleList"
           :key="item.uuid"
           :label="item.name"
           :value="item.uuid"
@@ -65,32 +57,34 @@ export default {
         departmentsUuid: '',
         roleUuid: ''
       }
-      
     }
   },
   computed: {
     ...mapState({
-      userListAll: state => state.user.userListAll,
+        
       roleList: state => state.role.roleList,
       departments: state => state.department.departments
     })
   },
   methods: {
     handleChangeFirst(val) {
-      this.$bus.$emit('changeSelect', { handlerId: val })
+      console.log(val)
+      this.$emit('handleSearch', this.query)
     },
     handleChangeSecond(val) {
-      this.$bus.$emit('changeSelect', { auditConfirmation: val })
+      console.log(val)
+      this.$emit('handleSearch', this.query)
     },
     handleChangeThird(val) {
-      this.$bus.$emit('changeSelect', { submitterId: val })
+      console.log(val)
+      this.$emit('handleSearch', this.query)
     },
     handleSearch() {
-      this.$bus.$emit('handleSearch')
+      this.$emit('handleSearch',this.query)
     },
     handleRefresh() {
-      this.$bus.$emit('handleRefresh')
-      this.query = this.$options.data().query
+      this.$emit('handleRefresh')
+      //   this.query = this.$options.data().query
     }
   }
 }

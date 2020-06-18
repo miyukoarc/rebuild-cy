@@ -34,7 +34,7 @@ export const addTag = (payload) => {
  */
 export const getCustomerStatistics = (payload) => {
   return request({
-    url: '/externalUser/customerStatistics' + payload,
+    url: '/externalUser/customerStatistics',
     method: 'post',
     data: payload
   })

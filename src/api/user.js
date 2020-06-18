@@ -37,11 +37,11 @@ export const wxLogin = () => {
 }
 /**
  * 员工详细页
- * @param {string} payload 
+ * @param {string} uuid 
  */
-export const getDetail = (payload) => {
+export const getDetail = (uuid) => {
   return request({
-    url: '/user/' + payload,
+    url: '/user/' + uuid,
     method: 'get'
   })
 }

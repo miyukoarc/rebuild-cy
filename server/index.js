@@ -112,6 +112,13 @@ module.exports = app => {
 
   })
 
+  router.get('/api/user/:uuid', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/user/detail.json').toString()
+
+  })
+
   /**
    * sensitive
    */
@@ -130,6 +137,8 @@ module.exports = app => {
 
   })
 
+  
+
 
 
   /**
@@ -145,6 +154,19 @@ module.exports = app => {
     ctx.body = fs.readFileSync(__dirname + '/virtual/log/logAll.json').toString()
 
   })
+
+  /**
+   * externalUser
+   */
+  router.post('/api/externalUser/customerStatistics', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/externalUser/customerStatistics.json').toString()
+
+  })
+
+
+
 
 
 

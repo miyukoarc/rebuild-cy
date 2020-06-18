@@ -131,7 +131,6 @@ export default {
       });
     },
     refreshSelectedTag(view) {
-      console.log(view,'9999')
       this.$store.dispatch("tagsView/delCachedView", view).then(() => {
         const { fullPath } = view;
         this.$nextTick(() => {
@@ -142,7 +141,6 @@ export default {
       });
     },
     closeSelectedTag(view) {
-      console.log(view,'8888888===')
       this.$store
         .dispatch("tagsView/delView", view)
         .then(({ visitedViews }) => {

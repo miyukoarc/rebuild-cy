@@ -4,7 +4,8 @@ import {
   getInfo,
   getMyInfo,
   getUserList,
-  getAllUserList
+  getAllUserList,
+  getDetail
 } from '@/api/user'
 import {
   getToken,
@@ -32,17 +33,26 @@ const getDefaultState = () => {
      */
     userList: [],
     loading: false,
+    currentRowUserList: {},
     userPage: {
       total: 0,
       pageNumber: 0,
       pageSize: 0
-    }
+    },
+
+    /**
+     * show off userdetail
+     */
+    userDetail:{}
   }
 }
 
 const state = getDefaultState()
 
 const mutations = {
+  TOGGLE_LOADING(state, payload) {
+    state.loading = payload
+  },
   RESET_STATE: (state) => {
     Object.assign(state, getDefaultState())
   },
@@ -73,6 +83,19 @@ const mutations = {
   SAVE_USERLISTALL(state, payload) {
     state.payload = payload
   },
+
+
+  /**
+   * 保存员工列表 有分页
+   * @param {*} state 
+   * @param {*} payload 
+   */
+  SAVE_USERLIST(state, payload) {
+    state.userList = payload
+  },
+  SAVE_CURRENTROW(state,payload){
+    state.currentRowUserList = payload
+  },
   SET_USERPAGE(state, payload) {
     const {
       pageNumber,
@@ -83,9 +106,15 @@ const mutations = {
     state.userPage.pageNumber = pageNumber
     state.userPage.pageSize = pageSize
   },
-  TOGGLE_LOADING(state,payload){
-      state.loading = payload
+
+  /**
+   * 保存user详细byID
+   */
+  
+  SAVE_SHOWOFFUSER(state,payload){
+      state.userDetail = payload
   }
+
 }
 
 const actions = {
@@ -214,7 +243,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getUserList(payload).then(res => {
         commit('SAVE_USERLIST', res.items)
-        commit('SET_USERPAGE', res.items)
+        commit('SET_USERPAGE', res)
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
@@ -222,6 +251,21 @@ const actions = {
         reject()
       })
     })
+  },
+  /**
+   * 获取user详细
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  getDetail({commit},payload){
+     return new Promise((resolve,reject)=>{
+         getDetail(payload).then(res=>{
+             commit('SAVE_SHOWOFFUSER',res)
+             resolve()
+         }).catch(err=>{
+             reject()
+         })
+     })
   }
 }
 
