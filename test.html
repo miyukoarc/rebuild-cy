@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const arr = [
+            {
+                name: '0',
+                children: [
+                    {
+                        name: '1',
+                        children: [
+                            {
+                                name: '3'
+                            }
+                        ]
+                    }
+                ]
+            }, {
+                name: '2'
+            }
+        ]
+
+        function flatten(data) {
+
+            return data.reduce((arr, { name, children = [] }) =>
+
+                arr.concat([{ name }], flatten(children))
+
+                , [])
+
+        }
+
+        const obj = {
+            name: 'oscar',
+            age: 18
+        }
+
+        const foo = {
+            ...obj,
+            age: 19
+        }
+        console.log(foo)
+        // console.log(flatten(arr))
+        setTimeout(() => {
+            console.log(1)
+        }, 0)
+        Promise.resolve().then(() => {
+            console.log(2)
+        })
+        console.log(3) 
+    </script>
+</body>
+
+</html>

@@ -1,37 +1,59 @@
 <template>
-  <el-container class="app-container">
-    <el-header height="auto" style="padding:0">
+  <div class="app-container">
+    <!-- <el-header height="auto" style="padding:0"> -->
+    <!-- <el-card class="content-spacing">
       <list-header></list-header>
-    </el-header>
+    </el-card> -->
 
-    <el-container>
-      <el-table
-        v-loading="loading"
-        :data="departmentList"
-        style="width: 100%"
-        row-key="uuid"
-        border
-        lazy
-        stripe
-        default-expand-all
-        class="fill"
-        @row-click="handleDetail"
-        :tree-props="{ children: 'children' }"
-      >
-        <el-table-column prop="name" label="名称" align="center"></el-table-column>
-        <el-table-column prop="createdAt" label="创建时间" align="center"></el-table-column>
-        <el-table-column prop="updatedAt" label="更新时间" align="center"></el-table-column>
-        <el-table-column label="操作" align="center" width="240">
-          <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button>
-            <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-container>
+    <!-- </el-header> -->
+
+    <el-card class="content-spacing">
+      <div>
+        <el-table
+          v-loading="loading"
+          :data="roleList"
+          style="width: 100%"
+          row-key="uuid"
+          stripe
+          lazy
+          highlight-current-row
+          @row-click="handleDetail"
+        >
+        <el-table-column type="selection" ></el-table-column>
+          <el-table-column prop="name" label="角色名称" align="left"></el-table-column>
+          <!-- <el-table-column label="部门" align="center">
+              <template v-slot="scoped">
+                  <div>
+
+                  </div>
+              </template>
+          </el-table-column>
+          <el-table-column label="角色" align="center">
+              <template v-slot="scoped">
+                  <div>
+                  </div>
+              </template>
+          </el-table-column>
+          <el-table-column label="授权状态" align="center" >
+              <template v-slot="scoped">
+                  <div>
+                      {{scoped.row.status}}
+                  </div>
+              </template>
+          </el-table-column> -->
+          <el-table-column label="操作" align="center" width="240">
+            <template slot-scope="scope">
+                <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button>
+              <el-button type="primary" size="mini" >设置</el-button>
+              <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-card>
 
     <form-dialog ref="formDialog"></form-dialog>
-  </el-container>
+  </div>
 </template>
 
 <script>
@@ -55,9 +77,9 @@ export default {
   watch: {},
   computed: {
     ...mapState({
-      roleList:state=>state.role.roleList,
+      roleList: state => state.role.roleList,
       departmentList: state => state.department.departmentList,
-      loading: state => state.department.loading
+      loading: state => state.role.loading
     }),
     routesData() {
       return this.routes
@@ -102,7 +124,7 @@ export default {
         .catch(err => {
           this.$message({
             type: 'error',
-            message: err
+            message: '初始化失败'
           })
         })
     },

@@ -1,0 +1,21 @@
+{
+    "items": [
+        {
+            "createdAt": "2020-06-17 14:46:19",
+            "groupName": "默认分组",
+            "version": 1,
+            "uuid": 1,
+            "updatedAt": "2020-06-17 14:46:19"
+        },
+        {
+            "createdAt": "2020-06-18 14:56:01",
+            "groupName": "666666",
+            "version": 0,
+            "uuid": 2,
+            "updatedAt": "2020-06-18 14:56:01"
+        }
+    ],
+    "total": 2,
+    "pageNumber": 0,
+    "pageSize": 20
+}

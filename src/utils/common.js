@@ -46,3 +46,17 @@ export function setPermissionMap(obj){
     return temp
  }
 
+ /**
+  * 树形表扁平化
+  * @param {array} arr 
+  */
+ export function flatten(data) {
+
+    return data.reduce((arr, {createdAt,deleted, name,parent, sort,updatedAt,users,uuid,version,wxDepartmentId, children = [] }) =>
+
+        arr.concat([{ createdAt,deleted, name,parent, sort,updatedAt,users,uuid,version,wxDepartmentId, }], flatten(children))
+
+        , [])
+
+}
+

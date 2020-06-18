@@ -96,13 +96,14 @@ const actions = {
   },
   /**
    * 获取角色列表
-   * @param {*} param0 
+   * @param {*} payload 
    *
    */
-  getRoleList({commit}){
+  getRoleList({commit},payload){
       commit('TOGGLE_LOADING',true)
       return new Promise((resolve,reject)=>{
-          getRoleList().then(()=>{
+          getRoleList(payload).then(res=>{
+              commit('SAVE_LIST',res.items)
               commit('TOGGLE_LOADING',false)
               resolve()
           }).catch(err=>{

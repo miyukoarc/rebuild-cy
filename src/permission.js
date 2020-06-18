@@ -73,11 +73,16 @@ router.beforeEach(async (to, from, next) => {
 
           const accessed = await store.dispatch('permission/getListRole', roleCode)
 
-          router.addRoutes([...accessed], {
-            path: '*',
-            redirect: '/404',
-            hidden: true
-          })
+          console.log(accessed)
+
+          router.addRoutes([...accessed]
+        //     , 
+        //     {
+        //     path: '*',
+        //     redirect: '/404',
+        //     hidden: true
+        //   }
+          )
 
 
 

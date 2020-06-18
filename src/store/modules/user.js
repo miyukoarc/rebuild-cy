@@ -3,6 +3,7 @@ import {
   logout,
   getInfo,
   getMyInfo,
+  getUserList,
   getAllUserList
 } from '@/api/user'
 import {
@@ -81,6 +82,9 @@ const mutations = {
     state.userPage.total = total
     state.userPage.pageNumber = pageNumber
     state.userPage.pageSize = pageSize
+  },
+  TOGGLE_LOADING(state,payload){
+      state.loading = payload
   }
 }
 

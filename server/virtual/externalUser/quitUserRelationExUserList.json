@@ -1,0 +1,83 @@
+[
+    {
+        "userId": "zeness",
+        "userName": "朱余朋",
+        "departName": "技术部",
+        "toBeAllocatedCount": 9,
+        "quitDate": "2020-06-17 19:13:56",
+        "externalUserId": "wmrbZlEAAAv7Hos3NJ2i4qTmEiwrHDFg",
+        "externalUserName": "gion"
+    },
+    {
+        "userId": "zeness",
+        "userName": "朱余朋",
+        "departName": "技术部",
+        "toBeAllocatedCount": 9,
+        "quitDate": "2020-06-17 19:13:56",
+        "externalUserId": "wmrbZlEAAAAl1YucPnBI0RFljQuDdZHQ",
+        "externalUserName": "徽信支付"
+    },
+    {
+        "userId": "zeness",
+        "userName": "朱余朋",
+        "departName": "技术部",
+        "toBeAllocatedCount": 9,
+        "quitDate": "2020-06-17 19:13:56",
+        "externalUserId": "wmrbZlEAAACwkw3_DGkFBsJdPKPafwhw",
+        "externalUserName": "蛋先生"
+    },
+    {
+        "userId": "zeness",
+        "userName": "朱余朋",
+        "departName": "技术部",
+        "toBeAllocatedCount": 9,
+        "quitDate": "2020-06-17 19:13:56",
+        "externalUserId": "wmrbZlEAAAlTeSPul6DvsYxfPmAcYPbw",
+        "externalUserName": "ZENESS"
+    },
+    {
+        "userId": "DanXianSheng",
+        "userName": "陈骋昊",
+        "departName": "技术部",
+        "toBeAllocatedCount": 9,
+        "quitDate": "2020-06-17 20:14:14",
+        "externalUserId": "wmrbZlEAAAAl1YucPnBI0RFljQuDdZHQ",
+        "externalUserName": "徽信支付"
+    },
+    {
+        "userId": "DanXianSheng",
+        "userName": "陈骋昊",
+        "departName": "技术部",
+        "toBeAllocatedCount": 9,
+        "quitDate": "2020-06-17 20:14:14",
+        "externalUserId": "wmrbZlEAAAv7Hos3NJ2i4qTmEiwrHDFg",
+        "externalUserName": "gion"
+    },
+    {
+        "userId": "DanXianSheng",
+        "userName": "陈骋昊",
+        "departName": "技术部",
+        "toBeAllocatedCount": 9,
+        "quitDate": "2020-06-17 20:14:14",
+        "externalUserId": "wmrbZlEAAAlTeSPul6DvsYxfPmAcYPbw",
+        "externalUserName": "ZENESS"
+    },
+    {
+        "userId": "DanXianSheng",
+        "userName": "陈骋昊",
+        "departName": "技术部",
+        "toBeAllocatedCount": 9,
+        "quitDate": "2020-06-17 20:14:14",
+        "externalUserId": "wmrbZlEAAACwkw3_DGkFBsJdPKPafwhw",
+        "externalUserName": "蛋先生"
+    },
+    {
+        "userId": "DanXianSheng",
+        "userName": "陈骋昊",
+        "departName": "技术部",
+        "toBeAllocatedCount": 9,
+        "quitDate": "2020-06-17 20:14:14",
+        "externalUserId": "wmrbZlEAAArh0JyuNmJYZkNQ6r6MBcug",
+        "externalUserName": "金丛杰"
+    }
+]

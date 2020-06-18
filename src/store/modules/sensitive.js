@@ -51,6 +51,7 @@ loading: false,
     pageSize: 0,
     pageNumber: 0
   },
+  
   /**
    * 敏感动作列表
    */

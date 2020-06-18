@@ -1,0 +1,28 @@
+{
+    "items": [
+        {
+            "wxCreatedAt": null,
+            "fileName": null,
+            "imgId": "5eeb100b2f1383733edac507",
+            "description": "6666",
+            "type": "ARTICLE",
+            "mediaId": null,
+            "expireAt": null,
+            "title": "6666",
+            "version": 0,
+            "uuid": 1,
+            "localId": null,
+            "url": "http://47.111.161.128:80/public/article/330895778184308296",
+            "content": null,
+            "imgUrl": "http://47.111.161.128:80/public/file/5eeb100b2f1383733edac507",
+            "createdAt": "2020-06-18 14:56:19",
+            "deleted": false,
+            "articleContent": "<p>6666</p>",
+            "hash": "330895778184308296",
+            "updatedAt": "2020-06-18 14:56:19"
+        }
+    ],
+    "total": 1,
+    "pageNumber": 0,
+    "pageSize": 10
+}

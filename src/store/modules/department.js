@@ -6,19 +6,20 @@ import {
   locateDepartmentLeader,
   updateDepartment
 } from '@/api/department'
-
+import {flatten} from '@/utils/common'
 const state = {
     /**
      * 部门列表
      */
-  departmentList: [],
+  departmentList: [],//tree
+  departments: [],//list
   currentDepartment: {}, //当前行
   loading: false,
 }
 
 const mutations = {
     /**
-     * 保存部门列表
+     * 保存部门列表 树
      * @param {*} state 
      * @param {*} payload 
      */
@@ -30,6 +31,15 @@ const mutations = {
   },
   SAVE_DETAIL(state, payload){
       state.currentDepartment = payload
+  },
+
+  /**
+   * 保存部门列表 flatten
+   * @param {*} state 
+   * @param {*} payload 
+   */
+  SAVE_FLATTENLIST(state,payload){
+      state.departments = payload
   }
 
 }
@@ -109,7 +119,9 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getDepartmentList(payload).then(res => {
+          const accessed = flatten(res.items)
         commit('SAVE_LIST', res.items)
+        commit('SAVE_FLATTENLIST',accessed)
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
