@@ -1,8 +1,13 @@
 <template>
-  <el-container class="app-container">
-    <el-header height="auto" style="padding:0">
+  <div class="app-container">
+    <!-- <el-header height="auto" style="padding:0">
       <list-header></list-header>
-    </el-header>
+    </el-header> -->
+    <el-card>
+        <div>
+            <el-button size="small" @click="handleCreate">创建部门</el-button>
+        </div>
+    </el-card>
 
     <el-container>
       <el-table
@@ -23,7 +28,7 @@
         <el-table-column prop="updatedAt" label="更新时间" align="center"></el-table-column>
         <el-table-column label="操作" align="center" width="240">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button>
+            <el-button type="primary" size="mini" @click.stop="handleEdit(scope.$index,scope.row)">编辑</el-button>
             <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -31,7 +36,7 @@
     </el-container>
 
     <form-dialog ref="formDialog"></form-dialog>
-  </el-container>
+  </div>
 </template>
 
 <script>
@@ -105,11 +110,15 @@ export default {
           })
         })
     },
-    handleEdit(val) {
-      this.$store.commit('department/SAVE_DETAIL', val)
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
-      this.$refs['formDialog'].dialogVisible = true
+    handleEdit(index,row) {
+
+        console.log(index,row)
+        const payload = this.departmentList[index]
+        console.log(payload)
+    //   this.$store.commit('department/SAVE_DETAIL', val)
+    //   this.$refs['formDialog'].event = 'EditTemplate'
+    //   this.$refs['formDialog'].eventType = 'edit'
+    //   this.$refs['formDialog'].dialogVisible = true
     },
     handleDelete(val) {
       console.log(val)
@@ -140,7 +149,8 @@ export default {
           console.log(err)
         })
     },
-    handleDetail() {}
+    handleDetail() {},
+    handleCreate() {}
   }
 }
 </script>

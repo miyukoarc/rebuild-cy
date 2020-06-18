@@ -1,6 +1,18 @@
-import { login, logout, getInfo, getMyInfo,getUserList } from '@/api/user'
-import { getToken, setToken, removeToken} from '@/utils/auth'
-import { resetRouter } from '@/router'
+import {
+  login,
+  logout,
+  getInfo,
+  getMyInfo,
+  getAllUserList
+} from '@/api/user'
+import {
+  getToken,
+  setToken,
+  removeToken
+} from '@/utils/auth'
+import {
+  resetRouter
+} from '@/router'
 
 const getDefaultState = () => {
   return {
@@ -9,8 +21,21 @@ const getDefaultState = () => {
     roleCode: '',
     avatar: '',
 
+    /**
+     * 所有员工列表 无分页
+     */
+    userListAll: [],
 
-    userListAll: []
+    /**
+     * 员工列表 有分页
+     */
+    userList: [],
+    loading: false,
+    userPage: {
+      total: 0,
+      pageNumber: 0,
+      pageSize: 0
+    }
   }
 }
 
@@ -29,21 +54,53 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
-  SET_USERINFO: (state, payload) =>{
-      const {name,avatar,roleCode} = payload
-      state.name = name
-      state.avatar = avatar
-      state.roleCode = roleCode
+  SET_USERINFO: (state, payload) => {
+    const {
+      name,
+      avatar,
+      roleCode
+    } = payload
+    state.name = name
+    state.avatar = avatar
+    state.roleCode = roleCode
+  },
+  /**
+   * 保存无分页员工列表
+   * @param {*} state 
+   * @param {*} payload 
+   */
+  SAVE_USERLISTALL(state, payload) {
+    state.payload = payload
+  },
+  SET_USERPAGE(state, payload) {
+    const {
+      pageNumber,
+      pageSize,
+      total
+    } = payload
+    state.userPage.total = total
+    state.userPage.pageNumber = pageNumber
+    state.userPage.pageSize = pageSize
   }
 }
 
 const actions = {
   // user login
-  login({ commit }, userInfo) {
-    const { username, password } = userInfo
+  login({
+    commit
+  }, userInfo) {
+    const {
+      username,
+      password
+    } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
+      login({
+        username: username.trim(),
+        password: password
+      }).then(response => {
+        const {
+          data
+        } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
         resolve()
@@ -54,16 +111,24 @@ const actions = {
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getInfo({
+    commit,
+    state
+  }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        const { data } = response
+        const {
+          data
+        } = response
 
         if (!data) {
           reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
+        const {
+          name,
+          avatar
+        } = data
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
@@ -75,7 +140,10 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
+  logout({
+    commit,
+    state
+  }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         removeToken() // must remove  token  first
@@ -87,39 +155,69 @@ const actions = {
       })
     })
   },
-  getMyInfo({commit}){
-      return new Promise((resolve,reject) => {
-        getMyInfo().then((res)=>{
-            console.log(res)
+  getMyInfo({
+    commit
+  }) {
+    return new Promise((resolve, reject) => {
+      getMyInfo().then((res) => {
+        console.log(res)
 
-            commit('SET_USERINFO', res)
+        commit('SET_USERINFO', res)
 
-            resolve(res)
-        }).catch(err => {
-            reject()
-        })
+        resolve(res)
+      }).catch(err => {
+        reject()
       })
+    })
   },
 
   // remove token
-  resetToken({ commit }) {
+  resetToken({
+    commit
+  }) {
     return new Promise(resolve => {
       removeToken() // must remove  token  first
       commit('RESET_STATE')
       resolve()
     })
   },
-  getUserList(){
-      return new Promise((resolve,reject)=>{
-        getUserList().then((res)=>{
-            commit('SAVE_LIST',res.items)
-            resolve()
-        })
-        .catch(err=>{
-            console.log(err)
-            reject()
-        })
+  /**
+   * 所有员工列表无分页
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  getAllUserList({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      getAllUserList(payload).then(res => {
+        commit('SAVE_USERLISTALL', res)
+        resolve()
+      }).catch(err => {
+        reject()
       })
+    })
+  },
+  /**
+   * 员工列表 有分页
+   * @param {*} param0 
+   * @param {object} payload 
+   */
+  getUserList({
+    commit
+  }, payload) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      getUserList(payload).then(res => {
+        commit('SAVE_USERLIST', res.items)
+        commit('SET_USERPAGE', res.items)
+        commit('TOGGLE_LOADING', false)
+        resolve()
+      }).catch(err => {
+        commit('TOGGLE_LOADING', false)
+        reject()
+      })
+    })
   }
 }
 
@@ -129,4 +227,3 @@ export default {
   mutations,
   actions
 }
-

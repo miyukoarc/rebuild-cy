@@ -109,6 +109,21 @@ module.exports = app => {
     ctx.body = fs.readFileSync(__dirname + '/virtual/menu/menuList.json').toString()
 
   })
+  
+  /**
+   * tag
+   */
+
+  router.get('/api/tag/list', async ctx => {
+
+    if(ctx.request.query){
+        console.log(ctx.request.query)
+    }
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/tag/tagList.json').toString()
+
+  })
 
 
 

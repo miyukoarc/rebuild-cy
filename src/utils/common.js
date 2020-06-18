@@ -16,3 +16,33 @@ export function setPermissionMap(obj){
 }
 
 
+ /**
+  * 标签分组
+  * @param {array} arr 
+  */
+ export function classifyTag(arr){
+    let tempId = ""
+    let temp =[]
+    
+    for(let i=0;i<arr.length;i++){
+        if(arr[i].groupId!==tempId){
+            temp.push({
+                groupName: arr[i].groupName,
+                groupId:arr[i].groupId,
+                tags: []
+            })
+            tempId = arr[i].groupId
+        }
+    }
+
+    arr.forEach(item=>{
+        temp.forEach(group=>{
+            if(group.groupId===item.groupId){
+                group.tags.push(item)
+            }
+        })
+    })
+
+    return temp
+ }
+

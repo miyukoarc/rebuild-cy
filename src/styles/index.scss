@@ -9,8 +9,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-//   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
-font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  //   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 
 label {
@@ -66,67 +66,73 @@ div:focus {
 }
 
 
-.font-el{
-    font-size: 20px;
+.content-spacing {
+  margin: 10px 0 10px;
 }
 
-.font-l{
-    font-size: 18px;
-}
-.font-m{
-    font-size: 16px;
+
+.font-el {
+  font-size: 20px;
 }
 
-.font-s{
-    font-size: 14px;
+.font-l {
+  font-size: 18px;
 }
 
-.font-es{
-    font-size: 13px;
+.font-m {
+  font-size: 16px;
 }
 
-.font-exs{
-    font-size: 12px;
+.font-s {
+  font-size: 14px;
 }
 
-.color-danger{
-    color: $danger;
+.font-es {
+  font-size: 13px;
 }
 
-.color-info{
-    color: $info;
+.font-exs {
+  font-size: 12px;
 }
 
-.color-primary{
-    color: $primary;
+.color-danger {
+  color: $danger;
 }
 
-.color-success{
-    color: $success;
+.color-info {
+  color: $info;
+}
+
+.color-primary {
+  color: $primary;
+}
+
+.color-success {
+  color: $success;
 }
 
 //
 
-.bg-warning{
-    background-color: $warning;
+.bg-warning {
+  background-color: $warning;
 }
 
-.bg-danger{
-    background-color: $danger;
+.bg-danger {
+  background-color: $danger;
 }
 
-.bg-info{
-    background-color: $info;
+.bg-info {
+  background-color: $info;
 }
 
-.bg-primary{
-    background-color: $primary;
+.bg-primary {
+  background-color: $primary;
 }
 
-.bg-success{
-    background-color: $success;
+.bg-success {
+  background-color: $success;
 }
 
-.bg-warning{
-    background-color: $warning;
+.bg-warning {
+  background-color: $warning;
 }

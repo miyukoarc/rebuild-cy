@@ -43,11 +43,11 @@ export const getCustomerStatistics = (payload) => {
 /**
  * 
  * 所有的客户的列表，管理员可查看
- * @param {object} payload page
+ * @param {object} payload
  */
 export const getList = (payload) => {
   return request({
-    url: '/externalUser/list' + payload,
+    url: '/externalUser/list',
     method: 'post',
     params: payload
   })
@@ -56,11 +56,11 @@ export const getList = (payload) => {
 /**
  * 
  * 所有的客户的列表包含标签筛选,用户筛选，管理员可查看
- * @param {object} payload page
+ * @param {object} payload
  */
 export const getListAll = (payload) => {
   return request({
-    url: '/externalUser/listAll' + payload,
+    url: '/externalUser/listAll',
     method: 'post',
     params: payload
   })
@@ -172,5 +172,32 @@ export const update = (payload) => {
     url: '/externalUser/update',
     method: 'post',
     data: payload
+  })
+}
+
+
+
+/**
+ * 获取群列表
+ * @param {object} payload 
+ */
+export const getListGroup = (payload) => {
+  return request({
+    url: '/externalUser/listGroup',
+    method: 'get',
+    params: payload
+  })
+}
+
+
+/**
+ * 获取所有人列表
+ * @param {object} payload 
+ */
+export const getListOwner = (payload) => {
+  return request({
+    url: '/externalUser/listOwner',
+    method: 'get',
+    params: payload
   })
 }

@@ -49,16 +49,16 @@ export const getArticleDetail = (uuid)=>{
 }
 
 
-/**
- * 通过id查询的文章详情页
- * @param {string} uuid
- */
-export const getArticleDetail = (uuid)=>{
-    return request({
-        url: '/media/article/'+uuid,
-        method: 'get'
-    })
-}
+// /**
+//  * 通过id查询的文章详情页
+//  * @param {string} uuid
+//  */
+// export const getArticleDetail = (uuid)=>{
+//     return request({
+//         url: '/media/article/'+uuid,
+//         method: 'get'
+//     })
+// }
 
 
 /**

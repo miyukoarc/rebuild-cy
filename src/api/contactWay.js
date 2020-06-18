@@ -43,7 +43,7 @@ export const getList = (payload)=>{
     return request({
         url: '/contactWay/list',
         method: 'get',
-        data: payload
+        params: payload
     })
 }
 

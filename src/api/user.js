@@ -70,7 +70,7 @@ export const getQrcode = () => {
 }
 
 /**
- * 员工列表
+ * 员工列表有分页
  * @param {object} payload 
  */
 export const getUserList = (payload) => {
