@@ -2,7 +2,7 @@ const Koa = require('koa') //koa主模块
 const Router = require('koa-router') //koa路由
 const cors = require('koa2-cors') //跨域
 const fs = require('fs')
-const Koa_Session = require('koa-session'); // 导入koa-session     
+   
 // 配置
 
 
@@ -24,6 +24,11 @@ module.exports = app => {
   router.get('/api/department/list', async ctx => {
 
     ctx.body = fs.readFileSync(__dirname + '/virtual/department/departmentList.json').toString()
+  })
+
+  router.get('/api/department/listDep', async ctx => {
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/department/listDep.json').toString()
   })
 
   /**
@@ -91,6 +96,15 @@ module.exports = app => {
 
   })
 
+  router.get('/api/tag/listAllTag', async ctx => {
+
+    if(ctx.request.query){
+        console.log(ctx.request.query)
+    }
+    ctx.body = fs.readFileSync(__dirname + '/virtual/tag/listAllTag.json').toString()
+
+  })
+
   /**
    * user
    */
@@ -137,6 +151,13 @@ module.exports = app => {
 
   })
 
+  router.get('/api/sensitive/list', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/sensitive/list.json').toString()
+
+  })
+
   
 
 
@@ -166,6 +187,54 @@ module.exports = app => {
   })
 
 
+  router.get('/api/externalUser/listMy', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/externalUser/listMy.json').toString()
+
+  })
+
+  router.get('/api/externalUser/listAll', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/externalUser/listAll.json').toString()
+
+  })
+
+  router.get('/api/externalUser/runWayList', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/externalUser/runWayList.json').toString()
+
+  })
+
+  router.get('/api/externalUser/runWayListAll', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/externalUser/runWayListAll.json').toString()
+
+  })
+
+  router.get('/api/externalUser/listGroup', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/externalUser/listGroup.json').toString()
+
+  })
+  
+  router.get('/api/externalUser/listOwner', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/externalUser/listOwner.json').toString()
+
+  })
+
+  router.get('/api/externalUser/quitUserRelationExUserList', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/externalUser/quitUserRelationExUserList.json').toString()
+
+  })
 
 
 

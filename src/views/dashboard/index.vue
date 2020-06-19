@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <el-button @click="handleClick">获取</el-button>
+    <!-- <el-button @click="handleClick">获取</el-button> -->
     <div class="dashboard-text">name: {{ name }}</div>
   </div>
 </template>
@@ -15,14 +15,6 @@ export default {
   },
   mounted() {},
   methods: {
-    handleClick() {
-      this.$store
-        .dispatch('permission/getListAll')
-        .then(() => {})
-        .catch(err => {
-          console.log(err)
-        })
-    }
   }
 }
 </script>

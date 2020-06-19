@@ -1,1 +1,166 @@
-{"items":[],"total":0,"pageNumber":0,"pageSize":0}
+{
+    "items": [
+        {
+            "qq": null,
+            "birthday": "2020-06-09T16:00:00.000Z",
+            "createtime": "2020-06-17 09:45:37",
+            "address": null,
+            "delFollow": true,
+            "description": "",
+            "remark": "徽信支付",
+            "remarkMobiles": "13750870697",
+            "source": null,
+            "microBlog": null,
+            "version": 26,
+            "uuid": 37,
+            "tags": [
+                {
+                    "groupName": "测试标签",
+                    "tagName": "哈哈哈",
+                    "type": 1,
+                    "uuid": 10
+                },
+                {
+                    "groupName": "测试提交",
+                    "tagName": "请求",
+                    "type": 1,
+                    "uuid": 11
+                },
+                {
+                    "groupName": "测试专用1号",
+                    "tagName": "test2",
+                    "type": 1,
+                    "uuid": 54
+                },
+                {
+                    "groupName": "测试专用1号",
+                    "tagName": "test3",
+                    "type": 1,
+                    "uuid": 55
+                },
+                {
+                    "groupName": "持股时长1",
+                    "tagName": "短线投机",
+                    "type": 1,
+                    "uuid": 56
+                }
+            ],
+            "createdAt": "2020-06-16 21:41:44",
+            "externalUser": {
+                "externalUserId": "wmrbZlEAAAAl1YucPnBI0RFljQuDdZHQ",
+                "name": "徽信支付",
+                "avatar": "http://wx.qlogo.cn/mmhead/Q3auHgzwzM5NjVzdTDREceu8SaWAnbTicTfKfTgjnKibNV8SzKZIEbOg/0",
+                "uuid": 21
+            },
+            "deleted": true,
+            "remarkCorpName": null,
+            "user": {
+                "name": "陆浩然",
+                "uuid": 8,
+                "userId": "HuiXinZhiFu"
+            },
+            "age": 1,
+            "email": null,
+            "updatedAt": "2020-06-18 17:02:16"
+        },
+        {
+            "qq": null,
+            "birthday": null,
+            "createtime": "2020-06-17 17:49:03",
+            "address": null,
+            "delFollow": true,
+            "description": "",
+            "remark": "",
+            "remarkMobiles": "",
+            "source": null,
+            "microBlog": null,
+            "version": 5,
+            "uuid": 29,
+            "tags": {},
+            "createdAt": "2020-06-16 21:41:43",
+            "externalUser": {
+                "externalUserId": "wmrbZlEAAAv7Hos3NJ2i4qTmEiwrHDFg",
+                "name": "gion",
+                "avatar": "http://wx.qlogo.cn/mmhead/icFTnRoibgibp9XIKibVJiagH0onnKlC8WdmzRJiakxuG5aPr12maV7Q896g/0",
+                "uuid": 19
+            },
+            "deleted": true,
+            "remarkCorpName": null,
+            "user": {
+                "name": "朱余朋",
+                "uuid": 19,
+                "userId": "zeness"
+            },
+            "age": null,
+            "email": null,
+            "updatedAt": "2020-06-17 17:51:06"
+        },
+        {
+            "qq": null,
+            "birthday": null,
+            "createtime": "2020-06-17 17:03:14",
+            "address": null,
+            "delFollow": true,
+            "description": "",
+            "remark": "",
+            "remarkMobiles": "",
+            "source": null,
+            "microBlog": null,
+            "version": 6,
+            "uuid": 28,
+            "tags": {},
+            "createdAt": "2020-06-16 21:41:43",
+            "externalUser": {
+                "externalUserId": "wmrbZlEAAAv7Hos3NJ2i4qTmEiwrHDFg",
+                "name": "gion",
+                "avatar": "http://wx.qlogo.cn/mmhead/icFTnRoibgibp9XIKibVJiagH0onnKlC8WdmzRJiakxuG5aPr12maV7Q896g/0",
+                "uuid": 19
+            },
+            "deleted": true,
+            "remarkCorpName": null,
+            "user": {
+                "name": "何雪妮",
+                "uuid": 22,
+                "userId": "BanTangNaiKa"
+            },
+            "age": null,
+            "email": null,
+            "updatedAt": "2020-06-17 17:05:05"
+        },
+        {
+            "qq": null,
+            "birthday": null,
+            "createtime": "2020-06-17 14:00:09",
+            "address": null,
+            "delFollow": true,
+            "description": "",
+            "remark": "",
+            "remarkMobiles": "",
+            "source": null,
+            "microBlog": null,
+            "version": 1,
+            "uuid": 46,
+            "tags": {},
+            "createdAt": "2020-06-17 14:00:10",
+            "externalUser": {
+                "externalUserId": "wmrbZlEAAAv7Hos3NJ2i4qTmEiwrHDFg",
+                "name": "gion",
+                "avatar": "http://wx.qlogo.cn/mmhead/icFTnRoibgibp9XIKibVJiagH0onnKlC8WdmzRJiakxuG5aPr12maV7Q896g/0",
+                "uuid": 19
+            },
+            "deleted": true,
+            "remarkCorpName": null,
+            "user": {
+                "name": "陆浩然",
+                "uuid": 8,
+                "userId": "HuiXinZhiFu"
+            },
+            "age": null,
+            "email": null,
+            "updatedAt": "2020-06-17 14:01:34"
+        }
+    ],
+    "total": 4,
+    "pageNumber": 0,
+    "pageSize": 20
+}

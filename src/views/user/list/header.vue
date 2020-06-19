@@ -84,7 +84,7 @@ export default {
     },
     handleRefresh() {
       this.$emit('handleRefresh')
-      //   this.query = this.$options.data().query
+        this.query = this.$options.data().query
     }
   }
 }

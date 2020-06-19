@@ -33,12 +33,15 @@ function generatePermissionRoutes(routes) {
     routes[key].map(item => {
 
       if (item.path) {
-        const url =  item.code.replace('_','/')
+        // const url =  item.code.replace('_','/')
+
+        const part = item.component.slice(2).split('/').slice(1).join("/")
+
 
         firstObj.children.push({
-          path: '/'+ url,
+          path: item.route,
           name: item.code,
-          component: view(url),
+          component: view(part),
           meta: {
             title: item.menuTitle
           }
@@ -94,7 +97,7 @@ const actions = {
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-        console.log(err)
+        console.error(err)
         commit('TOGGLE_LOADING', false)
         reject()
       })
@@ -113,7 +116,7 @@ const actions = {
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-        console.log(err)
+        console.error(err)
         commit('TOGGLE_LOADING', false)
         reject()
       })
@@ -129,7 +132,6 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getListMy().then((res) => {
-        console.log(res)
         if (Object.keys(res.items).length) {
           commit('SAVE_LIST', res.items)
         }
@@ -137,7 +139,7 @@ const actions = {
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-        console.log(err)
+        console.error(err)
         commit('TOGGLE_LOADING', false)
         reject()
       })
@@ -162,7 +164,7 @@ const actions = {
         commit('TOGGLE_LOADING', false)
         resolve(filted)
       }).catch(err => {
-        console.log(err)
+        console.error(err)
         commit('TOGGLE_LOADING', false)
         reject()
       })

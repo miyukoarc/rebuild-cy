@@ -4,9 +4,11 @@ import {
   deleteDepartment,
   getDepartmentList,
   locateDepartmentLeader,
-  updateDepartment
+  updateDepartment,
+  getDepartments
 } from '@/api/department'
 import {flatten} from '@/utils/common'
+
 const state = {
     /**
      * 部门列表
@@ -174,6 +176,21 @@ const actions = {
     })
 
   },
+  /**
+   * 获取所有部门（列表）
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  getDepartments({commit},payload){
+     return new Promise((resolve,reject)=>{
+         getDepartments(payload).then(res=>{
+             commit('SAVE_FLATTENLIST',res.items)
+             resolve()
+         }).catch(err=>{
+             reject()
+         })
+     })
+  }
 
 }
 

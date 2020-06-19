@@ -4,9 +4,11 @@
       <list-header></list-header>
     </el-header>-->
     <el-card class="content-spacing">
-      <div>
-        <el-button size="small" @click="handleCreate">创建部门</el-button>
-      </div>
+      <tool-bar :hasExport="false" :hasImport="false">
+        <div slot="right">
+          <el-button size="small" @click="handleCreate">创建部门</el-button>
+        </div>
+      </tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -47,6 +49,7 @@
 import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
+import ToolBar from './tool-bar'
 
 import { mapState, mapMutations, mapActions } from 'vuex'
 
@@ -54,7 +57,8 @@ export default {
   components: {
     ListHeader,
     UserDetail,
-    FormDialog
+    FormDialog,
+    ToolBar
     // mHeadedr
   },
   data() {
@@ -118,9 +122,9 @@ export default {
       const payload = this.departmentList[index]
       console.log(payload)
       //   this.$store.commit('department/SAVE_DETAIL', val)
-      //   this.$refs['formDialog'].event = 'EditTemplate'
-      //   this.$refs['formDialog'].eventType = 'edit'
-      //   this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].event = 'EditTemplate'
+      this.$refs['formDialog'].eventType = 'edit'
+      this.$refs['formDialog'].dialogVisible = true
     },
     handleDelete(val) {
       console.log(val)
@@ -152,7 +156,11 @@ export default {
         })
     },
     handleDetail() {},
-    handleCreate() {}
+    handleCreate() {
+      this.$refs['formDialog'].event = 'CreateTemplate'
+      this.$refs['formDialog'].eventType = 'create'
+      this.$refs['formDialog'].dialogVisible = true
+    }
   }
 }
 </script>

@@ -75,3 +75,16 @@ export const updateDepartment = (payload) => {
         data: payload
     })
 }
+
+
+
+/**
+ * 更新部门
+ * 
+ */
+export const getDepartments = () => {
+    return request({
+        url: '/department/listDep',
+        method: 'get',
+    })
+}

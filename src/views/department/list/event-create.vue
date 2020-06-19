@@ -1,12 +1,12 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" label-width="100px">
     <el-form-item label="名称" prop="name">
-      <el-input v-model="form.name"></el-input>
+      <el-input v-model.trim="form.name"></el-input>
     </el-form-item>
     <el-form-item label="上级">
         <el-checkbox v-model="hasParent">是否为子部门</el-checkbox>
     </el-form-item>
-    <el-form-item>
+    <el-form-item v-if="hasParent">
         <el-select  v-model="form.parent" placeholder="请选择">
             <el-option
                 :disabled="!hasParent"
@@ -18,10 +18,11 @@
         </el-select>
     </el-form-item>
     
-    <el-form-item>
+    <div class="text-align-center">
+              <el-button size="small" @click="handleCancel">取消</el-button>
+
       <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
-      <el-button type="danger" size="small" @click="handleCancel">取消</el-button>
-    </el-form-item>
+    </div>
   </el-form>
 </template>
 

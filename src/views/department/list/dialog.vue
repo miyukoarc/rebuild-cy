@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body width="600px" :close-on-click-modal="false">
+        <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" center append-to-body width="600px" :close-on-click-modal="false">
             <div>
                 <component :is="event" />
             </div>
@@ -9,9 +9,7 @@
 </template>
 
 <script>
-// import EventDisable from './event-disable.vue'
-// import EventEnable from './event-enable.vue'
-// import EventKick from './event-kick.vue'
+
 import CreateTemplate from './event-create.vue'
 import EditTemplate from './event-edit.vue'
 import {mapState} from 'vuex'

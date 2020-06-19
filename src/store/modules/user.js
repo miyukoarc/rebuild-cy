@@ -26,7 +26,7 @@ const getDefaultState = () => {
     /**
      * 所有员工列表 无分页
      */
-    userListAll: [],
+    userListAll: [],//user/listAll
 
     /**
      * 员工列表 有分页
@@ -81,7 +81,7 @@ const mutations = {
    * @param {*} payload 
    */
   SAVE_USERLISTALL(state, payload) {
-    state.payload = payload
+    state.userListAll = payload
   },
 
 

@@ -1,1 +1,75 @@
-{"items":[],"total":0,"pageNumber":0,"pageSize":0}
+{
+    "items": [
+        {
+            "toUser": [
+                {
+                    "name": "陆浩然",
+                    "uuid": 8,
+                    "userId": "HuiXinZhiFu"
+                }
+            ],
+            "createdAt": "2020-06-18 13:32:51",
+            "deleted": false,
+            "action": null,
+            "type": "MSG",
+            "uuid": 6,
+            "version": 0,
+            "word": "你好",
+            "updatedAt": "2020-06-18 13:32:51"
+        },
+        {
+            "toUser": [
+                {
+                    "name": "陆浩然",
+                    "uuid": 8,
+                    "userId": "HuiXinZhiFu"
+                }
+            ],
+            "createdAt": "2020-06-16 22:13:07",
+            "deleted": false,
+            "action": null,
+            "type": "MSG",
+            "uuid": 4,
+            "version": 0,
+            "word": "我保证",
+            "updatedAt": "2020-06-16 22:13:07"
+        },
+        {
+            "toUser": [
+                {
+                    "name": "李恒光",
+                    "uuid": 9,
+                    "userId": "13a443b49ee6321a89a0ee964c2be60c"
+                }
+            ],
+            "createdAt": "2020-06-16 21:53:11",
+            "deleted": false,
+            "action": null,
+            "type": "MSG",
+            "uuid": 3,
+            "version": 0,
+            "word": "赚钱",
+            "updatedAt": "2020-06-16 21:53:11"
+        },
+        {
+            "toUser": [
+                {
+                    "name": "陆浩然",
+                    "uuid": 8,
+                    "userId": "HuiXinZhiFu"
+                }
+            ],
+            "createdAt": "2020-06-16 21:49:07",
+            "deleted": false,
+            "action": null,
+            "type": "MSG",
+            "uuid": 1,
+            "version": 0,
+            "word": "保证",
+            "updatedAt": "2020-06-16 21:49:07"
+        }
+    ],
+    "total": 4,
+    "pageNumber": 0,
+    "pageSize": 10
+}

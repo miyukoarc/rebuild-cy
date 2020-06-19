@@ -24,7 +24,7 @@
         </div>-->
       </el-container>
 
-      <div style="text-align:center;">
+      <div style="text-align:center;" v-if="env==='offline'">
           <el-t-button size="mini" @click="handleVirtualLogin">模拟登录</el-t-button>
           <!-- <el-button size="mini" @click="handleVirtualLogin">模拟登录</el-button> -->
       </div>
@@ -69,6 +69,11 @@ export default {
       passwordType: 'password',
       redirect: undefined
     }
+  },
+  computed:{
+      env(){
+          return process.env.VUE_APP_WORK
+      }
   },
   watch: {
     $route: {

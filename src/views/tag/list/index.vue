@@ -1,59 +1,71 @@
 <template>
-  <div class="app-container fill">
+  <div class="app-container">
     <el-card class="content-spacing">
-      <list-header></list-header>
+      <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 
     <el-card class="content-spacing">
-      <el-button size="small" @click="handleCreate" type="primary">添加标签组</el-button>
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+          <el-button type="primary">添加标签组</el-button>
+      </tool-bar>
     </el-card>
 
-    <el-card class="content-spacing table-container">
-      <el-table
-        :data="tagList"
-        v-loading="loading"
-        stripe
-        lazy
-        highlight-current-row
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column label="标签组名" prop="groupName"></el-table-column>
+    <el-card class="content-spacing">
+      <div>
+        <el-table
+          v-loading="loading"
+          :data="listAll"
+          style="width: 100%"
+          row-key="uuid"
+          stripe
+          lazy
+          highlight-current-row
+        >
+          <!-- <el-table-column type="selection"></el-table-column> -->
+          <el-table-column label="标签组名" align="left"></el-table-column>
+          <el-table-column label="标签" align="left"></el-table-column>
+          <!-- <el-table-column label="文章描述" align="left"></el-table-column> -->
+          <el-table-column label="操作" align="left">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
+              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
+              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
+            </template>
+          </el-table-column>
+        </el-table>
 
-        <el-table-column label="标签" min-width="600px">
-          <template v-slot="scoped">
-            <div>
-              <el-tag
-                v-for="item in scoped.row.tags"
-                :key="item.uuid"
-                class="tag-item"
-                type="primary"
-              >{{item.tagName}}</el-tag>
-            </div>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="操作">
-          <template v-slot="scoped">
-            <div>
-              <el-t-button size="small" type="primary" @click="handleEdit(scoped.$index,scoped.row)">编辑</el-t-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-      
-      <form-dialog ref="formDialog" />
+        <el-pagination
+          background
+          class="pager"
+          layout="total,prev, pager, next,jumper"
+          :total="pageConfig.total"
+          :current-page.sync="pageConfig.pageNumber"
+          :page-size="pageConfig.pageSize"
+          @current-change="changePage"
+        />
+      </div>
     </el-card>
+
+    <form-dialog ref="formDialog"></form-dialog>
   </div>
 </template>
 
 <script>
-import Header from './header'
-import { mapState } from 'vuex'
+// import mHeadedr from "./header";
+import UserDetail from './detail.vue'
+import ListHeader from './header.vue'
 import FormDialog from './dialog'
+import ToolBar from './tool-bar'
+import { mapState, mapMutations, mapActions } from 'vuex'
+
 export default {
   components: {
+    ListHeader,
+    UserDetail,
     FormDialog,
-    'list-header': Header
+    ToolBar
+    // mHeadedr
   },
   data() {
     return {
@@ -62,54 +74,55 @@ export default {
         pageNumber: 0,
         pageSize: 10
       },
-      query: {
-          groupName:'',
-          page: 0,
-          size: 200,
-          tagName: ''
-      }
 
+      query: {
+        page: 0,
+        size: 10,
+        flag: true,
+        name: '',
+        tagIds: '',
+        userId: '',
+        roleUuid: ''
+      }
     }
   },
+  watch: {},
   computed: {
     ...mapState({
-      loading: state => state.tag.loading,
-      tagList: state => state.tag.tagList,
-      tagListPage: state => state.tag.tagListPage
-    })
+      tagListAll: state => state.tag.tagListAll,
+
+      loading: state => state.externalUser.loading,
+      listAll: state => state.externalUser.listAll,
+      page: state => state.externalUser.page
+    }),
+    routesData() {
+      return this.routes
+    }
   },
   created() {
-    this.initData(this.query)
-    
-  },
-  mounted(){
-    this.$bus.$on('search',res=>{
-        console.log(res)
-        const {groupName,tagName} = res
-        this.query.groupName = groupName
-        this.query.tagName = tagName
-        this.initData(this.query)
-    })
-    this.$bus.$on('refresh',res=>{
-        this.query = this.$options.data().query//初始化query
-        this.initData(this.query)
-    })
-    this.$bus.$on('handleFresh',res=>{
-        console.log('handleFresh')
-        this.initData(this.query)
-    })
-  },
-  beforeDestroy(){
-      this.$bus.$off('search')
-      this.$bus.$off('refresh')
-      this.$bus.$off('handleFresh')
+    this.initDataList(this.query)
+    this.initFilter()
   },
   methods: {
-    initData(payload) {
-      this.pageConfig.total = this.tagListPage.total
-      this.pageConfig.pageNumber = this.tagListPage.pageNumber
+    doExport(val) {
+      console.log(val)
+    },
+    /**
+     * 初始化筛选信息
+     */
+    initFilter() {
       this.$store
-        .dispatch('tag/getTagList',payload)
+        .dispatch('tag/getListAllTag')
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
+
+      this.$store
+        .dispatch('user/getAllUserList')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -118,50 +131,64 @@ export default {
           })
         })
     },
-
-    handleSelectionChange() {},
-    changePage() {},
-    handleCreate() {
-      //    this.$bus.$emit('showDialog')
-      this.$refs['formDialog'].eventType = 'AddComponent'
-      this.$refs['formDialog'].event = 'add'
-      this.$refs['formDialog'].dialogVisible = true
+    /**
+     * 初始化表格信息
+     */
+    initDataList(payload) {
+      this.$store
+        .dispatch('externalUser/getListAll', payload)
+        .then(() => {
+          //初始化分页
+          this.pageConfig.pageNumber = this.page.pageNumber + 1
+          this.pageConfig.total = this.page.total
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
     },
-    handleEdit(index,row) {
-        console.log(index ,row)
-      // this.$bus.$emit('showDialog',{type:'edit'})
-      // this.$bus.$emit('showDialog')
-      const payload = this.tagList[index]
-    //   
-    //   console.log(payload)
-      this.$store.commit('tag/SAVE_GROUP', payload)
-      
-      this.$refs['formDialog'].eventType = 'EditComponent'
-      this.$refs['formDialog'].event = 'edit'
-      this.$refs['formDialog'].dialogVisible = true
+    handleDetail(val) {
+      const payload = this.userList[val].uuid
+      this.$router.push({
+        path: '/user/detail',
+        query: { uuid: payload }
+      })
+    },
+    handleSearch(val) {
+      const { tagIds, name } = val
+      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
+      this.query.name = name ? name : this.query.name
+      console.log(val, 'handleSearch')
+      this.initDataList(this.query)
+    },
+    handleRefresh() {
+      console.log('handleRefresh')
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
+    },
+    changePage(key) {
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key - 1
+      this.initDataList(this.query)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.el-card {
-  .pager {
-    padding: 20px 0;
-    text-align: center;
-  }
-}
-
-.tag-item {
-  margin-right: 10px;
-}
-.fill {
-  height: calc(100% - 84px);
+.user-card {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+}
+</style>
+
+<style lang="scss">
+.pager {
+  padding: 20px 0;
+  text-align: center;
 }
 
-.table-container {
-  flex: 1;
-}
+
 </style>

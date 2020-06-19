@@ -48,7 +48,7 @@ export const getCustomerStatistics = (payload) => {
 export const getList = (payload) => {
   return request({
     url: '/externalUser/list',
-    method: 'post',
+    method: 'get',
     params: payload
   })
 }
@@ -61,7 +61,7 @@ export const getList = (payload) => {
 export const getListAll = (payload) => {
   return request({
     url: '/externalUser/listAll',
-    method: 'post',
+    method: 'get',
     params: payload
   })
 }
@@ -73,7 +73,7 @@ export const getListAll = (payload) => {
 export const getListExUserByUserId = (payload) => {
   return request({
     url: '/externalUser/listExUserByUserId',
-    method: 'post',
+    method: 'get',
     params: payload
   })
 }
@@ -85,7 +85,7 @@ export const getListExUserByUserId = (payload) => {
 export const getExternalUserListMy = (payload) => {
   return request({
     url: '/externalUser/listMy',
-    method: 'post',
+    method: 'get',
     params: payload
   })
 }
@@ -97,7 +97,7 @@ export const getExternalUserListMy = (payload) => {
 export const getQuitUserRelationExUserList = (payload) => {
   return request({
     url: '/externalUser/quitUserRelationExUserList',
-    method: 'post',
+    method: 'get',
     params: payload
   })
 }
@@ -109,7 +109,7 @@ export const getQuitUserRelationExUserList = (payload) => {
 export const redistributionExUser = (payload) => {
   return request({
     url: '/externalUser/redistributionExUser',
-    method: 'post',
+    method: 'get',
     data: payload
   })
 }
@@ -145,7 +145,7 @@ export const removeTag = (payload) => {
 export const getRunWayList = (payload) => {
   return request({
     url: '/externalUser/runWayList',
-    method: 'post',
+    method: 'get',
     params: payload
   })
 }
@@ -158,7 +158,7 @@ export const getRunWayList = (payload) => {
 export const getRunWayListAll = (payload) => {
   return request({
     url: '/externalUser/runWayListAll',
-    method: 'post',
+    method: 'get',
     params: payload
   })
 }

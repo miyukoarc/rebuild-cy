@@ -1,0 +1,32 @@
+{
+    "items": [
+        {
+            "wxDepartmentId": 1,
+            "name": "杭州超盈信息技术有限公司",
+            "uuid": 1
+        },
+        {
+            "wxDepartmentId": 2,
+            "name": "运营一部",
+            "uuid": 2
+        },
+        {
+            "wxDepartmentId": 3,
+            "name": "技术部",
+            "uuid": 3
+        },
+        {
+            "wxDepartmentId": 4,
+            "name": "测试部门",
+            "uuid": 4
+        },
+        {
+            "wxDepartmentId": 5,
+            "name": "测试",
+            "uuid": 5
+        }
+    ],
+    "total": 5,
+    "pageNumber": 0,
+    "pageSize": 1000
+}

@@ -3,9 +3,17 @@
     <!-- <el-header height="auto" style="padding:0"> -->
     <!-- <el-card class="content-spacing">
       <list-header></list-header>
-    </el-card> -->
+    </el-card>-->
 
     <!-- </el-header> -->
+
+    <el-card class="content-spacing">
+      <tool-bar :hasExport="false" :hasImport="false">
+        <div slot="right">
+          <el-button type="small" @click="handleCreate">新建角色</el-button>
+        </div>
+      </tool-bar>
+    </el-card>
 
     <el-card class="content-spacing">
       <div>
@@ -19,32 +27,13 @@
           highlight-current-row
           @row-click="handleDetail"
         >
-        <el-table-column type="selection" ></el-table-column>
+          <el-table-column type="selection"></el-table-column>
           <el-table-column prop="name" label="角色名称" align="left"></el-table-column>
-          <!-- <el-table-column label="部门" align="center">
-              <template v-slot="scoped">
-                  <div>
-
-                  </div>
-              </template>
-          </el-table-column>
-          <el-table-column label="角色" align="center">
-              <template v-slot="scoped">
-                  <div>
-                  </div>
-              </template>
-          </el-table-column>
-          <el-table-column label="授权状态" align="center" >
-              <template v-slot="scoped">
-                  <div>
-                      {{scoped.row.status}}
-                  </div>
-              </template>
-          </el-table-column> -->
           <el-table-column label="操作" align="center" width="240">
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button>
-              <el-button type="primary" size="mini" >设置</el-button>
+              <el-button size="mini" @click="handlePermission">权限</el-button>
+              <el-button type="primary" size="mini"  @click.stop="handleEdit(scope.row)">编辑</el-button>
+
               <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -61,6 +50,7 @@
 import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
+import ToolBar from './tool-bar'
 
 import { mapState, mapMutations, mapActions } from 'vuex'
 
@@ -68,7 +58,8 @@ export default {
   components: {
     ListHeader,
     UserDetail,
-    FormDialog
+    FormDialog,
+    ToolBar
     // mHeadedr
   },
   data() {
@@ -88,16 +79,8 @@ export default {
   created() {
     this.initDataList()
   },
-  mounted() {
-    this.$bus.$on('showFormDialog', target => {
-      this.$refs['formDialog'].event = 'CreateTemplate'
-      this.$refs['formDialog'].eventType = 'create'
-      this.$refs['formDialog'].dialogVisible = true
-    })
-  },
-  beforeDestroy() {
-    this.$bus.$off('showFormDialog')
-  },
+  mounted() {},
+  beforeDestroy() {},
   methods: {
     handleClick(val, e) {
       e.stopPropagation()
@@ -105,10 +88,9 @@ export default {
       alert('点击')
     },
 
-    handleRowClick(value) {
-      this.$store.commit('role/SAVE_DETAIL', value)
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
+    handleCreate() {
+      this.$refs['formDialog'].event = 'CreateTemplate'
+      this.$refs['formDialog'].eventType = 'create'
       this.$refs['formDialog'].dialogVisible = true
     },
     sortChange(val) {
@@ -163,6 +145,7 @@ export default {
           console.log(err)
         })
     },
+    handlePermission(){},
     handleDetail() {}
   }
 }
