@@ -1,7 +1,7 @@
 import {
   getList,
   getListAll,
-  getListMy,
+  getPermissionListMy,
   getListRole
 } from '@/api/permission'
 
@@ -126,18 +126,19 @@ const actions = {
    * 我的权限列表
    * @param {*} param0 
    */
-  getListMy({
+  getPermissionListMy({
     commit
   }) {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
-      getListMy().then((res) => {
-        if (Object.keys(res.items).length) {
-          commit('SAVE_LIST', res.items)
-        }
-
+      getPermissionListMy().then((res) => {
+        commit('SAVE_LIST', res.items)
+        const filted = generatePermissionRoutes(res.items)
+        const accessed = setPermissionMap(res.items)
+        commit('SET_ROUTES', filted)
+        commit('SET_PERMISSIONMAP', accessed)
         commit('TOGGLE_LOADING', false)
-        resolve()
+        resolve(filted)
       }).catch(err => {
         console.error(err)
         commit('TOGGLE_LOADING', false)

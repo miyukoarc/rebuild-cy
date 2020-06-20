@@ -65,15 +65,15 @@ router.beforeEach(async (to, from, next) => {
 
           console.log(roleCode)
 
-          if (roleCode === 'super') {
-            console.log('超管菜单')
-            await store.dispatch('menu/getAllMenuList').then(()=>{}).catch(err=>{console.log(err)})
-          } else {
-            console.log('普通菜单')
+        //   if (roleCode === 'super') {
+        //     console.log('超管菜单')
+        //     await store.dispatch('menu/getAllMenuList').then(()=>{}).catch(err=>{console.log(err)})
+        //   } else {
+        //     console.log('普通菜单')
             await store.dispatch('menu/getMyMenuList')
-          }
+        //   }
 
-          const accessed = await store.dispatch('permission/getListRole', roleCode)
+          const accessed = await store.dispatch('permission/getPermissionListMy')
 
           console.log(accessed)
 

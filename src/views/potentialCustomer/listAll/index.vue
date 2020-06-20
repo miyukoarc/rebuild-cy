@@ -8,7 +8,8 @@
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
           <div slot="right">
               <el-button>新增用户</el-button>
-              <el-button type="primary">分配</el-button>
+              <el-t-button type="primary" :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']" :popAuth="true">分配</el-t-button>
+              <!-- <el-t-button >分配</el-t-button> -->
           </div>
       </tool-bar>
     </el-card>
@@ -45,7 +46,7 @@
           <el-table-column label="添加员工" align="left"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']" :popAuth="true">详情</el-t-button>
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
@@ -111,7 +112,9 @@ export default {
 
       loading: state => state.externalUser.loading,
       listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
+      page: state => state.externalUser.page,
+
+      permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
       return this.routes

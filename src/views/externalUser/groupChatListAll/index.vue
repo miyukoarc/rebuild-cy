@@ -1,10 +1,11 @@
 <template>
   <div class="app-container">
-
+    <!-- <el-header height="auto" style="padding:0"> -->
     <el-card class="content-spacing">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 
+    <!-- </el-header> -->
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
     </el-card>
@@ -13,53 +14,35 @@
       <div>
         <el-table
           v-loading="loading"
-          :data="listAll"
+          :data="listGroup"
           style="width: 100%"
           row-key="uuid"
           stripe
           lazy
           highlight-current-row
         >
-          <el-table-column type="selection"></el-table-column>
-          <el-table-column label="客户名" align="left">
-            <template v-slot="scope">
-              <div class="user-card" v-if="scope.row.externalUser">
-                <el-image
-                  :src="scope.row.externalUser.avatar"
-                  lazy
-                  
-                  style="width:30px;height:30px;margin-right:10px"
-                ></el-image>
-                <!-- <img :src="scope.row.externalUser.avatar" alt=""  style="width:30px;height:30px;margin-right:10px"> -->
-                <span>{{scope.row.externalUser.name}}</span>
-              </div>
+          <!-- <el-table-column type="selection"></el-table-column> -->
+          <el-table-column prop="name" label="群名称" align="left"></el-table-column>
+          <el-table-column label="群主" align="left">
+            <template v-slot="scoped">
+              <div v-if="scoped.row.owner">{{scoped.row.owner.name}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="所属客服" align="left">
-            <template v-slot="scope">
-              <div>{{scope.row.user.name}}</div>
+          <el-table-column prop="countNum" label="群人数" align="left"></el-table-column>
+          <el-table-column label="昨日入群" align="left">
+            <template v-slot="scoped">
+              <div>{{scoped.row.countNum}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="标签" align="left">
-            <template v-slot="scope">
-              <!-- <div>{{scope.row.role.name}}</div> -->
+          <el-table-column label="昨日退群" align="left">
+            <template v-slot="scoped">
+              <div>{{scoped.row.countNum}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="添加时间" align="left" prop="createtime">
-            
-          </el-table-column>
-
-          <el-table-column label="渠道来源" align="left">
-            <template v-slot="scope">
-              <!-- <div>{{scope.row.status}}</div> -->
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="left">
+          <el-table-column label="创建时间" prop="createdAt"></el-table-column>
+          <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
-              <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" :popAuth="true" :auth="permissionMap[][]">详情</el-t-button>
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
+              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -107,23 +90,20 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        externalUuid: '',
+        userId: ''
       }
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
+      //   roleList: state => state.role.roleList,
+      listOwner: state => state.externalUser.departmentList,
 
       loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page,
-      permissionMap: state => state.permission.permissionMap
+      listGroup: state => state.externalUser.listGroup,
+      listGroupPage: state => state.externalUser.listGroupPage
     }),
     routesData() {
       return this.routes
@@ -133,16 +113,15 @@ export default {
     this.initDataList(this.query)
     this.initFilter()
   },
+  mounted() {},
+  beforeDestroy() {},
   methods: {
     doExport(val) {
       console.log(val)
     },
-    /**
-     * 初始化筛选信息
-     */
     initFilter() {
       this.$store
-        .dispatch('tag/getListAllTag')
+        .dispatch('externalUser/getListOwner')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -150,29 +129,14 @@ export default {
             message: '初始化失败'
           })
         })
-
-
-        this.$store
-        .dispatch('user/getAllUserList')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
-        
     },
-    /**
-     * 初始化表格信息
-     */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('externalUser/getListGroup', payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.listGroupPage.pageNumber + 1
+          this.pageConfig.total = this.listGroupPage.total
         })
         .catch(err => {
           this.$message({
@@ -189,9 +153,11 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
+      const { externalUuid, userId } = val
+      this.query.externalUuid = externalUuid
+        ? externalUuid
+        : this.query.externalUuid
+      this.query.userId = userId ? userId : this.query.userId
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },
@@ -210,10 +176,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-card{
-    display: flex;
-    align-items: center;
-}
 </style>
 
 <style lang="scss">
@@ -221,8 +183,6 @@ export default {
   padding: 20px 0;
   text-align: center;
 }
-
-
 // .app-container {
 //   border-top: 1px solid #e9e9e9;
 //   background: white;

@@ -23,7 +23,7 @@ export const getListAll = () => {
 /**
  * 我的权限列表
  */
-export const getListMy = () => {
+export const getPermissionListMy = () => {
   return request({
     url: '/permission/listMy',
     method: 'get'

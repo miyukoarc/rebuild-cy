@@ -1,0 +1,3401 @@
+{
+    "items": {
+        "user": [
+            {
+                "code": "user_joinQrcode",
+                "menuTitle": "查看二维码",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "user",
+                "icon": "",
+                "sort": 90,
+                "title": "查看二维码",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 90,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "user_listAll",
+                "menuTitle": "员工列表",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "user",
+                "icon": "",
+                "sort": 100,
+                "title": "查看员工列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 87,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listAll",
+                "component": "@/views/user/listAll",
+                "deleted": false,
+                "route": "/user/listAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "user_detail",
+                "menuTitle": "查看员工详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "user",
+                "icon": "",
+                "sort": 101,
+                "title": "查看员工详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 88,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "detail/:uuid",
+                "component": "@/views/user/detail",
+                "deleted": false,
+                "route": "/user/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "user_manager",
+                "menuTitle": "员工管理",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "user",
+                "icon": "user",
+                "sort": 104,
+                "title": "员工管理",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 62,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "user_userActiveCount",
+                "menuTitle": "活跃状态",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "user",
+                "icon": "",
+                "sort": 111,
+                "title": "活跃状态",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 89,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "userActiveCount",
+                "component": "@/views/user/userActiveCount",
+                "deleted": false,
+                "route": "/user/userActiveCount",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "user_update",
+                "menuTitle": "修改员工信息",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "user",
+                "icon": "",
+                "sort": 120,
+                "title": "修改员工信息",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 85,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "user_delete",
+                "menuTitle": "删除员工",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "user",
+                "icon": "",
+                "sort": 120,
+                "title": "删除员工",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 86,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "externalUser": [
+            {
+                "code": "externalUser_listExUserByUserId",
+                "menuTitle": "根据用户uuid查询对应的客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 100,
+                "title": "根据用户uuid查询对应的客户",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 5,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "listExUserByUserId",
+                "component": "@/views/externalUser/listExUserByUserId",
+                "deleted": false,
+                "route": "/externalUser/listExUserByUserId",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_listMy",
+                "menuTitle": "客户的列表具备筛选条件",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 100,
+                "title": "客户的列表具备筛选条件",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 11,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "listMy",
+                "component": "@/views/externalUser/listMy",
+                "deleted": false,
+                "route": "/externalUser/listMy",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_groupDetail",
+                "menuTitle": "群详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 100,
+                "title": "群详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 13,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "groupDetail",
+                "component": "@/views/externalUser/groupDetail",
+                "deleted": false,
+                "route": "/externalUser/groupDetail",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_manager",
+                "menuTitle": "客户管理",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "externalUser",
+                "sort": 101,
+                "title": "客户管理",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 1,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_detail",
+                "menuTitle": "查看客户详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 101,
+                "title": "查看客户详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 3,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "detail/:uuid",
+                "component": "@/views/externalUser/detail",
+                "deleted": false,
+                "route": "/externalUser/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_listAll",
+                "menuTitle": "全部客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 101,
+                "title": "查看所有客户列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 9,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "listAll",
+                "component": "@/views/externalUser/listAll",
+                "deleted": false,
+                "route": "/externalUser/listAll",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_runWayListMy",
+                "menuTitle": "我的流失客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 102,
+                "title": "查看我的流失客户列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 14,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "runWayListMy",
+                "component": "@/views/externalUser/runWayListMy",
+                "deleted": false,
+                "route": "/externalUser/runWayListMy",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_runWayListAll",
+                "menuTitle": "全部流失客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 103,
+                "title": "查看所有流失客户列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 16,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "runWayListAll",
+                "component": "@/views/externalUser/runWayListAll",
+                "deleted": false,
+                "route": "/externalUser/runWayListAll",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_quitUserRelationExUserList",
+                "menuTitle": "离职员工的客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 104,
+                "title": "查看离职成员客户列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 4,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "quitUserRelationExUserList",
+                "component": "@/views/externalUser/quitUserRelationExUserList",
+                "deleted": false,
+                "route": "/externalUser/quitUserRelationExUserList",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_quitUserRelationExUserDetail",
+                "menuTitle": "查看离职成员客户详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 104,
+                "title": "查看离职成员客户详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 8,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "quitUserRelationExUserDetail",
+                "component": "@/views/externalUser/quitUserRelationExUserDetail",
+                "deleted": false,
+                "route": "/externalUser/quitUserRelationExUserDetail",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_update",
+                "menuTitle": "更新客户资料",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 110,
+                "title": "更新客户资料",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 2,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_remark",
+                "menuTitle": "修改客户备注",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 110,
+                "title": "修改客户备注",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 10,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_addTag",
+                "menuTitle": "修改客户备注",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 120,
+                "title": "修改客户备注",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 17,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_redistributionExUser",
+                "menuTitle": "离职成员的外部联系人再分配",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 130,
+                "title": "离职成员的外部联系人再分配",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 7,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_removeTag",
+                "menuTitle": "删除客户标签",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 130,
+                "title": "删除客户标签",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 12,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "externalUser_groupChatListAll",
+                "menuTitle": "群管理",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUser",
+                "icon": "",
+                "sort": 150,
+                "title": "查看群聊列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 15,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "groupChatListAll",
+                "component": "@/views/externalUser/groupChatListAll",
+                "deleted": false,
+                "route": "/externalUser/groupChatListAll",
+                "updatedAt": "2020-06-20 10:59:03"
+            }
+        ],
+        "tag": [
+            {
+                "code": "tag_listMy",
+                "menuTitle": "我的标签列表",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "tag",
+                "icon": "",
+                "sort": 100,
+                "title": "我的标签列表",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 24,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "listMy",
+                "component": "@/views/tag/listMy",
+                "deleted": false,
+                "route": "/tag/listMy",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "tag_deleteTagIsAudit",
+                "menuTitle": "删除标签组包含是否审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "tag",
+                "icon": "",
+                "sort": 100,
+                "title": "删除标签组包含是否审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 25,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "deleteTagIsAudit",
+                "component": "@/views/tag/deleteTagIsAudit",
+                "deleted": false,
+                "route": "/tag/deleteTagIsAudit",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "tag_updateTagIsAudit",
+                "menuTitle": "编辑标签包含是否审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "tag",
+                "icon": "",
+                "sort": 100,
+                "title": "编辑标签包含是否审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 26,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "updateTagIsAudit",
+                "component": "@/views/tag/updateTagIsAudit",
+                "deleted": false,
+                "route": "/tag/updateTagIsAudit",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "tag_addTagIsAudit",
+                "menuTitle": "添加标签包含是否审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "tag",
+                "icon": "",
+                "sort": 100,
+                "title": "添加标签包含是否审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 27,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "addTagIsAudit",
+                "component": "@/views/tag/addTagIsAudit",
+                "deleted": false,
+                "route": "/tag/addTagIsAudit",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "tag_detail",
+                "menuTitle": "Tag详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "tag",
+                "icon": "",
+                "sort": 101,
+                "title": "Tag详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 23,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "detail/:uuid",
+                "component": "@/views/tag/detail",
+                "deleted": false,
+                "route": "/tag/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "tag_listAll",
+                "menuTitle": "企业标签",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "tag",
+                "icon": "",
+                "sort": 109,
+                "title": "Tag列表根据标签组分组",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 22,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "listAll",
+                "component": "@/views/tag/listAll",
+                "deleted": false,
+                "route": "/tag/listAll",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "tag_add",
+                "menuTitle": "添加标签",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "tag",
+                "icon": "",
+                "sort": 110,
+                "title": "添加标签",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 19,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "tag_delete",
+                "menuTitle": "删除标签",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "tag",
+                "icon": "",
+                "sort": 120,
+                "title": "删除标签",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 21,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "tag_update",
+                "menuTitle": "修改标签",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "tag",
+                "icon": "",
+                "sort": 130,
+                "title": "修改标签",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 20,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            }
+        ],
+        "riskManagement": [
+            {
+                "code": "riskManagement_add",
+                "menuTitle": "添加敏感词",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 100,
+                "title": "添加敏感词",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 45,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "riskManagement_update",
+                "menuTitle": "修改敏感词",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 100,
+                "title": "修改敏感词",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 46,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "riskManagement_delete",
+                "menuTitle": "删除敏感词",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 100,
+                "title": "删除敏感词",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 47,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "riskManagement_manager",
+                "menuTitle": "风控安全",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "sensitive",
+                "sort": 103,
+                "title": "风控安全",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 35,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "riskManagement_sensitiveListAll",
+                "menuTitle": "敏感词管理",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 112,
+                "title": "查看敏感词列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 48,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "sensitiveListAll",
+                "component": "@/views/sensitive/sensitiveListAll",
+                "deleted": false,
+                "route": "/riskManagement/sensitiveListAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "riskManagement_sensitiveLogListAll",
+                "menuTitle": "敏感词触发记录",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 113,
+                "title": "查看敏感词操作记录",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 50,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "sensitiveLogListAll",
+                "component": "@/views/sensitive/sensitiveLogListAll",
+                "deleted": false,
+                "route": "/riskManagement/sensitiveLogListAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "riskManagement_actionListAll",
+                "menuTitle": "敏感行为记录",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 114,
+                "title": "查看敏感行为列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 49,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "actionListAll",
+                "component": "@/views/sensitive/actionListAll",
+                "deleted": false,
+                "route": "/riskManagement/actionListAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "riskManagement_auditListAll",
+                "menuTitle": "审核列表",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 115,
+                "title": "查看审核列表",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 51,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "auditListAll",
+                "component": "@/views/sensitive/auditListAll",
+                "deleted": false,
+                "route": "/riskManagement/auditListAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "riskManagement_auditTaglistAll",
+                "menuTitle": "标签审核列表",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 115,
+                "title": "标签审核列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 52,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "auditTaglistAll",
+                "component": "@/views/sensitive/auditTaglistAll",
+                "deleted": false,
+                "route": "/riskManagement/auditTaglistAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "riskManagement_auditPermissionlistAll",
+                "menuTitle": "权限审核审批",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 115,
+                "title": "权限审核列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 53,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "auditPermissionlistAll",
+                "component": "@/views/sensitive/auditPermissionlistAll",
+                "deleted": false,
+                "route": "/riskManagement/auditPermissionlistAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "riskManagement_auditBatchSendTaklistAll",
+                "menuTitle": "群发审核列表",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 115,
+                "title": "群发审核列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 54,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "auditBatchSendTaklistAll",
+                "component": "@/views/sensitive/auditBatchSendTaklistAll",
+                "deleted": false,
+                "route": "/riskManagement/auditBatchSendTaklistAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "riskManagement_logAll",
+                "menuTitle": "操作日志",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "riskManagement",
+                "icon": "",
+                "sort": 117,
+                "title": "查看操作日志记录",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 79,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "logAll",
+                "component": "@/views/sensitive/logAll",
+                "deleted": false,
+                "route": "/riskManagement/logAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "mediaGroup": [
+            {
+                "code": "mediaGroup_listAll",
+                "menuTitle": "查看素材组列表",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "mediaGroup",
+                "icon": "",
+                "sort": 100,
+                "title": "查看素材组列表",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 60,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listAll",
+                "component": "@/views/mediaGroup/listAll",
+                "deleted": false,
+                "route": "/mediaGroup/listAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "mediaGroup_add",
+                "menuTitle": "添加素材组",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "mediaGroup",
+                "icon": "",
+                "sort": 110,
+                "title": "添加素材组",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 58,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "mediaGroup_rename",
+                "menuTitle": "更改素材组名称",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "mediaGroup",
+                "icon": "",
+                "sort": 110,
+                "title": "更改素材组名称",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 61,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "mediaGroup_delete",
+                "menuTitle": "删除素材组",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "mediaGroup",
+                "icon": "",
+                "sort": 120,
+                "title": "删除素材组",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 59,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "role": [
+            {
+                "code": "role_listAll",
+                "menuTitle": "角色管理",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "role",
+                "icon": "",
+                "sort": 100,
+                "title": "查看角色列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 63,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listAll",
+                "component": "@/views/role/listAll",
+                "deleted": false,
+                "route": "/role/listAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "role_role",
+                "menuTitle": "查看角色详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "role",
+                "icon": "",
+                "sort": 101,
+                "title": "查看角色详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 64,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "detail/:uuid",
+                "component": "@/views/role/detail",
+                "deleted": false,
+                "route": "/role/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "role_add",
+                "menuTitle": "添加角色",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "role",
+                "icon": "",
+                "sort": 110,
+                "title": "添加角色",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 65,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "role_delete",
+                "menuTitle": "删除角色",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "role",
+                "icon": "",
+                "sort": 130,
+                "title": "删除角色",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 66,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "role_update",
+                "menuTitle": "修改角色",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "role",
+                "icon": "",
+                "sort": 140,
+                "title": "修改角色",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 67,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "batchSendTask": [
+            {
+                "code": "batchSendTask_add",
+                "menuTitle": "创建群发任务",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "batchSendTask",
+                "icon": "",
+                "sort": 100,
+                "title": "创建群发任务",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 68,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "add",
+                "component": "@/views/batchSendTask/add",
+                "deleted": false,
+                "route": "/batchSendTask/add",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "batchSendTask_listBatchSendTaskResult",
+                "menuTitle": "群发任务结果列表",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "batchSendTask",
+                "icon": "",
+                "sort": 100,
+                "title": "群发任务结果列表",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 71,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listBatchSendTaskResult",
+                "component": "@/views/batchSendTask/listBatchSendTaskResult",
+                "deleted": false,
+                "route": "/batchSendTask/listBatchSendTaskResult",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "batchSendTask_addBatchSendTask",
+                "menuTitle": "创建群发任务包含是否需要审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "batchSendTask",
+                "icon": "",
+                "sort": 100,
+                "title": "创建群发任务包含是否需要审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 73,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "addBatchSendTask",
+                "component": "@/views/batchSendTask/addBatchSendTask",
+                "deleted": false,
+                "route": "/batchSendTask/addBatchSendTask",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "batchSendTask_detail",
+                "menuTitle": "任务详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "batchSendTask",
+                "icon": "",
+                "sort": 101,
+                "title": "查看任务详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 70,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "detail/:uuid",
+                "component": "@/views/batchSendTask/detail",
+                "deleted": false,
+                "route": "/batchSendTask/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "batchSendTask_listMy",
+                "menuTitle": "我的群发",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "batchSendTask",
+                "icon": "",
+                "sort": 107,
+                "title": "查看我的任务列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 72,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listMy",
+                "component": "@/views/batchSendTask/listMy",
+                "deleted": false,
+                "route": "/batchSendTask/listMy",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "batchSendTask_listAll",
+                "menuTitle": "全部群发",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "batchSendTask",
+                "icon": "",
+                "sort": 108,
+                "title": "查看全部任务列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 69,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listAll",
+                "component": "@/views/batchSendTask/listAll",
+                "deleted": false,
+                "route": "/batchSendTask/listAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "contactWay": [
+            {
+                "code": "contactWay_listAll",
+                "menuTitle": "渠道管理",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "contactWay",
+                "icon": "",
+                "sort": 100,
+                "title": "渠道列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 75,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listAll",
+                "component": "@/views/contactWay/listAll",
+                "deleted": false,
+                "route": "/contactWay/listAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "contactWay_detail",
+                "menuTitle": "渠道详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "contactWay",
+                "icon": "",
+                "sort": 101,
+                "title": "渠道详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 76,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "detail",
+                "component": "@/views/contactWay/detail",
+                "deleted": false,
+                "route": "/contactWay/detail",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "contactWay_add",
+                "menuTitle": "添加渠道",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "contactWay",
+                "icon": "",
+                "sort": 110,
+                "title": "添加渠道",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 74,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "contactWay_delete",
+                "menuTitle": "删除渠道",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "contactWay",
+                "icon": "",
+                "sort": 120,
+                "title": "删除渠道",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 77,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "contactWay_update",
+                "menuTitle": "更新渠道",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "contactWay",
+                "icon": "",
+                "sort": 130,
+                "title": "更新渠道",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 78,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "permission": [
+            {
+                "code": "permission_listAll",
+                "menuTitle": "查看权限模块列表",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "permission",
+                "icon": "",
+                "sort": 100,
+                "title": "查看权限模块列表",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 81,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listAll",
+                "component": "@/views/permission/listAll",
+                "deleted": false,
+                "route": "/permission/listAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "permission_rolePermissionList",
+                "menuTitle": "查看角色权限列表",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "permission",
+                "icon": "",
+                "sort": 110,
+                "title": "查看角色权限列表",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 82,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "permission_update",
+                "menuTitle": "审核配置",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "permission",
+                "icon": "",
+                "sort": 116,
+                "title": "审核配置",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 80,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "permission_roleLinkPermissionIsAudit",
+                "menuTitle": "角色赋予权限包含是否需要审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "permission",
+                "icon": "",
+                "sort": 150,
+                "title": "角色赋予权限包含是否需要审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 83,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "permission_roleLinkPermission",
+                "menuTitle": "设置角色权限",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "permission",
+                "icon": "",
+                "sort": 150,
+                "title": "设置角色权限",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 84,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "department": [
+            {
+                "code": "department_listAll",
+                "menuTitle": "部门管理",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "department",
+                "icon": "",
+                "sort": 100,
+                "title": "查看部门列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 91,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listAll",
+                "component": "@/views/department/listAll",
+                "deleted": false,
+                "route": "/department/listAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "department_detail",
+                "menuTitle": "查看部门详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "department",
+                "icon": "",
+                "sort": 101,
+                "title": "查看部门详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 92,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "detail/:uuid",
+                "component": "@/views/department/detail",
+                "deleted": false,
+                "route": "/department/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "department_add",
+                "menuTitle": "创建部门",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "department",
+                "icon": "",
+                "sort": 110,
+                "title": "创建部门",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 95,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "department_delete",
+                "menuTitle": "删除部门",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "department",
+                "icon": "",
+                "sort": 120,
+                "title": "删除部门",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 97,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "department_update",
+                "menuTitle": "修改部门",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "department",
+                "icon": "",
+                "sort": 130,
+                "title": "修改部门",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 96,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "department_allocation",
+                "menuTitle": "分配部门",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "department",
+                "icon": "",
+                "sort": 140,
+                "title": "分配部门",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 93,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "department_locateDepartmentLeader",
+                "menuTitle": "分配部门主管",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "department",
+                "icon": "",
+                "sort": 140,
+                "title": "分配部门主管",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 94,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "message": [
+            {
+                "code": "message_singleListAll",
+                "menuTitle": "私聊存档",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "message",
+                "icon": "",
+                "sort": 100,
+                "title": "查看私聊会话存档",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 98,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "singleListAll",
+                "component": "@/views/message/singleListAll",
+                "deleted": false,
+                "route": "/message/singleListAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "message_groupChatListAll",
+                "menuTitle": "群聊存档",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "message",
+                "icon": "",
+                "sort": 100,
+                "title": "查看群聊会话存档",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 99,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "groupChatListAll",
+                "component": "@/views/message/groupChatListAll",
+                "deleted": false,
+                "route": "/message/groupChatListAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "menu": [
+            {
+                "code": "menu_listAll",
+                "menuTitle": "菜单列表",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "menu",
+                "icon": "",
+                "sort": 100,
+                "title": "菜单列表",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 100,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listAll",
+                "component": "@/views/menu/listAll",
+                "deleted": false,
+                "route": "/menu/listAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "menu_detail",
+                "menuTitle": "菜单详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "menu",
+                "icon": "",
+                "sort": 101,
+                "title": "菜单详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 101,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "detail/:uuid",
+                "component": "@/views/menu/detail",
+                "deleted": false,
+                "route": "/menu/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "menu_listMy",
+                "menuTitle": "我的菜单",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "menu",
+                "icon": "",
+                "sort": 110,
+                "title": "我的菜单",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 102,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listMy",
+                "component": "@/views/menu/listMy",
+                "deleted": false,
+                "route": "/menu/listMy",
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "media": [
+            {
+                "code": "media_addMediaIsAudit",
+                "menuTitle": "新建素材包含是否审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "",
+                "sort": 100,
+                "title": "新建素材包含是否审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 110,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "addMediaIsAudit",
+                "component": "@/views/media/addMediaIsAudit",
+                "deleted": false,
+                "route": "/media/addMediaIsAudit",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "media_deleteMediaIsAudit",
+                "menuTitle": "删除素材包含是否审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "",
+                "sort": 100,
+                "title": "删除素材包含是否审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 111,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "deleteMediaIsAudit",
+                "component": "@/views/tag/deleteMediaIsAudit",
+                "deleted": false,
+                "route": "/media/deleteMediaIsAudit",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "media_article_detail",
+                "menuTitle": "查看文章详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "",
+                "sort": 101,
+                "title": "查看文章详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 107,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "article/detail/:uuid",
+                "component": "@/views/media/article/detail",
+                "deleted": false,
+                "route": "/media/article/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "media_detail",
+                "menuTitle": "查看素材详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "",
+                "sort": 101,
+                "title": "查看素材详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 108,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "detail/:uuid",
+                "component": "@/views/media/detail",
+                "deleted": false,
+                "route": "/media/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "media_browsing_Records",
+                "menuTitle": "文章的浏览记录",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "",
+                "sort": 101,
+                "title": "文章的浏览记录",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 109,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "browsingRecords/:articleUuid",
+                "component": "@/views/media/browsingRecords",
+                "deleted": false,
+                "route": "/media/browsingRecords/:articleUuid",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "media_manager",
+                "menuTitle": "运营管理",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "media",
+                "sort": 102,
+                "title": "运营管理",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 18,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "media_add",
+                "menuTitle": "添加临时素材",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "",
+                "sort": 110,
+                "title": "添加临时素材",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 103,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "media_listAll",
+                "menuTitle": "素材库",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "",
+                "sort": 110,
+                "title": "查看素材库列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 106,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "listAll",
+                "component": "@/views/media/listAll",
+                "deleted": false,
+                "route": "/media/listAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "media_article_listAll",
+                "menuTitle": "文章管理",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "",
+                "sort": 111,
+                "title": "查看文章列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 112,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": "article/listAll",
+                "component": "@/views/media/article/listAll",
+                "deleted": false,
+                "route": "/media/article/listAll",
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "media_delete",
+                "menuTitle": "删除素材",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "",
+                "sort": 120,
+                "title": "删除素材",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 105,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "media_article/update",
+                "menuTitle": "修改文章",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "media",
+                "icon": "",
+                "sort": 130,
+                "title": "修改文章",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 104,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "potentialCustomer": [
+            {
+                "code": "potentialCustomer_detail",
+                "menuTitle": "查看潜在客户详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "potentialCustomer",
+                "icon": "",
+                "sort": 101,
+                "title": "查看潜在客户详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 31,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "detail/:uuid",
+                "component": "@/views/potentialCustomer/detail",
+                "deleted": false,
+                "route": "/potentialCustomer/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "potentialCustomer_listMy",
+                "menuTitle": "我的潜在客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "potentialCustomer",
+                "icon": "",
+                "sort": 105,
+                "title": "查看我的潜在客户列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 33,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "listMy",
+                "component": "@/views/potentialCustomer/listMy",
+                "deleted": false,
+                "route": "/potentialCustomer/listMy",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "potentialCustomer_listAll",
+                "menuTitle": "全部潜在客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "potentialCustomer",
+                "icon": "",
+                "sort": 106,
+                "title": "查看全部潜在客户列表",
+                "isMenu": true,
+                "version": 0,
+                "uuid": 30,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "listAll",
+                "component": "@/views/potentialCustomer/listAll",
+                "deleted": false,
+                "route": "/potentialCustomer/listAll",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "potentialCustomer_add",
+                "menuTitle": "添加潜在客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "potentialCustomer",
+                "icon": "",
+                "sort": 120,
+                "title": "添加潜在客户",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 34,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "batchAdd",
+                "component": "@/views/potentialCustomer/batchAdd",
+                "deleted": false,
+                "route": "/potentialCustomer/batchAdd",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "potentialCustomer_update",
+                "menuTitle": "修改潜在客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "potentialCustomer",
+                "icon": "",
+                "sort": 130,
+                "title": "修改潜在客户",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 28,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "potentialCustomer_delete",
+                "menuTitle": "删除潜在客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "potentialCustomer",
+                "icon": "",
+                "sort": 140,
+                "title": "删除潜在客户",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 29,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "potentialCustomer_allocation",
+                "menuTitle": "分配潜在客户",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "potentialCustomer",
+                "icon": "",
+                "sort": 150,
+                "title": "分配潜在客户",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 32,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            }
+        ],
+        "audit": [
+            {
+                "code": "audit_detail",
+                "menuTitle": "群发审核的详情",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "audit",
+                "icon": "",
+                "sort": 101,
+                "title": "群发审核的详情",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 36,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": "detail/:uuid",
+                "component": "@/views/audit/detail",
+                "deleted": false,
+                "route": "/audit/detail/:uuid",
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "audit_auditTagConfirmation",
+                "menuTitle": "标签进行审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "audit",
+                "icon": "",
+                "sort": 110,
+                "title": "标签进行审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 37,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "audit_batchAuditBatchTaskConfirmation",
+                "menuTitle": "群发进行批量审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "audit",
+                "icon": "",
+                "sort": 110,
+                "title": "群发进行批量审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 38,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            },
+            {
+                "code": "audit_auditMediaConfirmation",
+                "menuTitle": "素材进行审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "audit",
+                "icon": "",
+                "sort": 110,
+                "title": "素材进行审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 39,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "audit_batchAuditPermissionConfirmation",
+                "menuTitle": "权限进行批量审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "audit",
+                "icon": "",
+                "sort": 110,
+                "title": "权限进行批量审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 40,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "audit_auditPermissionConfirmation",
+                "menuTitle": "权限进行审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "audit",
+                "icon": "",
+                "sort": 110,
+                "title": "权限进行审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 41,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "audit_batchAuditMediaConfirmation",
+                "menuTitle": "素材进行批量审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "audit",
+                "icon": "",
+                "sort": 110,
+                "title": "素材进行批量审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 42,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "audit_batchAuditTagConfirmation",
+                "menuTitle": "标签进行批量审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "audit",
+                "icon": "",
+                "sort": 110,
+                "title": "标签进行批量审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 43,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "audit_auditBatchTaskConfirmation",
+                "menuTitle": "群发进行审核",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "audit",
+                "icon": "",
+                "sort": 110,
+                "title": "群发进行审核",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 44,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "externalUserTrends": [
+            {
+                "code": "externalUserTrends_add",
+                "menuTitle": "添加客户动态",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUserTrends",
+                "icon": "",
+                "sort": 110,
+                "title": "添加客户动态",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 57,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "externalUserTrends_delete",
+                "menuTitle": "删除客户动态",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUserTrends",
+                "icon": "",
+                "sort": 120,
+                "title": "删除客户动态",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 56,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            },
+            {
+                "code": "externalUserTrends_update",
+                "menuTitle": "更新一条客户动态",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "externalUserTrends",
+                "icon": "",
+                "sort": 130,
+                "title": "更新一条客户动态",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 55,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:04",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:04"
+            }
+        ],
+        "customerStatistics": [
+            {
+                "code": "customerStatistics_customerStatistics",
+                "menuTitle": "获取联系客户统计数据",
+                "needAudit": false,
+                "roles": [
+                    {
+                        "createdAt": "2020-06-20 10:59:03",
+                        "deleted": false,
+                        "code": "super",
+                        "name": "超级管理员",
+                        "version": 1,
+                        "uuid": 1,
+                        "updatedAt": "2020-06-20 10:59:04"
+                    }
+                ],
+                "module": "customerStatistics",
+                "icon": "",
+                "sort": 130,
+                "title": "获取联系客户统计数据",
+                "isMenu": false,
+                "version": 0,
+                "uuid": 6,
+                "auditState": 1,
+                "createdAt": "2020-06-20 10:59:03",
+                "path": null,
+                "component": null,
+                "deleted": false,
+                "route": null,
+                "updatedAt": "2020-06-20 10:59:03"
+            }
+        ]
+    },
+    "total": 112,
+    "pageNumber": 0,
+    "pageSize": 1000
+}

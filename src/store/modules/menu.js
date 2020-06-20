@@ -31,7 +31,8 @@ function generateRoutes(routes) {
           component: resolve => require([`@/views${url}/index.vue`], resolve),
         //   component: ()=>{return  (resolve) => require(`${}`) },          // component:()=> import('@/views'+url+'/index.vue'),//why?
           meta: {
-            title: second.menuTitle
+            title: second.menuTitle,
+            auth: second
           }
         })
       })

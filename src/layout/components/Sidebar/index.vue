@@ -13,7 +13,7 @@
         mode="vertical"
       > 
         <!-- <sidebar-item key="/dashboard" :> </sidebar-item> -->
-        <sidebar-item v-for="route in rebuildRoutes" :key="route.code" :item="route" />
+        <sidebar-item v-for="route in rebuildRoutes" :key="route.code" :popAuth="true" :item="route" />
       </el-menu>
     </el-scrollbar>
   </div>

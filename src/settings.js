@@ -18,5 +18,6 @@ module.exports = {
    * @type {boolean} true | false
    * @description open or close tagsview
    */
-  tagsView: true
+  tagsView: true,
+  showAuth: true,
 }

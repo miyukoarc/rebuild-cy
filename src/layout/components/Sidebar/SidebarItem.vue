@@ -1,9 +1,36 @@
 <template>
   <div v-if="!item.hidden">
-    <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
-      <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
+    <template
+      v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow"
+    >
+      <el-tooltip v-if="showAuth&&popAuth" placement="left">
+        <div slot="content">
+          <div v-for="(item, index) in resolveAuth(onlyOneChild.meta.auth)" :key="index">
+              {{item}}
+          </div>
+        </div>
+        <app-link :to="resolvePath(onlyOneChild.path)">
+          <el-menu-item
+            :index="resolvePath(onlyOneChild.path)"
+            :class="{'submenu-title-noDropdown':!isNest}"
+          >
+            <item
+              :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)"
+              :title="onlyOneChild.meta.title"
+            />
+          </el-menu-item>
+        </app-link>
+      </el-tooltip>
+
+      <app-link v-else :to="resolvePath(onlyOneChild.path)">
+        <el-menu-item
+          :index="resolvePath(onlyOneChild.path)"
+          :class="{'submenu-title-noDropdown':!isNest}"
+        >
+          <item
+            :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)"
+            :title="onlyOneChild.meta.title"
+          />
         </el-menu-item>
       </app-link>
     </template>
@@ -17,6 +44,7 @@
         :key="child.code"
         :is-nest="true"
         :item="child"
+        :popAuth="true"
         :base-path="resolvePath(child.path)"
         class="nest-menu"
       />
@@ -30,6 +58,7 @@ import { isExternal } from '@/utils/validate'
 import Item from './Item'
 import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'
+import settings from '@/settings'
 
 export default {
   name: 'SidebarItem',
@@ -48,14 +77,32 @@ export default {
     basePath: {
       type: String,
       default: ''
+    },
+    popAuth: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
     // TODO: refactor with render function
     this.onlyOneChild = null
-    return {}
+    return {
+      authData: {
+        roles: [],
+        title: '',
+        module: '',
+        needAudit: false,
+        code: ''
+      }
+    }
   },
+  computed: {
+    showAuth() {
+      return settings.showAuth
+    }
+  },
+  created() {},
   methods: {
     hasOneShowingChild(children = [], parent) {
       const showingChildren = children.filter(item => {
@@ -64,6 +111,12 @@ export default {
         } else {
           // Temp set(will be used if only has one showing child)
           this.onlyOneChild = item
+        //   const {  title, module, needAudit, code } = item.meta.auth
+        //     // this.authData.roles = roles         
+        //     this.authData.title = title
+        //     this.authData.module = module
+        //     this.authData.needAudit = needAudit
+        //     this.authData.code = code         
           return true
         }
       })
@@ -75,7 +128,7 @@ export default {
 
       // Show parent if there are no child router to display
       if (showingChildren.length === 0) {
-        this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
+        this.onlyOneChild = { ...parent, path: '', noShowingChildren: true }
         return true
       }
 
@@ -89,6 +142,27 @@ export default {
         return this.basePath
       }
       return path.resolve(this.basePath, routePath)
+    },
+    resolveAuth(obj){
+        const arr = []
+        for(let key in obj){
+            if(key==='roles'){
+                arr.push('角色：'+obj['roles'][0].name)
+            }
+            if(key==='needAudit'){
+                arr.push(obj['needAudit']?'权限：需要审核':'权限：不需要审核')
+            }
+            if(key==='module'){
+                arr.push('模块：'+obj['module'])
+            }
+            if(key==='title'){
+                arr.push('名称：'+obj['title'])
+            }
+            if(key==='code'){
+                arr.push('code：'+obj['code'])
+            }
+        }
+        return arr
     }
   }
 }

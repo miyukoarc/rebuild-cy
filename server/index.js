@@ -66,8 +66,12 @@ module.exports = app => {
     } else {
       ctx.body = "123"
     }
+  })
+
+  router.get('/api/permission/listMy', async ctx => {
 
 
+        ctx.body = fs.readFileSync(__dirname + '/virtual/permission/listMy.json').toString()
 
   })
 
@@ -78,6 +82,13 @@ module.exports = app => {
 
 
     ctx.body = fs.readFileSync(__dirname + '/virtual/menu/menuList.json').toString()
+
+  })
+
+  router.get('/api/menu/listMy', async ctx => {
+
+
+    ctx.body = fs.readFileSync(__dirname + '/virtual/menu/listMy.json').toString()
 
   })
   
