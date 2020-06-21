@@ -6,10 +6,6 @@
 
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
-        <div slot="right">
-          <el-button>新增用户</el-button>
-          <el-button type="primary">分配</el-button>
-        </div>
       </tool-bar>
     </el-card>
 
@@ -25,11 +21,10 @@
           highlight-current-row
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="敏感词" align="left"></el-table-column>
-          <el-table-column label="通知人" align="left"></el-table-column>
-          <el-table-column label="创建时间" align="left"></el-table-column>
-          <el-table-column label="状态" align="left"></el-table-column>
-          <el-table-column label="操作" align="left">
+          <el-table-column label="事件" align="left"></el-table-column>
+          <el-table-column label="模块" align="left"></el-table-column>
+          <el-table-column label="发生时间" align="left"></el-table-column>
+          <el-table-column label="操作人" align="left">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
@@ -116,7 +111,7 @@ export default {
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListAllTag')
+        .dispatch('tag/getListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({

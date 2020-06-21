@@ -3,7 +3,7 @@ import {
   addTagIsAudit,
   deleteTagIsAudit,
   updateTagIsAudit,
-  getListAllTag
+  getListSelect
 } from '@/api/tag'
 import {classifyTag} from '@/utils/common'
 const state = {
@@ -144,9 +144,9 @@ const actions = {
    * @param {*} param0 
    * @param {object} payload 
    */
-  getListAllTag({commit},payload){
+  getListSelect({commit},payload){
       return new Promise((resolve, reject)=>{
-        getListAllTag(payload).then(res=>{
+        getListSelect(payload).then(res=>{
             commit('SAVE_LIST',res)
             resolve()
         }).catch(err=>{

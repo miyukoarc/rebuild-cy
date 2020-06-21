@@ -1,15 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
 
-    
-    <el-form-item>
-      卡片名称（企业标签由管理员统一配置，配置后企业全部成员可使用）
-    </el-form-item>
-    <el-form-item label="标签组名称">
-      <el-input v-model.trim="query.name"></el-input>
-    </el-form-item>
-
-    <el-form-item label="标签名称">
+    <el-form-item label="搜索活码名称">
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item>
 
@@ -19,9 +11,9 @@
 
     <el-form-item label="批量添加次数">
       <el-input v-model.trim="query.name"></el-input>
-    </el-form-item> -->
+    </el-form-item>
 
-    <!-- <el-form-item label="发生时间">
+    <el-form-item label="入库时间">
       <el-date-picker
         v-model="value"
         type="daterange"

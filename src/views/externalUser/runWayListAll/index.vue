@@ -148,7 +148,7 @@ export default {
      */
     // initFilter() {
     //   this.$store
-    //     .dispatch('tag/getListAllTag')
+    //     .dispatch('tag/getListSelect')
     //     .then(() => {})
     //     .catch(err => {
     //       this.$message({

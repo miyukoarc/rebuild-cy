@@ -53,6 +53,19 @@ export const getDepartmentList = (payload) => {
 }
 
 /**
+ * 部门列表 筛选
+ * @param {object} payload page
+ */
+export const getDepartmentListSelect = (payload) => {
+    return request({
+        url: '/department/listSelect',
+        method: 'get',
+        params: payload
+    })
+}
+
+
+/**
  * 分配部门主管
  * @param {object} payload 
  */

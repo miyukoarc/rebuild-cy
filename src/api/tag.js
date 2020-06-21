@@ -15,9 +15,9 @@ export const getTagList =(payload)=>{
 /**
  * 标签列表页数据
  */
-export const getListAllTag =()=>{
+export const getListSelect =()=>{
     return request({
-        url: '/tag/listAllTag',
+        url: '/tag/listSelect',
         method: 'get',
 
     })

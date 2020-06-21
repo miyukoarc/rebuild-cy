@@ -60,7 +60,7 @@ export const updateRole = (payload) => {
 
 export const getRoleList = () => {
     return request({
-        url: '/role/list',
+        url: '/role/listAll',
         method: 'get',
     })
 }

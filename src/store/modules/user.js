@@ -5,7 +5,8 @@ import {
   getMyInfo,
   getUserList,
   getAllUserList,
-  getDetail
+  getDetail,
+  getUserListSelect
 } from '@/api/user'
 import {
   getToken,
@@ -27,6 +28,7 @@ const getDefaultState = () => {
      * 所有员工列表 无分页
      */
     userListAll: [],//user/listAll
+    listSelect: [],
 
     /**
      * 员工列表 有分页
@@ -113,64 +115,17 @@ const mutations = {
   
   SAVE_SHOWOFFUSER(state,payload){
       state.userDetail = payload
+  },
+  /**
+   * 保存员工列表 无分页(筛选)
+   */
+  SAVE_LISTSELECT(state,payload){
+    state.listSelect = payload
   }
 
 }
 
 const actions = {
-  // user login
-  login({
-    commit
-  }, userInfo) {
-    const {
-      username,
-      password
-    } = userInfo
-    return new Promise((resolve, reject) => {
-      login({
-        username: username.trim(),
-        password: password
-      }).then(response => {
-        const {
-          data
-        } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
-  // get user info
-  getInfo({
-    commit,
-    state
-  }) {
-    return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const {
-          data
-        } = response
-
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
-
-        const {
-          name,
-          avatar
-        } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
 
   // user logout
   logout({
@@ -266,7 +221,18 @@ const actions = {
              reject()
          })
      })
-  }
+  },
+  getUserListSelect({commit},payload){
+    return new Promise((resolve,reject)=>{
+        getUserListSelect(payload).then(res=>{
+            commit('SAVE_LISTSELECT',res)
+            resolve()
+        }).catch(err=>{
+            reject()
+        })
+    })
+ },
+  
 }
 
 export default {

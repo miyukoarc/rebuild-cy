@@ -1,8 +1,8 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
-    <el-form-item label="敏感词行为">
+    <!-- <el-form-item label="敏感词行为">
       <el-input v-model.trim="query.name"></el-input>
-    </el-form-item>
+    </el-form-item> -->
 
     <!-- <el-form-item label="手机号码">
       <el-input v-model.trim="query.name"></el-input>

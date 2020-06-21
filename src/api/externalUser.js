@@ -144,7 +144,7 @@ export const removeTag = (payload) => {
  */
 export const getRunWayList = (payload) => {
   return request({
-    url: '/externalUser/runWayList',
+    url: '/externalUser/runWayListMy',
     method: 'get',
     params: payload
   })
@@ -183,7 +183,7 @@ export const update = (payload) => {
  */
 export const getListGroup = (payload) => {
   return request({
-    url: '/externalUser/listGroup',
+    url: '/externalUser/groupChatListAll',
     method: 'get',
     params: payload
   })
@@ -196,7 +196,7 @@ export const getListGroup = (payload) => {
  */
 export const getListOwner = (payload) => {
   return request({
-    url: '/externalUser/listOwner',
+    url: '/externalUser/groupChatOwnerListSelect',
     method: 'get',
     params: payload
   })

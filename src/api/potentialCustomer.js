@@ -75,7 +75,7 @@ export const update = (payload) => {
 
 export const getList = (payload) => {
     return request({
-        url: '/potentialCustomer/list',
+        url: '/potentialCustomer/listAll',
         method: 'get',
         params: payload
     })

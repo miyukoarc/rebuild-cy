@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :hasExport="false" @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar :hasExport="false" @handleExport="doExport" >
           <div slot="right">
               <el-button type="primary">新建</el-button>
           </div>

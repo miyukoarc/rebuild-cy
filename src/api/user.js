@@ -126,3 +126,13 @@ export const getMyInfo = () => {
     method: 'get'
   })
 }
+
+/**
+ * 获取用户列表
+ */
+export const getUserListSelect = () => {
+  return request({
+    url: '/user/listSelect',
+    method: 'get'
+  })
+}

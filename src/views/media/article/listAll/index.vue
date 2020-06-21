@@ -5,8 +5,11 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar :hasExport="false" >
+        <div slot="right">
           <el-button type="primary">新建文章</el-button>
+
+        </div>
       </tool-bar>
     </el-card>
 
@@ -112,7 +115,7 @@ export default {
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListAllTag')
+        .dispatch('tag/getListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({

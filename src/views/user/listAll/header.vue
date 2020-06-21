@@ -6,7 +6,7 @@
     <el-form-item label="所在部门">
       <el-select v-model="query.departmentsUuid" @change="handleChangeSecond">
         <el-option
-          v-for="item in departments"
+          v-for="item in departmentListSelect"
           :key="item.uuid"
           :label="item.name"
           :value="item.uuid"
@@ -63,7 +63,7 @@ export default {
     ...mapState({
         
       roleList: state => state.role.roleList,
-      departments: state => state.department.departments
+      departmentListSelect: state => state.department.listSelect
     })
   },
   methods: {

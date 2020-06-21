@@ -5,7 +5,8 @@ import {
   getDepartmentList,
   locateDepartmentLeader,
   updateDepartment,
-  getDepartments
+  getDepartments,
+  getDepartmentListSelect
 } from '@/api/department'
 import {flatten} from '@/utils/common'
 
@@ -17,6 +18,8 @@ const state = {
   departments: [],//list
   currentDepartment: {}, //当前行
   loading: false,
+
+  listSelect: []//筛选列表
 }
 
 const mutations = {
@@ -42,6 +45,13 @@ const mutations = {
    */
   SAVE_FLATTENLIST(state,payload){
       state.departments = payload
+  },
+
+  /**
+   * 保存部门列表 筛选
+   */
+  SAVE_LISTSELECT(state,payload){
+    state.listSelect = payload
   }
 
 }
@@ -190,7 +200,20 @@ const actions = {
              reject()
          })
      })
-  }
+  },
+  /**
+   * 部门列表 筛选
+   */
+  getDepartmentListSelect({commit},payload){
+    return new Promise((resolve,reject)=>{
+        getDepartmentListSelect(payload).then(res=>{
+            commit('SAVE_LISTSELECT',res.items)
+            resolve()
+        }).catch(err=>{
+            reject()
+        })
+    })
+ },
 
 }
 

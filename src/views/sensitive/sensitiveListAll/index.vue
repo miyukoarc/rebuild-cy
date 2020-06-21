@@ -7,7 +7,9 @@
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
         <div slot="right">
-          <el-button type="primary">新建</el-button>
+          <!-- <el-button>新增用户</el-button> -->
+          <!-- <el-button type="primary">分配</el-button> -->
+          <el-t-button type="primary">新建</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -24,7 +26,7 @@
           highlight-current-row
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="敏感行为" align="left"></el-table-column>
+          <el-table-column label="敏感词" align="left"></el-table-column>
           <el-table-column label="通知人" align="left"></el-table-column>
           <el-table-column label="创建时间" align="left"></el-table-column>
           <el-table-column label="状态" align="left"></el-table-column>
@@ -115,7 +117,7 @@ export default {
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListAllTag')
+        .dispatch('tag/getListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({

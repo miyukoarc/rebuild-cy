@@ -1,6 +1,6 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
-    <el-form-item label="敏感词行为">
+    <el-form-item label="审批模块">
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item>
 
@@ -12,7 +12,7 @@
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item> -->
 
-    <el-form-item label="发生时间">
+    <!-- <el-form-item label="发生时间">
       <el-date-picker
         v-model="value"
         type="daterange"
@@ -21,18 +21,40 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
       ></el-date-picker>
-    </el-form-item>
+    </el-form-item> -->
 
-    <!-- <el-form-item label="所属客服">
+    <el-form-item label="审批人">
       <el-select v-model="query.userId" @change="handleChangeThird">
         <el-option
-          v-for="item in userListAll"
-          :key="item.userId"
-          :label="item.name"
-          :value="item.userId"
+          v-for="item in 10"
+          :key="item"
+          :label="item"
+          :value="item"
         ></el-option>
       </el-select>
-    </el-form-item>-->
+    </el-form-item>
+
+    <el-form-item label="提交人">
+      <el-select v-model="query.userId" @change="handleChangeThird">
+        <el-option
+          v-for="item in 10"
+          :key="item"
+          :label="item"
+          :value="item"
+        ></el-option>
+      </el-select>
+    </el-form-item>
+
+    <el-form-item label="状态">
+      <el-select v-model="query.userId" @change="handleChangeThird">
+        <el-option
+          v-for="item in 10"
+          :key="item"
+          :label="item"
+          :value="item"
+        ></el-option>
+      </el-select>
+    </el-form-item>
 
     <!-- <el-form-item label="客户标签">
       <el-select v-model="query.tagIds" clearable @change="handleChangeSecond">
