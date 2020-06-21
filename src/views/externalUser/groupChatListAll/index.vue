@@ -42,7 +42,7 @@
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
           <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" :popAuth="true" :auth="permissionMap['externalUser']['externalUser_groupDetail']">详情</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -103,7 +103,9 @@ export default {
 
       loading: state => state.externalUser.loading,
       listGroup: state => state.externalUser.listGroup,
-      listGroupPage: state => state.externalUser.listGroupPage
+      listGroupPage: state => state.externalUser.listGroupPage,
+
+      permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
       return this.routes
