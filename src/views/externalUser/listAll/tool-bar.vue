@@ -2,8 +2,8 @@
   <div>
     <div class="tool-bar-container">
       <div class="left">
-        <el-button type="primary" @click="actionExport" v-if="hasExport">导出Excel</el-button>
-        <el-button type="primary" @click="actionImport" v-if="hasImport">导入Excel</el-button>
+        <el-button size="small" type="primary" @click="actionExport" v-if="hasExport">导出Excel</el-button>
+        <el-button size="small" type="primary" @click="actionImport" v-if="hasImport">导入Excel</el-button>
         <span class="font-s color-info">{{msg}}</span>
       </div>
 

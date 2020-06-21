@@ -92,20 +92,28 @@ export default {
     resolveAuth(obj){
         const arr = []
         for(let key in obj){
+            arr[4] ='角色：'
             if(key==='roles'){
-                arr.push('角色：'+obj['roles'][0].name)
+                arr[4] = '角色：'+obj['roles'][0].name
+            }
+            
+            
+            if(key==='module'){
+                // arr.push()
+                arr[2] = '模块：'+obj['module']
             }
             if(key==='needAudit'){
-                arr.push(obj['needAudit']?'权限：需要审核':'权限：不需要审核')
+                arr[3] = obj['needAudit']?'审核：需要审核':'审核：不需要审核'
+                // arr.push()
             }
-            if(key==='module'){
-                arr.push('模块：'+obj['module'])
+            
+            if(key==='code'){
+                arr[1] = 'code：'+obj['code']
+                // arr.push()
             }
             if(key==='title'){
-                arr.push('名称：'+obj['title'])
-            }
-            if(key==='code'){
-                arr.push('code：'+obj['code'])
+                arr[0] = '名称：'+obj['title']
+                // arr.push()
             }
         }
         return arr
