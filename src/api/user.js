@@ -75,7 +75,7 @@ export const getQrcode = () => {
  */
 export const getUserList = (payload) => {
   return request({
-    url: '/user/list',
+    url: '/user/listAll',
     method: 'get',
     params: payload
   })

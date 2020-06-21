@@ -106,7 +106,7 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     refresh() {
-      this.$store.dispatch('department/getDepartmentList').then(()=>{
+      this.$store.dispatch('department/getDepartmentListAll').then(()=>{
           this.reload()
       }).catch(err => {
         this.$message({

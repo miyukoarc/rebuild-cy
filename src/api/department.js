@@ -44,9 +44,9 @@ export const deleteDepartment = (uuid)=>{
  * 部门列表
  * @param {object} payload page
  */
-export const getDepartmentList = (payload) => {
+export const getDepartmentListAll = (payload) => {
     return request({
-        url: '/department/list',
+        url: '/department/listAll',
         method: 'get',
         params: payload
     })

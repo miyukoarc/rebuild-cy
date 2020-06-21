@@ -2,7 +2,7 @@ import {
   getDepartmentDetail,
   addDepartment,
   deleteDepartment,
-  getDepartmentList,
+  getDepartmentListAll,
   locateDepartmentLeader,
   updateDepartment,
   getDepartments,
@@ -125,12 +125,12 @@ const actions = {
    * 获取部门列表树
    * @param {object} payload 
    */
-  getDepartmentList({
+  getDepartmentListAll({
     commit
   },payload) {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
-      getDepartmentList(payload).then(res => {
+      getDepartmentListAll(payload).then(res => {
           const accessed = flatten(res.items)
         commit('SAVE_LIST', res.items)
         commit('SAVE_FLATTENLIST',accessed)

@@ -201,3 +201,16 @@ export const getListOwner = (payload) => {
     params: payload
   })
 }
+
+
+/**
+ * 敏感词列表
+ * @param {object} payload 
+ */
+export const getSensitiveListAll = (payload) => {
+  return request({
+    url: '/externalUser/sensitiveListAll',
+    method: 'get',
+    params: payload
+  })
+}

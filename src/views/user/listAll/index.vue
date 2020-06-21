@@ -7,7 +7,7 @@
 
     <!-- </el-header> -->
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
+      <tool-bar @handleExport="doExport"></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -40,7 +40,7 @@
           </el-table-column>
           <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" :popAuth="true" :auth="permissionMap['user']['user_detail']">详情</el-t-button>
               <el-button
                 type="primary"
                 size="mini"
@@ -109,7 +109,10 @@ export default {
 
       loading: state => state.user.loading,
       userList: state => state.user.userList,
-      userPage: state => state.user.userPage
+      userPage: state => state.user.userPage,
+
+
+      permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
       return this.routes

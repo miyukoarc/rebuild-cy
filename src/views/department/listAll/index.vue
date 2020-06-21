@@ -6,7 +6,8 @@
     <el-card class="content-spacing">
       <tool-bar :hasExport="false" :hasImport="false">
         <div slot="right">
-          <el-button size="small" @click="handleCreate">创建部门</el-button>
+
+          <el-t-button size="small" :popAuth="true" :auth="permissionMap['department']['department_add']" @click="handleCreate">创建部门</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -29,12 +30,14 @@
         <el-table-column prop="updatedAt" label="更新时间" align="center"></el-table-column>
         <el-table-column label="操作" align="center" width="240">
           <template slot-scope="scope">
-            <el-button
+            <el-t-button
               type="primary"
               size="mini"
+              :auth="permissionMap['department']['department_update']"
+              :popAuth="true"
               @click.stop="handleEdit(scope.$index,scope.row)"
-            >编辑</el-button>
-            <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
+            >编辑</el-t-button>
+            <el-button type="danger" :auth="permissionMap['department']['department_delete']" :popAuth="true" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -59,7 +62,7 @@ export default {
     UserDetail,
     FormDialog,
     ToolBar
-    // mHeadedr
+
   },
   data() {
     return {}
@@ -68,7 +71,9 @@ export default {
   computed: {
     ...mapState({
       departmentList: state => state.department.departmentList,
-      loading: state => state.department.loading
+      loading: state => state.department.loading,
+
+      permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
       return this.routes
@@ -108,7 +113,7 @@ export default {
     },
     initDataList() {
       this.$store
-        .dispatch('department/getDepartmentList')
+        .dispatch('department/getDepartmentListAll')
         .then(() => {})
         .catch(err => {
           this.$message({
