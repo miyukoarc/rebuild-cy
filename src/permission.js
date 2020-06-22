@@ -16,7 +16,7 @@ NProgress.configure({
   showSpinner: false
 }) // NProgress Configuration
 
-const whiteList = ['/login', '/department/list', '/role/list'] // no redirect whitelist
+const whiteList = ['/login'] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
   // start progress bar
@@ -36,19 +36,23 @@ router.beforeEach(async (to, from, next) => {
 
     if (to.path === '/login') {
       //if is logged in, redirect to the home page
+      alert('login')
       next({
         path: '/'
       })
       NProgress.done()
     } else {
+        alert('hasLogin')
 
       const username = store.getters.name
 
       if (username) {
+          alert('username')
 
         next()
 
       } else {
+          
         try {
 
           await store.dispatch('user/getMyInfo').then(() => {
@@ -60,8 +64,6 @@ router.beforeEach(async (to, from, next) => {
               message: err || err.message
             })
           })
-
-          const roleCode = store.state.user.roleCode
 
           console.log(roleCode)
 
@@ -98,8 +100,10 @@ router.beforeEach(async (to, from, next) => {
   }else{
 
     if (whiteList.indexOf(to.path) !== -1) {
+        console.log(router,'1')
         next()
       } else {
+        console.log(router,'2')
         next(`/login?redirect=${to.path}`)
         NProgress.done()
       }

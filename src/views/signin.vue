@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <!-- <div class="login-container">
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -14,23 +14,20 @@
       </div>
 
       <el-container class="qrcode-container">
-        <!-- <div id="wx_qrcode">
-          <iframe :srcdoc="loginPage" frameborder="0"></iframe>
-        </div> -->
-        <div class="iframe-container">
-          <iframe
-            src="http://10.10.10.159/login"
-            style="height:400px;width:400px;"
-            frameborder="0"
-          ></iframe>
+        <div id="wx_qrcode">
         </div>
+
       </el-container>
 
-      <div style="text-align:center;" v-if="env==='offline'">
+      
+    </el-form>
+  </div> -->
+  
+  <div style="text-align:center;" v-if="env==='offline'">
         <el-t-button size="mini" @click="handleVirtualLogin">模拟登录</el-t-button>
       </div>
-    </el-form>
-  </div>
+  <div id="wx_qrcode" v-else></div>
+
 </template>
 
 <script>
@@ -92,35 +89,38 @@ export default {
     }
   },
   created() {
- 
-  },
+          if (process.env.VUE_APP_WORK !== 'offline') {
+      this.getWxlogin()
+    }
+  },    
   mounted() {
-    // if (process.env.VUE_APP_WORK !== 'offline') {
-    //   this.getWxlogin()
-    // }
-    // window.WwLogin({
-    //   id: 'wx_qrcode',
-    //   appid: 'wwa266cd2b968ae008',
-    //   agentid: '1000019',
-    //   redirect_uri: 'http://sidebar.cyscrm.com/api/wxlogin',
-    //   state: '123456',
-    //   href: ''
-    // })
+
+    window.WwLogin({
+      id: 'wx_qrcode',
+      appid: 'wwa266cd2b968ae008',
+      agentid: '1000019',
+      redirect_uri: 'http://sidebar.cyscrm.com/api/wxlogin',
+      state: '123456',
+      href: ''
+    })
   },
   methods: {
     getWxlogin() {
-      this.$nextTick(async () => {
-        const res = await wxLogin()
-        if (res) {
-          this.wxQrCode = res
-          const style =
-            '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
 
-          document.write(this.addStr(this.wxQrCode, style))
-        }
-      })
+        wxLogin().then(res=>{
+        //   this.wxQrCode = res
+        //   const style =
+        //     '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
+
+        //   document.write(this.addStr(this.wxQrCode, style))
+        }).catch(err=>{
+            console.error(err)
+        })
+
+      
     },
     addStr(str, style) {
+        console.log(str)
       const arr = str.split('</head>')
       return `${arr[0]}${style}</head>${arr[1]}`
     },
