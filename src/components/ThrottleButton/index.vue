@@ -11,11 +11,8 @@
       <div slot="content">
         <!-- <div v-if="Object.keys(auth).length" class="container">
           <div v-for="(value,key) in authData" :key="key">{{key}}: {{value}}</div>
-        </div> -->
-        <div v-for="(item, index) in resolveAuth(authData)" :key="index">
-              {{item}}
-          </div>
-
+        </div>-->
+        <div v-for="(item, index) in resolveAuth(authData)" :key="index">{{item}}</div>
       </div>
 
       <el-button v-bind="$attrs" v-on="evet" :disabled="disabled">
@@ -47,6 +44,12 @@ export default {
       defautl: false
     }
   },
+    data() {
+    return {
+      timer: null,
+      filtedArr: []
+    }
+  },
   computed: {
     evet() {
       if (this.throttle) {
@@ -70,11 +73,9 @@ export default {
       return this.auth
     }
   },
-  data() {
-    return {
-      timer: null
-    }
-  },
+
+  updated(){
+     this.filtedArr = this.resolveAuth(this.auth)},
   methods: {
     throat(method) {
       const me = this
@@ -89,34 +90,44 @@ export default {
         }
       }
     },
-    resolveAuth(obj){
-        const arr = []
-        for(let key in obj){
-            arr[4] ='角色：'
-            if(key==='roles'){
-                arr[4] = '角色：'+obj['roles'][0].name
-            }
-            
-            
-            if(key==='module'){
-                // arr.push()
-                arr[2] = '模块：'+obj['module']
-            }
-            if(key==='needAudit'){
-                arr[3] = obj['needAudit']?'审核：需要审核':'审核：不需要审核'
-                // arr.push()
-            }
-            
-            if(key==='code'){
-                arr[1] = 'code：'+obj['code']
-                // arr.push()
-            }
-            if(key==='title'){
-                arr[0] = '名称：'+obj['title']
-                // arr.push()
-            }
+    resolveAuth(obj) {
+      const arr = []
+      for (let key in obj) {
+        // arr[4] = '角色：'
+        if (key === 'roles') {
+            // console.log(obj['roles'])
+          let str = obj['roles']
+            .map(item => {
+              return item.name
+            })
+            .join(' ')
+
+        //   arr[4] = `角色：${str}`
+          arr.splice(4,1,`角色：${str}`)
         }
-        return arr
+
+        if (key === 'needAudit') {
+          arr[3] = obj['needAudit'] ? '审核：需要审核' : '审核：不需要审核'
+          // arr.push()
+        }
+
+        if (key === 'module') {
+          // arr.push()
+          arr[2] = '模块：' + obj['module']
+        }
+        if (key === 'code') {
+          arr[1] = 'code：' + obj['code']
+          // arr.push()
+        }
+        if (key === 'title') {
+          arr[0] = '名称：' + obj['title']
+          // arr.push()
+        }
+      }
+      return arr
+    },
+    flattenArr(arr){
+        return arr.map(item=>{return item.name}).join(' ')
     }
   }
 }

@@ -24,12 +24,15 @@ function generateRoutes(routes) {
         children: []
       }
       item.children.map(second => {
-        const url = second.component.split('@/views')[1]
+        const part = second.component.slice(2).split('/').slice(1).join("/")
+
+        // const url = second.component.split('@/views')[1]
+        // console.log(`@/views${url}/index.vue`,part,second.route)
         firstObj.children.push({
           path: second.route,
           name: second.code,
-          component: resolve => require([`@/views${url}/index.vue`], resolve),
-        //   component: ()=>{return  (resolve) => require(`${}`) },          // component:()=> import('@/views'+url+'/index.vue'),//why?
+        //   component: resolve => require([`@/views${url}/index.vue`], resolve),
+          component: view(part),          // component:()=> import('@/views'+url+'/index.vue'),//why?
           meta: {
             title: second.menuTitle,
             auth: second
@@ -38,8 +41,15 @@ function generateRoutes(routes) {
       })
       temp.push(firstObj)
     })
+    console
     return temp
   
+  }
+
+  function view (path) {
+    return  (resolve) => {
+      require([`@/views/${path}/index.vue`], resolve)
+    }
   }
 
 

@@ -14,19 +14,20 @@
       </div>
 
       <el-container class="qrcode-container">
-        <div id="wx_qrcode"></div>
-        <!-- <div class="iframe-container">
+        <!-- <div id="wx_qrcode">
+          <iframe :srcdoc="loginPage" frameborder="0"></iframe>
+        </div> -->
+        <div class="iframe-container">
           <iframe
-            src="http://10.10.10.65:9000/login"
-            style="height:100%;width:100%;"
+            src="http://10.10.10.159/login"
+            style="height:400px;width:400px;"
             frameborder="0"
           ></iframe>
-        </div>-->
+        </div>
       </el-container>
 
       <div style="text-align:center;" v-if="env==='offline'">
-          <el-t-button size="mini" @click="handleVirtualLogin">模拟登录</el-t-button>
-          <!-- <el-button size="mini" @click="handleVirtualLogin">模拟登录</el-button> -->
+        <el-t-button size="mini" @click="handleVirtualLogin">模拟登录</el-t-button>
       </div>
     </el-form>
   </div>
@@ -34,7 +35,9 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import {setToken} from '@/utils/auth'
+import { setToken } from '@/utils/auth'
+import { wxLogin } from '@/api/user'
+
 export default {
   name: 'Login',
   data() {
@@ -53,6 +56,7 @@ export default {
       }
     }
     return {
+      loginPage: null,
       loginForm: {
         username: 'admin',
         password: '111111'
@@ -67,13 +71,14 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      wxQrCode: null
     }
   },
-  computed:{
-      env(){
-          return process.env.VUE_APP_WORK
-      }
+  computed: {
+    env() {
+      return process.env.VUE_APP_WORK
+    }
   },
   watch: {
     $route: {
@@ -86,17 +91,39 @@ export default {
       immediate: true
     }
   },
+  created() {
+ 
+  },
   mounted() {
-    window.WwLogin({
-      id: 'wx_qrcode',
-      appid: 'wwa266cd2b968ae008',
-      agentid: '1000019',
-      redirect_uri: 'http://sidebar.cyscrm.com/api/wxlogin',
-      state: '123456',
-      href: ''
-    })
+    // if (process.env.VUE_APP_WORK !== 'offline') {
+    //   this.getWxlogin()
+    // }
+    // window.WwLogin({
+    //   id: 'wx_qrcode',
+    //   appid: 'wwa266cd2b968ae008',
+    //   agentid: '1000019',
+    //   redirect_uri: 'http://sidebar.cyscrm.com/api/wxlogin',
+    //   state: '123456',
+    //   href: ''
+    // })
   },
   methods: {
+    getWxlogin() {
+      this.$nextTick(async () => {
+        const res = await wxLogin()
+        if (res) {
+          this.wxQrCode = res
+          const style =
+            '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
+
+          document.write(this.addStr(this.wxQrCode, style))
+        }
+      })
+    },
+    addStr(str, style) {
+      const arr = str.split('</head>')
+      return `${arr[0]}${style}</head>${arr[1]}`
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -126,12 +153,12 @@ export default {
         }
       })
     },
-    handleVirtualLogin(){
-        this.setToken('123')
-        this.$router.push({path: '/dashboard'})
+    handleVirtualLogin() {
+      this.setToken('123')
+      this.$router.push({ path: '/dashboard' })
     },
-    setToken(token){
-        return setToken(token)
+    setToken(token) {
+      return setToken(token)
     }
   }
 }

@@ -20,6 +20,7 @@
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+        @change="handleChangeFirst"
       ></el-date-picker>
     </el-form-item>
 
@@ -61,23 +62,25 @@ export default {
     return {
       value: '',
       query: {
-        name: '',
-        tagIds: '',
-        userId: ''
+        startTime: '',
+        endTime: '',
+        // userId: ''
         // roleUuid: ''
       }
     }
   },
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      userListAll: state => state.user.userListAll
+    //   tagListAll: state => state.tag.tagListAll,
+    //   userListAll: state => state.user.userListAll
       //   departments: state => state.department.departments
     })
   },
   methods: {
     handleChangeFirst(val) {
       console.log(val)
+      this.query.startTime = val[0]
+      this.query.endTime = val[1]
       this.$emit('handleSearch', this.query)
     },
     handleChangeSecond(val) {

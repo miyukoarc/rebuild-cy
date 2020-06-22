@@ -19,5 +19,5 @@ module.exports = {
    * @description open or close tagsview
    */
   tagsView: true,
-  showAuth: true,
+  showAuth: true
 }

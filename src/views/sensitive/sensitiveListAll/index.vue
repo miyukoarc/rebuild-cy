@@ -9,7 +9,7 @@
         <div slot="right">
           <!-- <el-button>新增用户</el-button> -->
           <!-- <el-button type="primary">分配</el-button> -->
-          <el-t-button type="primary">新建</el-t-button>
+          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['riskManagement']['riskManagement_add']">新建</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -26,9 +26,15 @@
           highlight-current-row
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="敏感词" align="left"></el-table-column>
-          <el-table-column label="通知人" align="left"></el-table-column>
-          <el-table-column label="创建时间" align="left"></el-table-column>
+          <el-table-column label="敏感词" align="left" prop="word"></el-table-column>
+          <el-table-column label="通知人" align="left">
+              <template v-slot="scope">
+                  <div>
+                      <span v-for="item in scope.row.toUser" :key="item.uuid">{{item.name}}</span>
+                  </div>
+              </template>
+          </el-table-column>
+          <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
           <el-table-column label="状态" align="left"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
@@ -94,19 +100,18 @@ export default {
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
+    //   tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
-    }),
-    routesData() {
-      return this.routes
-    }
+      loading: state => state.sensitive.loading,
+      listAll: state => state.sensitive.sensitiveListAll,
+      page: state => state.sensitive.sensitivePage,
+
+      permissionMap: state => state.permission.permissionMap
+    })
   },
   created() {
     this.initDataList(this.query)
-    this.initFilter()
+    // this.initFilter()
   },
   methods: {
     doExport(val) {
@@ -115,33 +120,33 @@ export default {
     /**
      * 初始化筛选信息
      */
-    initFilter() {
-      this.$store
-        .dispatch('tag/getListSelect')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+    // initFilter() {
+    //   this.$store
+    //     .dispatch('sensitive/getSensitiveListAll')
+    //     .then(() => {})
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '初始化失败'
+    //       })
+    //     })
 
-      this.$store
-        .dispatch('user/getAllUserList')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
-    },
+    //   this.$store
+    //     .dispatch('user/getAllUserList')
+    //     .then(() => {})
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '初始化失败'
+    //       })
+    //     })
+    // },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('sensitive/getSensitiveListAll', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1

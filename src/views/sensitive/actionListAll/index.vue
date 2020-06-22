@@ -84,11 +84,9 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        startTime: true,
+        endTime: '',
+        action: '',
       }
     }
   },
@@ -97,9 +95,9 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
+      loading: state => state.sensitive.loading,
+      listAll: state => state.sensitive.actionListAll,
+      page: state => state.sensitive.actionPage
     }),
     routesData() {
       return this.routes
@@ -142,7 +140,7 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('sensitive/getActionListAll', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1
@@ -163,9 +161,10 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
+      const { startTime, endTime,action } = val
+      this.query.startTime = startTime ? startTime : this.query.startTime
+      this.query.endTime = endTime ? endTime : this.query.endTime
+      this.query.action = action ? action : this.query.action
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },

@@ -5,9 +5,7 @@
     >
       <el-tooltip v-if="showAuth&&popAuth" placement="left">
         <div slot="content">
-          <div v-for="(item, index) in resolveAuth(onlyOneChild.meta.auth)" :key="index">
-              {{item}}
-          </div>
+          <div v-for="(item, index) in resolveAuth(onlyOneChild.meta.auth)" :key="index">{{item}}</div>
         </div>
         <app-link :to="resolvePath(onlyOneChild.path)">
           <el-menu-item
@@ -111,12 +109,12 @@ export default {
         } else {
           // Temp set(will be used if only has one showing child)
           this.onlyOneChild = item
-        //   const {  title, module, needAudit, code } = item.meta.auth
-        //     // this.authData.roles = roles         
-        //     this.authData.title = title
-        //     this.authData.module = module
-        //     this.authData.needAudit = needAudit
-        //     this.authData.code = code         
+          //   const {  title, module, needAudit, code } = item.meta.auth
+          //     // this.authData.roles = roles
+          //     this.authData.title = title
+          //     this.authData.module = module
+          //     this.authData.needAudit = needAudit
+          //     this.authData.code = code
           return true
         }
       })
@@ -143,33 +141,38 @@ export default {
       }
       return path.resolve(this.basePath, routePath)
     },
-    resolveAuth(obj){
-        const arr = []
-        for(let key in obj){
-            arr[4] ='角色：'
-            if(key==='roles'){
-                arr[4] = '角色：'+obj['roles'][0].name
-            }
-            
-            if(key==='module'){
-                // arr.push()
-                arr[2] = '模块：'+obj['module']
-            }
-            if(key==='needAudit'){
-                arr[3] = obj['needAudit']?'审核：需要审核':'审核：不需要审核'
-                // arr.push()
-            }
-            
-            if(key==='code'){
-                arr[1] = 'code：'+obj['code']
-                // arr.push()
-            }
-            if(key==='title'){
-                arr[0] = '名称：'+obj['title']
-                // arr.push()
-            }
+    resolveAuth(obj) {
+      const arr = []
+      for (let key in obj) {
+        // arr[4] = '角色：'
+        if (key === 'roles') {
+          arr[4] =
+            '角色：' +
+            obj['roles']
+              .map(item => {    
+                return item.name
+              })
+              .join(',')
         }
-        return arr
+        if (key === 'module') {
+          // arr.push()
+          arr[2] = '模块：' + obj['module']
+        }
+        if (key === 'needAudit') {
+          arr[3] = obj['needAudit'] ? '审核：需要审核' : '审核：不需要审核'
+          // arr.push()
+        }
+
+        if (key === 'code') {
+          arr[1] = 'code：' + obj['code']
+          // arr.push()
+        }
+        if (key === 'title') {
+          arr[0] = '名称：' + obj['title']
+          // arr.push()
+        }
+      }
+      return arr
     }
   }
 }

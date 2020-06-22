@@ -65,32 +65,30 @@ router.beforeEach(async (to, from, next) => {
 
           console.log(roleCode)
 
-        //   if (roleCode === 'super') {
-        //     console.log('超管菜单')
-        //     await store.dispatch('menu/getAllMenuList').then(()=>{}).catch(err=>{console.log(err)})
-        //   } else {
-        //     console.log('普通菜单')
             await store.dispatch('menu/getMyMenuList')
-        //   }
+
 
           const accessed = await store.dispatch('permission/getPermissionListMy')
 
           console.log(accessed)
 
-          router.addRoutes([...accessed]
-        //     , 
-        //     {
-        //     path: '*',
-        //     redirect: '/404',
-        //     hidden: true
-        //   }
+          router.addRoutes([...accessed
+            , 
+            {
+            path: '*',
+            redirect: '/404',
+            hidden: true
+          }]
           )
 
-
+          next({
+            ...to,
+            replace:true
+          })
 
         } catch (error) {
 
-          Message.error(err || 'Error')
+          Message.error(error || 'Error')
           next(`/login?redirect=${to.path}`)
           NProgress.done()
         }

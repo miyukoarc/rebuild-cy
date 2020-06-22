@@ -41,11 +41,13 @@
           <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
               <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" :popAuth="true" :auth="permissionMap['user']['user_detail']">详情</el-t-button>
-              <el-button
+              <el-t-button
                 type="primary"
                 size="mini"
+                :popAuth="true"
+                :auth="permissionMap['department']['department_allocation']"
                 @click.stop="handleDistribute(scope.$index)"
-              >分配部门</el-button>
+              >分配部门</el-t-button>
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>

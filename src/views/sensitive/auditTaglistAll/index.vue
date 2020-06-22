@@ -7,10 +7,8 @@
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
         <div slot="right">
-          <!-- <el-button>新增用户</el-button> -->
-          <!-- <el-button type="primary">分配</el-button> -->
-          <el-t-button type="primary">批量通过</el-t-button>
-          <el-t-button type="primary">批量拒绝</el-t-button>
+          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']" @click="handleBatchConfrim">批量通过</el-t-button>
+          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']" @click="handleBatchReject">批量拒绝</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -25,17 +23,42 @@
           stripe
           lazy
           highlight-current-row
+          :default-sort="{order:'ascending',prop:'auditState'}"
+          @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="提交人" align="left"></el-table-column>
-          <el-table-column label="提交时间" align="left"></el-table-column>
-          <el-table-column label="添加/删除的标签内容" align="left"></el-table-column>
-          <el-table-column label="操作" align="left">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
+          <el-table-column width="85" align="center" label="提交人">
+            <template v-slot="scoped">
+              <div>{{scoped.row.submitOperator.name}}</div>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            align="center"
+            label="提交时间"
+            prop="createdAt"
+            sortable
+            :sort-orders="['descending', 'ascending']"
+          ></el-table-column>
+
+          <el-table-column align="center" label="添加/删除的标签内容">
+            <template v-slot="scoped">
+              <div>{{scoped.row.tagContent}}</div>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="操作" align="center" sortable :sort-method="sortBy">
+            <template v-slot="scoped">
+              <div>
+                <span
+                  v-if="scoped.row.auditState!=='TO_BE_REVIEWED'"
+                  :class="scoped.row.auditState==='APPROVED'?'color-success':'color-danger'"
+                >{{auditStateEnum[`${scoped.row.auditState}`]}}</span>
+                <div v-else>
+                  <el-t-button size="mini" type="primary" @click="handleAccess(scoped.row)">通过</el-t-button>
+                  <el-t-button size="mini" type="danger" @click="handleReject(scoped.row)">拒绝</el-t-button>
+                </div>
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -83,22 +106,25 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
-      }
+        auditConfirmation: '',
+        auditType: 'TAG',
+        handlerId: '',
+        submitterId: ''
+      },
+
+      selects: []
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
+      auditStateEnum: state => state.enum.auditState,
+    //   tagListAll: state => state.tag.tagListAll,
+      permissionMap: state => state.permission.permissionMap,
 
-      loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
+      loading: state => state.sensitive.loading,
+      listAll: state => state.sensitive.auditTaglist,
+      page: state => state.sensitive.auditTagPage
     }),
     routesData() {
       return this.routes
@@ -117,17 +143,7 @@ export default {
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListSelect')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
-
-      this.$store
-        .dispatch('user/getAllUserList')
+        .dispatch('user/getUserListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -141,7 +157,7 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('sensitive/getAuditTaglistAll', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1
@@ -162,9 +178,14 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
+      const { auditConfirmation, handlerId, submitterId } = val
+      this.query.auditConfirmation = auditConfirmation
+        ? auditConfirmation
+        : this.query.auditConfirmation
+      this.query.handlerId = handlerId ? handlerId : this.query.handlerId
+      this.query.submitterId = submitterId
+        ? submitterId
+        : this.query.submitterId
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },
@@ -177,6 +198,161 @@ export default {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
+    },
+    handleSelectionChange(val) {
+      this.selects = val.map(item => {
+        return item.uuid
+      })
+    },
+
+    /**
+     * 单挑审批
+     */
+    handleAccess(val) {
+      const payload = {
+        auditConfirmation: 'APPROVED',
+        uuids: [val.uuid]
+      }
+
+      this.$confirm('是否通过当前审批', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          await this.$store
+            .dispatch('audit/batchAuditTagConfirmation', payload)
+            .then(res => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.initDataList(this.query)
+            })
+            .catch(err => {
+              console.error(err)
+              this.$message({
+                type: 'danger',
+                message: '操作失败'
+              })
+            })
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+    handleReject(val) {
+      const payload = {
+        auditConfirmation: 'AUDIT_FAILED',
+        uuids: [val.uuid]
+      }
+
+      this.$confirm('是否拒绝当前审批', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          await this.$store
+            .dispatch('audit/batchAuditTagConfirmation', payload)
+            .then(res => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.initDataList(this.query)
+            })
+            .catch(err => {
+              console.log(err)
+              this.$message({
+                type: 'danger',
+                message: '操作失败'
+              })
+            })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    /**
+     * 批量审批
+     */
+    handleBatchConfrim() {
+      const uuids = this.selects
+      const payload = {
+        auditConfirmation: 'APPROVED',
+        uuids
+      }
+      console.log(payload)
+      if (this.selects.length) {
+        this.$store
+          .dispatch('audit/batchAuditTagConfirmation', payload)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '操作成功',
+              onClose: () => {
+                this.initData()
+              }
+            })
+          })
+          .catch(err => {
+            console.log(err)
+            this.$message({
+              type: 'error',
+              message: '操作失败'
+            })
+          })
+      } else {
+        this.$message({
+          type: 'error',
+          message: '请选择至少一项'
+        })
+      }
+    },
+    handleBatchReject() {
+      const uuids = this.selects
+      const payload = {
+        auditConfirmation: 'AUDIT_FAILED',
+        uuids
+      }
+      if (this.selects.length) {
+        this.$store
+          .dispatch('audit/batchAuditTagConfirmation', payload)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '操作成功',
+              onClose: () => {
+                this.initData()
+              }
+            })
+          })
+          .catch(err => {
+            console.log(err)
+            this.$message({
+              type: 'error',
+              message: '操作失败'
+            })
+          })
+      } else {
+        this.$message({
+          type: 'error',
+          message: '请选择至少一项'
+        })
+      }
+    },
+    /**
+     * 排序
+     */
+    sortBy(a, b) {
+    //   console.log(a, b)
+      if (a.auditState === 'TO_BE_REVIEWED') {
+        return -1
+      }
+      if (b.auditState === 'TO_BE_REVIEWED') {
+        return 1
+      }
     }
   }
 }

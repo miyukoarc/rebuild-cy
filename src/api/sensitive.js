@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export const add = (payload) => {
     return request({
-        url: '/sensitive/add',
+        url: '/riskManagement/add',
         method: 'get',
         data: payload
     })
@@ -19,7 +19,7 @@ export const add = (payload) => {
  */
 export const deleteSensitive = (payload) => {
     return request({
-        url: '/sensitive/delete',
+        url: '/riskManagement/delete',
         method: 'get',
         data: payload
     })
@@ -31,7 +31,7 @@ export const deleteSensitive = (payload) => {
  */
 export const update = (payload) => {
     return request({
-        url: '/sensitive/update',
+        url: '/riskManagement/update',
         method: 'get',
         data: payload
     })
@@ -43,9 +43,9 @@ export const update = (payload) => {
  * 权限审核列表
  * @param {object} payload 
  */
-export const getAuditPermissionlist = (payload) => {
+export const getAuditPermissionlistAll = (payload) => {
     return request({
-        url: '/sensitive/auditPermissionlist',
+        url: '/riskManagement/auditPermissionlistAll',
         method: 'get',
         params: payload
     })
@@ -56,9 +56,9 @@ export const getAuditPermissionlist = (payload) => {
  * 群发审核列表
  * @param {object} payload 
  */
-export const getAuditBatchSendTaklist = (payload) => {
+export const getAuditBatchSendTaklistAll = (payload) => {
     return request({
-        url: '/sensitive/auditBatchSendTaklist',
+        url: '/riskManagement/auditBatchSendTaklistAll',
         method: 'get',
         params: payload
     })
@@ -73,7 +73,7 @@ export const getAuditBatchSendTaklist = (payload) => {
  */
 export const getAuditList = (payload) => {
     return request({
-        url: '/sensitive/auditList',
+        url: '/riskManagement/auditList',
         method: 'get',
         params: payload
     })
@@ -84,9 +84,9 @@ export const getAuditList = (payload) => {
  * 标签审核列表
  * @param {object} payload 
  */
-export const getAuditTaglist = (payload) => {
+export const getAuditTaglistAll = (payload) => {
     return request({
-        url: '/sensitive/auditTaglist',
+        url: '/riskManagement/auditTaglistAll',
         method: 'get',
         params: payload
     })
@@ -96,9 +96,9 @@ export const getAuditTaglist = (payload) => {
  * 敏感词列表
  * @param {object} payload 
  */
-export const getList = (payload) => {
+export const getSensitiveListAll = (payload) => {
     return request({
-        url: '/sensitive/list',
+        url: '/riskManagement/sensitiveListAll',
         method: 'get',
         params: payload
     })
@@ -109,9 +109,9 @@ export const getList = (payload) => {
  * 敏感词行为
  * @param {object} payload 
  */
-export const getListAction = (payload) => {
+export const getActionListAll = (payload) => {
     return request({
-        url: '/sensitive/listAction',
+        url: '/riskManagement/actionListAll',
         method: 'get',
         params: payload
     })
@@ -124,7 +124,7 @@ export const getListAction = (payload) => {
  */
 export const getLog = (payload) => {
     return request({
-        url: '/sensitive/log',
+        url: '/riskManagement/sensitiveLogListAll',
         method: 'get',
         params: payload
     })

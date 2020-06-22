@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
-    <el-form-item label="审批模块">
-      <el-input v-model.trim="query.name"></el-input>
+    <el-form-item label="敏感行为">
+      <el-input v-model.trim="query.action"></el-input>
     </el-form-item>
 
     <!-- <el-form-item label="手机号码">
@@ -12,7 +12,7 @@
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item> -->
 
-    <!-- <el-form-item label="发生时间">
+    <el-form-item label="发生时间">
       <el-date-picker
         v-model="value"
         type="daterange"
@@ -20,10 +20,22 @@
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+        @change="handleChangeFirst"
       ></el-date-picker>
+    </el-form-item>
+
+    <!-- <el-form-item label="审批人">
+      <el-select v-model="query.userId" @change="handleChangeThird">
+        <el-option
+          v-for="item in 10"
+          :key="item"
+          :label="item"
+          :value="item"
+        ></el-option>
+      </el-select>
     </el-form-item> -->
 
-    <el-form-item label="审批人">
+    <!-- <el-form-item label="提交人">
       <el-select v-model="query.userId" @change="handleChangeThird">
         <el-option
           v-for="item in 10"
@@ -32,9 +44,9 @@
           :value="item"
         ></el-option>
       </el-select>
-    </el-form-item>
+    </el-form-item> -->
 
-    <el-form-item label="提交人">
+    <!-- <el-form-item label="状态">
       <el-select v-model="query.userId" @change="handleChangeThird">
         <el-option
           v-for="item in 10"
@@ -43,18 +55,7 @@
           :value="item"
         ></el-option>
       </el-select>
-    </el-form-item>
-
-    <el-form-item label="状态">
-      <el-select v-model="query.userId" @change="handleChangeThird">
-        <el-option
-          v-for="item in 10"
-          :key="item"
-          :label="item"
-          :value="item"
-        ></el-option>
-      </el-select>
-    </el-form-item>
+    </el-form-item> -->
 
     <!-- <el-form-item label="客户标签">
       <el-select v-model="query.tagIds" clearable @change="handleChangeSecond">
@@ -83,23 +84,25 @@ export default {
     return {
       value: '',
       query: {
-        name: '',
-        tagIds: '',
-        userId: ''
+        action: '',
+        startTiem: '',
+        endTime: ''
         // roleUuid: ''
       }
     }
   },
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      userListAll: state => state.user.userListAll
+    //   tagListAll: state => state.tag.tagListAll,
+    //   userListAll: state => state.user.userListAll
       //   departments: state => state.department.departments
     })
   },
   methods: {
     handleChangeFirst(val) {
       console.log(val)
+        this.query.startTime = val[0]
+        this.query.endTime = val[1]      
       this.$emit('handleSearch', this.query)
     },
     handleChangeSecond(val) {

@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function wxLogin() {
+    return request({
+      url:'/login',
+      method: 'get'
+    })
+  }
+
 export function login(data) {
   return request({
     url: '/vue-admin-template/user/login',
@@ -25,16 +32,16 @@ export function logout() {
   })
 }
 
-/**
- * 微信登录
- * @param {} 
- */
-export const wxLogin = () => {
-  return request({
-    url: '/login',
-    method: 'get'
-  })
-}
+// /**
+//  * 微信登录
+//  * @param {} 
+//  */
+// export const wxLogin = () => {
+//   return request({
+//     url: '/login',
+//     method: 'get'
+//   })
+// }
 /**
  * 员工详细页
  * @param {string} uuid 

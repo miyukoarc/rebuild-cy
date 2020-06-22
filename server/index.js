@@ -232,52 +232,52 @@ module.exports = app => {
    * sensitive
    */
 
-  router.get('/api/sensitive/auditTaglistAll', async ctx => {
+  router.get('/api/riskManagement/auditTaglistAll', async ctx => {
 
 
     ctx.body = fs.readFileSync(__dirname + '/virtual/sensitive/auditTaglistAll.json').toString()
 
   })
 
-  router.get('/api/sensitive/auditPermissionlistAll', async ctx => {
+  router.get('/api/riskManagement/auditPermissionlistAll', async ctx => {
 
 
     ctx.body = fs.readFileSync(__dirname + '/virtual/sensitive/auditPermissionlistAll.json').toString()
 
   })
 
-  router.get('/api/sensitive/auditBatchSendTaklistAll', async ctx => {
+  router.get('/api/riskManagement/auditBatchSendTaklistAll', async ctx => {
 
 
     ctx.body = fs.readFileSync(__dirname + '/virtual/sensitive/auditBatchSendTaklistAll.json').toString()
 
   })
 
-  router.get('/api/sensitive/auditListAll', async ctx => {
+  router.get('/api/riskManagement/auditListAll', async ctx => {
 
 
     ctx.body = fs.readFileSync(__dirname + '/virtual/sensitive/auditListAll.json').toString()
 
   })
 
-  router.get('/api/sensitive/sensitiveListAll', async ctx => {
+  router.get('/api/riskManagement/sensitiveListAll', async ctx => {
 
 
     ctx.body = fs.readFileSync(__dirname + '/virtual/sensitive/sensitiveListAll.json').toString()
 
   })
 
-  router.get('/api/sensitive/sensitiveLogListAll', async ctx => {
+  router.get('/api/riskManagement/sensitiveLogListAll', async ctx => {
 
 
     ctx.body = fs.readFileSync(__dirname + '/virtual/sensitive/sensitiveLogListAll.json').toString()
 
   })
 
-  router.get('/api/sensitive/list', async ctx => {
+  router.get('/api/riskManagement/actionListAll', async ctx => {
 
 
-    ctx.body = fs.readFileSync(__dirname + '/virtual/sensitive/list.json').toString()
+    ctx.body = fs.readFileSync(__dirname + '/virtual/sensitive/actionListAll.json').toString()
 
   })
 

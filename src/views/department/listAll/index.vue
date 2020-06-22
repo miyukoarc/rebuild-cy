@@ -37,7 +37,7 @@
               :popAuth="true"
               @click.stop="handleEdit(scope.$index,scope.row)"
             >编辑</el-t-button>
-            <el-button type="danger" :auth="permissionMap['department']['department_delete']" :popAuth="true" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
+            <el-t-button type="danger" :auth="permissionMap['department']['department_delete']" :popAuth="true" size="mini" @click.stop="handleDelete(scope.row)">删除</el-t-button>
           </template>
         </el-table-column>
       </el-table>

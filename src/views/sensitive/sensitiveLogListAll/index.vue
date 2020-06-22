@@ -77,22 +77,20 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        param: '',
+        startTime: '',
+        endTime: '',
       }
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
+    //   tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
+      loading: state => state.sensitive.loading,
+      listAll: state => state.sensitive.logListAll,
+      page: state => state.sensitive.logListAllPage
     }),
     routesData() {
       return this.routes
@@ -100,7 +98,7 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    this.initFilter()
+    // this.initFilter()
   },
   methods: {
     doExport(val) {
@@ -109,33 +107,33 @@ export default {
     /**
      * 初始化筛选信息
      */
-    initFilter() {
-      this.$store
-        .dispatch('tag/getListSelect')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+    // initFilter() {
+    //   this.$store
+    //     .dispatch('tag/getListSelect')
+    //     .then(() => {})
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '初始化失败'
+    //       })
+    //     })
 
-      this.$store
-        .dispatch('user/getAllUserList')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
-    },
+    //   this.$store
+    //     .dispatch('user/getAllUserList')
+    //     .then(() => {})
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '初始化失败'
+    //       })
+    //     })
+    // },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('sensitive/getLog', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1
@@ -156,9 +154,9 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
+      const { startTime, endTime } = val
+      this.query.startTime = startTime ? startTime : this.query.startTime
+      this.query.endTime = endTime ? endTime : this.query.endTime
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },

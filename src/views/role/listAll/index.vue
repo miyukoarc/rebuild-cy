@@ -10,7 +10,7 @@
     <el-card class="content-spacing">
       <tool-bar :hasExport="false" :hasImport="false">
         <div slot="right">
-          <el-button type="small" @click="handleCreate">新建角色</el-button>
+          <el-t-button :popAuth="true" :auth="permissionMap['role']['role_add']" type="small" @click="handleCreate">新建角色</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -31,10 +31,10 @@
           <el-table-column prop="name" label="角色名称" align="left"></el-table-column>
           <el-table-column label="操作" align="center" width="240">
             <template slot-scope="scope">
-              <el-button size="mini" @click="handlePermission">权限</el-button>
-              <el-button type="primary" size="mini"  @click.stop="handleEdit(scope.row)">编辑</el-button>
+              <el-t-button size="mini" @click="handlePermission" :popAuth="true" :auth="permissionMap['role']['role_role']">权限</el-t-button>
+              <el-t-button type="primary" size="mini"  @click.stop="handleEdit(scope.row)" :popAuth="true" :auth="permissionMap['role']['role_update']">编辑</el-t-button>
 
-              <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
+              <el-t-button type="danger" size="mini" @click.stop="handleDelete(scope.row)" :popAuth="true" :auth="permissionMap['role']['role_delete']">删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -70,7 +70,9 @@ export default {
     ...mapState({
       roleList: state => state.role.roleList,
       departmentList: state => state.department.departmentList,
-      loading: state => state.role.loading
+      loading: state => state.role.loading,
+
+      permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
       return this.routes
