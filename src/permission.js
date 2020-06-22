@@ -9,6 +9,9 @@ import {
   getToken
 } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import {
+  resolvePlugin
+} from '@babel/core'
 
 
 
@@ -36,60 +39,79 @@ router.beforeEach(async (to, from, next) => {
 
     if (to.path === '/login') {
       //if is logged in, redirect to the home page
-      alert('login')
+      //   alert('login')
       next({
         path: '/'
       })
       NProgress.done()
     } else {
-        alert('hasLogin')
+      // alert('hasLogin')
 
       const username = store.getters.name
 
       if (username) {
-          alert('username')
+        //   alert('username')
+
+
 
         next()
 
       } else {
-          
+
         try {
 
+          let accessed
+
           await store.dispatch('user/getMyInfo').then(() => {
+            //   console.log(res)
+            console.log(store.state.user.name)
 
-          }).catch(err => {
+            // 
 
+          }).catch(err=>{
             Message({
-              type: 'error',
-              message: err || err.message
+              type:'error',
+              message:err || err.message
             })
           })
 
-          console.log(roleCode)
-
-            await store.dispatch('menu/getMyMenuList')
 
 
-          const accessed = await store.dispatch('permission/getPermissionListMy')
+          await store.dispatch('menu/getMyMenuList')
+          accessed = await store.dispatch('permission/getPermissionListMy')
 
-          console.log(accessed)
 
-          router.addRoutes([...accessed
-            , 
-            {
-            path: '*',
-            redirect: '/404',
-            hidden: true
-          }]
+
+
+
+
+
+
+
+          router.addRoutes(
+            //   accessed
+                [...accessed,
+              {
+                path: '*',
+                redirect: '/404',
+                hidden: true
+              }
+            ]
           )
+
+
+
+
+
+
 
           next({
             ...to,
-            replace:true
+            replace: true
           })
 
         } catch (error) {
-
+          alert('!')
           Message.error(error || 'Error')
           next(`/login?redirect=${to.path}`)
           NProgress.done()
@@ -97,16 +119,16 @@ router.beforeEach(async (to, from, next) => {
       }
     }
 
-  }else{
+  } else {
 
     if (whiteList.indexOf(to.path) !== -1) {
-        console.log(router,'1')
-        next()
-      } else {
-        console.log(router,'2')
-        next(`/login?redirect=${to.path}`)
-        NProgress.done()
-      }
+      //   console.log(router, '1')
+      next()
+    } else {
+      //   console.log(router, '2')
+      next(`/login?redirect=${to.path}`)
+      NProgress.done()
+    }
   }
 
 

@@ -69,9 +69,12 @@ const mutations = {
     state.currentMenuDetail = payload
   },
   SET_MENU(state, payload) {
-      const filted = generateRoutes(payload)
-    state.rebuildMenu = filted
-    state.rebuildMenuList = constantRoutes.concat(filted)
+      
+    state.rebuildMenu = payload
+    
+  },
+  SAVE_REBUILDMENULIST(state,payload){
+    state.rebuildMenuList = constantRoutes.concat(payload)
   }
 }
 
@@ -121,7 +124,9 @@ const actions = {
   }) {
     return new Promise((resolve, reject) => {
       getMyMenuList().then(res => {
-        commit('SET_MENU', res.items)
+        const filted = generateRoutes(res.items)
+        commit('SAVE_REBUILDMENULIST',filted)
+        commit('SET_MENU', filted)
         commit('SAVE_LIST', res.items)
         resolve()
       }).catch(err => {

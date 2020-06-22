@@ -1,26 +1,45 @@
 'use strict'
 
-import { app, protocol, BrowserWindow,ipcMain } from 'electron'
+import { app, protocol, BrowserWindow,BrowserView, Tray ,Menu} from 'electron'
 import {
   createProtocol,
   /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib'
+
+const {ipcMain} = require('electron')
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
+const path = require('path')
+const os = require('os')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+
+
+let tray 
+
+console.log(process.env.NODE_ENV)
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
 
 function createWindow () {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600, webPreferences: {
-    // Use pluginOptions.nodeIntegration, leave this alone
-    // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-    nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+  win = new BrowserWindow({ 
+    // frame: false,//无边框窗口
+    width: 800, 
+    height: 600,
+    minHeight: 600,
+    minWidth:800,
+    maximizable: false,
+    // transparent: true, 
+    show: false,
+    sanbox: true,//微信扫码登录
+    webPreferences: {
+      nodeIntegration: true
   } })
+
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -32,9 +51,20 @@ function createWindow () {
     win.loadURL('app://./index.html')
   }
 
-  win.on('closed', () => {
-    win = null
+
+  win.on('ready-to-show',()=>{
+    win.show()
   })
+  win.on('closed', () => {
+    // win = null
+    win.hide(); 
+    win.setSkipTaskbar(true);
+    event.preventDefault();
+  })
+}
+
+function createTray(){
+  
 }
 
 // Quit when all windows are closed.
@@ -53,6 +83,13 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+/***
+ * 
+ */
+
+
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -73,6 +110,7 @@ app.on('ready', async () => {
 
   }
   createWindow()
+
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -90,13 +128,20 @@ if (isDevelopment) {
   }
 }
 
+ipcMain.on('max',(e)=>{
+  win.maximize()
+})
+//窗口最大化
 
-ipcMain.on('asynchronous-message', (event, arg) => {
-    console.log(arg) // prints "ping"
-    event.reply('asynchronous-reply', 'pong')
-  })
-  
-  ipcMain.on('synchronous-message', (event, arg) => {
-    console.log(arg) // prints "ping"
-    event.returnValue = 'pong'
-  })
+ipcMain.on('min',(e)=>{
+  win.minimize()
+})
+//窗口最小化
+
+ipcMain.on('close',e=>win.hide())
+//窗口关闭
+ipcMain.on('unmax',()=>{
+  win.unmaximize()
+})
+
+

@@ -55,12 +55,12 @@ if (isElectron()) {
     Vue.prototype.$remote = remote
     Vue.prototype.$isElectron = isElectron
   
-    console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
+    // console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
   
-    ipcRenderer.on('asynchronous-reply', (event, arg) => {
-      console.log(arg) // prints "pong"
-    })
-    ipcRenderer.send('asynchronous-message', 'ping')
+    // ipcRenderer.on('asynchronous-reply', (event, arg) => {
+    //   console.log(arg) // prints "pong"
+    // })
+    // ipcRenderer.send('asynchronous-message', 'ping')
   }
 
 Vue.component(TButton.name,TButton)

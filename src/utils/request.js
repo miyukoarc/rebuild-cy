@@ -1,36 +1,57 @@
+/*
+ * @Author: your name
+ * @Date: 2020-05-13 00:01:31
+ * @LastEditTime: 2020-06-11 22:07:54
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \chaoying_web\src\utils\request.js
+ */
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import router from '@/router'
+import {
+  MessageBox,
+  Message,
+  Loading
+} from 'element-ui'
+
+import {removeToken} from '@/utils/auth'
+
+// var loadinginstace
 
 // create an axios instance
-const service = axios.create({
-  baseURL: process.env.VUE_APP_WORK==='offline'?"http://127.0.0.1:3000/api":"", // url = base url + request url
-//   baseURL:"http://sidebar.cyscrm.com/api",
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
-})
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+// axios.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8'
 
+const service = axios.create({
+  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  withCredentials: true, // send cookies when cross-domain requests
+  timeout: 15000, // request timeout
+  validateStatus: (status) => {
+    return status < 500
+  }
+})
 // request interceptor
 service.interceptors.request.use(
   config => {
     // do something before request is sent
 
     // if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-    //   config.headers['X-Token'] = getToken()
+    // let each request carry token
+    // ['X-Token'] is a custom headers key
+    // please modify it according to the actual situation
+    // config.headers['X-Token'] = getToken()
     // }
-    // console.log(config.baseURL)
-    // config.headers['Content-Type'] = 'application/json; charset=utf-8'
-    config.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'
-    // const newUrl = ()=> config.baseURL + '/api'
-    // config.baseURL = newUrl
+    // TODO
+    // store.commit('app/OPEN_LOADING')
+    // loadinginstace = Loading.service({
+    //   fullscreen: true
+    // })
     return config
   },
   error => {
     // do something with request error
+    // loadinginstace.close()
     console.log(error) // for debug
     return Promise.reject(error)
   }
@@ -41,7 +62,7 @@ service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
@@ -49,7 +70,49 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    // const res = response.data
+    const res = response.data
+
+    if(response.status == 400) {
+        // alert('4040')
+
+
+      if (res.status === 4000) {
+        Message({
+          message: res.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
+
+        removeToken()
+
+        router.push({
+            path: '/login'
+        })
+        // return Promise.reject(new Error(res.message || 'Error'))
+
+
+      }
+
+
+      return Promise.reject(new Error(res.message || 'Error'))
+
+    } else {
+        // if(res.name==null){
+            // Message({
+            //     message:res.message || 'Error',
+            //     type:'error',
+            //     duration:5 * 1000
+            //   })
+      
+        //       removeToken()
+      
+        //       router.push({
+        //           path: '/login'
+        //       })
+        //   }
+    
+      return res
+    }
 
     // if the custom code is not 20000, it is judged as an error.
     // if (res.code !== 20000) {
@@ -74,32 +137,13 @@ service.interceptors.response.use(
     //   }
     //   return Promise.reject(new Error(res.message || 'Error'))
     // } else {
-    //   return res
+    // return res
     // }
-    // const res = response.data
-    const res = response
-
-//     if(response.config.headers.showLoading !== false){
-//         hideLoading();
-//       }
-
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.status !== 200 || res.data.status === 4000) {
-        
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
-
-
-      return Promise.reject(new Error(res.message || 'Error'))
-    } else {
-      return res.data
-    }
   },
   error => {
-    console.log('err' + error) // for debug
+    // loadinginstace.close()
+    // store.commit('app/CLOSE_LOADING')
+    // console.log('err' + error.response.status) // for debug
     Message({
       message: error.message,
       type: 'error',

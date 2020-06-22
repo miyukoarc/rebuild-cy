@@ -1,167 +1,68 @@
 <template>
-  <!-- <div class="login-container">
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
-      auto-complete="on"
-      label-position="left"
-    >
-      <div class="title-container">
-        <h3 class="title">Keep Calm and</h3>
-        <h4 class="title">Make Epic shit</h4>
-      </div>
-
-      <el-container class="qrcode-container">
-        <div id="wx_qrcode">
-        </div>
-
-      </el-container>
-
-      
-    </el-form>
-  </div> -->
-  
-  <div style="text-align:center;" v-if="env==='offline'">
-        <el-t-button size="mini" @click="handleVirtualLogin">模拟登录</el-t-button>
-      </div>
-  <div id="wx_qrcode" v-else></div>
-
+  <div class="login-container">
+  </div>
 </template>
 
-<script>
-import { validUsername } from '@/utils/validate'
-import { setToken } from '@/utils/auth'
-import { wxLogin } from '@/api/user'
+<script>;
+
+import { wxLogin } from "@/api/user";
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
-    }
     return {
-      loginPage: null,
-      loginForm: {
-        username: 'admin',
-        password: '111111'
-      },
-      loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
-        ],
-        password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
-      },
-      loading: false,
-      passwordType: 'password',
       redirect: undefined,
+      otherQuery: {},
       wxQrCode: null
-    }
-  },
-  computed: {
-    env() {
-      return process.env.VUE_APP_WORK
-    }
+    };
   },
   watch: {
     $route: {
       handler: function(route) {
-        this.redirect = route.query && route.query.redirect
+        const query = route.query;
+        if (query) {
+          this.redirect = query.redirect;
+          this.otherQuery = this.getOtherQuery(query);
+        }
       },
-      // handler(newVal,oldVal){
-      //     console.log(newVal)
-      // },
       immediate: true
     }
   },
   created() {
-          if (process.env.VUE_APP_WORK !== 'offline') {
-      this.getWxlogin()
-    }
-  },    
+    // window.addEventListener('storage', this.afterQRScan)
+  },
   mounted() {
+    this.getWxlogin();
 
-    window.WwLogin({
-      id: 'wx_qrcode',
-      appid: 'wwa266cd2b968ae008',
-      agentid: '1000019',
-      redirect_uri: 'http://sidebar.cyscrm.com/api/wxlogin',
-      state: '123456',
-      href: ''
-    })
   },
   methods: {
     getWxlogin() {
+      this.$nextTick(async () => {
+        const res = await wxLogin();
+        if (res) {
+          this.wxQrCode = res;
+          const style =
+            "<style>#login{width:100%;margin: 20px auto; text-align:center}</style>";
 
-        wxLogin().then(res=>{
-        //   this.wxQrCode = res
-        //   const style =
-        //     '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
-
-        //   document.write(this.addStr(this.wxQrCode, style))
-        }).catch(err=>{
-            console.error(err)
-        })
-
-      
+          document.write(this.addStr(this.wxQrCode, style));
+        }
+      });
     },
     addStr(str, style) {
-        console.log(str)
-      const arr = str.split('</head>')
-      return `${arr[0]}${style}</head>${arr[1]}`
+      const arr = str.split("</head>");
+      return `${arr[0]}${style}</head>${arr[1]}`;
     },
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
-    },
-    handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store
-            .dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
-        } else {
-          console.log('error submit!!')
-          return false
+
+    getOtherQuery(query) {
+      return Object.keys(query).reduce((acc, cur) => {
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
         }
-      })
+        return acc;
+      }, {});
     },
-    handleVirtualLogin() {
-      this.setToken('123')
-      this.$router.push({ path: '/dashboard' })
-    },
-    setToken(token) {
-      return setToken(token)
-    }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -177,6 +78,40 @@ $cursor: #fff;
     color: $cursor;
   }
 }
+#login {
+  width: 100%;
+  margin: 20px auto;
+  text-align: center;
+}
+// .login-warp {
+//   background-color: #fff;
+//   .el-tabs__nav-scroll {
+//     background-color: #fff;
+//     padding: 5px 10px 0 10px;
+//   }
+//   .qywx {
+//     background-color: #fff;
+//     text-align: center;
+//   }
+
+//   .el-form-item__content {
+//     background-color: #2d3a4b;
+//   }
+//   .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
+//     color: #1890ff;
+//     cursor: pointer;
+//   }
+//   .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
+//     color: #1890ff;
+//     cursor: pointer;
+//   }
+//   .login-container .el-form-item {
+//     background-color: #283443;
+//   }
+//   .yhdl {
+//     padding: 20px 20px;
+//   }
+// }
 
 /* reset element-ui css */
 .login-container {
@@ -216,10 +151,6 @@ $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
-.qrcode-container {
-  display: flex;
-  justify-content: center;
-}
 .login-container {
   min-height: 100%;
   width: 100%;
@@ -249,7 +180,7 @@ $light_gray: #eee;
 
   .svg-container {
     padding: 6px 5px 6px 15px;
-    color: $dark_gray;
+    color: #fff;
     vertical-align: middle;
     width: 30px;
     display: inline-block;
@@ -275,6 +206,18 @@ $light_gray: #eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+
+  .thirdparty-button {
+    position: absolute;
+    right: 0;
+    bottom: 6px;
+  }
+
+  @media only screen and (max-width: 470px) {
+    .thirdparty-button {
+      display: none;
+    }
   }
 }
 </style>

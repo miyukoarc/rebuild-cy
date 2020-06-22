@@ -148,12 +148,13 @@ const actions = {
   }) {
     return new Promise((resolve, reject) => {
       getMyInfo().then((res) => {
-        console.log(res)
+        // console.log(res)
 
         commit('SET_USERINFO', res)
 
         resolve(res)
       }).catch(err => {
+          console.error(err)
         reject()
       })
     })
