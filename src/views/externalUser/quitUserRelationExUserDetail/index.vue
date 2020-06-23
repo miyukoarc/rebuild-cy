@@ -1,16 +1,21 @@
 <template>
   <div class="app-container">
-    <el-card class="content-spacing">
-      <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
-    </el-card>
-
     <!-- <el-card class="content-spacing">
+      <list-header></list-header>
+    </el-card>-->
+
+    <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
         <div slot="right">
-          <el-button type="primary">新建</el-button>
+          <el-t-button
+            type="primary"
+            @click="handleDistribute"
+            :popAuth="true"
+            :auth="permissionMap['externalUser']['externalUser_redistributionExUser']"
+          >分配给其他员工</el-t-button>
         </div>
       </tool-bar>
-    </el-card> -->
+    </el-card>
 
     <el-card class="content-spacing">
       <div>
@@ -23,17 +28,27 @@
           lazy
           highlight-current-row
         >
-          <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="审批模块" align="left"></el-table-column>
-          <el-table-column label="提交人" align="left"></el-table-column>
-          <el-table-column label="提交时间" align="left"></el-table-column>
-          <el-table-column label="审批人" align="left"></el-table-column>
-          <el-table-column label="审核时间" align="left"></el-table-column>
-          <el-table-column label="描述" align="left"></el-table-column>
-          <el-table-column label="状态" align="left"></el-table-column>
+          <el-table-column type="selection"></el-table-column>
+          <el-table-column label="客户名称" prop="externalUserName" align="left"></el-table-column>
+
+          <el-table-column label="原添加人" prop="userName" align="left"></el-table-column>
+          <el-table-column label="原添加人所属部门" prop="departName" align="left"></el-table-column>
+          <el-table-column label="离职时间" align="left" prop="quitDate"></el-table-column>
+
+          <!-- <el-table-column label="渠道来源" align="left">
+            <template v-slot="scope">
+            </template>
+          </el-table-column>-->
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <el-t-button
+                type="primary"
+                size="mini"
+                :popAuth="true"
+                :auth="permissionMap['externalUser']['externalUser_redistributionExUser']"
+                @click.stop="handleDistributeSingle(scope.$index)"
+              >分配</el-t-button>
+              <!-- <el-t-button :popAuth="true" :auth="permissionMap['externalUser']['externalUser_quitUserRelationExUserList']" type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-t-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
@@ -41,7 +56,7 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
+        <!-- <el-pagination
           background
           class="pager"
           layout="total,prev, pager, next,jumper"
@@ -49,7 +64,7 @@
           :current-page.sync="pageConfig.pageNumber"
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
-        />
+        />-->
       </div>
     </el-card>
 
@@ -66,6 +81,7 @@ import ToolBar from './tool-bar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+  name: 'runWayListAll',
   components: {
     ListHeader,
     UserDetail,
@@ -82,29 +98,35 @@ export default {
       },
 
       query: {
-        page: 0,
-        size: 10,
-        startTime: true,
-        endTime: '',
-        action: '',
+        // page: 0,
+        // size: 10,
+        // flag: true,
+        // name: '',
+        // tagIds: '',
+        // userId: '',
+        // roleUuid: ''
       }
     }
   },
-  watch: {},
-  computed: {
-    ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-
-      loading: state => state.sensitive.loading,
-      listAll: state => state.sensitive.actionListAll,
-      page: state => state.sensitive.actionPage
-    }),
-    routesData() {
-      return this.routes
+  watch: {
+    $route: {
+      handler(newVal, oldVal) {
+        console.log(this.$route.query)
+      },
+      immediate: true
     }
   },
+  computed: {
+    ...mapState({
+      //   tagListAll: state => state.tag.tagListAll,
+
+      loading: state => state.externalUser.loading,
+      listAll: state => state.externalUser.quitUserRelationExUserListDetail,
+      permissionMap: state => state.permission.permissionMap
+    })
+  },
   created() {
-    this.initDataList(this.query)
+    this.initDataList(this.$route.query)
     // this.initFilter()
   },
   methods: {
@@ -126,7 +148,7 @@ export default {
         })
 
       this.$store
-        .dispatch('user/getAllUserList')
+        .dispatch('user/getUserListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -140,38 +162,36 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('sensitive/getActionListAll', payload)
+        .dispatch('externalUser/getQuitUserRelationExUserDetail', payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          //   this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1
+          //   this.pageConfig.total = this.runWayListAllPage.total
         })
         .catch(err => {
+          console.error(err)
           this.$message({
             type: 'error',
             message: '初始化失败'
           })
         })
     },
-    handleDetail(val) {
-      const payload = this.userList[val].uuid
+    handleDetail(index) {
+      const userId = this.quitUserRelationExUserList[index].userId
       this.$router.push({
-        path: '/user/detail',
-        query: { uuid: payload }
+        path: '/externalUser/quitUserRelationExUserDetail',
+        query: { userId: userId }
       })
     },
-    handleSearch(val) {
-      const { startTime, endTime,action } = val
-      this.query.startTime = startTime ? startTime : this.query.startTime
-      this.query.endTime = endTime ? endTime : this.query.endTime
-      this.query.action = action ? action : this.query.action
-      console.log(val, 'handleSearch')
-      this.initDataList(this.query)
+    handleDistribute() {
+      this.$refs['formDialog'].event = 'DistributeTemplate'
+      this.$refs['formDialog'].eventType = 'distribute'
+      this.$refs['formDialog'].dialogVisible = true
     },
-    handleRefresh() {
-      console.log('handleRefresh')
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+    handleDistributeSingle(index) {
+      this.$refs['formDialog'].event = 'DistributeTemplate'
+      this.$refs['formDialog'].eventType = 'distribute'
+      this.$refs['formDialog'].dialogVisible = true
     },
     changePage(key) {
       this.query.page = key - 1
@@ -194,18 +214,4 @@ export default {
   padding: 20px 0;
   text-align: center;
 }
-
-// .app-container {
-//   border-top: 1px solid #e9e9e9;
-//   background: white;
-//   .roles-table {
-//     margin-top: 30px;
-//   }
-//   .permission-tree {
-//     margin-bottom: 30px;
-//   }
-// }
-// header .el-header button {
-//   margin-right: 5px;
-// }
 </style>

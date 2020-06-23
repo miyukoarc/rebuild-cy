@@ -7,8 +7,8 @@
     <el-card class="content-spacing">
       <tool-bar :hasExport="false" >
         <div slot="right">
-          <el-button type="primary">新建文章</el-button>
-
+          <!-- <el-t-button type="primary">新建文章</el-t-button> -->
+          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['media']['media_addMediaIsAudit']">新建文章</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -81,22 +81,20 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        title: '',
       }
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
+    //   tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
+      loading: state => state.batchSendTask.loading,
+      listAll: state => state.batchSendTask.listMy,
+      page: state => state.batchSendTask.listMyPage,
+
+      permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
       return this.routes
@@ -104,7 +102,7 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    this.initFilter()
+    // this.initFilter()
   },
   methods: {
     doExport(val) {
@@ -115,7 +113,7 @@ export default {
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListSelect')
+        .dispatch('batchSendTask/getListMy')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -139,7 +137,7 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('batchSendTask/getListMy', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1
@@ -160,9 +158,9 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
+      const { title } = val
+      this.query.title = title ? title : this.query.title
+    //   this.query.name = name ? name : this.query.name
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },

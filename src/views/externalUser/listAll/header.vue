@@ -17,11 +17,14 @@
 
     <el-form-item label="客户标签">
       <el-select v-model="query.tagIds" clearable @change="handleChangeSecond">
-        <el-option-group v-for="item in tagListAll" :key="item.groupId" :label="item.groupName">
+        <el-option-group 
+        v-for="item in tagListAll" 
+        :key="item.groupId" 
+        :label="item.groupName">
           <el-option
             v-for="child in item.tagList"
             :key="child.uuid"
-            :label="child.name"
+            :label="child.tagName"
             :value="child.tagId"
           ></el-option>
         </el-option-group>

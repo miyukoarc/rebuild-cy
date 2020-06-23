@@ -214,3 +214,16 @@ export const getSensitiveListAll = (payload) => {
     params: payload
   })
 }
+
+
+/**
+ * 离职员工的客户列表
+ * @param {object} payload 
+ */
+export const getQuitUserRelationExUserDetail = (payload) => {
+    return request({
+      url: '/externalUser/quitUserRelationExUserDetail',
+      method: 'get',
+      params: payload
+    })
+  }

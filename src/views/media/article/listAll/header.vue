@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="文章名">
-      <el-input v-model.trim="query.name"></el-input>
+      <el-input v-model.trim="query.title"></el-input>
     </el-form-item>
 
     <!-- <el-form-item label="手机号码">
@@ -59,19 +59,19 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      value: '',
+    //   value: '',
       query: {
-        name: '',
-        tagIds: '',
-        userId: ''
+        title: '',
+        // tagIds: '',
+        // userId: ''
         // roleUuid: ''
       }
     }
   },
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      userListAll: state => state.user.userListAll
+    //   tagListAll: state => state.tag.tagListAll,
+    //   userListAll: state => state.user.userListAll
       //   departments: state => state.department.departments
     })
   },

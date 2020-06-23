@@ -60,7 +60,7 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      value: '',
+      value: [],
       query: {
         startTime: '',
         endTime: '',
@@ -96,6 +96,7 @@ export default {
     },
     handleRefresh() {
       this.$emit('handleRefresh')
+      this.value = this.$options.data().value
       this.query = this.$options.data().query
     }
   }

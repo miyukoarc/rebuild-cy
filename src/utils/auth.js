@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 
-const TokenKey =  process.env.VUE_APP_WORK ==='offline'?'text':'JSESSIONID'
+const TokenKey =  process.env.VUE_APP_WORK ==='offline'?'text':'SESSION'
 
 export function getToken() {
   return Cookies.get(TokenKey)

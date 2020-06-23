@@ -8,6 +8,7 @@ import {
   getQuitUserRelationExUserList,
   getListExUserByUserId,
   getCustomerStatistics,
+  getQuitUserRelationExUserDetail
 } from '@/api/externalUser'
 
 const state = {
@@ -80,10 +81,13 @@ const state = {
   listOwner: [], //群主列表
 
   /**
-   * 离职员工客户列表
+   * 离职员工客户列表(所有)
    */
-  quitUserRelationExUserList:[]
-
+  quitUserRelationExUserList:[],
+  /**
+   * 某个离职员工客户列表
+   */
+  quitUserRelationExUserListDetail:[]
 
 
 }
@@ -211,10 +215,17 @@ const mutations = {
   },
 
   /**
-   * 离职员工的客户
+   * 离职员工的客户（所有）
    */
   SAVE_QUITLIST(state,payload){
     state.quitUserRelationExUserList = payload
+  },
+
+  /**
+   * 某个离职员工的客户列表
+   */
+  SAVE_QUITLISTDETAIL(state,payload){
+      state.quitUserRelationExUserListDetail = payload
   }
 
 
@@ -409,6 +420,19 @@ const actions = {
         reject()
       })
     })
+  },
+  /**
+   * 离职员工的客户列表
+   */
+  getQuitUserRelationExUserDetail({commit},payload){
+     return new Promise((resolve,reject)=>{
+         getQuitUserRelationExUserDetail(payload).then(res=>{
+             commit('SAVE_QUITLISTDETAIL',res)
+             resolve()
+         }).catch(err=>{
+             reject()
+         })
+     })
   }
 }
 

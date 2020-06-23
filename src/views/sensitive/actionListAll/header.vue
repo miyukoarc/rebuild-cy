@@ -10,7 +10,7 @@
 
     <el-form-item label="批量添加次数">
       <el-input v-model.trim="query.name"></el-input>
-    </el-form-item> -->
+    </el-form-item>-->
 
     <el-form-item label="发生时间">
       <el-date-picker
@@ -33,7 +33,7 @@
           :value="item"
         ></el-option>
       </el-select>
-    </el-form-item> -->
+    </el-form-item>-->
 
     <!-- <el-form-item label="提交人">
       <el-select v-model="query.userId" @change="handleChangeThird">
@@ -44,7 +44,7 @@
           :value="item"
         ></el-option>
       </el-select>
-    </el-form-item> -->
+    </el-form-item>-->
 
     <!-- <el-form-item label="状态">
       <el-select v-model="query.userId" @change="handleChangeThird">
@@ -55,7 +55,7 @@
           :value="item"
         ></el-option>
       </el-select>
-    </el-form-item> -->
+    </el-form-item>-->
 
     <!-- <el-form-item label="客户标签">
       <el-select v-model="query.tagIds" clearable @change="handleChangeSecond">
@@ -82,7 +82,7 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      value: '',
+      value: [],
       query: {
         action: '',
         startTiem: '',
@@ -93,16 +93,16 @@ export default {
   },
   computed: {
     ...mapState({
-    //   tagListAll: state => state.tag.tagListAll,
-    //   userListAll: state => state.user.userListAll
+      //   tagListAll: state => state.tag.tagListAll,
+      //   userListAll: state => state.user.userListAll
       //   departments: state => state.department.departments
     })
   },
   methods: {
     handleChangeFirst(val) {
-      console.log(val)
-        this.query.startTime = val[0]
-        this.query.endTime = val[1]      
+    //   console.log(val)
+      this.query.startTime = this.value[0]
+      this.query.endTime = this.value[1]
       this.$emit('handleSearch', this.query)
     },
     handleChangeSecond(val) {
@@ -118,6 +118,7 @@ export default {
     },
     handleRefresh() {
       this.$emit('handleRefresh')
+      this.value = this.$options.data().value
       this.query = this.$options.data().query
     }
   }

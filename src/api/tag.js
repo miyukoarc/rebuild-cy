@@ -6,7 +6,7 @@ import request from '@/utils/request'
  */
 export const getTagList =(payload)=>{
     return request({
-        url: '/tag/list',
+        url: '/tag/listAll',
         method: 'get',
         params: payload
     })

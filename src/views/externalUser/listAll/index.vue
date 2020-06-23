@@ -111,7 +111,6 @@ export default {
         name: '',
         tagIds: '',
         userId: '',
-        roleUuid: ''
       }
     }
   },
@@ -189,9 +188,10 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
+      const { tagIds, name, userId } = val
       this.query.tagIds = tagIds ? tagIds : this.query.tagIds
       this.query.name = name ? name : this.query.name
+      this.query.userId = userId ? userId : this.query.userId
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },

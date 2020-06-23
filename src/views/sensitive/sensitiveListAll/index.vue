@@ -9,7 +9,11 @@
         <div slot="right">
           <!-- <el-button>新增用户</el-button> -->
           <!-- <el-button type="primary">分配</el-button> -->
-          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['riskManagement']['riskManagement_add']">新建</el-t-button>
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['riskManagement']['riskManagement_add']"
+          >新建</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -28,11 +32,11 @@
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="敏感词" align="left" prop="word"></el-table-column>
           <el-table-column label="通知人" align="left">
-              <template v-slot="scope">
-                  <div>
-                      <span v-for="item in scope.row.toUser" :key="item.uuid">{{item.name}}</span>
-                  </div>
-              </template>
+            <template v-slot="scope">
+              <div>
+                <span v-for="item in scope.row.toUser" :key="item.uuid">{{item.name}}</span>
+              </div>
+            </template>
           </el-table-column>
           <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
           <el-table-column label="状态" align="left"></el-table-column>
@@ -89,18 +93,16 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        startTime: '',
+        endTime: '',
+        word: ''
       }
     }
   },
   watch: {},
   computed: {
     ...mapState({
-    //   tagListAll: state => state.tag.tagListAll,
+      //   tagListAll: state => state.tag.tagListAll,
 
       loading: state => state.sensitive.loading,
       listAll: state => state.sensitive.sensitiveListAll,
@@ -167,9 +169,10 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
+      const { startTime, endTime, word } = val
+      this.query.startTime = startTime ? startTime : this.query.startTime
+      this.query.endTime = endTime ? endTime : this.query.endTime
+      this.query.word = word ? word : this.query.word
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },

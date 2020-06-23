@@ -5,11 +5,11 @@
     </el-form-item>
 
     <el-form-item label="手机号码">
-      <el-input v-model.trim="query.name"></el-input>
+      <el-input v-model.trim="query.mobile"></el-input>
     </el-form-item>
 
     <el-form-item label="批量添加次数">
-      <el-input v-model.trim="query.name"></el-input>
+      <el-input v-model.trim="query.tryCount"></el-input>
     </el-form-item>
 
     <el-form-item label="入库时间">
@@ -20,6 +20,7 @@
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+        @change="handleChangeFirst"
       ></el-date-picker>
     </el-form-item>
 
@@ -59,11 +60,13 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      value: '',
+      value: [],
       query: {
         name: '',
-        tagIds: '',
-        userId: ''
+        mobile: '',
+        endTime: '',
+        startTime: '',
+        tryCount: ''
         // roleUuid: ''
       }
     }
@@ -78,6 +81,8 @@ export default {
   methods: {
     handleChangeFirst(val) {
       console.log(val)
+      this.query.startTime = this.value[0]
+      this.query.endTime = this.value[1]
       this.$emit('handleSearch', this.query)
     },
     handleChangeSecond(val) {

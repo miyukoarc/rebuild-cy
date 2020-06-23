@@ -57,7 +57,7 @@ export const batchSendTaskSuspend = (uuid) => {
  */
 export const getList = (payload) => {
   return request({
-    url: '/batchSendTask/list',
+    url: '/batchSendTask/listAll',
     method: 'get',
     params: payload
   })
@@ -99,5 +99,8 @@ export const sendResultHasSend = (uuid)=>{
         method: 'post',
     })
 }
+
+
+
 
 

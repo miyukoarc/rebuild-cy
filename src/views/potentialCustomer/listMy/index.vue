@@ -6,10 +6,19 @@
 
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
-          <div slot="right">
-              <el-button>新增用户</el-button>
-              <el-button type="primary">分配</el-button>
-          </div>
+        <div slot="right">
+          <el-t-button
+            type="primary"
+            :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
+            :popAuth="true"
+          >添加客户</el-t-button>
+          <el-t-button
+            type="primary"
+            :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
+            :popAuth="true"
+          >新增用户</el-t-button>
+          <el-t-button :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']">分配</el-t-button>
+        </div>
       </tool-bar>
     </el-card>
 
@@ -45,7 +54,9 @@
           <el-table-column label="添加员工" align="left"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <el-t-button size="mini" @click.stop="handleEdit(scope.$index)">编辑</el-t-button>
+              <el-t-button size="mini" @click.stop="handleDelete(scope.$index)">删除</el-t-button>
+              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
@@ -96,11 +107,11 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
         name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        mobile: '',
+        endTime: '',
+        startTime: '',
+        tryCount: ''
       }
     }
   },
@@ -109,9 +120,11 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
+      loading: state => state.potentialCustomer.loading,
+      listAll: state => state.potentialCustomer.listMy,
+      page: state => state.potentialCustomer.listMyPage,
+
+      permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
       return this.routes
@@ -119,7 +132,7 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    this.initFilter()
+    // this.initFilter()
   },
   methods: {
     doExport(val) {
@@ -128,33 +141,33 @@ export default {
     /**
      * 初始化筛选信息
      */
-    initFilter() {
-      this.$store
-        .dispatch('tag/getListSelect')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+    // initFilter() {
+    //   this.$store
+    //     .dispatch('tag/getListSelect')
+    //     .then(() => {})
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '初始化失败'
+    //       })
+    //     })
 
-      this.$store
-        .dispatch('user/getAllUserList')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
-    },
+    //   this.$store
+    //     .dispatch('user/getUserListSelect')
+    //     .then(() => {})
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '初始化失败'
+    //       })
+    //     })
+    // },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('potentialCustomer/getListMy', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1
@@ -175,9 +188,12 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
+      const { name, mobile, endTime, startTime, tryCount } = val
       this.query.name = name ? name : this.query.name
+      this.query.mobile = mobile ? mobile : this.query.mobile
+      this.query.endTime = endTime ? endTime : this.query.endTime
+      this.query.startTime = startTime ? startTime : this.query.startTime
+      this.query.tryCount = tryCount ? tryCount : this.query.tryCount
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },
@@ -190,7 +206,9 @@ export default {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
-    }
+    },
+    handleEdit() {},
+    handleDelete() {}
   }
 }
 </script>

@@ -10,7 +10,7 @@ const state = {
     /**
      * 标签列表
      */
-  tagList: [],
+  tagListAll: [],
   loading: false,
   tagListPage: {
     pageSize: 0,
@@ -30,7 +30,7 @@ const mutations = {
    * @param {*} payload 
    */
   SAVE_TAGLIST(state, payload) {
-    state.tagList = payload
+    state.tagListAll = payload
   },
   /**
    * 保存分页信息
@@ -85,7 +85,7 @@ const actions = {
       getTagList(payload).then(res => {
           const accessed = classifyTag(res.items)
         commit('SAVE_TAGLIST',accessed)
-        commit('SET_TAGLISTPAGE',res.items)
+        commit('SET_TAGLISTPAGE',res)
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {

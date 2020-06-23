@@ -34,7 +34,7 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
       headers: {
         host: '127.0.0.1:3000' //koa服务在3000端口运行
       },
-      target: "http://127.0.0.1:8085", //与调试本地node server保持一致
+      target: "http://localhost:8085", //与调试本地node server保持一致
       changeOrigin: true,
       pathRewrite: {
         "^/api": ""
@@ -59,9 +59,10 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
     disableHostCheck: true,
     proxy: {
         [process.env.VUE_APP_BASE_API]: {
+            target: 'http://47.111.161.128:9000/',
             // target: 'http://10.10.10.65:9000', // 光
             // target: 'http://10.10.10.84:80', // 杜亮
-            target: 'http://10.10.10.198:80', // 骋昊
+            // target: 'http://10.10.10.198:80', // 骋昊
             // ws: true,
             changeOrigin: true,
             pathRewrite: {
@@ -69,7 +70,8 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
             }
         },
         '/public': {
-            target: 'http://10.10.10.198:80',
+            target: 'http://47.111.161.128:9000/',
+            // target: 'http://10.10.10.198:80',
             changeOrigin: true,
         },
         // "/api": {
@@ -84,7 +86,9 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
             headers: {
                 Host: 'sidebar.cyscrm.com'
             },
-            target: "http://10.10.10.198:80", //陈浩
+            target: 'http://47.111.161.128:9000/',
+            // target: "http://10.10.10.198:80", //陈浩
+            // target: "http://sidebar.cyscrm.com:9000"//线上
             // target: "http://10.10.10.84:80", //杜亮
             // target: 'http://10.10.10.65:9000', //光
             // target: "http://47.111.161.128:80",

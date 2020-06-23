@@ -22,8 +22,12 @@
           highlight-current-row
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="标签组名" align="left"></el-table-column>
-          <el-table-column label="标签" align="left"></el-table-column>
+          <el-table-column label="标签组名" align="left" prop="groupName" width="100"></el-table-column>
+          <el-table-column label="标签" align="left">
+              <template v-slot="scope">
+                  <el-tag v-for="item in scope.row.tags" :key="item.uuid" style="margin-right:5px;">{{item.tagName}}</el-tag>
+              </template>
+          </el-table-column>
           <!-- <el-table-column label="文章描述" align="left"></el-table-column> -->
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
@@ -89,19 +93,14 @@ export default {
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-
-      loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
-    }),
-    routesData() {
-      return this.routes
-    }
+      loading: state => state.tag.loading,
+      listAll: state => state.tag.tagListAll,
+      page: state => state.tag.tagListPage
+    })
   },
   created() {
     this.initDataList(this.query)
-    this.initFilter()
+    // this.initFilter()
   },
   methods: {
     doExport(val) {
@@ -136,7 +135,7 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('tag/getTagList', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1

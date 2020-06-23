@@ -41,7 +41,7 @@ export const deleteContactWay = (payload)=>{
  */
 export const getList = (payload)=>{
     return request({
-        url: '/contactWay/list',
+        url: '/contactWay/listAll',
         method: 'get',
         params: payload
     })

@@ -7,7 +7,7 @@
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
           <div slot="right">
-              <el-button type="primary" @click="handleDistribute">分配给其他员工</el-button>
+              <el-t-button type="primary" @click="handleDistribute" :popAuth="true" :auth="permissionMap['externalUser']['externalUser_redistributionExUser']">分配给其他员工</el-t-button>
           </div>
       </tool-bar>
     </el-card>
@@ -39,8 +39,8 @@
           </el-table-column>-->
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini">详情</el-button>
-              <el-button type="primary" size="mini"></el-button>
+              <el-t-button type="primary" size="mini" :popAuth="true" :auth="permissionMap['externalUser']['externalUser_redistributionExUser']" @click.stop="handleDistributeSingle(scope.$index)">分配</el-t-button>
+              <el-t-button :popAuth="true" :auth="permissionMap['externalUser']['externalUser_quitUserRelationExUserList']" type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-t-button>
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
@@ -107,6 +107,7 @@ export default {
 
       loading: state => state.externalUser.loading,
       quitUserRelationExUserList: state => state.externalUser.quitUserRelationExUserList,
+      permissionMap: state => state.permission.permissionMap
     }),
   },
   created() {
@@ -132,7 +133,7 @@ export default {
         })
 
         this.$store
-        .dispatch('user/getAllUserList')
+        .dispatch('user/getUserListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -161,14 +162,19 @@ export default {
           })
         })
     },
-    handleDetail(val) {
-      const payload = this.userList[val].uuid
+    handleDetail(index) {
+      const userId = this.quitUserRelationExUserList[index].userId
       this.$router.push({
-        path: '/user/detail',
-        query: { uuid: payload }
+        path: '/externalUser/quitUserRelationExUserDetail',
+        query: { userId: userId }
       })
     },
     handleDistribute(){
+        this.$refs['formDialog'].event = 'DistributeTemplate'
+        this.$refs['formDialog'].eventType = 'distribute'
+        this.$refs['formDialog'].dialogVisible = true
+    },
+    handleDistributeSingle(index){
         this.$refs['formDialog'].event = 'DistributeTemplate'
         this.$refs['formDialog'].eventType = 'distribute'
         this.$refs['formDialog'].dialogVisible = true

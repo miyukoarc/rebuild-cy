@@ -7,7 +7,7 @@
     <el-card class="content-spacing">
       <tool-bar :hasExport="false" @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
           <div slot="right">
-              <el-button type="primary">新建群发</el-button>
+              <el-t-button :popAuth="true" :auth="permissionMap['batchSendTask']['batchSendTask_add']" type="primary">新建群发</el-t-button>
           </div>
       </tool-bar>
     </el-card>
@@ -23,7 +23,7 @@
           lazy
           highlight-current-row
         >
-          <el-table-column type="selection"></el-table-column>
+          <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="id" align="left">
             <template v-slot="scope">
               <div class="user-card" v-if="scope.row.externalUser">
@@ -95,11 +95,11 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        // flag: true,
+        // name: '',
+        // tagIds: '',
+        // userId: '',
+        // roleUuid: ''
       }
     }
   },
@@ -108,9 +108,11 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
+      loading: state => state.batchSendTask.loading,
+      listAll: state => state.batchSendTask.list,
+      page: state => state.batchSendTask.listAllPage,
+
+      permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
       return this.routes
@@ -118,7 +120,7 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    this.initFilter()
+    // this.initFilter()
   },
   methods: {
     doExport(val) {
@@ -153,7 +155,7 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('batchSendTask/getList', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1

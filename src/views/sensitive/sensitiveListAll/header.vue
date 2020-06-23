@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="敏感词行为">
-      <el-input v-model.trim="query.name"></el-input>
+      <el-input v-model.trim="query.word"></el-input>
     </el-form-item>
 
     <!-- <el-form-item label="手机号码">
@@ -20,6 +20,7 @@
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+        @change="handleChangeFirst"
       ></el-date-picker>
     </el-form-item>
 
@@ -59,25 +60,21 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      value: '',
+      value: [],
       query: {
-        name: '',
-        tagIds: '',
-        userId: ''
-        // roleUuid: ''
+        startTime: '',
+        endTime: '',
+        word: ''
       }
     }
   },
   computed: {
-    ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      userListAll: state => state.user.userListAll
-      //   departments: state => state.department.departments
-    })
   },
   methods: {
     handleChangeFirst(val) {
       console.log(val)
+      this.query.startTime = this.value[0]
+      this.query.endTime = this.value[1]
       this.$emit('handleSearch', this.query)
     },
     handleChangeSecond(val) {
@@ -93,6 +90,7 @@ export default {
     },
     handleRefresh() {
       this.$emit('handleRefresh')
+      this.value = this.$options.data().value
       this.query = this.$options.data().query
     }
   }

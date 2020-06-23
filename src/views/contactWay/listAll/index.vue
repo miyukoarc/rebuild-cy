@@ -7,7 +7,7 @@
     <el-card class="content-spacing">
       <tool-bar :hasExport="false" @handleExport="doExport" >
           <div slot="right">
-              <el-button type="primary">新建</el-button>
+              <el-t-button type="primary" :popAuth="true" :auth="permissionMap['contactWay']['contactWay_add']" >新建</el-t-button>
           </div>
       </tool-bar>
     </el-card>
@@ -24,24 +24,12 @@
           highlight-current-row
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="客户名" align="left">
-            <template v-slot="scope">
-              <div class="user-card" v-if="scope.row.externalUser">
-                <el-image
-                  :src="scope.row.externalUser.avatar"
-                  lazy
-                  style="width:30px;height:30px;margin-right:10px"
-                ></el-image>
-                <!-- <img :src="scope.row.externalUser.avatar" alt=""  style="width:30px;height:30px;margin-right:10px"> -->
-                <span>{{scope.row.externalUser.name}}</span>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="手机号" align="left"></el-table-column>
-          <el-table-column label="批量添加次数" align="left"></el-table-column>
-          <el-table-column label="入库时间" align="left"></el-table-column>
-          <el-table-column label="所属员工" align="left"></el-table-column>
-          <el-table-column label="添加员工" align="left"></el-table-column>
+          <el-table-column label="二维码" align="left"></el-table-column>
+          <el-table-column label="名称" align="left"></el-table-column>
+          <el-table-column label="添加好友人数" align="left"></el-table-column>
+          <el-table-column label="创建时间" align="left"></el-table-column>
+          <el-table-column label="使用成员" align="left"></el-table-column>
+          <el-table-column label="标签" align="left"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
@@ -95,11 +83,7 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        remark: '',
       }
     }
   },
@@ -108,9 +92,10 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
+      loading: state => state.contactWay.loading,
+      listAll: state => state.contactWay.list,
+      page: state => state.contactWay.listPage,
+      permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
       return this.routes
@@ -118,7 +103,7 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    this.initFilter()
+    // this.initFilter()
   },
   methods: {
     doExport(val) {
@@ -153,7 +138,7 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('contactWay/getList', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1
@@ -174,9 +159,8 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
+      const { remark } = val
+      this.query.remark = remark ? remark : this.query.remark
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },

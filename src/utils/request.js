@@ -24,7 +24,7 @@ import {removeToken} from '@/utils/auth'
 // axios.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8'
 
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: process.env.VUE_APP_WORK==='offline'?'http://127.0.0.1:3000/api':process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 15000, // request timeout
   validateStatus: (status) => {
@@ -73,7 +73,7 @@ service.interceptors.response.use(
     const res = response.data
 
     if(response.status == 400) {
-        // alert('4040')
+        // alert('to/login')
 
 
       if (res.status === 4000) {
@@ -88,7 +88,7 @@ service.interceptors.response.use(
         router.push({
             path: '/login'
         })
-        // return Promise.reject(new Error(res.message || 'Error'))
+        return Promise.reject(new Error(res.message || 'Error'))
 
 
       }
