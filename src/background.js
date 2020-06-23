@@ -17,8 +17,6 @@ const os = require('os')
 let win
 
 
-let tray 
-
 console.log(process.env.NODE_ENV)
 
 // Scheme must be registered before the app is ready
@@ -55,16 +53,12 @@ function createWindow () {
   win.on('ready-to-show',()=>{
     win.show()
   })
-  win.on('closed', () => {
-    // win = null
-    win.hide(); 
-    win.setSkipTaskbar(true);
+  win.on('closed', (event,args) => {
+    win = null
+    // win.hide(); 
+    // win.setSkipTaskbar(true);
     event.preventDefault();
   })
-}
-
-function createTray(){
-  
 }
 
 // Quit when all windows are closed.
@@ -127,21 +121,3 @@ if (isDevelopment) {
     })
   }
 }
-
-ipcMain.on('max',(e)=>{
-  win.maximize()
-})
-//窗口最大化
-
-ipcMain.on('min',(e)=>{
-  win.minimize()
-})
-//窗口最小化
-
-ipcMain.on('close',e=>win.hide())
-//窗口关闭
-ipcMain.on('unmax',()=>{
-  win.unmaximize()
-})
-
-

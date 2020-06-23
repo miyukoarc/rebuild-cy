@@ -4,7 +4,7 @@
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item>
 
-        <el-form-item label="所属客服">
+    <el-form-item label="所属客服">
       <el-select v-model="query.userId" @change="handleChangeThird">
         <el-option
           v-for="item in userListAll"
@@ -17,12 +17,14 @@
 
     <el-form-item label="客户标签">
       <el-select v-model="query.tagIds" clearable @change="handleChangeSecond">
-        <el-option
-          v-for="item in tagListAll"
-          :key="item.tagId"
-          :label="item.tagName"
-          :value="item.tagId"
-        ></el-option>
+        <el-option-group v-for="item in tagListAll" :key="item.groupId" :label="item.groupName">
+          <el-option
+            v-for="child in item.tagList"
+            :key="child.uuid"
+            :label="child.name"
+            :value="child.tagId"
+          ></el-option>
+        </el-option-group>
       </el-select>
     </el-form-item>
 
@@ -40,20 +42,20 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-    //   options: [
-    //     {
-    //       label: '待审核',
-    //       value: 'TO_BE_REVIEWED'
-    //     },
-    //     {
-    //       label: '审核通过',
-    //       value: 'APPROVED'
-    //     },
-    //     {
-    //       label: '审核不通过',
-    //       value: 'AUDIT_FAILED'
-    //     }
-    //   ],
+      //   options: [
+      //     {
+      //       label: '待审核',
+      //       value: 'TO_BE_REVIEWED'
+      //     },
+      //     {
+      //       label: '审核通过',
+      //       value: 'APPROVED'
+      //     },
+      //     {
+      //       label: '审核不通过',
+      //       value: 'AUDIT_FAILED'
+      //     }
+      //   ],
       query: {
         name: '',
         tagIds: '',
@@ -64,10 +66,9 @@ export default {
   },
   computed: {
     ...mapState({
-        
-      tagListAll: state => state.tag.tagListAll,
-      userListAll: state => state.user.userListAll
-    //   departments: state => state.department.departments
+      tagListAll: state => state.tag.tagListSelect,
+      userListAll: state => state.user.listSelect
+      //   departments: state => state.department.departments
     })
   },
   methods: {
@@ -84,11 +85,11 @@ export default {
       this.$emit('handleSearch', this.query)
     },
     handleSearch() {
-      this.$emit('handleSearch',this.query)
+      this.$emit('handleSearch', this.query)
     },
     handleRefresh() {
       this.$emit('handleRefresh')
-        this.query = this.$options.data().query
+      this.query = this.$options.data().query
     }
   }
 }

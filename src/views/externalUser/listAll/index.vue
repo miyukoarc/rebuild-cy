@@ -153,7 +153,7 @@ export default {
 
 
         this.$store
-        .dispatch('user/getAllUserList')
+        .dispatch('user/getUserListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({

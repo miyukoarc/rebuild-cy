@@ -29,7 +29,7 @@ export default {
     }
   },
   created() {
-    // window.addEventListener('storage', this.afterQRScan)
+
   },
   mounted() {
     this.getWxlogin();

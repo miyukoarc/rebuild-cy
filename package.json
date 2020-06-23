@@ -1,6 +1,6 @@
 {
-  "name": "vue-admin-template",
-  "version": "4.2.1",
+  "name": "cyscrm-admin",
+  "version": "0.0.9",
   "description": "A vue admin template with Element UI & axios & iconfont & permission control & lint",
   "author": "Pan <panfree23@gmail.com>",
   "scripts": {
@@ -16,7 +16,8 @@
     "postuninstall": "electron-builder install-app-deps",
     "preview": "node build/index.js --preview",
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml",
-    "test:ci": "npm run lint && npm run test:unit"
+    "test:ci": "npm run lint && npm run test:unit",
+    "packager": "electron-packager ./ cyscrm --win --out ./dist-electron"
   },
   "main": "background.js",
   "dependencies": {
@@ -48,6 +49,7 @@
     "chalk": "2.4.2",
     "connect": "3.6.6",
     "electron": "9.0.0",
+    "electron-packager": "^14.2.1",
     "eslint": "5.15.3",
     "eslint-plugin-vue": "5.2.2",
     "html-webpack-plugin": "3.2.0",

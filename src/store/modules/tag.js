@@ -18,7 +18,8 @@ const state = {
     total: 0
   },
 
-  tagListAll: []
+  tagListAll: [],
+  tagListSelect: []
 
 
 }
@@ -61,6 +62,12 @@ const mutations = {
    */
   SAVE_LIST(state,payload){
     state.tagListAll = payload
+  },
+  /**
+   * 保存筛选列表
+   */
+  SAVE_LISTSELECT(state,payload){
+      state.tagListSelect = payload
   }
 }
 
@@ -147,7 +154,8 @@ const actions = {
   getListSelect({commit},payload){
       return new Promise((resolve, reject)=>{
         getListSelect(payload).then(res=>{
-            commit('SAVE_LIST',res)
+            // commit('SAVE_LIST',res)
+            commit('SAVE_LISTSELECT',res)
             resolve()
         }).catch(err=>{
             console.log(err)
