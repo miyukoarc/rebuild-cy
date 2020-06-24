@@ -25,7 +25,11 @@
           <el-table-column label="标签组名" align="left" prop="groupName" width="100"></el-table-column>
           <el-table-column label="标签" align="left">
               <template v-slot="scope">
-                  <el-tag v-for="item in scope.row.tags" :key="item.uuid" style="margin-right:5px;">{{item.tagName}}</el-tag>
+                  <div v-if="Object.keys(scope.row.tags).length">
+
+                    <el-tag v-for="item in scope.row.tags" :key="item.uuid" style="margin-right:5px;">{{item.tagName}}</el-tag>
+                  </div>
+                  <div v-else>--</div>
               </template>
           </el-table-column>
           <!-- <el-table-column label="文章描述" align="left"></el-table-column> -->
@@ -39,7 +43,7 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
+        <!-- <el-pagination
           background
           class="pager"
           layout="total,prev, pager, next,jumper"
@@ -47,7 +51,7 @@
           :current-page.sync="pageConfig.pageNumber"
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
-        />
+        /> -->
       </div>
     </el-card>
 
@@ -82,11 +86,8 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        groupName: '',
+        tagName: ''
       }
     }
   },

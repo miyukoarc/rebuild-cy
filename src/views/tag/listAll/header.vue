@@ -6,11 +6,11 @@
       卡片名称（企业标签由管理员统一配置，配置后企业全部成员可使用）
     </el-form-item>
     <el-form-item label="标签组名称">
-      <el-input v-model.trim="query.name"></el-input>
+      <el-input v-model.trim="query.groupName"></el-input>
     </el-form-item>
 
     <el-form-item label="标签名称">
-      <el-input v-model.trim="query.name"></el-input>
+      <el-input v-model.trim="query.tagName"></el-input>
     </el-form-item>
 
     <!-- <el-form-item label="手机号码">
@@ -68,19 +68,19 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      value: '',
+    //   value: '',
       query: {
-        name: '',
-        tagIds: '',
-        userId: ''
+        groupName: '',
+        tagName: '',
+        // userId: ''
         // roleUuid: ''
       }
     }
   },
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      userListAll: state => state.user.userListAll
+    //   tagListAll: state => state.tag.tagListAll,
+    //   userListAll: state => state.user.userListAll
       //   departments: state => state.department.departments
     })
   },

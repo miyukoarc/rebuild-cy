@@ -155,7 +155,7 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('batchSendTask/listMy', payload)
+        .dispatch('batchSendTask/getListMy', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1

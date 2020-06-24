@@ -27,10 +27,8 @@
                 <el-image
                   :src="scope.row.externalUser.avatar"
                   lazy
-                  
                   style="width:30px;height:30px;margin-right:10px"
                 ></el-image>
-                <!-- <img :src="scope.row.externalUser.avatar" alt=""  style="width:30px;height:30px;margin-right:10px"> -->
                 <span>{{scope.row.externalUser.name}}</span>
               </div>
             </template>
@@ -42,7 +40,10 @@
           </el-table-column>
           <el-table-column label="标签" align="left">
             <template v-slot="scope">
-              <!-- <div>{{scope.row.role.name}}</div> -->
+              <div v-if="Object.keys(scope.row.tags).length">
+                  <el-tag v-for="item in scope.row.tags" :key="item.uuid" style="margin: 0 5px 5px 0;">{{item.tagName}}</el-tag>
+              </div>
+              <div v-else>--</div>
             </template>
           </el-table-column>
           <el-table-column label="添加时间" align="left" prop="createtime">
@@ -51,11 +52,13 @@
 
           <el-table-column label="渠道来源" align="left">
             <template v-slot="scope">
-              <!-- <div>{{scope.row.status}}</div> -->
+                <div v-if="Object.keys(scope.row.contactWay)">{{scope.row.contactWay.state}}</div>
+                <div v-else>--</div>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
+                <el-t-button :popAuth="true" :auth="permissionMap['externalUser']['externalUser_detail']" type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-t-button>
               <!-- <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" :popAuth="true" :auth="permissionMap[''][]">详情</el-t-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
@@ -121,7 +124,7 @@ export default {
 
       loading: state => state.externalUser.loading,
       listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page,
+      page: state => state.externalUser.listAllPage,
       permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
@@ -180,11 +183,12 @@ export default {
           })
         })
     },
-    handleDetail(val) {
-      const payload = this.userList[val].uuid
+    handleDetail(index) {
+      const userId = this.listAll[index].userId
+      const uuid = this.listAll[index].uuid
       this.$router.push({
-        path: '/user/detail',
-        query: { uuid: payload }
+        path: '/externalUser/detail/'+ uuid,
+        params: { userId: userId }
       })
     },
     handleSearch(val) {
