@@ -1,27 +1,23 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" label-width="100px">
-    <el-form-item label="名称" prop="name">
-      <el-input v-model="form.name"></el-input>
+    <el-form-item label="敏感词" prop="name">
+      <el-input v-model="form.word"></el-input>
     </el-form-item>
-    <el-form-item label="上级">
-        <el-checkbox v-model="hasParent">是否为子部门</el-checkbox>
-    </el-form-item>
-    <el-form-item>
-        <el-select  v-model="form.parent" placeholder="请选择">
+    <el-form-item label="通知人">
+        <el-select  multiple collapse-tags  v-model="form.toUser" placeholder="请选择">
             <el-option
-                :disabled="!hasParent"
-                v-for="item in 10"
-                :key="item"
-                :label="item"
-                :value="item"
+                v-for="item in userListSelect"
+                :key="item.userId"
+                :label="item.name"
+                :value="item.userId"
             ></el-option>
         </el-select>
     </el-form-item>
     
-    <el-form-item>
+    <div class="text-align-center">
+      <el-button size="small" @click="handleCancel">取消</el-button>
       <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
-      <el-button type="danger" size="small" @click="handleCancel">取消</el-button>
-    </el-form-item>
+    </div>
   </el-form>
 </template>
 
@@ -34,12 +30,12 @@ export default {
     return {
       hasParent: false,
       form: {
-        name: '',
-        code: '',
-        org: '',
+        word: '',
+        type: 'MSG',
+        toUser: [],
       },
       rules: {
-        name: [
+        word: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
           { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
         ],
@@ -51,20 +47,10 @@ export default {
     }
   },
   watch: {
-      hasParent:{
-          handler(newVal,oldVal){
-              if(newVal){
-
-              }
-              if(!newVal){
-
-              }
-          },
-          immediate:true
-      }
   },
   computed: {
       ...mapState({
+          userListSelect: state => state.user.listSelect
       })
   },
   mounted(){
@@ -77,7 +63,7 @@ export default {
         if (valid) {
           console.log(payload)
           this.$store
-            .dispatch('role/addRole', payload)
+            .dispatch('sensitive/add', payload)
             .then(() => {
               this.$message({
                 type: 'success',
@@ -104,8 +90,9 @@ export default {
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
     },
+    handleChange(){},
     refresh() {
-      this.$store.dispatch('role/getRoleList').then(()=>{
+      this.$store.dispatch('sensitive/getSensitiveListAll').then(()=>{
           this.reload()
       }).catch(err => {
         this.$message({

@@ -1,7 +1,8 @@
 import {
   additionFail,
   getListMy,
-  getList
+  getList,
+  batchAdd
 } from '@/api/potentialCustomer'
 
 const state = {
@@ -129,6 +130,21 @@ const actions = {
       })
     })
   },
+  /**
+   * 批量添加潜在客户，根据手机号
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  batchAdd({commit},payload){
+     return new Promise((resolve,reject)=>{
+         batchAdd(payload).then(res=>{
+             resolve()
+         }).catch(err=>{
+             console.error(err)
+             reject()
+         })
+     })
+  }
 
 }
 

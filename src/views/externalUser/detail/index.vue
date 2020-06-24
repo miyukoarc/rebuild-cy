@@ -1,13 +1,15 @@
 <template>
   <div>
       src\views\externalUser\detail\index.vue
-      {{$route.params.userId}}
+      
   </div>
 </template>
 
 <script>
 export default {
-
+    mounted(){
+        console.log(this.$route)
+    }
 }
 </script>
 

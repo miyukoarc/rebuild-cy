@@ -4,18 +4,15 @@
       <el-input v-model.trim="form.name"></el-input>
     </el-form-item>
     <el-form-item label="上级">
-        <el-checkbox v-model="hasParent">是否为子部门</el-checkbox>
-    </el-form-item>
-    <el-form-item v-if="hasParent">
-        <el-select  v-model="form.parent" placeholder="请选择">
+        <el-select  v-model="form.parentUuid" placeholder="请选择">
             <el-option
-                :disabled="!hasParent"
-                v-for="item in 10"
-                :key="item"
-                :label="item"
-                :value="item"
+                v-for="item in listSelect"
+                :key="item.uuid"
+                :label="item.name"
+                :value="item.uuid"
             ></el-option>
         </el-select>
+        <!-- <el-checkbox v-model="hasParent">是否为子部门</el-checkbox> -->
     </el-form-item>
     
     <div class="text-align-center">
@@ -36,8 +33,7 @@ export default {
       hasParent: false,
       form: {
         name: '',
-        code: '',
-        org: '',
+        parentUuid: 1,
       },
       rules: {
         name: [
@@ -66,6 +62,7 @@ export default {
   },
   computed: {
       ...mapState({
+          listSelect: state => state.department.listSelect
       })
   },
   mounted(){

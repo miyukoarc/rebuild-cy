@@ -9,6 +9,7 @@ import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 import {MessageBox} from 'element-ui'
 
 import '@/styles/index.scss' // global css
+import 'default-passive-events'
 
 import App from './App'
 import store from './store'

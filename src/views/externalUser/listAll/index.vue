@@ -184,11 +184,11 @@ export default {
         })
     },
     handleDetail(index) {
-      const userId = this.listAll[index].userId
+      const userId = this.listAll[index].user.userId
       const uuid = this.listAll[index].uuid
       this.$router.push({
         path: '/externalUser/detail/'+ uuid,
-        params: { userId: userId }
+        query: { userId: userId }
       })
     },
     handleSearch(val) {

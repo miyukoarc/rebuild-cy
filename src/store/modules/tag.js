@@ -12,6 +12,7 @@ const state = {
      */
   tagListAll: [],
   loading: false,
+  currentGroup: [],
   tagListPage: {
     pageSize: 0,
     pageNumber: 0,
@@ -46,6 +47,9 @@ const mutations = {
     state.tagListPage.pageSize = pageSize
     state.tagListPage.pageNumber = pageNumber
     state.tagListPage.total = total
+  },
+  SAVE_GROUP(state,payload){
+      state.currentGroup = payload
   },
   /**
    * 切换loading状态
@@ -151,9 +155,9 @@ const actions = {
    * @param {*} param0 
    * @param {object} payload 
    */
-  getListSelect({commit},payload){
+  getListSelect({commit}){
       return new Promise((resolve, reject)=>{
-        getListSelect(payload).then(res=>{
+        getListSelect().then(res=>{
             // commit('SAVE_LIST',res)
             commit('SAVE_LISTSELECT',res)
             resolve()

@@ -17,6 +17,12 @@
 <script>
 import { mapState } from 'vuex'
 export default {
+  props: {
+    transfer: {
+      type: Object,
+      default: () => {}
+    }
+  },
   inject: ['reload'],
   data() {
     return {
@@ -38,36 +44,47 @@ export default {
       }
     }
   },
-  watch: {
-    currDepartmentTemplate: {
-      handler(newVal, oldVal) {
-        if (newVal) {
-          //   console.log(newVal)
-          this.initData()
-        }
-      },
-      immediate: true
-    }
-  },
   computed: {
     ...mapState({
-      currentRole: state => state.role.currentRole,
-      currentDepartment: state => state.department.currentDepartment
+      currentRole: state => state.role.currentRole
     })
   },
-  updated() {
-    //   console.log('updated')
-    //   this.initData()
+  watch: {
+    transfer: {
+      handler(newVal, oldVal) {
+        //   console.log(newVal)
+        const { code, name, uuid } = newVal
+        this.form.code = code
+        this.form.name = name
+        this.form.uuid = uuid
+      }
+    }
+    // currentRole: {
+    //   handler(newVal, oldVal) {
+    //     console.log(newVal)
+    //     this.initData()
+    //   },
+    //   immediate: true,
+    //   deep: true
+    // }
   },
+  // mounted () {
+  //   this.initData()
+  //   console.log(this.currentRole,'currentRole')
+  // },
   methods: {
     initData() {
-      const parent = this.currentDepartment.parent
-      this.form.name = this.currentDepartment.name
+      const { code, name, uuid } = this.currentRole
+      this.form.code = code
+      this.form.name = name
+      this.form.uuid = uuid
+      //   const parent = this.currentDepartment.parent
+      //   this.form.name = this.currentDepartment.name
 
-      if (Object.keys(parent).length) {
-        this.hasParent = true
-        this.$set(this.form, 'parent', parent.uuid)
-      }
+      //   if (Object.keys(parent).length) {
+      //     this.hasParent = true
+      //     this.$set(this.form, 'parent', parent.uuid)
+      //   }
     },
     handleConfirm() {
       const payload = this.form

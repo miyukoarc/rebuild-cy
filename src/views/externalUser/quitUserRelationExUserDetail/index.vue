@@ -5,7 +5,7 @@
     </el-card>-->
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar @handleExport="doExport" >
         <div slot="right">
           <el-t-button
             type="primary"
@@ -20,6 +20,7 @@
     <el-card class="content-spacing">
       <div>
         <el-table
+          ref="multipleTable"
           v-loading="loading"
           :data="listAll"
           style="width: 100%"
@@ -27,6 +28,7 @@
           stripe
           lazy
           highlight-current-row
+          @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="客户名称" prop="externalUserName" align="left"></el-table-column>
@@ -105,7 +107,8 @@ export default {
         // tagIds: '',
         // userId: '',
         // roleUuid: ''
-      }
+      },
+      selectedAllData:[]
     }
   },
   watch: {
@@ -129,6 +132,11 @@ export default {
     this.initDataList(this.$route.query)
     // this.initFilter()
   },
+  mounted(){
+    this.$bus.$on('handleRefresh',()=>{
+        this.initDataList(this.query)
+    })
+  },
   methods: {
     doExport(val) {
       console.log(val)
@@ -138,7 +146,7 @@ export default {
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListSelect')
+        .dispatch('department/getDepartmentListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -147,15 +155,15 @@ export default {
           })
         })
 
-      this.$store
-        .dispatch('user/getUserListSelect')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+    //   this.$store
+    //     .dispatch('user/getUserListSelect')
+    //     .then(() => {})
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '初始化失败'
+    //       })
+    //     })
     },
     /**
      * 初始化表格信息
@@ -184,19 +192,45 @@ export default {
       })
     },
     handleDistribute() {
-      this.$refs['formDialog'].event = 'DistributeTemplate'
-      this.$refs['formDialog'].eventType = 'distribute'
-      this.$refs['formDialog'].dialogVisible = true
+      if(this.selectedAllData.length>0){
+        this.$refs['formDialog'].event = 'DistributeTemplate'
+        this.$refs['formDialog'].eventType = 'distribute'
+        this.$refs['formDialog'].dialogVisible = true
+        this.$refs['formDialog'].selectedAllData = this.selectedAllData
+      }else{
+        this.$message({
+          type:'warning',
+          message:'请勾选分配人员!'
+        })
+      }
     },
     handleDistributeSingle(index) {
+      // let that = this
+      // let single = []
+      // const a = this.quitUserRelationExUserList[index]
+      // single.push(a)
+      // console.log(single,'s')
+      // this.handleSelectionChange(single)
+      // if (this.selectedAllData.length>0) {
+      //     this.selectedAllData.forEach(row => {
+      //       this.$refs.multipleTable.toggleRowSelection(row);
+      //     });
+      //   } else {
+      //     this.$refs.multipleTable.clearSelection();
+      //   }
       this.$refs['formDialog'].event = 'DistributeTemplate'
       this.$refs['formDialog'].eventType = 'distribute'
       this.$refs['formDialog'].dialogVisible = true
+      this.$store.commit('externalUser/SAVE_QUITUSERCURRENTROW',this.quitUserRelationExUserList[index])
     },
     changePage(key) {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
+    },
+    handleSelectionChange(val) {
+      this.selectedAllData = val
+      console.log(val, "selected");
     }
   }
 }

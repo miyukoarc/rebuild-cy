@@ -30,9 +30,12 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+import online from '@/views/signin'
+import offline from '@/views/login'
+const loginPage = process.env.VUE_APP_WORK === 'offline' ? offline : online
 export const constantRoutes = [{
     path: '/login',
-    component: () => import('@/views/signin'),
+    component: loginPage,
     hidden: true
   },
   {
@@ -52,29 +55,29 @@ export const constantRoutes = [{
   /**
    * local test
    */
-//   {
-//     path: '/department',
-//     component: Layout,
-//     children: [{
-//       path: 'list',
-//       component: () => import('@/views/department/list'),
-//     }]
-//   },
-//   {
-//     path: '/role',
-//     component: Layout,
-//     children: [{
-//       path: 'list',
-//       component: () => import('@/views/role/list'),
-//     }]
-//   },
+  //   {
+  //     path: '/department',
+  //     component: Layout,
+  //     children: [{
+  //       path: 'list',
+  //       component: () => import('@/views/department/list'),
+  //     }]
+  //   },
+  //   {
+  //     path: '/role',
+  //     component: Layout,
+  //     children: [{
+  //       path: 'list',
+  //       component: () => import('@/views/role/list'),
+  //     }]
+  //   },
   {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
   // 404 page must be placed at the end !!!
-    // { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 

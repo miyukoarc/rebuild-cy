@@ -69,7 +69,7 @@
             </template>
           </el-table-column>
         </el-table>
-
+        
         <el-pagination
           background
           class="pager"
@@ -187,10 +187,10 @@ export default {
           })
         })
     },
-    handleDetail(val) {
-      const payload = this.userList[val].uuid
+    handleDetail(index) {
+      const payload = this.userList[index].uuid
       this.$router.push({
-        path: '/user/detail',
+        path: '/externalUser/detail',
         query: { uuid: payload }
       })
     },

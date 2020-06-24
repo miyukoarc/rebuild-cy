@@ -23,7 +23,7 @@ components:{
   data() {
     return {
       dialogVisible: false,
-      event: 'DistributeTemplate',
+      event: 'EditTemplate',
       eventType: ''
     };
   },
@@ -53,13 +53,13 @@ components:{
   methods: {
 
       genTitle(){
-        //   if(this.eventType==='create'){
-        //       return '创建模板'
-        //   }
+          if(this.eventType==='create'){
+              return '创建模板'
+          }
 
-        //   if(this.eventType==='edit'){
-        //       return '编辑模板'
-        //   }
+          if(this.eventType==='edit'){
+              return '编辑模板'
+          }
 
           if(this.eventType==='distribute'){
               return '分配部门'

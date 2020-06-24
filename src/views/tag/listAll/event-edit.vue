@@ -1,139 +1,194 @@
 <template>
-  <el-form :model="form" ref="form" :rules="rules" label-width="100px">
+  <div>
+    <el-form ref="form" :model="form" label-width="120px" label-position="left">
+      <div class="cell-container">
+        <el-form-item class="form-item-container" label="标签组名称" prop="tagList.groupName" :rules="rules.groupName">
+          <el-input v-model="form.groupName" maxlength="15"></el-input>
+        </el-form-item>
+        <div class="operate-container">
+          <el-button size="small" type="text" @click="handleDeleteGroup">删除组</el-button>
+        </div>
+      </div>
 
-    <el-form-item label="名称" prop="name">
-      <el-input v-model="form.name"></el-input>
-    </el-form-item>
+      <!-- <el-form-item label="标签名称">
+                <el-input v-model="form.groupName"></el-input>
+      </el-form-item>-->
+      <div v-show="form.tagList.length">
+        <div class="cell-container" v-for="(item,index) in form.tagList" :key="index">
+          <el-form-item class="form-item-container" :label="`标签名称(${index+1})`" :prop="'tagList.'+index+'.tagName'" :rules="rules.tagName">
+            <el-input v-model="form.tagList[index].tagName" maxlength="15"></el-input>
+          </el-form-item>
 
+          <div class="operate-container">
+            <el-button size="mini" type="danger" @click="handleDelete(index)">删除</el-button>
+          </div>
+        </div>
+      </div>
+      <el-form-item label>
+        <el-button size="small" type="text" @click="handleAddTag">添加标签</el-button>
+      </el-form-item>
 
-    <el-form-item label="上级">
-      <el-checkbox v-model="hasParent">是否为子部门</el-checkbox>
-    </el-form-item>
-
-    <el-form-item>
-      <el-select v-model="form.parent" placeholder="请选择">
-        <el-option
-          :disabled="!hasParent"
-          v-for="item in 10"
-          :key="item"
-          :label="item"
-          :value="item"
-        ></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
-      <el-button type="danger" size="small" @click="handleCancel">取消</el-button>
-    </el-form-item>
-  </el-form>
+      <!-- <el-form-item   label> -->
+          <div style="text-align:center;">
+              <el-t-button size="small" @click="handleCancel">取消</el-t-button>
+        <el-t-button size="small" type="primary" @click="handleEdit">确定</el-t-button>
+          </div>
+        
+      <!-- </el-form-item> -->
+    </el-form>
+  </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 export default {
-  inject: ['reload'],
   data() {
     return {
-      hasParent: false,
       form: {
-        code: '',
-        name: '',
-        org: 0,
-        // parent: 0,
-        uuid: ''
+        groupId: '',
+        groupName: '',
+        tagList: [
+          {
+            tagName: '',
+            tagId: ''
+          }
+        ]
       },
       rules: {
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+        groupName: [
+          { required: true, message: '请输入标签组名称', trigger: 'blur' },
+          { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
+        ],
+        tagName: [
+          { required: true, message: '请输入标签名称', trigger: 'blur' },
+          { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
         ]
       }
     }
   },
+  computed: {
+    ...mapState({
+      currentGroup: state => state.tag.currentGroup
+    })
+  },
   watch: {
-    currDepartmentTemplate: {
+    currentGroup: {
       handler(newVal, oldVal) {
-        if (newVal) {
-          //   console.log(newVal)
-          this.initData()
-        }
+        this.form.groupName = newVal.groupName
+        this.form.groupId = newVal.groupId
+        this.$set(
+          this.form,
+          'tagList',
+          newVal.tags.map(item => {
+            return { tagId: item.tagId, tagName: item.tagName }
+          })
+        )
+
+        //   console.log()
       },
+      deep: true,
       immediate: true
     }
   },
-  computed: {
-    ...mapState({
-        currentRole: state => state.role.currentRole,
-        currentDepartment: state => state.department.currentDepartment
-    })
-  },
-  updated() {
-    //   console.log('updated')
-    //   this.initData()
-  },
   methods: {
-    initData() {
-      const parent = this.currentDepartment.parent
-      this.form.name = this.currentDepartment.name
-
-
-      if (Object.keys(parent).length) {
-        this.hasParent = true
-        this.$set(this.form, 'parent', parent.uuid)
-
-      }
-    },
-    handleConfirm() {
-      const payload = this.form
-
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-          console.log(payload)
-          this.$store
-            .dispatch('role/updateRole', payload)
-            .then(() => {
-              this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.handleCancel()
-              this.refresh()
-            })
-            .catch(err => {
-              console.log(err)
-              this.$message({
-                type: 'error',
-                message: '操作失败'
-              })
-            })
-        } else {
-          this.$message({
-            type: 'error',
-            message: '请检查输入'
-          })
-        }
+    handleAddTag() {
+      this.form.tagList.push({
+        tagName: ''
       })
     },
     handleCancel() {
-      this.$parent.$parent.dialogVisible = false
+      this.closeDialog()
     },
-    refresh() {
-      console.log('刷新')
+    handleEdit() {
+      console.log(this.form)
+      this.closeDialog()
       this.$store
-        .dispatch('role/getRoleList')
+        .dispatch('tag/updateTagIsAudit', this.form)
         .then(() => {
-          this.reload()
+          this.$message({
+            type: 'success',
+            message: '操作成功',
+          })
+          this.handleFresh()
         })
         .catch(err => {
+          console.log(err)
           this.$message({
             type: 'error',
-            message: err
+            message: '操作失败',
           })
         })
+        
+    },
+    handleDelete(index) {
+        console.log(this.form.tagList.splice(index,1))
+
+    },
+    closeDialog() {
+      this.$parent.$parent.dialogVisible = false
+    },
+    handleDeleteGroup() {
+      this.$confirm('是否删除当前标签组', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          const groupId = this.form.groupId
+          const groupName = this.form.groupName
+          const tagIds = this.form.tagList.map(item => {
+            return item.tagId
+          })
+          const payload = {
+            groupId,
+            groupName,
+            tagIds
+          }
+
+          this.closeDialog()
+
+          this.$store
+            .dispatch('tag/deleteTagIsAudit', payload)
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功',
+              })
+            
+              this.handleFresh()
+            })
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: '操作失败',
+              })
+              console.log(err)
+            })
+
+            this.form = this.$options.data().form
+
+            
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    handleFresh(){
+        this.$bus.$emit('handleFresh')
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.cell-container {
+  display: flex;
+  .form-item-container {
+    flex: 1;
+  }
+}
+.operate-container {
+  margin-left: 10px;
+  line-height: 40px;
+}
 </style>

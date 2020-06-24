@@ -13,11 +13,11 @@
             :popAuth="true"
           >添加客户</el-t-button>
           <el-t-button
-            type="primary"
             :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
             :popAuth="true"
+            @click.stop="handleCreate"
           >新增用户</el-t-button>
-          <el-t-button :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']">分配</el-t-button>
+          <el-t-button type="primary" :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']">分配</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -34,32 +34,25 @@
           highlight-current-row
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="客户名" align="left">
-            <template v-slot="scope">
-              <div class="user-card" v-if="scope.row.externalUser">
-                <el-image
-                  :src="scope.row.externalUser.avatar"
-                  lazy
-                  style="width:30px;height:30px;margin-right:10px"
-                ></el-image>
-                <!-- <img :src="scope.row.externalUser.avatar" alt=""  style="width:30px;height:30px;margin-right:10px"> -->
-                <span>{{scope.row.externalUser.name}}</span>
-              </div>
-            </template>
+          <el-table-column label="客户名" align="left" prop="name">
           </el-table-column>
-          <el-table-column label="手机号" align="left"></el-table-column>
-          <el-table-column label="批量添加次数" align="left"></el-table-column>
-          <el-table-column label="入库时间" align="left"></el-table-column>
-          <el-table-column label="所属员工" align="left"></el-table-column>
-          <el-table-column label="添加员工" align="left"></el-table-column>
+          <el-table-column label="手机号" align="left" prop="mobile"></el-table-column>
+          <el-table-column label="批量添加次数" align="left" prop="tryCount"></el-table-column>
+          <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
+          <el-table-column label="所属员工" align="left" >
+              <template v-slot="scope">
+                  <div>{{scope.row.belong.name}}</div>
+              </template>
+          </el-table-column>
+          <el-table-column label="添加员工" align="left">
+              <template v-slot="scope">
+                  <div>{{scope.row.creator.name}}</div>
+              </template>
+          </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-t-button size="mini" @click.stop="handleEdit(scope.$index)">编辑</el-t-button>
-              <el-t-button size="mini" @click.stop="handleDelete(scope.$index)">删除</el-t-button>
-              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
+              <el-t-button size="mini" :popAuth="true" :auth="permissionMap['potentialCustomer']['potentialCustomer_update']" @click.stop="handleEdit(scope.$index)">编辑</el-t-button>
+              <el-t-button type="danger" :popAuth="true" :auth="permissionMap['potentialCustomer']['potentialCustomer_delete']" size="mini" @click.stop="handleDelete(scope.$index)">删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -119,7 +112,7 @@ export default {
   computed: {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
-
+      
       loading: state => state.potentialCustomer.loading,
       listAll: state => state.potentialCustomer.listMy,
       page: state => state.potentialCustomer.listMyPage,
@@ -133,6 +126,7 @@ export default {
   created() {
     this.initDataList(this.query)
     // this.initFilter()
+
   },
   methods: {
     doExport(val) {
@@ -207,7 +201,16 @@ export default {
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
     },
-    handleEdit() {},
+    handleCreate(){
+      this.$refs['formDialog'].event = 'CreateTemplate'
+      this.$refs['formDialog'].eventType = 'create'
+      this.$refs['formDialog'].dialogVisible = true
+    },
+    handleEdit() {
+      this.$refs['formDialog'].event = 'EditTemplate'
+      this.$refs['formDialog'].eventType = 'edit'
+      this.$refs['formDialog'].dialogVisible = true
+    },
     handleDelete() {}
   }
 }

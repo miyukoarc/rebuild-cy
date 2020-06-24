@@ -13,6 +13,7 @@
             type="primary"
             :popAuth="true"
             :auth="permissionMap['riskManagement']['riskManagement_add']"
+            @click.stop="handleCreate"
           >新建</el-t-button>
         </div>
       </tool-bar>
@@ -34,18 +35,34 @@
           <el-table-column label="通知人" align="left">
             <template v-slot="scope">
               <div>
-                <span v-for="item in scope.row.toUser" :key="item.uuid">{{item.name}}</span>
+                <span v-for="item in scope.row.toUser" style="margin-left:5px;" :key="item.uuid">{{item.name}}</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
-          <el-table-column label="状态" align="left"></el-table-column>
+          <el-table-column label="状态" align="left">
+            <template v-slot="scope">
+              <div>{{scope.row.deleted?'无效':'有效'}}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
+              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
+              <el-t-button
+                type="primary"
+                :popAuth="true"
+                :auth="permissionMap['riskManagement']['riskManagement_update']"
+                size="mini"
+                @click.stop="handleEdit(scope.$index)"
+              >编辑</el-t-button>
+
+              <el-t-button
+                type="danger"
+                :popAuth="true"
+                :auth="permissionMap['riskManagement']['riskManagement_delete']"
+                size="mini"
+                @click.stop="handleDelete(scope.$index)"
+              >删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -113,7 +130,7 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    // this.initFilter()
+    this.initFilter()
   },
   methods: {
     doExport(val) {
@@ -122,27 +139,27 @@ export default {
     /**
      * 初始化筛选信息
      */
-    // initFilter() {
-    //   this.$store
-    //     .dispatch('sensitive/getSensitiveListAll')
-    //     .then(() => {})
-    //     .catch(err => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '初始化失败'
-    //       })
-    //     })
+    initFilter() {
+      //   this.$store
+      //     .dispatch('sensitive/getSensitiveListAll')
+      //     .then(() => {})
+      //     .catch(err => {
+      //       this.$message({
+      //         type: 'error',
+      //         message: '初始化失败'
+      //       })
+      //     })
 
-    //   this.$store
-    //     .dispatch('user/getAllUserList')
-    //     .then(() => {})
-    //     .catch(err => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '初始化失败'
-    //       })
-    //     })
-    // },
+      this.$store
+        .dispatch('user/getUserListSelect')
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
+    },
     /**
      * 初始化表格信息
      */
@@ -185,6 +202,49 @@ export default {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
+    },
+    handleCreate() {
+      this.$refs['formDialog'].event = 'CreateTemplate'
+      this.$refs['formDialog'].eventType = 'create'
+      this.$refs['formDialog'].dialogVisible = true
+    },
+    handleDelete(index) {
+      const payload = { uuid: this.listAll[index].uuid }
+      this.$confirm('是否删除当前敏感词', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          await this.$store
+            .dispatch('sensitive/deleteSensitive', payload)
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.initDataList(this.query)
+            })
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: err
+              })
+            })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    handleEdit(index) {
+        let {toUser,type,uuid,word} = this.listAll[index]
+        toUser = toUser.map(item=>{return item.userId})
+        // console.log(toUser)
+        const payload = {toUser,type,uuid,word}
+      this.$refs['formDialog'].event = 'EditTemplate'
+      this.$refs['formDialog'].eventType = 'edit'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = payload
     }
   }
 }

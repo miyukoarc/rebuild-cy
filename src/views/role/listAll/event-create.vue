@@ -22,13 +22,14 @@ import { mapState } from 'vuex'
 
 export default {
   inject: ['reload'],
+
   data() {
     return {
-      hasParent: false,
       form: {
         name: '',
         code: '',
-        org: ''
+        // uuid: ''
+        // org: ''
       },
       rules: {
         name: [
@@ -43,15 +44,7 @@ export default {
     }
   },
   watch: {
-    hasParent: {
-      handler(newVal, oldVal) {
-        if (newVal) {
-        }
-        if (!newVal) {
-        }
-      },
-      immediate: true
-    }
+
   },
   computed: {
     ...mapState({})

@@ -2,7 +2,7 @@
   <div>
     <el-form :model="form" ref="form" label-width="120px">
       <el-form-item label="名称" prop="name">
-        <el-select v-model="form.departmentsUuid">
+        <el-select v-model="form.depUuid">
           <el-option
             v-for="item in departments"
             :key="item.uuid"
@@ -26,15 +26,24 @@ export default {
   data() {
     return {
       form: {
-        departmentsUuid: 0
+        depUuid: '',
+        userId: ''
       }
     }
   },
   computed: {
     ...mapState({
       user: state => state.user.currentRowUserList,
-      departments: state => state.department.departments
+      departments: state => state.department.listSelect
     })
+  },
+  watch: {
+    user: {
+      handler(newVal, oldVal) {
+          this.form.userId = newVal.userId
+      },
+      immediate:true
+    }
   },
   methods: {
     closeDialog() {
@@ -43,7 +52,23 @@ export default {
     handleCancel() {
       this.closeDialog()
     },
-    handleConfrim() {}
+    handleConfrim() {
+        const payload = this.form
+        this.$store.dispatch('department/allocation',payload).then((res)=>{
+            this.$message({
+                type: 'success',
+                message: '操作成功'
+            })
+            this.$bus.$emit('handleRefresh')
+            this.closeDialog()
+        }).catch(err=>{
+            this.$message({
+                type: 'error',
+                message: err
+            })
+            // this.closeDialog()
+        })
+    }
   }
 }
 </script>

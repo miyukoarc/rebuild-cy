@@ -28,15 +28,13 @@ export const addDepartment = (payload) => {
 
 /**
  * s删除部门
- * @param {string} uuid 
+ * @param {string} payload 
  */
-export const deleteDepartment = (uuid)=>{
+export const deleteDepartment = (payload)=>{
     return request({
         url: '/department/delete',
         method: 'post',
-        data: {
-            uuid
-        }
+        data: payload
     })
 }
 
@@ -101,3 +99,20 @@ export const getDepartments = () => {
         method: 'get',
     })
 }
+
+
+/**
+ * 分配部门
+ * @param {*} payload 
+ */
+export const allocation = (payload) => {
+    return request({
+        url: '/department/allocation',
+        method: 'post',
+        data: payload
+    })
+}
+
+
+
+

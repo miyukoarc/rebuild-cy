@@ -25,16 +25,15 @@
           stripe
           lazy
           highlight-current-row
-          @row-click="handleDetail"
         >
-          <el-table-column type="selection"></el-table-column>
+          <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column prop="name" label="角色名称" align="left"></el-table-column>
-          <el-table-column label="操作" align="center" width="240">
+          <el-table-column label="操作" align="left" >
             <template slot-scope="scope">
               <el-t-button size="mini" @click="handlePermission" :popAuth="true" :auth="permissionMap['role']['role_role']">权限</el-t-button>
-              <el-t-button type="primary" size="mini"  @click.stop="handleEdit(scope.row)" :popAuth="true" :auth="permissionMap['role']['role_update']">编辑</el-t-button>
+              <el-t-button type="primary" size="mini"  @click="handleEdit(scope.row)" :popAuth="true" :auth="permissionMap['role']['role_update']">编辑</el-t-button>
 
-              <el-t-button type="danger" size="mini" @click.stop="handleDelete(scope.row)" :popAuth="true" :auth="permissionMap['role']['role_delete']">删除</el-t-button>
+              <el-t-button type="danger" size="mini" @click="handleDelete(scope.row)" :popAuth="true" :auth="permissionMap['role']['role_delete']">删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -113,15 +112,20 @@ export default {
         })
     },
     handleEdit(val) {
-      this.$store.commit('role/SAVE_DETAIL', val)
+        const {name,code,uuid} = val
+        const payload = {name,code,uuid}
+        // const payload = this.roleList[index]
+    //   this.$store.commit('role/SAVE_DETAIL', payload)
       this.$refs['formDialog'].event = 'EditTemplate'
       this.$refs['formDialog'].eventType = 'edit'
       this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = payload
     },
-    handleDelete(val) {
-      console.log(val)
-      const payload = { uuid: val.uuid }
-      this.$confirm('是否删除当前部门', 'Warning', {
+    handleDelete(index) {
+      console.log(index)
+      const uuid = this.roleList[index].uuid
+      const payload = { uuid }
+      this.$confirm('是否删除当前角色', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

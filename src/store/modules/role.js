@@ -27,6 +27,7 @@ const mutations = {
     },
     SAVE_DETAIL(state, payload){
         state.currentRole = payload
+        console.log(state.currentRole,'state.currentRole')
     }
 }
 
@@ -45,7 +46,7 @@ const actions = {
           }).catch(err=>{
               console.log(err)
               commit('TOGGLE_LOADING',false)
-              reject()
+              reject(err)
           })
       })
   },
@@ -59,7 +60,7 @@ const actions = {
               resolve()
           }).catch(err=>{
               console.log(err)
-              reject()
+              reject(err)
           })
       })
   },
@@ -73,7 +74,7 @@ const actions = {
               resolve()
           }).catch(err=>{
               console.log(err)
-              reject()
+              reject(err)
           })
       })
   },
@@ -90,7 +91,7 @@ const actions = {
           }).catch(err=>{
               console.log(err)
               commit('TOGGLE_LOADING',false)
-              reject()
+              reject(err)
           })
       })
   },
@@ -109,7 +110,7 @@ const actions = {
           }).catch(err=>{
               console.log(err)
               commit('TOGGLE_LOADING',false)
-              reject()
+              reject(err)
           })
       })
   },

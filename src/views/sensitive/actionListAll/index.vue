@@ -84,7 +84,7 @@ export default {
       query: {
         page: 0,
         size: 10,
-        startTime: true,
+        startTime: '',
         endTime: '',
         action: '',
       }

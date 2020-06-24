@@ -15,16 +15,16 @@
       </div>
 
       <el-container class="qrcode-container">
-        <!-- <div id="wx_qrcode">
+        <div id="wx_qrcode">
           <iframe :srcdoc="loginPage" frameborder="0"></iframe>
-        </div> -->
-        <div class="iframe-container">
+        </div>
+        <!-- <div class="iframe-container">
           <iframe
             src="http://10.10.10.159/login"
             style="height:400px;width:400px;"
             frameborder="0"
           ></iframe>
-        </div>
+        </div> -->
       </el-container>
 
       <div style="text-align:center;" v-if="env==='offline'">
@@ -98,14 +98,14 @@ export default {
     // if (process.env.VUE_APP_WORK !== 'offline') {
     //   this.getWxlogin()
     // }
-    // window.WwLogin({
-    //   id: 'wx_qrcode',
-    //   appid: 'wwa266cd2b968ae008',
-    //   agentid: '1000019',
-    //   redirect_uri: 'http://sidebar.cyscrm.com/api/wxlogin',
-    //   state: '123456',
-    //   href: ''
-    // })
+    window.WwLogin({
+      id: 'wx_qrcode',
+      appid: 'wwa266cd2b968ae008',
+      agentid: '1000019',
+      redirect_uri: 'http://sidebar.cyscrm.com/api/wxlogin',
+      state: '123456',
+      href: ''
+    })
   },
   methods: {
     getWxlogin() {

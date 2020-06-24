@@ -4,7 +4,10 @@ import {
   getSensitiveListAll,
   getAuditPermissionlistAll,
   getAuditTaglistAll,
-  getAuditBatchSendTaklistAll
+  getAuditBatchSendTaklistAll,
+  add,
+  deleteSensitive,
+  update
 } from '@/api/sensitive'
 const state = {
   /**
@@ -216,7 +219,7 @@ const actions = {
       }).catch(err => {
         console.log(err)
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
@@ -241,7 +244,7 @@ const actions = {
         console.log(err)
         commit('TOGGLE_LOADING', false)
 
-        reject()
+        reject(err)
       })
     })
   },
@@ -263,7 +266,7 @@ const actions = {
       }).catch(err => {
         console.log(err)
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
@@ -285,7 +288,7 @@ const actions = {
       }).catch(err => {
         console.log(err)
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
@@ -307,7 +310,7 @@ const actions = {
       }).catch(err => {
         console.log(err)
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
@@ -329,10 +332,52 @@ const actions = {
       }).catch(err => {
         console.log(err)
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
+  /**
+   * 添加敏感词
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  add({commit},payload){
+     return new Promise((resolve,reject)=>{
+         add(payload).then(res=>{
+             resolve()
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  },
+  /**
+   * 删除敏感词
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  deleteSensitive({commit},payload){
+     return new Promise((resolve,reject)=>{
+         deleteSensitive(payload).then(res=>{
+             resolve(res)
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  },
+  /**
+   * 更新敏感词
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  update({commit},payload){
+     return new Promise((resolve,reject)=>{
+         update(payload).then(res=>{
+             resolve()
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  }
 
 
 

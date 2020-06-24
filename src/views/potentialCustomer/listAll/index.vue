@@ -11,13 +11,14 @@
             type="primary"
             :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
             :popAuth="true"
-          >添加客户</el-t-button> -->
+          >添加客户</el-t-button>-->
           <el-t-button
             type="primary"
             :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
             :popAuth="true"
+            @click.stop="handleCreate"
           >新增用户</el-t-button>
-          <el-t-button :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']">分配</el-t-button>
+          <el-t-button :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']" @click.stop="handleDistribute">分配</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -54,8 +55,8 @@
           <el-table-column label="添加员工" align="left"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-t-button size="mini" @click.stop="handleEdit(scope.$index)">编辑</el-t-button>
-              <el-t-button size="mini" @click.stop="handleDelete(scope.$index)">删除</el-t-button>
+              <el-t-button size="mini" :popAuth="true" :auth="permissionMap['potentialCustomer']['potentialCustomer_update']" @click.stop="handleEdit(scope.$index)">编辑</el-t-button>
+              <el-t-button type="danger" :popAuth="true" :auth="permissionMap['potentialCustomer']['potentialCustomer_delete']" size="mini" @click.stop="handleDelete(scope.$index)">删除</el-t-button>
               <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
@@ -206,6 +207,16 @@ export default {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
+    },
+    handleCreate() {
+      this.$refs['formDialog'].event = 'CreateTemplate'
+      this.$refs['formDialog'].eventType = 'create'
+      this.$refs['formDialog'].dialogVisible = true
+    },
+    handleDistribute(){
+              this.$refs['formDialog'].event = 'DistributeTemplate'
+      this.$refs['formDialog'].eventType = 'distribute'
+      this.$refs['formDialog'].dialogVisible = true
     },
     handleEdit() {},
     handleDelete() {}

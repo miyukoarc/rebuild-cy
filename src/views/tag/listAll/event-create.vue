@@ -1,93 +1,125 @@
 <template>
-  <el-form :model="form" ref="form" :rules="rules" label-width="100px">
-    <el-form-item label="名称" prop="name">
-      <el-input v-model="form.name"></el-input>
-    </el-form-item>
-    <el-form-item label="上级">
-        <el-checkbox v-model="hasParent">是否为子部门</el-checkbox>
-    </el-form-item>
-    <el-form-item>
-        <el-select  v-model="form.parent" placeholder="请选择">
-            <el-option
-                :disabled="!hasParent"
-                v-for="item in 10"
-                :key="item"
-                :label="item"
-                :value="item"
-            ></el-option>
-        </el-select>
-    </el-form-item>
-    
-    <el-form-item>
-      <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
-      <el-button type="danger" size="small" @click="handleCancel">取消</el-button>
-    </el-form-item>
-  </el-form>
+  <div>
+    <el-form ref="form" :model="form" label-width="120px" label-position="left">
+      <el-form-item label="标签组名称" :prop="'tagList.groupName'" :rules="rules.groupName">
+        <el-input v-model.trim="form.groupName" maxlength="15">
+          <span slot="suffix">{{form.groupName.length}}/15</span>
+        </el-input>
+      </el-form-item>
+      <!-- <el-form-item label="标签名称">
+                <el-input v-model="form.groupName"></el-input>
+      </el-form-item>-->
+      <div v-show="form.tagList.length">
+        <el-form-item
+          v-for="(item,index) in form.tagList"
+          :key="index"
+          :label="`新增标签(${index+1})`"
+          :prop="'tagList.'+index+'.tagName'"
+          :rules="rules.tagName"
+        >
+          <el-input v-model.trim="form.tagList[index].tagName" maxlength="15">
+            <span slot="suffix">{{form.tagList[index].tagName.length}}/15</span>
+          </el-input>
+        </el-form-item>
+      </div>
+      <el-form-item label>
+        <el-button size="small" type="text" @click="handleAddTag">添加标签</el-button>
+      </el-form-item>
+      <!-- <el-form-item style="text-align:center;"> -->
+      <div style="text-align:center;">
+        <el-t-button size="small" @click="handleCancel">取 消</el-t-button>
+        <el-t-button size="small" type="primary" @click="handleApply">确定</el-t-button>
+      </div>
+
+      <!-- <el-t-button size="mini" v-else>确定</el-t-button> -->
+      <!-- </el-form-item> -->
+      <!-- <div slot="footer"></div> -->
+    </el-form>
+  </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-
 export default {
-    inject: ['reload'],
   data() {
     return {
-      hasParent: false,
       form: {
-        name: '',
-        code: '',
-        org: '',
+        groupName: '',
+        tagList: [
+          {
+            tagName: ''
+          }
+        ]
       },
       rules: {
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+        groupName: [
+          { required: false, message: '请输入标签组名称', trigger: 'blur' },
+          { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
         ],
-        code: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+        tagName: [
+          { required: true, message: '请输入标签名称', trigger: 'blur' },
+          { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
         ]
       }
     }
   },
-  watch: {
-      hasParent:{
-          handler(newVal,oldVal){
-              if(newVal){
-
-              }
-              if(!newVal){
-
-              }
-          },
-          immediate:true
-      }
-  },
   computed: {
-      ...mapState({
-      })
-  },
-  mounted(){
+    ...mapState({
+      permissionMap: state => state.permission.permissionMap
+    })
   },
   methods: {
-    handleConfirm() {
-      const payload = this.form
+    handleAddTag() {
+      this.form.tagList.push({
+        tagName: ''
+      })
+    },
+    handleApply() {
+      // const payload = this.form
+      // console.log(this.form)
+      let groupName
+      let addTagName
+      let payload
+      let tagList = []
 
+      if (this.permissionMap['tag']['tag_addTagIsAudit'].needAudit) {
+        groupName = this.form.groupName
+
+        addTagName = this.form.tagList.map(item => item.tagName).join(',')
+
+        payload = {
+          groupName,
+          addTagName
+        }
+      } else {
+        groupName = this.form.groupName
+
+        // tagList = this.form.tagList.reduce((sum,curr)=>{[].push({tagName:curr.tagName})},[])
+        this.form.tagList.forEach(item=>{
+            tagList.push({tagName:item.tagName})
+        })
+
+
+        payload = {
+          groupName,
+          tagList
+        }
+      }
+
+      this.closeDialog()
       this.$refs['form'].validate(valid => {
         if (valid) {
-          console.log(payload)
           this.$store
-            .dispatch('role/addRole', payload)
+            .dispatch('tag/addTagIsAudit', payload)
             .then(() => {
               this.$message({
                 type: 'success',
                 message: '操作成功'
               })
-              this.handleCancel()
-              this.refresh()
+              this.form = this.$options.data().form
+              this.handleRefresh()
             })
             .catch(err => {
-              console.log(err)
               this.$message({
                 type: 'error',
                 message: '操作失败'
@@ -96,27 +128,24 @@ export default {
         } else {
           this.$message({
             type: 'error',
-            message: '请检查输入'
+            message: '请检查输入！'
           })
+          return false
         }
       })
     },
     handleCancel() {
+      this.closeDialog()
+    },
+    closeDialog() {
       this.$parent.$parent.dialogVisible = false
     },
-    refresh() {
-      this.$store.dispatch('role/getRoleList').then(()=>{
-          this.reload()
-      }).catch(err => {
-        this.$message({
-          type: 'error',
-          message: err
-        })
-      })
+    handleRefresh(){
+        this.$bus.$emit('handleFresh')
     }
   }
 }
 </script>
 
 <style>
-</style>
+</style> 

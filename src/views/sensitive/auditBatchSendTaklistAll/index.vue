@@ -27,27 +27,28 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column width="85" align="center" label="提交人">
+          <el-table-column width="85" align="left" label="提交人">
             <template v-slot="scoped">
               <div>{{scoped.row.submitOperator.name}}</div>
             </template>
           </el-table-column>
 
           <el-table-column
-            align="center"
+            align="left"
             label="提交时间"
             prop="createdAt"
             sortable
             :sort-orders="['descending', 'ascending']"
           ></el-table-column>
 
-          <el-table-column align="center" label="添加/删除的标签内容">
-            <template v-slot="scoped">
+          <el-table-column align="left" label="群发内容" prop="textContent">
+            <!-- <template v-slot="scoped">
               <div>{{scoped.row.tagContent}}</div>
-            </template>
+            </template> -->
           </el-table-column>
+          <el-table-column label="发送客户" align="left"></el-table-column>
 
-          <el-table-column label="操作" align="center" sortable :sort-method="sortBy">
+          <el-table-column label="操作" align="left" sortable :sort-method="sortBy">
             <template v-slot="scoped">
               <div>
                 <span

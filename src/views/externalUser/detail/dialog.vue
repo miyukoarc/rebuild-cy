@@ -32,7 +32,6 @@ components:{
           handler(newVal,oldVal){
               if(newVal){
                   this.genTitle()
-
               }
           },
           immediate: true,
@@ -62,7 +61,7 @@ components:{
         //   }
 
           if(this.eventType==='distribute'){
-              return '分配部门'
+              return '添加动态'
           }
           
           

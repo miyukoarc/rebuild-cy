@@ -21,12 +21,14 @@
           highlight-current-row
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="事件" align="left"></el-table-column>
-          <el-table-column label="模块" align="left"></el-table-column>
-          <el-table-column label="发生时间" align="left"></el-table-column>
+          <el-table-column label="事件" align="left" prop="param"></el-table-column>
+          <el-table-column label="模块" align="left" prop="type"></el-table-column>
+          <el-table-column label="发生时间" align="left" prop="createdAt"></el-table-column>
           <el-table-column label="操作人" align="left">
+              
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+                <div v-if="scope.row.triggerUser">{{scope.row.triggerUser.name}}</div>
+              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->

@@ -6,7 +6,14 @@
 
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
-          <el-button type="primary">添加标签组</el-button>
+        <div slot="right">
+          <el-t-button
+            @click.stop="handleCreate"
+            :popAuth="true"
+            :auth="permissionMap['tag']['tag_add']"
+            type="primary"
+          >添加标签组</el-t-button>
+        </div>
       </tool-bar>
     </el-card>
 
@@ -24,18 +31,25 @@
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="标签组名" align="left" prop="groupName" width="100"></el-table-column>
           <el-table-column label="标签" align="left">
-              <template v-slot="scope">
-                  <div v-if="Object.keys(scope.row.tags).length">
-
-                    <el-tag v-for="item in scope.row.tags" :key="item.uuid" style="margin-right:5px;">{{item.tagName}}</el-tag>
-                  </div>
-                  <div v-else>--</div>
-              </template>
+            <template v-slot="scope">
+              <div v-if="Object.keys(scope.row.tags).length">
+                <el-tag
+                  v-for="item in scope.row.tags"
+                  :key="item.uuid"
+                  style="margin-right:5px;"
+                >{{item.tagName}}</el-tag>
+              </div>
+              <div v-else>--</div>
+            </template>
           </el-table-column>
           <!-- <el-table-column label="文章描述" align="left"></el-table-column> -->
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click.stop="handleEdit(scope.$index,scope.row)"
+              >编辑</el-button>
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
@@ -51,7 +65,7 @@
           :current-page.sync="pageConfig.pageNumber"
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
-        /> -->
+        />-->
       </div>
     </el-card>
 
@@ -80,7 +94,7 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 1000
       },
 
       query: {
@@ -96,12 +110,23 @@ export default {
     ...mapState({
       loading: state => state.tag.loading,
       listAll: state => state.tag.tagListAll,
-      page: state => state.tag.tagListPage
+      page: state => state.tag.tagListPage,
+
+      permissionMap: state => state.permission.permissionMap
     })
   },
   created() {
     this.initDataList(this.query)
     // this.initFilter()
+  },
+  mounted(){
+    this.$bus.$on('handleFresh',res=>{
+        console.log('handleFresh')
+        this.initDataList(this.query)
+    })
+  },
+  beforeDestroy(){
+      this.$bus.$off('handleRefresh')
   },
   methods: {
     doExport(val) {
@@ -168,10 +193,24 @@ export default {
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },
+    handleEdit(index, row) {
+      console.log(index, row)
+      const payload = this.listAll[index]
+      this.$store.commit('tag/SAVE_GROUP', payload)
+
+      this.$refs['formDialog'].eventType = 'edit'
+      this.$refs['formDialog'].event = 'EditTemplate'
+      this.$refs['formDialog'].dialogVisible = true
+    },
     changePage(key) {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
+    },
+    handleCreate() {
+      this.$refs['formDialog'].eventType = 'create'
+      this.$refs['formDialog'].event = 'CreateTemplate'
+      this.$refs['formDialog'].dialogVisible = true
     }
   }
 }
@@ -189,6 +228,4 @@ export default {
   padding: 20px 0;
   text-align: center;
 }
-
-
 </style>

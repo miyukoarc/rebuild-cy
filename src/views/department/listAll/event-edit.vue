@@ -5,20 +5,17 @@
     </el-form-item>
 
     <el-form-item label="上级">
-      <el-checkbox v-model="hasParent">是否为子部门</el-checkbox>
-    </el-form-item>
-
-    <el-form-item v-if="hasParent">
-      <el-select v-model="form.parent" placeholder="请选择">
+      <el-select v-model="form.parentUuid" placeholder="请选择">
         <el-option
-          :disabled="!hasParent"
-          v-for="item in 10"
-          :key="item"
-          :label="item"
-          :value="item"
+          v-for="item in listSelect"
+          :key="item.uuid"
+          :label="item.name"
+          :value="item.uuid"
         ></el-option>
       </el-select>
+
     </el-form-item>
+
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
       <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
@@ -32,11 +29,9 @@ export default {
   //   inject: ['reload'],
   data() {
     return {
-      hasParent: false,
       form: {
-        code: '',
         name: '',
-        org: 0,
+        parentUuid: 1,
         // parent: 0,
         uuid: ''
       },
@@ -49,10 +44,10 @@ export default {
     }
   },
   watch: {
-    currDepartmentTemplate: {
+    currentDepartment: {
       handler(newVal, oldVal) {
         if (newVal) {
-          //   console.log(newVal)
+            console.log(newVal)
           this.initData()
         }
       },
@@ -61,7 +56,8 @@ export default {
   },
   computed: {
     ...mapState({
-      currentDepartment: state => state.department.currentDepartment
+      currentDepartment: state => state.department.currentDepartment,
+      listSelect: state => state.department.listSelect
     })
   },
   updated() {
@@ -70,13 +66,11 @@ export default {
   },
   methods: {
     initData() {
-      const parent = this.currentDepartment.parent
-      this.form.name = this.currentDepartment.name
-
-      if (Object.keys(parent).length) {
-        this.hasParent = true
-        this.$set(this.form, 'parent', parent.uuid)
-      }
+      const { name, uuid } = this.currentDepartment
+      const parentUuid = this.currentDepartment.parent.uuid
+      this.form.name = name
+      this.form.parentUuid = parentUuid
+      this.form.uuid = uuid
     },
     handleConfirm() {
       const payload = this.form

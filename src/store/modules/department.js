@@ -6,7 +6,8 @@ import {
   locateDepartmentLeader,
   updateDepartment,
   getDepartments,
-  getDepartmentListSelect
+  getDepartmentListSelect,
+  allocation
 } from '@/api/department'
 import {flatten} from '@/utils/common'
 
@@ -74,7 +75,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
 
@@ -95,7 +96,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
 
@@ -116,7 +117,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
 
@@ -131,15 +132,15 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getDepartmentListAll(payload).then(res => {
-          const accessed = flatten(res.items)
+        //   const accessed = flatten(res.items)
         commit('SAVE_LIST', res.items)
-        commit('SAVE_FLATTENLIST',accessed)
+        // commit('SAVE_FLATTENLIST',accessed)
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
 
@@ -160,7 +161,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
 
@@ -181,7 +182,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
 
@@ -197,7 +198,7 @@ const actions = {
              commit('SAVE_FLATTENLIST',res.items)
              resolve()
          }).catch(err=>{
-             reject()
+             reject(err)
          })
      })
   },
@@ -210,10 +211,22 @@ const actions = {
             commit('SAVE_LISTSELECT',res.items)
             resolve()
         }).catch(err=>{
-            reject()
+            reject(err)
         })
     })
  },
+ /**
+  * 分配部门
+  */
+ allocation({commit},payload){
+    return new Promise((resolve,reject)=>{
+        allocation(payload).then(res=>{
+            resolve(res)
+        }).catch(err=>{
+            reject(err)
+        })
+    })
+ }
 
 }
 

@@ -32,22 +32,22 @@
                   lazy
                   style="width:30px;height:30px;margin-right:10px"
                 ></el-image>
-                <!-- <img :src="scope.row.externalUser.avatar" alt=""  style="width:30px;height:30px;margin-right:10px"> -->
                 <span>{{scope.row.externalUser.name}}</span>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="发送者" align="left"></el-table-column>
-          <el-table-column label="群发类型" align="left"></el-table-column>
-          <el-table-column label="内容" align="left"></el-table-column>
-          <el-table-column label="修改时间" align="left"></el-table-column>
-          <el-table-column label="创建时间" align="left"></el-table-column>
+          <el-table-column label="发送者" align="left">
+              <template v-slot="scope">
+                  <div>{{scope.row.sender.name}}</div>
+              </template>
+          </el-table-column>
+          <el-table-column label="群发类型" align="left" prop="sendType"></el-table-column>
+          <el-table-column label="内容" align="left" prop="textContent"></el-table-column>
+          <el-table-column label="修改时间" align="left" prop="updatedAt"></el-table-column>
+          <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>

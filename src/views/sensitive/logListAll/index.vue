@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}条记录`">
       </tool-bar>
     </el-card>
 
@@ -21,13 +21,18 @@
           highlight-current-row
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="敏感词" align="left"></el-table-column>
-          <el-table-column label="通知人" align="left"></el-table-column>
-          <el-table-column label="创建时间" align="left"></el-table-column>
-          <el-table-column label="状态" align="left"></el-table-column>
+          <el-table-column label="所属模块" align="left" prop="entity"></el-table-column>
+          <el-table-column label="事件" align="left" prop="event"></el-table-column>
+          <el-table-column label="操作员工" align="left">
+              <template v-slot="scope">
+                  <div>{{scope.row.operator.name}}</div>
+              </template>
+          </el-table-column>
+          <el-table-column label="时间" align="left" prop="createdAt"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+                <el-button size="mini" disabled>详情</el-button>
+              <!-- <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" >详情</el-t-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
@@ -78,11 +83,13 @@ export default {
       query: {
         page: 0,
         size: 10,
-        flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        startTime: '',
+        endTime: ''
+        // flag: true,
+        // name: '',
+        // tagIds: '',
+        // userId: '',
+        // roleUuid: ''
       }
     }
   },
@@ -91,9 +98,9 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
-      page: state => state.externalUser.page
+      loading: state => state.logRecords.loading,
+      listAll: state => state.logRecords.logListAll,
+      page: state => state.logRecords.logListPage
     }),
     routesData() {
       return this.routes
@@ -101,9 +108,10 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    this.initFilter()
+    // this.initFilter()
   },
   methods: {
+    //   ...mapActions('log',['getLogListAll']),
     doExport(val) {
       console.log(val)
     },
@@ -135,8 +143,9 @@ export default {
      * 初始化表格信息
      */
     initDataList(payload) {
+
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch('logRecords/getLogListAll', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1

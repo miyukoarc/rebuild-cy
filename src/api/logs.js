@@ -4,10 +4,10 @@ import request from '@/utils/request'
  * 操作记录
  * @param {object} payload 
  */
-export const getLogAll = (payload) => {
+export const getLogListAll = (payload) => {
   return request({
-    url: '/log/logAll',
-    method: 'post',
+    url: '/log/logListAll',
+    method: 'get',
     params: payload
   })
 }

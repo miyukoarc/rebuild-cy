@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="searchForm" inline label-width="120px">
+  <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
     <el-form-item label="搜索客户">
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item>
@@ -98,5 +98,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+  .external-user-list-all-header div .el-form-item {
+    margin-bottom: 0px;
+  }
 </style>

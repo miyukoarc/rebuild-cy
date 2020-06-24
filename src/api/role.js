@@ -46,7 +46,7 @@ export const deleteRole = (payload) => {
 
 export const updateRole = (payload) => {
     return request({
-        url: '/role/updateRole',
+        url: '/role/update',
         method: 'post',
         data: payload
     })

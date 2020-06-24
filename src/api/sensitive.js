@@ -8,7 +8,7 @@ import request from '@/utils/request'
 export const add = (payload) => {
     return request({
         url: '/riskManagement/add',
-        method: 'get',
+        method: 'post',
         data: payload
     })
 }
@@ -20,7 +20,7 @@ export const add = (payload) => {
 export const deleteSensitive = (payload) => {
     return request({
         url: '/riskManagement/delete',
-        method: 'get',
+        method: 'post',
         data: payload
     })
 }
@@ -32,7 +32,7 @@ export const deleteSensitive = (payload) => {
 export const update = (payload) => {
     return request({
         url: '/riskManagement/update',
-        method: 'get',
+        method: 'post',
         data: payload
     })
 }

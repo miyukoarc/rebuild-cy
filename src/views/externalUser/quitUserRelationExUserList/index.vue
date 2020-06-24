@@ -5,9 +5,9 @@
     </el-card> -->
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar @handleExport="doExport" >
           <div slot="right">
-              <el-t-button type="primary" @click="handleDistribute" :popAuth="true" :auth="permissionMap['externalUser']['externalUser_redistributionExUser']">分配给其他员工</el-t-button>
+              <!-- <el-t-button type="primary" @click="handleDistribute" :popAuth="true" :auth="permissionMap['externalUser']['externalUser_redistributionExUser']">分配给其他员工</el-t-button> -->
           </div>
       </tool-bar>
     </el-card>
@@ -22,8 +22,9 @@
           stripe
           lazy
           highlight-current-row
+          @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection"></el-table-column>
+          <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="离职员工" prop="userName" align="left">
           </el-table-column>
 
@@ -97,13 +98,16 @@ export default {
         // tagIds: '',
         // userId: '',
         // roleUuid: ''
-      }
+      },
+      // 选择勾选
+      selectedAllData:[],
     }
   },
   watch: {},
   computed: {
     ...mapState({
     //   tagListAll: state => state.tag.tagListAll,
+    
 
       loading: state => state.externalUser.loading,
       quitUserRelationExUserList: state => state.externalUser.quitUserRelationExUserList,
@@ -113,6 +117,11 @@ export default {
   created() {
     this.initDataList(this.query)
     this.initFilter()
+  },
+  mounted(){
+    this.$bus.$on('handleRefresh',()=>{
+        this.initDataList(this.query)
+    })
   },
   methods: {
     doExport(val) {
@@ -151,8 +160,8 @@ export default {
         .dispatch('externalUser/getQuitUserRelationExUserList', payload)
         .then(() => {
           //初始化分页
-        //   this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1
-        //   this.pageConfig.total = this.runWayListAllPage.total
+          // this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1
+          // this.pageConfig.total = this.runWayListAllPage.total
         })
         .catch(err => {
             console.error(err)
@@ -173,16 +182,23 @@ export default {
         this.$refs['formDialog'].event = 'DistributeTemplate'
         this.$refs['formDialog'].eventType = 'distribute'
         this.$refs['formDialog'].dialogVisible = true
+        this.$refs['formDialog'].selectedAllData = this.selectedAllData
     },
     handleDistributeSingle(index){
+      console.log('index',)
         this.$refs['formDialog'].event = 'DistributeTemplate'
         this.$refs['formDialog'].eventType = 'distribute'
         this.$refs['formDialog'].dialogVisible = true
+        this.$store.commit('externalUser/SAVE_QUITUSERCURRENTROW',this.quitUserRelationExUserList[index])
     },
     changePage(key) {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
+    },
+    handleSelectionChange(val){
+      console.log(val,'33333')
+      this.selectedAllData = val
     }
   }
 }

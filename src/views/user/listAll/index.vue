@@ -21,7 +21,7 @@
           lazy
           highlight-current-row
         >
-          <el-table-column type="selection"></el-table-column>
+          <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column prop="name" label="员工姓名" align="left"></el-table-column>
           <el-table-column label="部门" align="left">
             <template v-slot="scoped">
@@ -37,6 +37,16 @@
             <template v-slot="scoped">
               <div>{{scoped.row.status}}</div>
             </template>
+          </el-table-column>
+          <el-table-column label="是否开通客户联系功能" prop="isFollowUser">
+              <template v-slot="scope">
+                  <div>{{scope.row.isFollowUser?"是":"否"}}</div>
+              </template>
+          </el-table-column>
+          <el-table-column label="是否开通会话存档功能" prop="isMessageUser">
+              <template v-slot="scope">
+                  <div>{{scope.row.isMessageUser?"是":"否"}}</div>
+              </template>
           </el-table-column>
           <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
@@ -125,14 +135,17 @@ export default {
     this.initFilter()
   },
   mounted() {
-    this.$bus.$on('showFormDialog', target => {
-      this.$refs['formDialog'].event = 'CreateTemplate'
-      this.$refs['formDialog'].eventType = 'create'
-      this.$refs['formDialog'].dialogVisible = true
+    // this.$bus.$on('showFormDialog', target => {
+    //   this.$refs['formDialog'].event = 'CreateTemplate'
+    //   this.$refs['formDialog'].eventType = 'create'
+    //   this.$refs['formDialog'].dialogVisible = true
+    // })
+    this.$bus.$on('handleRefresh',()=>{
+        this.initDataList(this.query)
     })
   },
   beforeDestroy() {
-    this.$bus.$off('showFormDialog')
+    this.$bus.$off('handleRefresh')
   },
   methods: {
     doExport(val) {
@@ -153,16 +166,16 @@ export default {
       this.initDataList()
     },
     initFilter() {
-      this.$store
-        .dispatch('role/getRoleList')
-        .then(() => {
-        })
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+    //   this.$store
+    //     .dispatch('user/getUserListSelect')
+    //     .then(() => {
+    //     })
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '初始化失败'
+    //       })
+    //     })
 
       this.$store
         .dispatch('department/getDepartmentListSelect')
@@ -190,10 +203,10 @@ export default {
         })
     },
     handleDetail(val) {
-      const payload = this.userList[val].uuid
+      const uuid = this.userList[val].uuid
       this.$router.push({
-        path: '/user/detail',
-        query: { uuid: payload }
+        path: '/user/detail/'+uuid
+        // query: { uuid: payload }
       })
     },
     handleSearch(val) {

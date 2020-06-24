@@ -109,7 +109,7 @@ export const getQuitUserRelationExUserList = (payload) => {
 export const redistributionExUser = (payload) => {
   return request({
     url: '/externalUser/redistributionExUser',
-    method: 'get',
+    method: 'post',
     data: payload
   })
 }

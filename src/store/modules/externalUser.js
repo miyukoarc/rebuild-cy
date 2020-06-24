@@ -8,7 +8,8 @@ import {
   getQuitUserRelationExUserList,
   getListExUserByUserId,
   getCustomerStatistics,
-  getQuitUserRelationExUserDetail
+  getQuitUserRelationExUserDetail,
+  redistributionExUser
 } from '@/api/externalUser'
 
 const state = {
@@ -84,6 +85,12 @@ const state = {
    * 离职员工客户列表(所有)
    */
   quitUserRelationExUserList:[],
+  quitListPage:{
+    total: 0,
+    pageNumber: 0,
+    pageSize: 0
+  },
+  quitUserCurrentRow:{},
   /**
    * 某个离职员工客户列表
    */
@@ -193,6 +200,7 @@ const mutations = {
     state.runWayListAllPage.pageNumber = pageNumber
     state.runWayListAllPage.pageSize = pageSize
   },
+  
 
   /**
    * 保存群聊列表
@@ -220,7 +228,20 @@ const mutations = {
   SAVE_QUITLIST(state,payload){
     state.quitUserRelationExUserList = payload
   },
-
+  SET_QUITLISTPAGE(state, payload) {
+    const {
+      total,
+      pageSize,
+      pageNumber
+    } = payload
+    state.quitListPage.total = total
+    state.quitListPage.pageNumber = pageNumber
+    state.quitListPage.pageSize = pageSize
+  },
+  SAVE_QUITUSERCURRENTROW(state,payload){
+    state.quitUserCurrentRow = payload
+    console.log(state.quitUserCurrentRow,'3333')
+  },
   /**
    * 某个离职员工的客户列表
    */
@@ -334,6 +355,25 @@ const actions = {
     return new Promise((resolve, reject) => {
       getQuitUserRelationExUserList(payload).then(res => {
           commit('SAVE_QUITLIST',res)
+          commit('TOGGLE_LOADING',false)
+        resolve()
+      }).catch(err => {
+          commit('TOGGLE_LOADING',false)
+        console.log(err)
+        reject()
+      })
+    })
+  },
+  /**
+   * 离职成员的外部联系人再分配
+   * @param {object} payload 
+   */
+  redistributionExUser({
+    commit
+  }, payload) {
+      commit('TOGGLE_LOADING',true)
+    return new Promise((resolve, reject) => {
+      redistributionExUser(payload).then(res => {
           commit('TOGGLE_LOADING',false)
         resolve()
       }).catch(err => {

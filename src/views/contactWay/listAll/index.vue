@@ -7,7 +7,7 @@
     <el-card class="content-spacing">
       <tool-bar :hasExport="false" @handleExport="doExport" >
           <div slot="right">
-              <el-t-button type="primary" :popAuth="true" :auth="permissionMap['contactWay']['contactWay_add']" >新建</el-t-button>
+              <el-t-button type="primary" :popAuth="true" :auth="permissionMap['contactWay']['contactWay_add']" @click.stop="newChannelCode">新建活码</el-t-button>
           </div>
       </tool-bar>
     </el-card>
@@ -22,7 +22,7 @@
           stripe
           lazy
           highlight-current-row
-        >
+         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="二维码" align="left"></el-table-column>
           <el-table-column label="名称" align="left"></el-table-column>
@@ -103,7 +103,8 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    // this.initFilter()
+    this.initFilter()
+    
   },
   methods: {
     doExport(val) {
@@ -113,8 +114,18 @@ export default {
      * 初始化筛选信息
      */
     initFilter() {
-      this.$store
-        .dispatch('tag/getListAllTag')
+      // this.$store
+      //   .dispatch('tag/getListAllTag')
+      //   .then(() => {})
+      //   .catch(err => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: '初始化失败'
+      //     })
+      //   })
+        
+        this.$store
+        .dispatch('tag/getListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -122,9 +133,9 @@ export default {
             message: '初始化失败'
           })
         })
-
-      this.$store
-        .dispatch('user/getAllUserList')
+        
+        this.$store
+        .dispatch('user/getUserListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -132,6 +143,15 @@ export default {
             message: '初始化失败'
           })
         })
+      // this.$store
+      //   .dispatch('user/getAllUserList')
+      //   .then(() => {})
+      //   .catch(err => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: '初始化失败'
+      //     })
+      //   })
     },
     /**
      * 初始化表格信息
@@ -173,7 +193,14 @@ export default {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
-    }
+    },
+    // 新建渠道码
+    newChannelCode() {
+      this.$router.push({
+        path:`/contactWay/detail`,
+        query:{ way:'add' }
+      })
+    },
   }
 }
 </script>

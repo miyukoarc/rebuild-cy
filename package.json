@@ -23,6 +23,7 @@
   "dependencies": {
     "axios": "0.18.1",
     "dayjs": "^1.8.28",
+    "default-passive-events": "^1.0.10",
     "element-ui": "2.13.0",
     "is-electron": "^2.2.0",
     "js-cookie": "2.2.0",

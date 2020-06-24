@@ -6,8 +6,12 @@
     <el-card class="content-spacing">
       <tool-bar :hasExport="false" :hasImport="false">
         <div slot="right">
-
-          <el-t-button size="small" :popAuth="true" :auth="permissionMap['department']['department_add']" @click="handleCreate">创建部门</el-t-button>
+          <el-t-button
+            size="small"
+            :popAuth="true"
+            :auth="permissionMap['department']['department_add']"
+            @click="handleCreate"
+          >创建部门</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -37,7 +41,13 @@
               :popAuth="true"
               @click.stop="handleEdit(scope.$index,scope.row)"
             >编辑</el-t-button>
-            <el-t-button type="danger" :auth="permissionMap['department']['department_delete']" :popAuth="true" size="mini" @click.stop="handleDelete(scope.row)">删除</el-t-button>
+            <el-t-button
+              type="danger"
+              :auth="permissionMap['department']['department_delete']"
+              :popAuth="true"
+              size="mini"
+              @click.stop="handleDelete(scope.row)"
+            >删除</el-t-button>
           </template>
         </el-table-column>
       </el-table>
@@ -62,7 +72,6 @@ export default {
     UserDetail,
     FormDialog,
     ToolBar
-
   },
   data() {
     return {}
@@ -81,6 +90,7 @@ export default {
   },
   created() {
     this.initDataList()
+    this.initFilter()
   },
   mounted() {
     this.$bus.$on('showFormDialog', target => {
@@ -111,6 +121,17 @@ export default {
     pageChange() {
       this.initDataList()
     },
+    initFilter() {
+      this.$store
+        .dispatch('department/getDepartmentListSelect')
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err
+          })
+        })
+    },
     initDataList() {
       this.$store
         .dispatch('department/getDepartmentListAll')
@@ -123,17 +144,21 @@ export default {
         })
     },
     handleEdit(index, row) {
-      console.log(index, row)
-      const payload = this.departmentList[index]
-      console.log(payload)
-      //   this.$store.commit('department/SAVE_DETAIL', val)
+    //   const payload = this.departmentList[index]
+    //   console.log(row)
+        this.$store.commit('department/SAVE_DETAIL', row)
       this.$refs['formDialog'].event = 'EditTemplate'
       this.$refs['formDialog'].eventType = 'edit'
       this.$refs['formDialog'].dialogVisible = true
     },
     handleDelete(val) {
-      console.log(val)
-      const payload = { uuid: val.uuid }
+      console.log(val.uuid)
+      const uuid = val.uuid
+
+      const payload = {
+          uuid: uuid
+      }
+      
       this.$confirm('是否删除当前部门', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
