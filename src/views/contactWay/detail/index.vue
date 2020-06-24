@@ -29,11 +29,11 @@
             <el-form-item label="客服人员:" prop="member">
               <el-select v-model="ruleForm.member" multiple placeholder="请选择">
                 <el-option
-                v-for="item in userListAll"
-                :key="item.userId"
-                :label="item.name"
-                :value="item.userId"
-              ></el-option>
+                  v-for="item in userListAll"
+                  :key="item.userId"
+                  :label="item.name"
+                  :value="item.userId"
+                ></el-option>
               </el-select>
               <span class="tip">同一个二维码可以选择多位成员同时使用</span>
             </el-form-item>
