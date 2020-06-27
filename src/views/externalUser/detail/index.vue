@@ -166,10 +166,10 @@
           <el-card class="content-spacing">
             <div style="display:flex;justify-content:space-between;align-content:center;">
             <h4 class="font-es">客户动态</h4>
-            <el-t-button type="primary" style="margin:auto 0;" :popAuth="true" size="mini" :auth="permissionMap['externalUserTrends']['externalUserTrends_add']">添加动态</el-t-button>
+            <el-t-button @click="handleCreate" type="primary" style="margin:auto 0;" :popAuth="true" size="mini" :auth="permissionMap['externalUserTrends']['externalUserTrends_add']">添加动态</el-t-button>
             </div>
             <div class="member-status-content margin-top-20">
-            <div v-if="externalUserTrends.length>0">
+            <div v-if="externalUserTrends">
               <el-timeline>
                 <el-timeline-item
                   v-for="(item,index) in externalUserTrends"
@@ -181,12 +181,15 @@
                     <div>{{ item.remark }}</div>
                     <!-- <h4>{{ item.remark }}</h4> -->
                     <p style="margin:0px;text-align:right;">
-                      <span
+                      <el-t-button
+                      :popAuth="true"
+                      :auth="permissionMap['externalUserTrends']['externalUserTrends_update']"
+                      type="text"
                         v-show="item.editable"
                         class="ml-10"
                         @click="handleEditTrend(item)"
-                      >编辑</span>
-                      <span v-show="item.editable" class="ml-10" @click="handleDeleteTrend(item)">删除</span>
+                      >编辑</el-t-button>
+                      <el-t-button :popAuth="true" :auth="permissionMap['externalUserTrends']['externalUserTrends_delete']" type="text" v-show="item.editable" class="ml-10" @click="handleDeleteTrend(item)">删除</el-t-button>
                     </p>
                   </el-card>
                 </el-timeline-item>
@@ -197,14 +200,18 @@
           </el-card>
         </el-col>
       </el-row>
+
+      <form-dialog ref="formDialog"></form-dialog>
     </div>
   </div>
 </template>
 
 <script>
 import defaultAvatar from "@/assets/2.jpg";
+import FormDialog from './dialog'
 import { mapState } from "vuex";
 export default {
+  components:{FormDialog},
   data() {
     return {
       userInfo: {},
@@ -245,7 +252,7 @@ export default {
       permissionMap: state => state.permission.permissionMap
     }),
     externalUserTrends(){
-      return this.externalUserDetail.externalUserTrends.items
+      return this.externalUserDetail?.externalUserTrends?.items
     },
     defaultAvatar() {
       return defaultAvatar;
@@ -371,8 +378,50 @@ export default {
       const current = this.limited
       this.limited = !current
     },
-    handleEditTrend(){},
-    handleDeleteTrend(){},
+    handleCreate(){
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].event = 'CreateTemplate'
+      this.$refs['formDialog'].eventType = 'create'
+    },
+    handleEditTrend(){
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].event = 'EditTemplate'
+      this.$refs['formDialog'].eventType = 'edit'
+    },
+    handleDeleteTrend(){
+            console.log(val.uuid)
+      const uuid = val.uuid
+
+      const payload = {
+          uuid: uuid
+      }
+      
+      this.$confirm('是否删除当前部门', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          await this.$store
+            .dispatch('department/deleteDepartment', payload)
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.initDataList()
+            })
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: err
+              })
+            })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
 };
 </script>

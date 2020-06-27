@@ -12,18 +12,18 @@
 
 import CreateTemplate from './event-create.vue'
 import EditTemplate from './event-edit.vue'
-import DistributeTemplate from './event-distribute'
+// import DistributeTemplate from './event-distribute'
 import {mapState} from 'vuex'
 export default {
 components:{
     CreateTemplate,
     EditTemplate,
-    DistributeTemplate
+    // DistributeTemplate
 },
   data() {
     return {
       dialogVisible: false,
-      event: 'DistributeTemplate',
+      event: 'CreateTemplate',
       eventType: ''
     };
   },
@@ -53,11 +53,11 @@ components:{
 
       genTitle(){
           if(this.eventType==='create'){
-              return '创建模板'
+              return '添加动态'
           }
 
           if(this.eventType==='edit'){
-              return '编辑模板'
+              return '编辑动态'
           }
 
           if(this.eventType==='distribute'){
