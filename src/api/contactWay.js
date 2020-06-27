@@ -1,10 +1,18 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-24 10:23:46
+ * @LastEditTime: 2020-06-28 00:10:43
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\api\contactWay.js
+ */ 
 import request from '@/utils/request'
 
 /**
  * 详细页
  * @param {string} uuid 
  */
-export const getDetail = (uuid)=>{
+export const getContactWayDetail = (uuid)=>{
     return request({
         url: '/contactWay/'+uuid,
         method: 'get'
@@ -15,7 +23,7 @@ export const getDetail = (uuid)=>{
  * 添加客户渠道
  * @param {object} payload 
  */
-export const add = (payload)=>{
+export const contactWayAdd = (payload)=>{
     return request({
         url: '/contactWay/add',
         method: 'post',

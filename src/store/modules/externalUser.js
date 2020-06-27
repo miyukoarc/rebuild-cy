@@ -413,6 +413,27 @@ const actions = {
     })
   },
   /**
+   * 获取离职成员的客户列表
+   * @param {*} param0 
+   * @param {object} payload 
+   */
+  getQuitUserRelationExUserDetail({
+    commit
+  }, payload) {
+      commit('TOGGLE_LOADING',true)
+    return new Promise((resolve, reject) => {
+      getQuitUserRelationExUserDetail(payload).then(res => {
+          commit('SAVE_QUITLISTDETAIL',res)
+          commit('TOGGLE_LOADING',false)
+        resolve()
+      }).catch(err => {
+          commit('TOGGLE_LOADING',false)
+        console.log(err)
+        reject()
+      })
+    })
+  },
+  /**
    * 离职成员的外部联系人再分配
    * @param {object} payload 
    */

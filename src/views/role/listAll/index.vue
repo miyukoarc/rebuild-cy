@@ -115,7 +115,7 @@ export default {
         const {name,code,uuid} = val
         const payload = {name,code,uuid}
         // const payload = this.roleList[index]
-    //   this.$store.commit('role/SAVE_DETAIL', payload)
+      this.$store.commit('role/SAVE_DETAIL', payload)
       this.$refs['formDialog'].event = 'EditTemplate'
       this.$refs['formDialog'].eventType = 'edit'
       this.$refs['formDialog'].dialogVisible = true

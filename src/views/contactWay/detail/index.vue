@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-11 11:15:45
- * @LastEditTime: 2020-06-24 21:31:08
+ * @LastEditTime: 2020-06-28 00:27:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\contactWay\detail.vue
@@ -98,8 +98,8 @@
             <el-form-item label="二维码预览：" prop="qrCode">
               <div class="qr-code display-flex">
                 <div class="qr-code-warp">
-                  <img :src="qrCode" alt class="img">
-                  <img v-if="imageUrl" :src="imageUrl" alt class="img-p">
+                  <img :src="qrCode" alt class="img" />
+                  <img v-if="imageUrl" :src="imageUrl" alt class="img-p" />
                 </div>
 
                 <el-upload
@@ -109,7 +109,7 @@
                   :on-success="handleAvatarSuccess"
                   :before-upload="beforeAvatarUpload"
                 >
-                  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                  <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                   <div v-else class="upload-img flex-column-center-alinecenter">
                     <i class="el-icon-plus avatar-uploader-icon" />
                     <p>更换头像</p>
@@ -136,163 +136,162 @@
 //   contactWayUpdate
 // }from'@/api/contactWay/index'
 // import{ userlistAll }from'@/api/user/index'
-import qrCode from'@/assets/0.png'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import qrCode from "@/assets/0.png";
+import { mapState, mapMutations, mapActions } from "vuex";
 
-export default{
-  name:'ContactWayDetail',
+export default {
+  name: "ContactWayDetail",
   data() {
-    return{
-      qrCode:qrCode,
-      isShow:false,
-      checkboxGroup:[],
-      addNewGroupformData:[],
-      ruleForm:{
-        name:'',
-        member:[],
-        options:[],
-        autoAddFriend:true,
-        openTime:'1'
+    return {
+      qrCode: qrCode,
+      isShow: false,
+      checkboxGroup: [],
+      addNewGroupformData: [],
+      ruleForm: {
+        name: "",
+        member: [],
+        options: [],
+        autoAddFriend: true,
+        openTime: "1"
       },
-      rules:{
-        name:[
-          { required:true,message:'请输入活动名称',trigger:'blur' },
-          { min:1,max:20,message:'长度在 3 到 5 个字符',trigger:'blur' }
+      rules: {
+        name: [
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+          { min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur" }
         ],
-        member:[
-          { required:true,message:'请选择客服人员',trigger:'change' }
+        member: [
+          { required: true, message: "请选择客服人员", trigger: "change" }
         ]
       },
-      imageUrl:'',
-      uuid:'',
-      way:'',
-      configId:'',
-      imgId:''
-    }
+      imageUrl: "",
+      uuid: "",
+      way: "",
+      configId: "",
+      imgId: ""
+    };
   },
-  computed:{
+  computed: {
     ...mapState({
       tagListSelect: state => state.tag.tagListSelect,
       userListAll: state => state.user.listSelect
     }),
     tagData() {
-      if(!this.isShow) {
-        // console.log(this.addNewGroupformData,'this.addNewGroupformData')
-        return this.tagListSelect.filter((item,index)=>{
-          return index < 3
-        })
-      }else{
-        return this.tagListSelect
+      if (!this.isShow) {
+        return this.tagListSelect.filter((item, index) => {
+          return index < 3;
+        });
+      } else {
+        return this.tagListSelect;
       }
     }
   },
   created() {
-    if(this.$route.query && this.$route.query.way) {
-      this.way = this.$route.query.way
-      if(this.$route.query.way == 'add') {
-      }else if(this.$route.query.way == 'edit') {
-        this.uuid = this.$route.query.uuid
-        this.getContactWayDetail(this.uuid)
+    if (this.$route.query && this.$route.query.way) {
+      this.way = this.$route.query.way;
+      if (this.$route.query.way == "add") {
+      } else if (this.$route.query.way == "edit") {
+        this.uuid = this.$route.query.uuid;
+        this.getContactWayDetail(this.uuid);
       }
     }
-    console.log(this.tagListSelect,'tagListSelect')
   },
-  methods:{
-    async getContactWayDetail(uuid) {
-      await contactWayDetail(this.uuid)
-        .then(res=>{
-          this.configId = res.configId
-          this.qrCode = res.qrCode
-          this.ruleForm.name = res.remark
-          this.ruleForm.autoAddFriend = res.skipVerify
-          res.serviceUsers.map(item=>{
-            this.ruleForm.member.push(item.userId)
-          })
-          res.servicesTags.map(item=>{
-            this.checkboxGroup.push(item.uuid)
-          })
+  methods: {
+    getContactWayDetail(uuid) {
+      this.$store
+        .dispatch("contactWay/getContactWayDetail", uuid)
+        .then(res => {
+          this.configId = res.configId;
+          this.qrCode = res.qrCode;
+          this.ruleForm.name = res.remark;
+          this.ruleForm.autoAddFriend = res.skipVerify;
+          res.serviceUsers.map(item => {
+            this.ruleForm.member.push(item.userId);
+          });
+          res.servicesTags.map(item => {
+            this.checkboxGroup.push(item.uuid);
+          });
         })
-        .catch(err=>{})
+        .catch(err => {});
     },
     submitForm(formName) {
-      this.$refs[formName].validate(async valid=>{
-        if(valid) {
-          if(this.way == 'add') {
-            const params = {
-              remark:this.ruleForm.name,
-              scene:2,
-              skipVerify:this.ruleForm.autoAddFriend,
-              tags:this.checkboxGroup,
-              type:this.ruleForm.member.length > 1 ? 2 : 1,
-              user:this.ruleForm.member
-            }
-            if(this.imgId != '') {
-              params.imgId = this.imgId
-            }
-            await contactWayAdd(params)
-              .then(()=>{
-                this.$message({
-                  message:'保存成功',
-                  type:'success'
-                })
-                this.$router.push({
-                  path:`/contactWay/list`
-                })
-              })
-              .catch(err=>{})
-          }else{
-            const params = {
-              configId:this.configId,
-              remark:this.ruleForm.name,
-              scene:2,
-              skipVerify:this.ruleForm.autoAddFriend,
-              tags:this.checkboxGroup,
-              type:this.ruleForm.member.length > 1 ? 2 : 1,
-              user:this.ruleForm.member
-            }
-            if(this.imgId != '') {
-              params.imgId = this.imgId
-            }
-
-            await contactWayUpdate(params)
-              .then(()=>{
-                this.$message({
-                  message:'保存成功',
-                  type:'success'
-                })
-              })
-              .catch(err=>{})
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          // if (this.way == "add") {
+          let params = {
+            remark: this.ruleForm.name,
+            scene: 2,
+            skipVerify: this.ruleForm.autoAddFriend,
+            tags: this.checkboxGroup,
+            type: this.ruleForm.member.length > 1 ? 2 : 1,
+            user: this.ruleForm.member
+          };
+          if (this.imgId != "") {
+            params.imgId = this.imgId;
           }
-        }else{
-          console.log('error submit!!')
-          return false
+          this.$store
+            .dispatch("contactWay/contactWayAdd", params)
+            .then(() => {
+              this.$message({
+                message: "保存成功",
+                type: "success"
+              });
+              // this.$router.push({
+              //   path: `/contactWay/listAll`
+              // });
+            })
+            .catch(err => {});
+          // } else {
+          // const params = {
+          //   configId: this.configId,
+          //   remark: this.ruleForm.name,
+          //   scene: 2,
+          //   skipVerify: this.ruleForm.autoAddFriend,
+          //   tags: this.checkboxGroup,
+          //   type: this.ruleForm.member.length > 1 ? 2 : 1,
+          //   user: this.ruleForm.member
+          // };
+          // if (this.imgId != "") {
+          //   params.imgId = this.imgId;
+          // }
+
+          // await contactWayUpdate(params)
+          //   .then(() => {
+          //     this.$message({
+          //       message: "保存成功",
+          //       type: "success"
+          //     });
+          //   })
+          //   .catch(err => {});
+          // }
+        } else {
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields()
+      this.$refs[formName].resetFields();
     },
-    handleCheckedTagsChange(tag,index) {
-    },
-    handleAvatarSuccess(res,file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
-      this.imgId = res.id
+    handleCheckedTagsChange(tag, index) {},
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      this.imgId = res.id;
     },
     beforeAvatarUpload(file) {
-      console.log(file,'file')
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
+      console.log(file, "file");
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if(!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
       }
-      if(!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
       }
-      return isJPG && isLt2M
+      return isJPG && isLt2M;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

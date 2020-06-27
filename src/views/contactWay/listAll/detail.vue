@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-27 23:12:45
+ * @LastEditTime: 2020-06-27 23:12:57
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\contactWay\listAll\detail.vue
+--> 
 <template>
   <div>
     <el-tabs v-model="activeType">

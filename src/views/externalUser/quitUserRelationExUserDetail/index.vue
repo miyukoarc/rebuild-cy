@@ -5,7 +5,7 @@
     </el-card>-->
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" >
+      <tool-bar @handleExport="doExport">
         <div slot="right">
           <el-t-button
             type="primary"
@@ -48,7 +48,7 @@
                 size="mini"
                 :popAuth="true"
                 :auth="permissionMap['externalUser']['externalUser_redistributionExUser']"
-                @click.stop="handleDistributeSingle(scope.$index)"
+                @click.stop="handleDistributeSingle(scope.$index,scope.row)"
               >分配</el-t-button>
               <!-- <el-t-button :popAuth="true" :auth="permissionMap['externalUser']['externalUser_quitUserRelationExUserList']" type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-t-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
@@ -76,14 +76,14 @@
 
 <script>
 // import mHeadedr from "./header";
-import UserDetail from './detail.vue'
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import UserDetail from "./detail.vue";
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: 'runWayListAll',
+  name: "runWayListAll",
   components: {
     ListHeader,
     UserDetail,
@@ -108,13 +108,13 @@ export default {
         // userId: '',
         // roleUuid: ''
       },
-      selectedAllData:[]
-    }
+      selectedAllData: []
+    };
   },
   watch: {
     $route: {
       handler(newVal, oldVal) {
-        console.log(this.$route.query)
+        console.log(this.$route.query);
       },
       immediate: true
     }
@@ -129,111 +129,104 @@ export default {
     })
   },
   created() {
-    this.initDataList(this.$route.query)
+    this.initDataList(this.$route.query);
     // this.initFilter()
   },
-  mounted(){
-    this.$bus.$on('handleRefresh',()=>{
-        this.initDataList(this.query)
-    })
+  mounted() {
+    this.$bus.$on("handleRefresh", () => {
+      this.initDataList(this.query);
+    });
   },
   methods: {
     doExport(val) {
-      console.log(val)
+      console.log(val);
     },
     /**
      * 初始化筛选信息
      */
     initFilter() {
       this.$store
-        .dispatch('department/getDepartmentListSelect')
+        .dispatch("department/getDepartmentListSelect")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
 
-    //   this.$store
-    //     .dispatch('user/getUserListSelect')
-    //     .then(() => {})
-    //     .catch(err => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '初始化失败'
-    //       })
-    //     })
+      //   this.$store
+      //     .dispatch('user/getUserListSelect')
+      //     .then(() => {})
+      //     .catch(err => {
+      //       this.$message({
+      //         type: 'error',
+      //         message: '初始化失败'
+      //       })
+      //     })
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getQuitUserRelationExUserDetail', payload)
+        .dispatch("externalUser/getQuitUserRelationExUserDetail", payload)
         .then(() => {
           //初始化分页
           //   this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1
           //   this.pageConfig.total = this.runWayListAllPage.total
         })
         .catch(err => {
-          console.error(err)
+          console.error(err);
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
     handleDetail(index) {
-      const userId = this.quitUserRelationExUserList[index].userId
+      const userId = this.listAll[index].userId;
       this.$router.push({
-        path: '/externalUser/quitUserRelationExUserDetail',
+        path: "/externalUser/quitUserRelationExUserDetail",
         query: { userId: userId }
-      })
+      });
     },
     handleDistribute() {
-      if(this.selectedAllData.length>0){
-        this.$refs['formDialog'].event = 'DistributeTemplate'
-        this.$refs['formDialog'].eventType = 'distribute'
-        this.$refs['formDialog'].dialogVisible = true
-        this.$refs['formDialog'].selectedAllData = this.selectedAllData
-      }else{
+      if (this.selectedAllData.length > 0) {
+        this.$refs["formDialog"].event = "DistributeTemplate";
+        this.$refs["formDialog"].eventType = "distribute";
+        this.$refs["formDialog"].dialogVisible = true;
+        this.$refs["formDialog"].selectedAllData = this.selectedAllData;
+      } else {
         this.$message({
-          type:'warning',
-          message:'请勾选分配人员!'
-        })
+          type: "warning",
+          message: "请勾选分配人员!"
+        });
       }
     },
-    handleDistributeSingle(index) {
-      // let that = this
-      // let single = []
-      // const a = this.quitUserRelationExUserList[index]
-      // single.push(a)
-      // console.log(single,'s')
-      // this.handleSelectionChange(single)
-      // if (this.selectedAllData.length>0) {
-      //     this.selectedAllData.forEach(row => {
-      //       this.$refs.multipleTable.toggleRowSelection(row);
-      //     });
-      //   } else {
-      //     this.$refs.multipleTable.clearSelection();
-      //   }
-      this.$refs['formDialog'].event = 'DistributeTemplate'
-      this.$refs['formDialog'].eventType = 'distribute'
-      this.$refs['formDialog'].dialogVisible = true
-      this.$store.commit('externalUser/SAVE_QUITUSERCURRENTROW',this.quitUserRelationExUserList[index])
+    handleDistributeSingle(index, row) {
+      console.log(row, 666);
+      this.$refs.multipleTable.clearSelection();
+      this.handleSelectionChange(row);
+      this.selectedAllData.forEach(row => {
+        this.$refs.multipleTable.toggleRowSelection(row);
+      });
+      this.$refs["formDialog"].event = "DistributeTemplate";
+      this.$refs["formDialog"].eventType = "distribute";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$store.commit("externalUser/SAVE_QUITUSERCURRENTROW", row);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     handleSelectionChange(val) {
-      this.selectedAllData = val
+      this.selectedAllData = [val];
       console.log(val, "selected");
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

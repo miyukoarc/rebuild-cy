@@ -50,31 +50,31 @@ export default {
     })
   },
   watch: {
-    transfer: {
-      handler(newVal, oldVal) {
-        //   console.log(newVal)
-        const { code, name, uuid } = newVal
-        this.form.code = code
-        this.form.name = name
-        this.form.uuid = uuid
-      }
-    }
+    // transfer: {
+    //   handler(newVal, oldVal) {
+    //     //   console.log(newVal)
+    //     const { code, name, uuid } = newVal
+    //     this.form.code = code
+    //     this.form.name = name
+    //     this.form.uuid = uuid
+    //   }
+    // }
     // currentRole: {
     //   handler(newVal, oldVal) {
-    //     console.log(newVal)
-    //     this.initData()
+    //     console.log(newVal,'8888')
+    //     this.initData(newVal)
     //   },
     //   immediate: true,
     //   deep: true
     // }
   },
-  // mounted () {
-  //   this.initData()
-  //   console.log(this.currentRole,'currentRole')
-  // },
+  mounted () {
+    this.initData()
+    // console.log(this.currentRole,'currentRole')
+  },
   methods: {
     initData() {
-      const { code, name, uuid } = this.currentRole
+      const { code, name, uuid } = this.currentRole;
       this.form.code = code
       this.form.name = name
       this.form.uuid = uuid

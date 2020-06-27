@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-27 14:05:27
+ * @LastEditTime: 2020-06-27 14:07:29
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\main.js
+ */ 
 import Vue from 'vue'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
@@ -9,7 +17,7 @@ import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 import {MessageBox} from 'element-ui'
 
 import '@/styles/index.scss' // global css
-import 'default-passive-events'
+// import 'default-passive-events'
 
 import App from './App'
 import store from './store'

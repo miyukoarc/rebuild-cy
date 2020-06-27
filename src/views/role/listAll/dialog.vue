@@ -1,6 +1,14 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-27 14:05:27
+ * @LastEditTime: 2020-06-27 17:09:29
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\role\listAll\dialog.vue
+--> 
 <template>
     <div>
-        <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body center width="600px" :close-on-click-modal="false">
+        <el-dialog :title="genTitle()" :visible.sync="dialogVisible" @close="close" :modal-append-to-body="false" append-to-body center width="600px" :close-on-click-modal="false">
             <div>
                 <component :is="event" :transfer="transfer"/>
             </div>
@@ -62,9 +70,11 @@ components:{
           if(this.eventType==='edit'){
               return '编辑模板'
           }
-          
-          
       },
+      close(){
+          this.event=''
+      }
+    
   }
   
 };

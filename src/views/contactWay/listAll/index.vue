@@ -5,10 +5,15 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :hasExport="false" @handleExport="doExport" >
-          <div slot="right">
-              <el-t-button type="primary" :popAuth="true" :auth="permissionMap['contactWay']['contactWay_add']" @click.stop="newChannelCode">新建活码</el-t-button>
-          </div>
+      <tool-bar :hasExport="false" @handleExport="doExport">
+        <div slot="right">
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['contactWay']['contactWay_add']"
+            @click.stop="newChannelCode"
+          >新建活码</el-t-button>
+        </div>
       </tool-bar>
     </el-card>
     <el-card class="content-spacing">
@@ -21,20 +26,69 @@
           stripe
           lazy
           highlight-current-row
-         >
+        >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="二维码" align="left"></el-table-column>
-          <el-table-column label="名称" align="left"></el-table-column>
-          <el-table-column label="添加好友人数" align="left"></el-table-column>
-          <el-table-column label="创建时间" align="left"></el-table-column>
-          <el-table-column label="使用成员" align="left"></el-table-column>
-          <el-table-column label="标签" align="left"></el-table-column>
+          <el-table-column label="二维码" align="left">
+            <template slot-scope="scope">
+              <img
+                :src="scope.row.qrCode"
+                alt
+                id="qrcode"
+                style="width:40px;height:40px;margin-right:10px"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="名称" prop="remark" align="left"></el-table-column>
+          <el-table-column label="添加好友人数" prop="joinNumber" align="left"></el-table-column>
+          <el-table-column label="创建时间" prop="createdAt" align="left"></el-table-column>
+          <el-table-column label="使用成员" align="left">
+            <template slot-scope="scope">
+              <el-tag
+                v-for="(user,index) in scope.row.serviceUsers"
+                :key="index"
+                style="margin-right:5px;margin-bottom:5px"
+              >
+                <span v-if="user">{{ user.name }}</span>
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="标签" align="left">
+            <template slot-scope="scope">
+              <el-tag
+                v-for="(tag,index) in scope.row.servicesTags"
+                :key="index"
+                style="margin-right:5px;margin-bottom:5px"
+              >
+                <span v-if="tag">{{ tag.tagName }}</span>
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
+              <el-button
+                type="primary"
+                size="mini"
+                class="button-s"
+                @click.stop="handleDetail(scope.$index,scope.row)"
+              >详情</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                class="button-s"
+                @click.stop="downLoad(scope.row)"
+              >下载</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                class="button-s"
+                @click.stop="handleEdit(scope.row)"
+              >编辑</el-button>
+              <el-button
+                type="danger"
+                size="mini"
+                class="button-s"
+                @click.stop="handleDelete(scope.row)"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -57,11 +111,11 @@
 
 <script>
 // import mHeadedr from "./header";
-import UserDetail from './detail.vue'
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import UserDetail from "./detail.vue";
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -82,9 +136,9 @@ export default {
       query: {
         page: 0,
         size: 10,
-        remark: '',
+        remark: ""
       }
-    }
+    };
   },
   watch: {},
   computed: {
@@ -97,17 +151,16 @@ export default {
       permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
-      return this.routes
+      return this.routes;
     }
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
-    
+    this.initDataList(this.query);
+    this.initFilter();
   },
   methods: {
     doExport(val) {
-      console.log(val)
+      console.log(val);
     },
     /**
      * 初始化筛选信息
@@ -122,26 +175,26 @@ export default {
       //       message: '初始化失败'
       //     })
       //   })
-        
-        this.$store
-        .dispatch('tag/getListSelect')
+
+      this.$store
+        .dispatch("tag/getListSelect")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
-        
-        this.$store
-        .dispatch('user/getUserListSelect')
+            type: "error",
+            message: "初始化失败"
+          });
+        });
+
+      this.$store
+        .dispatch("user/getUserListSelect")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
       // this.$store
       //   .dispatch('user/getAllUserList')
       //   .then(() => {})
@@ -157,57 +210,125 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('contactWay/getList', payload)
+        .dispatch("contactWay/getList", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
+          console.log(this.pageConfig, "pageconfig");
         })
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
-    handleDetail(val) {
-      const payload = this.userList[val].uuid
-      this.$router.push({
-        path: '/user/detail',
-        query: { uuid: payload }
-      })
+    // 详情弹出框
+    handleDetail(index, row) {
+      this.$refs["formDialog"].event = "DetailTemplate";
+      this.$refs["formDialog"].eventType = "detail";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$store.commit("contactWay/SAVE_CONTACTWAYDETAILROW", row);
+      // const payload = this.userList[val].uuid;
+      // this.$router.push({
+      //   path: "/user/detail",
+      //   query: { uuid: payload }
+      // });
+    },
+    // 下载渠道码
+    downLoad(row) {
+      console.log(row, "下载");
+      this.downloadIamge(row.qrCode, row.remark);
+    },
+    downloadIamge(imgsrc, name) {
+      // 下载图片地址和图片名
+      const image = new Image();
+      image.setAttribute("crossOrigin", "anonymous");
+      image.onload = function() {
+        const canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, image.width, image.height);
+        const url = canvas.toDataURL("image/png"); // 得到图片的base64编码数据
+        const a = document.createElement("a"); // 生成一个a元素
+        const event = new MouseEvent("click"); // 创建一个单击事件
+        a.download = name || "photo"; // 设置图片名称
+        a.href = url; // 将生成的URL设置为a.href属性
+        a.dispatchEvent(event); // 触发a的单击事件
+      };
+      image.src = imgsrc;
     },
     handleSearch(val) {
-      const { remark } = val
-      this.query.remark = remark ? remark : this.query.remark
-      console.log(val, 'handleSearch')
-      this.initDataList(this.query)
+      const { remark } = val;
+      this.query.remark = remark ? remark : this.query.remark;
+      console.log(val, "handleSearch");
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      console.log('handleRefresh')
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      console.log("handleRefresh");
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     // 新建渠道码
     newChannelCode() {
       this.$router.push({
-        path:`/contactWay/detail`,
-        query:{ way:'add' }
-      })
+        path: `/contactWay/detail`,
+        query: { way: "add" }
+      });
     },
+    handleEdit(row) {
+      console.log(row, "row");
+      this.$router.push({
+        path: `/contactWay/detail`,
+        query: { way: "edit", uuid: row.uuid }
+      });
+    },
+    // 删除渠道码
+    handleDelete(row) {
+      console.log("delChannel", row);
+      this.$confirm("删除后不可恢复, 确定删除吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const params = {
+            configId: row.configId
+          };
+          this.$store
+            .dispatch("contactWay/deleteContactWay", params)
+            .then(() => {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.initDataList(this.query);
+            })
+            .catch(err => {});
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.user-card {
-  display: flex;
-  align-items: center;
+.button-s {
+  margin-bottom: 5px;
+  margin-left: 0px;
+  margin-right: 10px;
 }
 </style>
 
