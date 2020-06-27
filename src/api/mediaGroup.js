@@ -4,7 +4,7 @@ import request from '@/utils/request'
  * 添加素材组
  * @param {object} payload 
  */
-export const add = (payload) => {
+export const addGroup = (payload) => {
     return request({
         url: '/mediaGroup/add',
         method: 'post',
@@ -32,9 +32,9 @@ export const deleteMediaGroup = (payload) => {
  * 素材组列表
  * @param {object} payload 
  */
-export const getMediaGroupList = (payload) => {
+export const getMediaGroupListAll = (payload) => {
     return request({
-        url: '/mediaGroup/list',
+        url: '/mediaGroup/listAll',
         method: 'get',
         params: payload
 

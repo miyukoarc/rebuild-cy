@@ -30,13 +30,13 @@
           </el-table-column>
           <el-table-column label="时间" align="left" prop="createdAt"></el-table-column>
           <el-table-column label="操作" align="left">
-            <template slot-scope="scope">
+            <!-- <template slot-scope="scope"> -->
                 <el-button size="mini" disabled>详情</el-button>
               <!-- <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" >详情</el-t-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
-            </template>
+            <!-- </template> -->
           </el-table-column>
         </el-table>
 

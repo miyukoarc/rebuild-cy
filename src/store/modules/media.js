@@ -2,6 +2,10 @@ import {
   getArticleList
 } from '@/api/media'
 
+import {
+  getMediaGroupListAll,
+  addGroup
+} from '@/api/mediaGroup'
 const state = {
   /**
    * 文章列表
@@ -12,7 +16,12 @@ const state = {
     pageNumber: 0,
     pageSize: 0,
     total: 0
-  }
+  },
+
+  /**
+   * 素材组
+   */
+  mediaGroupListAll: []
 }
 
 const mutations = {
@@ -44,8 +53,14 @@ const mutations = {
    * @param {*} state 
    * @param {*} payload 
    */
-  TOGGLE_LIST(state, payload) {
+  TOGGLE_LOADING(state, payload) {
     state.loading = payload
+  },
+  /**
+   *  保存素材组 
+   */
+  SAVE_GROUPLIST(state, payload) {
+    state.mediaGroupListAll = payload
   }
 
 }
@@ -71,7 +86,43 @@ const actions = {
         reject()
       })
     })
-  }
+  },
+  /**
+   * 素材组列表
+   */
+  getMediaGroupListAll({
+    commit
+  }, payload) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      getMediaGroupListAll(payload).then(res => {
+        commit('SAVE_GROUPLIST', res.items)
+        commit('TOGGLE_LOADING', false)
+        resolve()
+      }).catch(err => {
+        commit('TOGGLE_LOADING', false)
+        console.log(err)
+        reject()
+      })
+    })
+  },
+  /**
+   * 添加分组
+   *  
+   */
+  addGroup({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      addGroup(payload).then(res => {
+        resolve()
+      }).catch(err => {
+        console.log(err)
+        reject()
+      })
+    })
+  },
+
 }
 
 
