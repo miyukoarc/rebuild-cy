@@ -52,17 +52,13 @@
 
           <el-table-column label="渠道来源" align="left">
             <template v-slot="scope">
-                <div v-if="Object.keys(scope.row.contactWay)">{{scope.row.contactWay.state}}</div>
+                <div v-if="Object.keys(scope.row.contactWay).length">{{scope.row.contactWay.state}}</div>
                 <div v-else>--</div>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
                 <el-t-button :popAuth="true" :auth="permissionMap['externalUser']['externalUser_detail']" type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-t-button>
-              <!-- <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" :popAuth="true" :auth="permissionMap[''][]">详情</el-t-button> -->
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -185,7 +181,7 @@ export default {
     },
     handleDetail(index) {
       const userId = this.listAll[index].user.userId
-      const uuid = this.listAll[index].uuid
+      const uuid = this.listAll[index].externalUser.uuid
       this.$router.push({
         path: '/externalUser/detail/'+ uuid,
         query: { userId: userId }
@@ -227,17 +223,4 @@ export default {
 }
 
 
-// .app-container {
-//   border-top: 1px solid #e9e9e9;
-//   background: white;
-//   .roles-table {
-//     margin-top: 30px;
-//   }
-//   .permission-tree {
-//     margin-bottom: 30px;
-//   }
-// }
-// header .el-header button {
-//   margin-right: 5px;
-// }
 </style>

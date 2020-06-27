@@ -2,18 +2,16 @@ import request from '@/utils/request'
 
 /**
  * 详细页
- * @param {string} payload
- * @param {string} userId 
+ * 
+ * @param {string} uuid 
  */
-export const getDetail = (payload, userId) => {
+export const getDetail = (uuid) => {
   return request({
-    url: '/externalUser/' + payload,
+    url: '/externalUser/' + uuid,
     method: 'get',
-    params: {
-      userId
-    }
   })
 }
+
 
 
 /**
@@ -223,6 +221,18 @@ export const getSensitiveListAll = (payload) => {
 export const getQuitUserRelationExUserDetail = (payload) => {
     return request({
       url: '/externalUser/quitUserRelationExUserDetail',
+      method: 'get',
+      params: payload
+    })
+  }
+
+/**
+ * 群详情
+ * @param {object} payload 
+ */
+  export const getGroupDetail = (payload) => {
+    return request({
+      url: '/externalUser/groupDetail',
       method: 'get',
       params: payload
     })

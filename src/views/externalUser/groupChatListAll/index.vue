@@ -148,10 +148,10 @@ export default {
         })
     },
     handleDetail(val) {
-      const payload = this.userList[val].uuid
+      const chatId = this.listGroup[val].chatId
       this.$router.push({
-        path: '/user/detail',
-        query: { uuid: payload }
+        path: '/externalUser/groupDetail',
+        query: { chatId }
       })
     },
     handleSearch(val) {

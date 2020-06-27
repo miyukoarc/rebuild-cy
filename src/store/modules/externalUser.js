@@ -1,15 +1,18 @@
 import {
   getListOwner,
   getListGroup,
+  getDetail,
   getExternalUserListMy,
   getListAll,
   getRunWayList,
   getRunWayListAll,
   getQuitUserRelationExUserList,
   getListExUserByUserId,
-  getCustomerStatistics,
   getQuitUserRelationExUserDetail,
-  redistributionExUser
+  redistributionExUser,
+  getGroupDetail,
+  
+  getCustomerStatistics
 } from '@/api/externalUser'
 
 const state = {
@@ -94,7 +97,24 @@ const state = {
   /**
    * 某个离职员工客户列表
    */
-  quitUserRelationExUserListDetail:[]
+  quitUserRelationExUserListDetail:[],
+
+  /**
+   * 群详情
+   */
+  groupDetail: {},
+  /**
+   * 用户统计数据
+   */
+  statistics: {},
+  /**
+   * 客户详情
+   */
+  externalUserDetail: {},
+  /**
+   * 所在群列表
+   */
+  groupListAll: []
 
 
 }
@@ -247,6 +267,32 @@ const mutations = {
    */
   SAVE_QUITLISTDETAIL(state,payload){
       state.quitUserRelationExUserListDetail = payload
+  },
+  SAVE_GROUPDETAIL(state,payload){
+    state.groupDetail = payload
+  },
+  /**
+   * 保存小
+   * @param {*} state 
+   * @param {*} payload 
+   */
+
+  SAVE_STATISTICS(state,payload){
+    state.statstics = payload
+  },
+  /**
+   * 保存客户详情
+   * @param {*} state 
+   * @param {*} payload 
+   */
+  SAVE_EXTERNALUSER(state,payload){
+    state.externalUserDetail=payload
+  },
+  /**
+   * 保存群列表
+   */
+  SAVE_GROUPLIST(state,payload){
+    state.groupListAll = payload
   }
 
 
@@ -462,18 +508,42 @@ const actions = {
     })
   },
   /**
-   * 离职员工的客户列表
+   * 群详情
+   * @param {*} param0 
+   * @param {*} payload 
    */
-  getQuitUserRelationExUserDetail({commit},payload){
-     return new Promise((resolve,reject)=>{
-         getQuitUserRelationExUserDetail(payload).then(res=>{
-             commit('SAVE_QUITLISTDETAIL',res)
-             resolve()
-         }).catch(err=>{
-             reject()
-         })
-     })
-  }
+  getGroupDetail({commit},payload){
+    commit('TOGGLE_LOADING',true)
+    return new Promise((resolve,reject)=>{
+        getGroupDetail(payload).then(res=>{
+          commit('TOGGLE_LOADING',false)
+            commit('SAVE_GROUPDETAIL',res)
+            resolve()
+        }).catch(err=>{
+          commit('TOGGLE_LOADING',false)
+            reject()
+        })
+    })
+ },
+ /**
+  * 客户详情
+  */
+ getDetail({commit},payload){
+  commit('TOGGLE_LOADING',true)
+  return new Promise((resolve,reject)=>{
+      getDetail(payload).then(res=>{
+        commit('SAVE_EXTERNALUSER',res)
+        commit('TOGGLE_LOADING',false)
+          resolve()
+      }).catch(err=>{
+        commit('TOGGLE_LOADING',false)
+          reject()
+      })
+  })
+},
+
+
+
 }
 
 

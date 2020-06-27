@@ -11,7 +11,6 @@
           </div>
       </tool-bar>
     </el-card>
-
     <el-card class="content-spacing">
       <div>
         <el-table

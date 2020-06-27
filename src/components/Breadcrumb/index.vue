@@ -3,7 +3,7 @@
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
         <span v-if="item.redirect==='noRedirect'||index==levelList.length-1" class="no-redirect">{{ item.meta.title }}</span>
-        <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
+        <span v-else >{{ item.meta.title }}</span>
       </el-breadcrumb-item>
     </transition-group>
   </el-breadcrumb>
@@ -11,17 +11,26 @@
 
 <script>
 import pathToRegexp from 'path-to-regexp'
+import { mapState } from 'vuex'
 
 export default {
   data() {
     return {
-      levelList: null
+      levelList: null,
     }
   },
   watch: {
-    $route() {
-      this.getBreadcrumb()
+    $route: {
+      handler(newVal,oldVal){
+        this.getBreadcrumb()
+        console.log(newVal)
+      }
     }
+  },
+  computed: {
+    ...mapState({
+      rebuildMenu: state => state.menu.rebuildMenu
+    })
   },
   created() {
     this.getBreadcrumb()
@@ -33,10 +42,48 @@ export default {
       const first = matched[0]
 
       if (!this.isDashboard(first)) {
-        matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
+        matched = [{ path: '/dashboard', meta: { title: '首页' }}].concat(matched)
       }
 
-      this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
+      this.levelList = matched.filter(item => {
+        if(item.meta && item.meta.title && item.meta.breadcrumb !== false){
+          if(item.path==='#'){
+            if(item.name==='media'){
+              item.meta.title = '运营管理'
+            }
+            if(item.name==='tag'){
+              item.meta.title = '运营管理'
+            }
+            if(item.name==='batchSendTask'){
+              item.meta.title = '运营管理'
+            }
+            if(item.name==='contactWay'){
+              item.meta.title = '运营管理'
+            }
+            if(item.name==='potentialCustomer'){
+              item.meta.title = '客户管理'
+            }
+            if(item.name==='externalUser'){
+              item.meta.title = '客户管理'
+            }
+            if(item.name==='riskManagement'){
+              item.meta.title = '风控安全'
+            }
+            if(item.name==='user'){
+              item.meta.title = '员工管理'
+            }
+            if(item.name==='department'){
+              item.meta.title = '员工管理'
+            }
+            if(item.name==='role'){
+              item.meta.title = '员工管理'
+            }
+            
+            
+          }
+          return item
+        }
+      })
     },
     isDashboard(route) {
       const name = route && route.name

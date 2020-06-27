@@ -52,13 +52,13 @@ components:{
   methods: {
 
       genTitle(){
-        //   if(this.eventType==='create'){
-        //       return '创建模板'
-        //   }
+          if(this.eventType==='create'){
+              return '创建模板'
+          }
 
-        //   if(this.eventType==='edit'){
-        //       return '编辑模板'
-        //   }
+          if(this.eventType==='edit'){
+              return '编辑模板'
+          }
 
           if(this.eventType==='distribute'){
               return '添加动态'

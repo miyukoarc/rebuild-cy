@@ -155,7 +155,7 @@ const actions = {
         resolve(res)
       }).catch(err => {
           console.error(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -183,7 +183,7 @@ const actions = {
         commit('SAVE_USERLISTALL', res)
         resolve()
       }).catch(err => {
-        reject()
+        reject(err)
       })
     })
   },
@@ -204,7 +204,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
@@ -219,7 +219,7 @@ const actions = {
              commit('SAVE_SHOWOFFUSER',res)
              resolve()
          }).catch(err=>{
-             reject()
+             reject(err)
          })
      })
   },
@@ -234,7 +234,7 @@ const actions = {
             commit('SAVE_LISTSELECT',res)
             resolve()
         }).catch(err=>{
-            reject()
+            reject(err)
         })
     })
  },

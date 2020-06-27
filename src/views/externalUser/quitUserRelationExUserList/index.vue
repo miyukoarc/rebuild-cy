@@ -185,10 +185,12 @@ export default {
         this.$refs['formDialog'].selectedAllData = this.selectedAllData
     },
     handleDistributeSingle(index){
-      console.log('index',)
+      console.log('index',this.quitUserRelationExUserList[index])
+      const payload = {}
         this.$refs['formDialog'].event = 'DistributeTemplate'
         this.$refs['formDialog'].eventType = 'distribute'
         this.$refs['formDialog'].dialogVisible = true
+        this.$refs['formDialog'].transfer = payload
         this.$store.commit('externalUser/SAVE_QUITUSERCURRENTROW',this.quitUserRelationExUserList[index])
     },
     changePage(key) {

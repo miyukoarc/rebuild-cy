@@ -2,7 +2,9 @@ import {
   additionFail,
   getListMy,
   getList,
-  batchAdd
+  batchAdd,
+  allocation,
+  deletePotentialCustomer
 } from '@/api/potentialCustomer'
 
 const state = {
@@ -86,7 +88,7 @@ const actions = {
         resolve()
       }).catch(err => {
         console.log(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -108,7 +110,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.error(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -122,11 +124,13 @@ const actions = {
   }, payload) {
     return new Promise((resolve, reject) => {
       getList(payload).then((res) => {
+        commit('SAVE_LISTALL',res.items)
+        commit('SET_LISTALLPAGE',res)
         console.log(res)
         resolve()
       }).catch(err => {
         console.log(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -141,10 +145,41 @@ const actions = {
              resolve()
          }).catch(err=>{
              console.error(err)
-             reject()
+             reject(err)
          })
      })
-  }
+  },
+  /**
+   * 删除潜在客户
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  deletePotentialCustomer({commit},payload){
+    return new Promise((resolve,reject)=>{
+        deletePotentialCustomer(payload).then(res=>{
+            resolve()
+        }).catch(err=>{
+            console.error(err)
+            reject(err)
+        })
+    })
+ },
+ /**
+  * 分配潜在用户
+  * @param {*} param0 
+  * @param {*} payload 
+  */
+ allocation({commit},payload){
+  return new Promise((resolve,reject)=>{
+      allocation(payload).then(res=>{
+          resolve()
+      }).catch(err=>{
+          console.error(err)
+          reject(err)
+      })
+  })
+},
+  
 
 }
 

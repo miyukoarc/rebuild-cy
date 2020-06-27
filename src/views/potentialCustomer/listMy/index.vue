@@ -17,7 +17,7 @@
             :popAuth="true"
             @click.stop="handleCreate"
           >新增用户</el-t-button>
-          <el-t-button type="primary" :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']">分配</el-t-button>
+          <el-t-button type="primary" :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']" @click="handleDistribute">分配</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -32,6 +32,7 @@
           stripe
           lazy
           highlight-current-row
+          @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="客户名" align="left" prop="name">
@@ -105,7 +106,8 @@ export default {
         endTime: '',
         startTime: '',
         tryCount: ''
-      }
+      },
+      selects: []
     }
   },
   watch: {},
@@ -125,7 +127,7 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    // this.initFilter()
+    this.initFilter()
 
   },
   methods: {
@@ -135,7 +137,7 @@ export default {
     /**
      * 初始化筛选信息
      */
-    // initFilter() {
+    initFilter() {
     //   this.$store
     //     .dispatch('tag/getListSelect')
     //     .then(() => {})
@@ -146,16 +148,16 @@ export default {
     //       })
     //     })
 
-    //   this.$store
-    //     .dispatch('user/getUserListSelect')
-    //     .then(() => {})
-    //     .catch(err => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '初始化失败'
-    //       })
-    //     })
-    // },
+      this.$store
+        .dispatch('user/getUserListSelect')
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
+    },
     /**
      * 初始化表格信息
      */
@@ -206,12 +208,37 @@ export default {
       this.$refs['formDialog'].eventType = 'create'
       this.$refs['formDialog'].dialogVisible = true
     },
-    handleEdit() {
+    handleEdit(index) {
+      const {name,remark,mobile,uuid} = this.listAll[index]
+      const payload = {name,remark,mobile,uuid}
+      // console.log(payload)
       this.$refs['formDialog'].event = 'EditTemplate'
       this.$refs['formDialog'].eventType = 'edit'
       this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = payload
     },
-    handleDelete() {}
+    handleDistribute(){
+      const uuid = this.selects
+      const payload = {uuid}
+      if(this.selects.length){
+        
+        this.$refs['formDialog'].event = 'DistributeTemplate'
+        this.$refs['formDialog'].eventType = 'distribute'
+        this.$refs['formDialog'].dialogVisible = true
+        this.$refs['formDialog'].transfer = payload
+      }else {
+        this.$message({
+          type:'warning',
+          message: '请至少选择一个客户'
+        })
+      }
+    },
+    handleDelete() {},
+    handleSelectionChange(val){
+      console.log(val)
+      const arr = val
+      this.selects = arr.map(item=>{return item.uuid+''})
+    }
   }
 }
 </script>

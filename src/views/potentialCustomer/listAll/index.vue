@@ -7,11 +7,6 @@
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
         <div slot="right">
-          <!-- <el-t-button
-            type="primary"
-            :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
-            :popAuth="true"
-          >添加客户</el-t-button>-->
           <el-t-button
             type="primary"
             :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
@@ -33,26 +28,24 @@
           stripe
           lazy
           highlight-current-row
+           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="客户名" align="left">
+          <el-table-column label="客户名" align="left" prop="name">
+          </el-table-column>
+          <el-table-column label="手机号" align="left" prop="mobile"></el-table-column>
+          <el-table-column label="批量添加次数" align="left" prop="tryCount"></el-table-column>
+          <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
+          <el-table-column label="所属员工" align="left" >
             <template v-slot="scope">
-              <div class="user-card" v-if="scope.row.externalUser">
-                <el-image
-                  :src="scope.row.externalUser.avatar"
-                  lazy
-                  style="width:30px;height:30px;margin-right:10px"
-                ></el-image>
-                <!-- <img :src="scope.row.externalUser.avatar" alt=""  style="width:30px;height:30px;margin-right:10px"> -->
-                <span>{{scope.row.externalUser.name}}</span>
-              </div>
+              <div>{{scope.row.belong.name}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="手机号" align="left"></el-table-column>
-          <el-table-column label="批量添加次数" align="left"></el-table-column>
-          <el-table-column label="入库时间" align="left"></el-table-column>
-          <el-table-column label="所属员工" align="left"></el-table-column>
-          <el-table-column label="添加员工" align="left"></el-table-column>
+          <el-table-column label="添加员工" align="left">
+            <template v-slot="scope">
+              <div>{{scope.row.creator.name}}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-t-button size="mini" :popAuth="true" :auth="permissionMap['potentialCustomer']['potentialCustomer_update']" @click.stop="handleEdit(scope.$index)">编辑</el-t-button>
@@ -113,7 +106,9 @@ export default {
         endTime: '',
         startTime: '',
         tryCount: ''
-      }
+      },
+
+      selects: []
     }
   },
   watch: {},
@@ -122,18 +117,23 @@ export default {
       tagListAll: state => state.tag.tagListAll,
 
       loading: state => state.potentialCustomer.loading,
-      listAll: state => state.potentialCustomer.listMy,
-      page: state => state.potentialCustomer.listMyPage,
+      listAll: state => state.potentialCustomer.listAll,
+      page: state => state.potentialCustomer.listAllPage,
 
       permissionMap: state => state.permission.permissionMap
-    }),
-    routesData() {
-      return this.routes
-    }
+    })
   },
   created() {
     this.initDataList(this.query)
-    // this.initFilter()
+    this.initFilter()
+  },
+  mounted(){
+    this.$bus.$on('handleRefresh',()=>{
+      this.initDataList(this.query)
+    })
+  },
+  beforeDestroy () {
+    this.$bus.$off('handleRefresh')
   },
   methods: {
     doExport(val) {
@@ -142,27 +142,27 @@ export default {
     /**
      * 初始化筛选信息
      */
-    // initFilter() {
-    //   this.$store
-    //     .dispatch('tag/getListSelect')
-    //     .then(() => {})
-    //     .catch(err => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '初始化失败'
-    //       })
-    //     })
+    initFilter() {
+      // this.$store
+      //   .dispatch('tag/getListSelect')
+      //   .then(() => {})
+      //   .catch(err => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: '初始化失败'
+      //     })
+      //   })
 
-    //   this.$store
-    //     .dispatch('user/getUserListSelect')
-    //     .then(() => {})
-    //     .catch(err => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '初始化失败'
-    //       })
-    //     })
-    // },
+      this.$store
+        .dispatch('user/getUserListSelect')
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
+    },
     /**
      * 初始化表格信息
      */
@@ -214,12 +214,64 @@ export default {
       this.$refs['formDialog'].dialogVisible = true
     },
     handleDistribute(){
-              this.$refs['formDialog'].event = 'DistributeTemplate'
-      this.$refs['formDialog'].eventType = 'distribute'
-      this.$refs['formDialog'].dialogVisible = true
+      const uuid = this.selects
+      const payload = {uuid}
+      if(this.selects.length){
+        
+        this.$refs['formDialog'].event = 'DistributeTemplate'
+        this.$refs['formDialog'].eventType = 'distribute'
+        this.$refs['formDialog'].dialogVisible = true
+        this.$refs['formDialog'].transfer = payload
+      }else {
+        this.$message({
+          type:'warning',
+          message: '请至少选择一个客户'
+        })
+      }
     },
-    handleEdit() {},
-    handleDelete() {}
+    handleEdit(index) {
+      const {name,remark,mobile,uuid} = this.listAll[index]
+      const payload = {name,remark,mobile,uuid}
+      // console.log(payload)
+      this.$refs['formDialog'].event = 'EditTemplate'
+      this.$refs['formDialog'].eventType = 'edit'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = payload
+    },
+    handleDelete(index) {
+      const {uuid} = this.listAll[index]
+      const payload = {uuid}
+      this.$confirm('是否删除当前客户', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          await this.$store
+            .dispatch('potentialCustomer/deletePotentialCustomer', payload)
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.initDataList()
+            })
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: err
+              })
+            })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    handleSelectionChange(val){
+      console.log(val)
+      const arr = val
+      this.selects = arr.map(item=>{return item.uuid+''})
+    }
   }
 }
 </script>
