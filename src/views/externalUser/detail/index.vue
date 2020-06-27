@@ -212,6 +212,7 @@ import FormDialog from './dialog'
 import { mapState } from "vuex";
 export default {
   components:{FormDialog},
+  inject: ['reload'],
   data() {
     return {
       userInfo: {},
@@ -383,33 +384,33 @@ export default {
       this.$refs['formDialog'].event = 'CreateTemplate'
       this.$refs['formDialog'].eventType = 'create'
     },
-    handleEditTrend(){
+    handleEditTrend(item){
+      console.log(item)
       this.$refs['formDialog'].dialogVisible = true
       this.$refs['formDialog'].event = 'EditTemplate'
       this.$refs['formDialog'].eventType = 'edit'
+      this.$refs['formDialog'].transfer = item
     },
-    handleDeleteTrend(){
-            console.log(val.uuid)
-      const uuid = val.uuid
+    handleDeleteTrend(item){
 
       const payload = {
-          uuid: uuid
+          uuid: item.uuid
       }
       
-      this.$confirm('是否删除当前部门', 'Warning', {
+      this.$confirm('是否删除当前动态', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(async () => {
           await this.$store
-            .dispatch('department/deleteDepartment', payload)
+            .dispatch('externalUser/deleteExTrends', payload)
             .then(() => {
               this.$message({
                 type: 'success',
                 message: '操作成功'
               })
-              this.initDataList()
+              this.reload()
             })
             .catch(err => {
               this.$message({

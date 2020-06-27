@@ -7,8 +7,8 @@
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
         <div slot="right">
-          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']" @click="handleBatchConfrim">批量通过</el-t-button>
-          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']" @click="handleBatchReject">批量拒绝</el-t-button>
+          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['audit']['audit_auditBatchTaskConfirmation']" @click="handleBatchConfrim">批量通过</el-t-button>
+          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['audit']['audit_auditBatchTaskConfirmation']" @click="handleBatchReject">批量拒绝</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -161,8 +161,8 @@ export default {
         .dispatch('sensitive/getAuditBatchSendTaklistAll', payload)
         .then(() => {
           //初始化分页
-        //   this.pageConfig.pageNumber = this.page.pageNumber + 1
-        //   this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.page.pageNumber + 1
+          this.pageConfig.total = this.page.total
         })
         .catch(err => {
           this.$message({
@@ -222,7 +222,7 @@ export default {
       })
         .then(async () => {
           await this.$store
-            .dispatch('audit/batchAuditTagConfirmation', payload)
+            .dispatch('audit/batchAuditBatchTaskConfirmation', payload)
             .then(res => {
               this.$message({
                 type: 'success',
@@ -255,7 +255,7 @@ export default {
       })
         .then(async () => {
           await this.$store
-            .dispatch('audit/batchAuditTagConfirmation', payload)
+            .dispatch('audit/batchAuditBatchTaskConfirmation', payload)
             .then(res => {
               this.$message({
                 type: 'success',
@@ -287,15 +287,13 @@ export default {
       console.log(payload)
       if (this.selects.length) {
         this.$store
-          .dispatch('audit/batchAuditTagConfirmation', payload)
+          .dispatch('audit/batchAuditBatchTaskConfirmation', payload)
           .then(() => {
             this.$message({
               type: 'success',
               message: '操作成功',
-              onClose: () => {
-                this.initData()
-              }
             })
+                this.initDataList(this.query)
           })
           .catch(err => {
             console.log(err)
@@ -319,15 +317,13 @@ export default {
       }
       if (this.selects.length) {
         this.$store
-          .dispatch('audit/batchAuditTagConfirmation', payload)
+          .dispatch('audit/batchAuditBatchTaskConfirmation', payload)
           .then(() => {
             this.$message({
               type: 'success',
               message: '操作成功',
-              onClose: () => {
-                this.initData()
-              }
             })
+                this.initDataList(this.query)
           })
           .catch(err => {
             console.log(err)

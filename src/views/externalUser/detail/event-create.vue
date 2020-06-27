@@ -1,12 +1,14 @@
 <template>
-  <el-form :model="form" ref="form" :rules="rules" label-width="100px">
+  <el-form :model="form" ref="form" >
 
-    <el-form-item label="名称" prop="name">
-      <el-input v-model="form.name"></el-input>
+
+    <el-form-item label="自定义动态" >
+      <el-input type="textarea" maxlength="100"
+  show-word-limit v-model.trim="form.remark"></el-input>
     </el-form-item>
 
 
-    <el-form-item label="上级">
+    <!-- <el-form-item label="上级">
       <el-checkbox v-model="hasParent">是否为子部门</el-checkbox>
     </el-form-item>
 
@@ -20,11 +22,11 @@
           :value="item"
         ></el-option>
       </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
-      <el-button type="danger" size="small" @click="handleCancel">取消</el-button>
-    </el-form-item>
+    </el-form-item> -->
+    <div class="text-align-center">
+      <el-t-button  size="small" @click="handleCancel">取消</el-t-button>
+      <el-t-button type="primary" size="small" @click="handleConfirm">确定</el-t-button>
+    </div>
   </el-form>
 </template>
 
@@ -36,54 +38,20 @@ export default {
     return {
       hasParent: false,
       form: {
-        code: '',
-        name: '',
-        org: 0,
-        // parent: 0,
-        uuid: ''
-      },
-      rules: {
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-        ]
+        remark: '',
+        externalUserId: ''
       }
-    }
-  },
-  watch: {
-    currDepartmentTemplate: {
-      handler(newVal, oldVal) {
-        if (newVal) {
-          //   console.log(newVal)
-          this.initData()
-        }
-      },
-      immediate: true
     }
   },
   computed: {
     ...mapState({
-              externalUserDetail: state => state.externalUser.externalUserDetail,
-        // currentRole: state => state.role.currentRole,
-        // currentDepartment: state => state.department.currentDepartment
+        externalUserDetail: state => state.externalUser.externalUserDetail,
     })
   },
-  updated() {
-    //   console.log('updated')
-    //   this.initData()
+  mounted(){
+      this.form.externalUserId = this.externalUserDetail?.externalUser?.externalUserId
   },
   methods: {
-    initData() {
-      const parent = this.currentDepartment.parent
-      this.form.name = this.currentDepartment.name
-
-
-      if (Object.keys(parent).length) {
-        this.hasParent = true
-        this.$set(this.form, 'parent', parent.uuid)
-
-      }
-    },
     handleConfirm() {
       const payload = this.form
 
@@ -91,7 +59,7 @@ export default {
         if (valid) {
           console.log(payload)
           this.$store
-            .dispatch('role/updateRole', payload)
+            .dispatch('externalUser/addExTrends', payload)
             .then(() => {
               this.$message({
                 type: 'success',
@@ -119,18 +87,19 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     refresh() {
+        this.reload()
       console.log('刷新')
-      this.$store
-        .dispatch('role/getRoleList')
-        .then(() => {
-          this.reload()
-        })
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: err
-          })
-        })
+    //   this.$store
+    //     .dispatch('role/getRoleList')
+    //     .then(() => {
+    //       this.reload()
+    //     })
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: err
+    //       })
+    //     })
     }
   }
 }

@@ -15,6 +15,8 @@ import {
   getCustomerStatistics
 } from '@/api/externalUser'
 
+import {addExTrends,deleteExTrends,
+  updateExTrends} from '@/api/externalUserTrends'
 const state = {
   /**
    * 我的客户
@@ -319,7 +321,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -341,7 +343,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -363,7 +365,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -385,7 +387,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -406,7 +408,7 @@ const actions = {
       }).catch(err => {
           commit('TOGGLE_LOADING',false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -425,7 +427,7 @@ const actions = {
       }).catch(err => {
           commit('TOGGLE_LOADING',false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -444,7 +446,7 @@ const actions = {
         resolve()
       }).catch(err => {
         console.log(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -465,7 +467,7 @@ const actions = {
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
-        reject()
+        reject(err)
       })
     })
   },
@@ -486,7 +488,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
@@ -503,7 +505,7 @@ const actions = {
         commit('SAVE_DATA', res)
         resolve()
       }).catch(err => {
-        reject()
+        reject(err)
       })
     })
   },
@@ -521,7 +523,7 @@ const actions = {
             resolve()
         }).catch(err=>{
           commit('TOGGLE_LOADING',false)
-            reject()
+            reject(err)
         })
     })
  },
@@ -537,7 +539,43 @@ const actions = {
           resolve()
       }).catch(err=>{
         commit('TOGGLE_LOADING',false)
-          reject()
+          reject(err)
+      })
+  })
+},
+/**
+  * 添加动态
+  */
+ addExTrends({commit},payload){
+  return new Promise((resolve,reject)=>{
+      addExTrends(payload).then(res=>{
+          resolve()
+      }).catch(err=>{
+          reject(err)
+      })
+  })
+},
+/**
+  * 删除动态
+  */
+ deleteExTrends({commit},payload){
+  return new Promise((resolve,reject)=>{
+    deleteExTrends(payload).then(res=>{
+          resolve()
+      }).catch(err=>{
+          reject(err)
+      })
+  })
+},
+/**
+  * 更新动态
+  */
+ updateExTrends({commit},payload){
+  return new Promise((resolve,reject)=>{
+    updateExTrends(payload).then(res=>{
+          resolve()
+      }).catch(err=>{
+          reject(err)
       })
   })
 },

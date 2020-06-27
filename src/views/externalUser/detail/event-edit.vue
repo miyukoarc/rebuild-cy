@@ -33,59 +33,41 @@
 <script>
 import { mapState } from 'vuex'
 export default {
+    props: {
+        transfer: {
+            type: Object,
+            default: ()=>{}
+        }
+    },
   inject: ['reload'],
   data() {
     return {
       hasParent: false,
       form: {
         remark: '',
-        externalUserId: ''
-      },
-      rules: {
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-        ]
+        externalUserId: '',
+        uuid: 0
       }
-    }
-  },
-  watch: {
-    currDepartmentTemplate: {
-      handler(newVal, oldVal) {
-        if (newVal) {
-          //   console.log(newVal)
-          this.initData()
-        }
-      },
-      immediate: true
     }
   },
   computed: {
     ...mapState({
-              externalUserDetail: state => state.externalUser.externalUserDetail,
-        // currentRole: state => state.role.currentRole,
-        // currentDepartment: state => state.department.currentDepartment
+        externalUserDetail: state => state.externalUser.externalUserDetail,
     })
+  },
+  watch:{
+      transfer:{
+          handler(newVal,oldVal){
+              console.log(newVal)
+              this.form.uuid = newVal.uuid
+              this.form.remark = newVal.remark
+          },immediate:true
+      }
   },
   mounted(){
       this.form.externalUserId = this.externalUserDetail?.externalUser?.externalUserId
   },
-  updated() {
-    //   console.log('updated')
-    //   this.initData()
-  },
   methods: {
-    initData() {
-      const parent = this.currentDepartment.parent
-      this.form.name = this.currentDepartment.name
-
-
-      if (Object.keys(parent).length) {
-        this.hasParent = true
-        this.$set(this.form, 'parent', parent.uuid)
-
-      }
-    },
     handleConfirm() {
       const payload = this.form
 
@@ -93,7 +75,7 @@ export default {
         if (valid) {
           console.log(payload)
           this.$store
-            .dispatch('role/updateRole', payload)
+            .dispatch('externalUser/updateExTrends', payload)
             .then(() => {
               this.$message({
                 type: 'success',
@@ -121,18 +103,19 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     refresh() {
+        this.reload()
       console.log('刷新')
-      this.$store
-        .dispatch('role/getRoleList')
-        .then(() => {
-          this.reload()
-        })
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: err
-          })
-        })
+    //   this.$store
+    //     .dispatch('role/getRoleList')
+    //     .then(() => {
+    //       this.reload()
+    //     })
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: err
+    //       })
+    //     })
     }
   }
 }

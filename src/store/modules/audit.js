@@ -1,4 +1,11 @@
-import {batchAuditTagConfirmation} from '@/api/audit'
+import {
+    auditPermissionConfirmation,
+    auditTagConfirmation,
+    batchAuditBatchTaskConfirmation,
+    batchAuditMediaConfirmation,
+    batchAuditPermissionConfirmation,
+    batchAuditTagConfirmation,
+} from '@/api/audit'
 
 const state = {
     auditTaglist: [],
@@ -24,7 +31,52 @@ const actions = {
                 resolve()
             }).catch(err=>{
                 console.log(err)
-                reject()
+                reject(err)
+            })
+        })
+    },
+    /**
+     * 权限审核操作
+     * @param {*} param0 
+     * @param {*} payload 
+     */
+    batchAuditPermissionConfirmation({commit},payload){
+        return new Promise((resolve,reject)=>{
+            batchAuditPermissionConfirmation(payload).then(()=>{
+                resolve()
+            }).catch(err=>{
+                console.log(err)
+                reject(err)
+            })
+        })
+    },
+    /**
+     * 素材的批量审核操作
+     * @param {*} param0 
+     * @param {*} payload 
+     */
+    batchAuditMediaConfirmation({commit},payload){
+        return new Promise((resolve,reject)=>{
+            batchAuditMediaConfirmation(payload).then(()=>{
+                resolve()
+            }).catch(err=>{
+                console.log(err)
+                reject(err)
+            })
+        })
+    },
+    /**
+     * 群发批量审核操作
+     * @param {*} param0 
+     * @param {*} payload 
+     */
+    batchAuditBatchTaskConfirmation({commit},payload){
+        return new Promise((resolve,reject)=>{
+            batchAuditBatchTaskConfirmation(payload).then(()=>{
+                resolve()
+            }).catch(err=>{
+                console.log(err)
+                reject(err)
             })
         })
     }
