@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="文件名">
-      <el-input v-model.trim="query.filename"></el-input>
+      <el-input v-model.trim="query.fileName"></el-input>
     </el-form-item>
 
     <!-- <el-form-item label="手机号码">
@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       query: {
-          remark: ''
+          fileName: ''
 
       }
     }

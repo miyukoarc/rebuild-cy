@@ -23,12 +23,30 @@ import { mapState } from "vuex";
 
 export default {
   inject: ["reload"],
+  props:{
+      transfer: {
+          type: Object,
+          default: ()=>{}
+      }
+  },
   data() {
     return {
       form: {
-        groupName: ""
+        groupName: "",
+        uuid: ''
       }
     };
+  },
+  watch:{
+      transfer:{
+          handler(newVal,oldVal){
+              const {groupName,uuid} = newVal
+              this.form.groupName = groupName
+              this.form.uuid = uuid
+          },
+          immediate: true
+
+      }
   },
   computed: {
     ...mapState({
@@ -44,7 +62,7 @@ export default {
         if (valid) {
           console.log(payload);
           this.$store
-            .dispatch("media/addGroup", payload)
+            .dispatch("media/rename", payload)
             .then(() => {
               this.$message({
                 type: "success",

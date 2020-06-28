@@ -60,3 +60,12 @@ export function setPermissionMap(obj){
 
 }
 
+/**
+ * 素材分类
+ * @param {array} arr 
+ * @param {string} target 
+ */
+export function classifyMedia(arr,target){
+    return arr.filter(item => { return item.type === target })
+}
+

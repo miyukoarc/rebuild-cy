@@ -15,7 +15,7 @@ export const getMediaDetail = (uuid)=>{
  * 添加临时素材
  * @param {object} payload 
  */
-export const add = (payload)=>{
+export const addMedia = (payload)=>{
     return request({
         url: '/media/add',
         method: 'post',
@@ -106,7 +106,7 @@ export const deleteArticle = (payload)=>{
  */
 export const getArticleList = (payload)=>{
     return request({
-        url: '/media/article/list',
+        url: '/media/article/listAll',
         method: 'get',
         params: payload
     })
@@ -168,13 +168,27 @@ export const getImgUrl = (payload)=>{
  * 素材列表
  * @param {string} payload
  */
-export const getMediaList = (payload)=>{
+export const getMediaListAll = (payload)=>{
     return request({
-        url: '/media/list',
+        url: '/media/listAll',
         method: 'get',
         params: payload
     })
 }
+
+/**
+ * 文章列表
+ * @param {string} payload
+ */
+export const getArticleListAll = (payload)=>{
+    return request({
+        url: '/media/article/listAll',
+        method: 'get',
+        params: payload
+    })
+}
+
+
 
 
 
