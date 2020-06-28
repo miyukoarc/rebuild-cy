@@ -23,7 +23,6 @@ export default {
     $route: {
       handler(newVal,oldVal){
         this.getBreadcrumb()
-        console.log(newVal)
       }
     }
   },

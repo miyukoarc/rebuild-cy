@@ -2,7 +2,7 @@
   <el-form ref="searchForm" inline label-width="120px">
     <!-- <el-form-item label="敏感词行为">
       <el-input v-model.trim="query.name"></el-input>
-    </el-form-item> -->
+    </el-form-item>-->
 
     <!-- <el-form-item label="手机号码">
       <el-input v-model.trim="query.name"></el-input>
@@ -10,9 +10,9 @@
 
     <el-form-item label="批量添加次数">
       <el-input v-model.trim="query.name"></el-input>
-    </el-form-item> -->
+    </el-form-item>-->
 
-    <el-form-item label="发生时间">
+    <el-form-item label="发生时间：">
       <el-date-picker
         v-model="value"
         type="daterange"
@@ -55,18 +55,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
-      value: '',
+      value: "",
       query: {
-        name: '',
-        tagIds: '',
-        userId: ''
+        name: "",
+        tagIds: "",
+        userId: ""
         // roleUuid: ''
       }
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -77,27 +77,30 @@ export default {
   },
   methods: {
     handleChangeFirst(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleSearch() {
-      this.$emit('handleSearch', this.query)
+      this.$emit("handleSearch", this.query);
     },
     handleRefresh() {
-      this.$emit('handleRefresh')
-      this.query = this.$options.data().query
+      this.$emit("handleRefresh");
+      this.query = this.$options.data().query;
     }
   }
-}
+};
 </script>
 
-<style>
+<style lang="scss" scoped>
+.el-form-item:last-child {
+  margin-bottom: 0;
+}
 </style>

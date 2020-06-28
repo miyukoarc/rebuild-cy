@@ -1,11 +1,11 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
-    <el-form-item label="搜索客户">
-      <el-input v-model.trim="query.name"></el-input>
+    <el-form-item label="搜索客户：">
+      <el-input v-model.trim="query.name" clearable></el-input>
     </el-form-item>
 
-    <el-form-item label="所属客服">
-      <el-select v-model="query.userId" @change="handleChangeThird">
+    <el-form-item label="所属客服：">
+      <el-select v-model="query.userId" clearable @change="handleChangeThird">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -15,7 +15,7 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item label="客户标签">
+    <el-form-item label="客户标签：">
       <el-select v-model="query.tagIds" clearable @change="handleChangeSecond">
         <el-option-group 
         v-for="item in tagListAll" 

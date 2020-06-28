@@ -11,12 +11,15 @@ import {
   getQuitUserRelationExUserDetail,
   redistributionExUser,
   getGroupDetail,
-  
+
   getCustomerStatistics
 } from '@/api/externalUser'
 
-import {addExTrends,deleteExTrends,
-  updateExTrends} from '@/api/externalUserTrends'
+import {
+  addExTrends,
+  deleteExTrends,
+  updateExTrends
+} from '@/api/externalUserTrends'
 const state = {
   /**
    * 我的客户
@@ -89,17 +92,17 @@ const state = {
   /**
    * 离职员工客户列表(所有)
    */
-  quitUserRelationExUserList:[],
-  quitListPage:{
+  quitUserRelationExUserList: [],
+  quitListPage: {
     total: 0,
     pageNumber: 0,
     pageSize: 0
   },
-  quitUserCurrentRow:{},
+  quitUserCurrentRow: {},
   /**
    * 某个离职员工客户列表
    */
-  quitUserRelationExUserListDetail:[],
+  quitUserRelationExUserListDetail: [],
 
   /**
    * 群详情
@@ -222,7 +225,7 @@ const mutations = {
     state.runWayListAllPage.pageNumber = pageNumber
     state.runWayListAllPage.pageSize = pageSize
   },
-  
+
 
   /**
    * 保存群聊列表
@@ -230,8 +233,8 @@ const mutations = {
   SAVE_LISTGROUP(state, payload) {
     state.listGroup = payload
   },
-  SAVE_LISTOWNER(state,payload){
-      state.listOwner = payload
+  SAVE_LISTOWNER(state, payload) {
+    state.listOwner = payload
   },
   SET_LISTGROUPPAGE(state, payload) {
     const {
@@ -247,7 +250,7 @@ const mutations = {
   /**
    * 离职员工的客户（所有）
    */
-  SAVE_QUITLIST(state,payload){
+  SAVE_QUITLIST(state, payload) {
     state.quitUserRelationExUserList = payload
   },
   SET_QUITLISTPAGE(state, payload) {
@@ -260,17 +263,16 @@ const mutations = {
     state.quitListPage.pageNumber = pageNumber
     state.quitListPage.pageSize = pageSize
   },
-  SAVE_QUITUSERCURRENTROW(state,payload){
+  SAVE_QUITUSERCURRENTROW(state, payload) {
     state.quitUserCurrentRow = payload
-    console.log(state.quitUserCurrentRow,'3333')
   },
   /**
    * 某个离职员工的客户列表
    */
-  SAVE_QUITLISTDETAIL(state,payload){
-      state.quitUserRelationExUserListDetail = payload
+  SAVE_QUITLISTDETAIL(state, payload) {
+    state.quitUserRelationExUserListDetail = payload
   },
-  SAVE_GROUPDETAIL(state,payload){
+  SAVE_GROUPDETAIL(state, payload) {
     state.groupDetail = payload
   },
   /**
@@ -279,7 +281,7 @@ const mutations = {
    * @param {*} payload 
    */
 
-  SAVE_STATISTICS(state,payload){
+  SAVE_STATISTICS(state, payload) {
     state.statstics = payload
   },
   /**
@@ -287,13 +289,13 @@ const mutations = {
    * @param {*} state 
    * @param {*} payload 
    */
-  SAVE_EXTERNALUSER(state,payload){
-    state.externalUserDetail=payload
+  SAVE_EXTERNALUSER(state, payload) {
+    state.externalUserDetail = payload
   },
   /**
    * 保存群列表
    */
-  SAVE_GROUPLIST(state,payload){
+  SAVE_GROUPLIST(state, payload) {
     state.groupListAll = payload
   }
 
@@ -399,14 +401,14 @@ const actions = {
   getQuitUserRelationExUserList({
     commit
   }, payload) {
-      commit('TOGGLE_LOADING',true)
+    commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getQuitUserRelationExUserList(payload).then(res => {
-          commit('SAVE_QUITLIST',res)
-          commit('TOGGLE_LOADING',false)
+        commit('SAVE_QUITLIST', res.items)
+        commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-          commit('TOGGLE_LOADING',false)
+        commit('TOGGLE_LOADING', false)
         console.log(err)
         reject(err)
       })
@@ -420,14 +422,14 @@ const actions = {
   getQuitUserRelationExUserDetail({
     commit
   }, payload) {
-      commit('TOGGLE_LOADING',true)
+    commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getQuitUserRelationExUserDetail(payload).then(res => {
-          commit('SAVE_QUITLISTDETAIL',res)
-          commit('TOGGLE_LOADING',false)
+        commit('SAVE_QUITLISTDETAIL', res.items)
+        commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-          commit('TOGGLE_LOADING',false)
+        commit('TOGGLE_LOADING', false)
         console.log(err)
         reject()
       })
@@ -440,13 +442,13 @@ const actions = {
   redistributionExUser({
     commit
   }, payload) {
-      commit('TOGGLE_LOADING',true)
+    commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       redistributionExUser(payload).then(res => {
-          commit('TOGGLE_LOADING',false)
+        commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-          commit('TOGGLE_LOADING',false)
+        commit('TOGGLE_LOADING', false)
         console.log(err)
         reject(err)
       })
@@ -482,7 +484,7 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getListOwner(payload).then(res => {
-        commit('SAVE_LISTOWNER',res)
+        commit('SAVE_LISTOWNER', res)
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
@@ -535,71 +537,81 @@ const actions = {
    * @param {*} param0 
    * @param {*} payload 
    */
-  getGroupDetail({commit},payload){
-    commit('TOGGLE_LOADING',true)
-    return new Promise((resolve,reject)=>{
-        getGroupDetail(payload).then(res=>{
-          commit('TOGGLE_LOADING',false)
-            commit('SAVE_GROUPDETAIL',res)
-            resolve()
-        }).catch(err=>{
-          commit('TOGGLE_LOADING',false)
-            reject(err)
-        })
+  getGroupDetail({
+    commit
+  }, payload) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      getGroupDetail(payload).then(res => {
+        commit('TOGGLE_LOADING', false)
+        commit('SAVE_GROUPDETAIL', res)
+        resolve()
+      }).catch(err => {
+        commit('TOGGLE_LOADING', false)
+        reject(err)
+      })
     })
- },
- /**
-  * 客户详情
-  */
- getDetail({commit},payload){
-  commit('TOGGLE_LOADING',true)
-  return new Promise((resolve,reject)=>{
-      getDetail(payload).then(res=>{
-        commit('SAVE_EXTERNALUSER',res)
-        commit('TOGGLE_LOADING',false)
-          resolve()
-      }).catch(err=>{
-        commit('TOGGLE_LOADING',false)
-          reject(err)
+  },
+  /**
+   * 客户详情
+   */
+  getDetail({
+    commit
+  }, payload) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      getDetail(payload).then(res => {
+        commit('SAVE_EXTERNALUSER', res)
+        commit('TOGGLE_LOADING', false)
+        resolve()
+      }).catch(err => {
+        commit('TOGGLE_LOADING', false)
+        reject(err)
       })
-  })
-},
-/**
-  * 添加动态
-  */
- addExTrends({commit},payload){
-  return new Promise((resolve,reject)=>{
-      addExTrends(payload).then(res=>{
-          resolve()
-      }).catch(err=>{
-          reject(err)
+    })
+  },
+  /**
+   * 添加动态
+   */
+  addExTrends({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      addExTrends(payload).then(res => {
+        resolve()
+      }).catch(err => {
+        reject(err)
       })
-  })
-},
-/**
-  * 删除动态
-  */
- deleteExTrends({commit},payload){
-  return new Promise((resolve,reject)=>{
-    deleteExTrends(payload).then(res=>{
-          resolve()
-      }).catch(err=>{
-          reject(err)
+    })
+  },
+  /**
+   * 删除动态
+   */
+  deleteExTrends({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      deleteExTrends(payload).then(res => {
+        resolve()
+      }).catch(err => {
+        reject(err)
       })
-  })
-},
-/**
-  * 更新动态
-  */
- updateExTrends({commit},payload){
-  return new Promise((resolve,reject)=>{
-    updateExTrends(payload).then(res=>{
-          resolve()
-      }).catch(err=>{
-          reject(err)
+    })
+  },
+  /**
+   * 更新动态
+   */
+  updateExTrends({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      updateExTrends(payload).then(res => {
+        resolve()
+      }).catch(err => {
+        reject(err)
       })
-  })
-},
+    })
+  },
 
 
 

@@ -31,11 +31,11 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="客户名称" prop="externalUserName" align="left"></el-table-column>
+          <el-table-column label="客户名称" prop="externalUser.name" align="left"></el-table-column>
 
-          <el-table-column label="原添加人" prop="userName" align="left"></el-table-column>
-          <el-table-column label="原添加人所属部门" prop="departName" align="left"></el-table-column>
-          <el-table-column label="离职时间" align="left" prop="quitDate"></el-table-column>
+          <el-table-column label="原添加人" prop="user.name" align="left"></el-table-column>
+          <el-table-column label="原添加人所属部门" prop="departments[0].name" align="left"></el-table-column>
+          <el-table-column label="离职时间" align="left" prop="updatedAt"></el-table-column>
 
           <!-- <el-table-column label="渠道来源" align="left">
             <template v-slot="scope">

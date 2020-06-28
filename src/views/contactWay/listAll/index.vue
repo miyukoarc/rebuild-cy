@@ -25,9 +25,10 @@
           row-key="uuid"
           stripe
           lazy
+          fit
           highlight-current-row
         >
-          <el-table-column type="selection"></el-table-column>
+          <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="二维码" align="left">
             <template slot-scope="scope">
               <img
@@ -65,30 +66,30 @@
           </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button
+              <el-t-button :popAuth="true" :auth="permissionMap['contactWay']['contactWay_detail']" 
                 type="primary"
                 size="mini"
                 class="button-s"
                 @click.stop="handleDetail(scope.$index,scope.row)"
-              >详情</el-button>
-              <el-button
+              >详情</el-t-button>
+              <el-t-button 
                 type="primary"
                 size="mini"
                 class="button-s"
                 @click.stop="downLoad(scope.row)"
-              >下载</el-button>
-              <el-button
+              >下载</el-t-button>
+              <el-t-button :popAuth="true" :auth="permissionMap['contactWay']['contactWay_update']" 
                 type="primary"
                 size="mini"
                 class="button-s"
                 @click.stop="handleEdit(scope.row)"
-              >编辑</el-button>
-              <el-button
+              >编辑</el-t-button>
+              <el-t-button :popAuth="true" :auth="permissionMap['contactWay']['contactWay_delete']" 
                 type="danger"
                 size="mini"
                 class="button-s"
                 @click.stop="handleDelete(scope.row)"
-              >删除</el-button>
+              >删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>

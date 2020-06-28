@@ -1,25 +1,20 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
-
-    
-    <el-form-item>
-      卡片名称（企业标签由管理员统一配置，配置后企业全部成员可使用）
-    </el-form-item>
-    <el-form-item label="标签组名称">
-      <el-input v-model.trim="query.groupName"></el-input>
+    <el-form-item label="标签组名称：">
+      <el-input v-model.trim="query.groupName" clearable></el-input>
     </el-form-item>
 
-    <el-form-item label="标签名称">
-      <el-input v-model.trim="query.tagName"></el-input>
+    <el-form-item label="标签名称：">
+      <el-input v-model.trim="query.tagName" clearable></el-input>
     </el-form-item>
-
+    <el-form-item>卡片名称（企业标签由管理员统一配置，配置后企业全部成员可使用）</el-form-item>
     <!-- <el-form-item label="手机号码">
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item>
 
     <el-form-item label="批量添加次数">
       <el-input v-model.trim="query.name"></el-input>
-    </el-form-item> -->
+    </el-form-item>-->
 
     <!-- <el-form-item label="发生时间">
       <el-date-picker
@@ -30,7 +25,7 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
       ></el-date-picker>
-    </el-form-item> -->
+    </el-form-item>-->
 
     <!-- <el-form-item label="所属客服">
       <el-select v-model="query.userId" @change="handleChangeThird">
@@ -64,49 +59,52 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
-    //   value: '',
+      //   value: '',
       query: {
-        groupName: '',
-        tagName: '',
+        groupName: "",
+        tagName: ""
         // userId: ''
         // roleUuid: ''
       }
-    }
+    };
   },
   computed: {
     ...mapState({
-    //   tagListAll: state => state.tag.tagListAll,
-    //   userListAll: state => state.user.userListAll
+      //   tagListAll: state => state.tag.tagListAll,
+      //   userListAll: state => state.user.userListAll
       //   departments: state => state.department.departments
     })
   },
   methods: {
     handleChangeFirst(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleSearch() {
-      this.$emit('handleSearch', this.query)
+      this.$emit("handleSearch", this.query);
     },
     handleRefresh() {
-      this.$emit('handleRefresh')
-      this.query = this.$options.data().query
+      this.$emit("handleRefresh");
+      this.query = this.$options.data().query;
     }
   }
-}
+};
 </script>
 
-<style>
+<style lang="scss" scoped>
+.el-form-item:last-child {
+  margin-bottom: 0;
+}
 </style>

@@ -62,14 +62,18 @@
           </el-table-column>-->
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click.stop="handleDetail(scope.$index,scope.row)"
+              >详情</el-button>
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
-        
+
         <el-pagination
           background
           class="pager"
@@ -88,14 +92,14 @@
 
 <script>
 // import mHeadedr from "./header";
-import UserDetail from './detail.vue'
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import UserDetail from "./detail.vue";
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: 'runWayListAll',
+  name: "runWayListAll",
   components: {
     ListHeader,
     UserDetail,
@@ -115,12 +119,12 @@ export default {
         page: 0,
         size: 10,
         flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
-        roleUuid: ''
+        name: "",
+        tagIds: "",
+        userId: "",
+        roleUuid: ""
       }
-    }
+    };
   },
   watch: {},
   computed: {
@@ -132,16 +136,16 @@ export default {
       runWayListAllPage: state => state.externalUser.runWayListAllPage
     }),
     routesData() {
-      return this.routes
+      return this.routes;
     }
   },
   created() {
-    this.initDataList(this.query)
+    this.initDataList(this.query);
     // this.initFilter()
   },
   methods: {
     doExport(val) {
-      console.log(val)
+      console.log(val);
     },
     /**
      * 初始化筛选信息
@@ -173,26 +177,25 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getRunWayListAll', payload)
+        .dispatch("externalUser/getRunWayListAll", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1
-          this.pageConfig.total = this.runWayListAllPage.total
+          this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1;
+          this.pageConfig.total = this.runWayListAllPage.total;
         })
         .catch(err => {
-            console.error(err)
+          console.error(err);
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
-    handleDetail(index) {
-      const payload = this.userList[index].uuid
+    handleDetail(index, row) {
       this.$router.push({
-        path: '/externalUser/detail',
-        query: { uuid: payload }
-      })
+        path: `/externalUser/detail/${row.uuid}`,
+        query: { userId: row.user.userId }
+      });
     },
     // handleSearch(val) {
     //   const { tagIds, name } = val
@@ -207,12 +210,12 @@ export default {
     //   this.initDataList(this.query)
     // },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

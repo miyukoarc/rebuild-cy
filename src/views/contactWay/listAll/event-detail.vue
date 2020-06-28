@@ -139,7 +139,7 @@ export default {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     flex-direction: column;
-    padding-left: 35px;
+    padding-left: 15px;
     padding-top: 13px;
     height: 100%;
     overflow-y: auto;

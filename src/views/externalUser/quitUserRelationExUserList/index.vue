@@ -25,14 +25,14 @@
           @selection-change="handleSelectionChange"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="离职员工" prop="userName" align="left">
+          <el-table-column label="离职员工" prop="name" align="left">
           </el-table-column>
 
-          <el-table-column label="部门" prop="departName" align="left">
+          <el-table-column label="部门" prop="departments[0].name" align="left">
           </el-table-column>
-          <el-table-column label="待分配人数" prop="toBeAllocatedCount" align="left">
+          <el-table-column label="待分配人数" prop="toBeAllocatedGroupCount" align="left">
           </el-table-column>
-          <el-table-column label="离职时间" align="left" prop="quitDate"></el-table-column>
+          <el-table-column label="离职时间" align="left" prop="updatedAt"></el-table-column>
 
           <!-- <el-table-column label="渠道来源" align="left">
             <template v-slot="scope">
@@ -199,7 +199,6 @@ export default {
       this.initDataList(this.query)
     },
     handleSelectionChange(val){
-      console.log(val,'33333')
       this.selectedAllData = val
     }
   }

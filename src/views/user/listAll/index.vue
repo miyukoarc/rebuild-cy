@@ -25,7 +25,7 @@
           <el-table-column prop="name" label="员工姓名" align="left"></el-table-column>
           <el-table-column label="部门" align="left">
             <template v-slot="scoped">
-              <div>{{scoped.row.departments[0].name}}</div>
+              <div>{{scoped.row.departments.name?scoped.row.departments.name:'--'}}</div>
             </template>
           </el-table-column>
           <el-table-column label="角色" align="left">

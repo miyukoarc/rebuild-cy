@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-27 22:34:57
+ * @LastEditTime: 2020-06-28 20:42:43
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\externalUser\detail\dialog.vue
+--> 
 <template>
     <div>
         <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body width="600px" center :close-on-click-modal="false">
@@ -64,7 +72,6 @@ components:{
           if(this.eventType==='distribute'){
               return '添加动态'
           }
-          
           
       },
   }

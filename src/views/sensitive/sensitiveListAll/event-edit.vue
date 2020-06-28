@@ -24,10 +24,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
-  inject: ['reload'],
+  inject: ["reload"],
   props: {
     transfer: {
       type: Object,
@@ -37,32 +37,31 @@ export default {
   data() {
     return {
       form: {
-        word: '',
-        type: 'MSG',
+        word: "",
+        type: "MSG",
         toUser: [],
         uuid: 0
       },
       rules: {
         word: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
         ],
         code: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
         ]
       }
-    }
+    };
   },
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        console.log(newVal)
-        const { toUser, type, uuid, word } = newVal
-        this.form.toUser = toUser
-        this.form.type = type
-        this.form.uuid = uuid
-        this.form.word = word
+        const { toUser, type, uuid, word } = newVal;
+        this.form.toUser = toUser;
+        this.form.type = type;
+        this.form.uuid = uuid;
+        this.form.word = word;
       },
       immediate: true
     }
@@ -75,55 +74,55 @@ export default {
   mounted() {},
   methods: {
     handleConfirm() {
-      const payload = this.form
+      const payload = this.form;
 
-      this.$refs['form'].validate(valid => {
+      this.$refs["form"].validate(valid => {
         if (valid) {
-          console.log(payload)
+          console.log(payload);
           this.$store
-            .dispatch('sensitive/update', payload)
+            .dispatch("sensitive/update", payload)
             .then(() => {
               this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.handleCancel()
-              this.refresh()
+                type: "success",
+                message: "操作成功"
+              });
+              this.handleCancel();
+              this.refresh();
             })
             .catch(err => {
-              console.log(err)
+              console.log(err);
               this.$message({
-                type: 'error',
-                message: '操作失败'
-              })
-            })
+                type: "error",
+                message: "操作失败"
+              });
+            });
         } else {
           this.$message({
-            type: 'error',
-            message: '请检查输入'
-          })
+            type: "error",
+            message: "请检查输入"
+          });
         }
-      })
+      });
     },
     handleCancel() {
-      this.$parent.$parent.dialogVisible = false
+      this.$parent.$parent.dialogVisible = false;
     },
     handleChange() {},
     refresh() {
       this.$store
-        .dispatch('sensitive/getSensitiveListAll')
+        .dispatch("sensitive/getSensitiveListAll")
         .then(() => {
-          this.reload()
+          this.reload();
         })
         .catch(err => {
           this.$message({
-            type: 'error',
+            type: "error",
             message: err
-          })
-        })
+          });
+        });
     }
   }
-}
+};
 </script>
 
 <style>

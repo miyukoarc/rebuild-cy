@@ -85,7 +85,7 @@
           </el-table-column>
           <el-table-column label="操作" align="left">
               <template v-slot="scope">
-                  <el-t-button type="primary" :auth="permissionMap['user']['user_detail']" :popAuth="true" @click.stop="handleDetail(scope.$index)">详情</el-t-button>
+                  <el-t-button type="primary" size="mini" :auth="permissionMap['user']['user_detail']" :popAuth="true" @click.stop="handleDetail(scope.$index)">详情</el-t-button>
 
               </template>
           </el-table-column>
