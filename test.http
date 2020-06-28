@@ -50,3 +50,7 @@ Cookie: JSESSIONID=70B89B14D1CCC5A79CEB5B0A8A7D1963
 ### permission 
 GET http://{{hostname}}:{{port}}/permission/listMy HTTP/1.1
 Cookie: JSESSIONID=70B89B14D1CCC5A79CEB5B0A8A7D1963
+
+###
+GET http://47.111.161.128/api/public/file/5ef2f0a374818e7f9d00afbc HTTP/1.1
+Content-Type: 

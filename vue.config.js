@@ -70,6 +70,9 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
             }
         },
         '/public': {
+            headers: {
+                Host: 'sidebar.cyscrm.com'
+            },
             target: 'http://47.111.161.128:9000/',
             // target: 'http://10.10.10.198:9000',
             changeOrigin: true,

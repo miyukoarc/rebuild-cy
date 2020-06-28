@@ -7,7 +7,7 @@
       width="300"
       trigger="hover"
     >-->
-    <el-tooltip v-if="showAuth&&popAuth" placement="top">
+    <el-tooltip :enterable="false" v-if="showAuth&&popAuth" placement="top">
       <div slot="content">
         <!-- <div v-if="Object.keys(auth).length" class="container">
           <div v-for="(value,key) in authData" :key="key">{{key}}: {{value}}</div>

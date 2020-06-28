@@ -5,10 +5,15 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :hasExport="false" >
+      <tool-bar :hasExport="false">
         <div slot="right">
           <!-- <el-t-button type="primary">新建文章</el-t-button> -->
-          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['media']['media_addMediaIsAudit']">新建文章</el-t-button>
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['media']['media_addMediaIsAudit']"
+            @click="handleCreate"
+          >新建文章</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -25,12 +30,24 @@
           highlight-current-row
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="文章标题" align="left"></el-table-column>
-          <el-table-column label="上传时间" align="left"></el-table-column>
-          <el-table-column label="文章描述" align="left"></el-table-column>
+          <el-table-column label="文章标题" align="left" prop="title"></el-table-column>
+          <el-table-column label="上传时间" align="left" prop="createdAt"></el-table-column>
+          <el-table-column label="文章描述" align="left" prop="description"></el-table-column>
           <el-table-column label="操作" align="left">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+            <template v-slot="scope">
+              <el-t-button
+                size="mini"
+                @click.stop="handleEdit(scope.$index)"
+                :popAuth="true"
+                :auth="permissionMap['media']['media_article/update']"
+              >编辑</el-t-button>
+              <el-t-button
+                size="mini"
+                @click.stop="handleDelete(scope.$index)"
+                :popAuth="true"
+                :auth="permissionMap['media']['media_delete']"
+              >删除</el-t-button>
+              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
@@ -81,18 +98,18 @@ export default {
       query: {
         page: 0,
         size: 10,
-        title: '',
+        title: ''
       }
     }
   },
   watch: {},
   computed: {
     ...mapState({
-    //   tagListAll: state => state.tag.tagListAll,
+      //   tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.batchSendTask.loading,
-      listAll: state => state.batchSendTask.listMy,
-      page: state => state.batchSendTask.listMyPage,
+      loading: state => state.media.loading,
+      listAll: state => state.media.articleList,
+      page: state => state.media.page,
 
       permissionMap: state => state.permission.permissionMap
     }),
@@ -137,7 +154,7 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('batchSendTask/getListMy', payload)
+        .dispatch('media/getArticleList', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1
@@ -160,7 +177,7 @@ export default {
     handleSearch(val) {
       const { title } = val
       this.query.title = title ? title : this.query.title
-    //   this.query.name = name ? name : this.query.name
+      //   this.query.name = name ? name : this.query.name
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },
@@ -173,6 +190,45 @@ export default {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
+    },
+    handleCreate() {
+      this.$router.push({
+        path: '/media/article/detail/0'
+      })
+    },
+    handleEdit(index) {
+      const uuid = this.listAll[index].uuid
+      this.$router.push({
+        path: '/media/article/detail/' + uuid
+      })
+    },
+    handleDelete(index) {
+      const uuid = this.listAll[index].uuid
+      this.$confirm('是否删除当前动态', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          await this.$store
+            .dispatch('media/deleteMedia', { uuid })
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.reload()
+            })
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: err
+              })
+            })
+        })
+        .catch(err => {
+          console.error(err)
+        })
     }
   }
 }
@@ -191,17 +247,4 @@ export default {
   text-align: center;
 }
 
-// .app-container {
-//   border-top: 1px solid #e9e9e9;
-//   background: white;
-//   .roles-table {
-//     margin-top: 30px;
-//   }
-//   .permission-tree {
-//     margin-bottom: 30px;
-//   }
-// }
-// header .el-header button {
-//   margin-right: 5px;
-// }
 </style>
