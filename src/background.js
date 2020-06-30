@@ -1,10 +1,11 @@
 'use strict'
 
-import { app, protocol, BrowserWindow,BrowserView, Tray ,Menu} from 'electron'
-import {
-  createProtocol,
-  /* installVueDevtools */
-} from 'vue-cli-plugin-electron-builder/lib'
+const  { app, protocol, BrowserWindow,BrowserView, Tray ,Menu} = require('electron')
+// const {createProtocol} = require('vue-cli-plugin-electron-builder/lib')
+// import {
+//   createProtocol,
+//   /* installVueDevtools */
+// } from 'vue-cli-plugin-electron-builder/lib'
 
 const {ipcMain} = require('electron')
 
@@ -30,11 +31,12 @@ function createWindow () {
     height: 600,
     minHeight: 600,
     minWidth:800,
-    maximizable: false,
+    // maximizable: false,
     // transparent: true, 
-    show: false,
-    sanbox: true,//微信扫码登录
+    // show: false,
+    
     webPreferences: {
+      sanbox: true,//微信扫码登录
       nodeIntegration: true
   } })
 
@@ -44,9 +46,11 @@ function createWindow () {
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
-    createProtocol('app')
+    // createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    win.loadURL('app://./index.html') //electron-builder
+    // win.loadURL('./dist/index.html')
+    
   }
 
 
