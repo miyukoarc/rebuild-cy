@@ -39,10 +39,11 @@ export const constantRoutes = [{
     component: loginPage,
     hidden: true
   },
+
   {
-      path: '/miniLogin',
-      component: MiniLogin,
-      hidden: true
+    path: '/miniLogin',
+    component: MiniLogin,
+    hidden: true
   },
   {
     path: '/',
@@ -56,7 +57,11 @@ export const constantRoutes = [{
         title: '首页',
         icon: 'dashboard'
       }
-    }]
+    }, {
+      path: '/board',
+      component: () => import('@/views/board.vue'),
+      hidden: true,
+    }, ]
   },
   /**
    * local test

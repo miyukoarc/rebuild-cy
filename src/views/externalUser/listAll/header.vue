@@ -110,7 +110,8 @@ export default {
         userId: "",
         radio: 1
         // roleUuid: ''
-      }
+      },
+      timer: null
     };
   },
   computed: {
@@ -132,8 +133,12 @@ export default {
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
+      if(this.timer){
+          clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(()=>{
+          this.$emit("handleSearch", this.query);
+      },1000)
     },
     handleChangeThird(val) {
       console.log(val);

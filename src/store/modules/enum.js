@@ -11,6 +11,10 @@ const state ={
         FILE: '文件',
         TEXT: '文本',
         ARTICLE: '文章'
+    },
+    roles:{
+        'super':'超级管理员',
+        'employee':'员工'
     }
 }
 
