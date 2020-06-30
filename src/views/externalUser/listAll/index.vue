@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-
     <el-card class="content-spacing">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
@@ -33,32 +32,40 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="所属客服" align="left">
+          <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
               <div>{{scope.row.user.name}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="标签" align="left">
+          <el-table-column label="企业标签" align="left">
             <template v-slot="scope">
               <div v-if="Object.keys(scope.row.tags).length">
-                  <el-tag v-for="item in scope.row.tags" :key="item.uuid" style="margin: 0 5px 5px 0;">{{item.tagName}}</el-tag>
+                <el-tag
+                  v-for="item in scope.row.tags"
+                  :key="item.uuid"
+                  style="margin: 0 5px 5px 0;"
+                >{{item.tagName}}</el-tag>
               </div>
               <div v-else>--</div>
             </template>
           </el-table-column>
-          <el-table-column label="添加时间" align="left" prop="createtime">
-            
-          </el-table-column>
+          <el-table-column label="添加时间" align="left" prop="createtime"></el-table-column>
 
-          <el-table-column label="渠道来源" align="left">
+          <el-table-column label="来源渠道" align="left">
             <template v-slot="scope">
-                <div v-if="Object.keys(scope.row.contactWay).length">{{scope.row.contactWay.state}}</div>
-                <div v-else>--</div>
+              <div v-if="Object.keys(scope.row.contactWay).length">{{scope.row.contactWay.state}}</div>
+              <div v-else>--</div>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-                <el-t-button :popAuth="true" :auth="permissionMap['externalUser']['externalUser_detail']" type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-t-button>
+              <el-t-button
+                :popAuth="true"
+                :auth="permissionMap['externalUser']['externalUser_detail']"
+                type="primary"
+                size="mini"
+                @click.stop="handleDetail(scope.$index)"
+              >详情</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -81,11 +88,11 @@
 
 <script>
 // import mHeadedr from "./header";
-import UserDetail from './detail.vue'
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import UserDetail from "./detail.vue";
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -107,11 +114,11 @@ export default {
         page: 0,
         size: 10,
         flag: true,
-        name: '',
-        tagIds: '',
-        userId: '',
+        name: "",
+        tagIds: "",
+        userId: ""
       }
-    }
+    };
   },
   watch: {},
   computed: {
@@ -124,95 +131,95 @@ export default {
       permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
-      return this.routes
+      return this.routes;
     }
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   methods: {
-    doExport(val) {
-      console.log(val)
-    },
-    /**
-     * 初始化筛选信息
-     */
-    initFilter() {
-      this.$store
-        .dispatch('tag/getListSelect')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
-
-
-        this.$store
-        .dispatch('user/getUserListSelect')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
-        
-    },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListAll', payload)
+        .dispatch("externalUser/getListAll", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
         })
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
+
+    /**
+     * 初始化筛选信息
+     */
+    initFilter() {
+      this.$store
+        .dispatch("tag/getListSelect")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: "初始化失败"
+          });
+        });
+
+      this.$store
+        .dispatch("user/getUserListSelect")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: "初始化失败"
+          });
+        });
+    },
+
     handleDetail(index) {
-      const userId = this.listAll[index].user.userId
-      const uuid = this.listAll[index].externalUser.uuid
+      const userId = this.listAll[index].user.userId;
+      const uuid = this.listAll[index].externalUser.uuid;
       this.$router.push({
-        path: '/externalUser/detail/'+ uuid,
+        path: "/externalUser/detail/" + uuid,
         query: { userId: userId }
-      })
+      });
     },
     handleSearch(val) {
-      const { tagIds, name, userId } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
-      this.query.userId = userId ? userId : this.query.userId
-      console.log(val, 'handleSearch')
-      this.initDataList(this.query)
+      const { tagIds, name, userId } = val;
+      this.query.tagIds = tagIds ? tagIds : this.query.tagIds;
+      this.query.name = name ? name : this.query.name;
+      this.query.userId = userId ? userId : this.query.userId;
+      console.log(val, "handleSearch");
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      console.log('handleRefresh')
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      console.log("handleRefresh");
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
+    },
+    doExport(val) {
+      console.log(val);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.user-card{
-    display: flex;
-    align-items: center;
+.user-card {
+  display: flex;
+  align-items: center;
 }
 </style>
 
@@ -221,6 +228,4 @@ export default {
   padding: 20px 0;
   text-align: center;
 }
-
-
 </style>
