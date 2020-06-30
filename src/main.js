@@ -45,16 +45,17 @@ import TButton from '@/components/ThrottleButton/index'
  */
 
 if (isElectron()) {
-    console.log('electron')
+    // console.log('electron')
     const electron = window.require('electron')
     const {
-      BrowserWindow,
       ipcRenderer,
       remote
     } = electron
     Vue.prototype.$ipcRenderer = ipcRenderer
     Vue.prototype.$remote = remote
     Vue.prototype.$isElectron = isElectron
+    const {BrowserWindow} = remote
+    Vue.prototype.$BrowserWindow = BrowserWindow
   
     // console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
   
@@ -62,6 +63,7 @@ if (isElectron()) {
     //   console.log(arg) // prints "pong"
     // })
     // ipcRenderer.send('asynchronous-message', 'ping')
+    // console.log(remote)
   }
 
 Vue.component(TButton.name,TButton)

@@ -59,10 +59,10 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
     disableHostCheck: true,
     proxy: {
         [process.env.VUE_APP_BASE_API]: {
-            target: 'http://47.111.161.128:9000/',
+            // target: 'http://47.111.161.128:9000/',
             // target: 'http://10.10.10.65:9000', // 光
             // target: 'http://10.10.10.84:80', // 杜亮
-            // target: 'http://10.10.10.198:9000', // 骋昊
+            target: 'http://10.10.10.198', // 骋昊
             // ws: true,
             changeOrigin: true,
             pathRewrite: {
@@ -73,8 +73,8 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
             headers: {
                 Host: 'sidebar.cyscrm.com'
             },
-            target: 'http://47.111.161.128:9000/',
-            // target: 'http://10.10.10.198:9000',
+            // target: 'http://47.111.161.128:9000/',
+            target: 'http://10.10.10.198',
             changeOrigin: true,
         },
         // "/api": {
@@ -89,8 +89,8 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
             headers: {
                 Host: 'sidebar.cyscrm.com'
             },
-            target: 'http://47.111.161.128:9000/',
-            // target: "http://10.10.10.198:9000", //陈浩
+            // target: 'http://47.111.161.128:9000/',
+            target: "http://10.10.10.198", //陈浩
             // target: "http://sidebar.cyscrm.com:9000"//线上
             // target: "http://10.10.10.84:80", //杜亮
             // target: 'http://10.10.10.65:9000', //光
@@ -125,7 +125,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  publicPath: './',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,
@@ -221,13 +221,13 @@ module.exports = {
         }
       )
   },
-  pluginOptions: {
-    electronBuilder: {
-      // List native deps here if they don't work
-      externals: ['my-native-dep'],
-      // If you are using Yarn Workspaces, you may have multiple node_modules folders
-      // List them all here so that VCP Electron Builder can find them
-      nodeModulesPath: ['../../node_modules', './node_modules']
-    }
-  }
+//   pluginOptions: {
+//     electronBuilder: {
+//       // List native deps here if they don't work
+//       externals: ['my-native-dep'],
+//       // If you are using Yarn Workspaces, you may have multiple node_modules folders
+//       // List them all here so that VCP Electron Builder can find them
+//       nodeModulesPath: ['../../node_modules', './node_modules']
+//     }
+//   }
 }
