@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="drawer-container">
-      <div class="drawer-item" v-for="group in alterTags" :key="group.groupId">
+      <div class="drawer-item" v-for="group in alterGroups" :key="group.groupId">
         <el-row>
           <el-col :span="10">
             <div class="font-es group-name">{{group.groupName}}:</div>
@@ -12,7 +12,7 @@
                 class="tag-unit text-ellipsis"
                 type="info"
                 size="mini"
-                v-for="tag in group.tags"
+                v-for="tag in alterTags(group.tags)"
                 :key="tag.tagId"
               >{{tag.tagName}}</el-tag>
             </div>
@@ -227,11 +227,20 @@ export default {
       }
   },
   computed:{
-      alterTags(){
+      alterGroups(){
           if(this.curly){
               return this.tags.slice(0,2)
           }else {
               return this.tags
+          }
+      },
+  },
+  methods: {
+      alterTags(arr){
+          if(this.curly){
+              return arr.slice(0,1)
+          }else {
+              return arr
           }
       }
   }
@@ -254,6 +263,7 @@ export default {
       margin-bottom: 3px;
     .group-name {
       width: 80px;
+      line-height: 20px;
     }
     .tags-container{
     .tag-unit {

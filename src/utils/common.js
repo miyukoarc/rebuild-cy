@@ -151,3 +151,64 @@ export function throttle(func, wait = 1000) {
     }, wait)
   }
 }
+
+/**
+ * 分组
+ * @param {*} obj 
+ */
+/*
+export function modifyListAll(obj) {
+    let temp = []
+
+    for (let key in obj) {
+        obj[key].map(item => {
+
+            if (Object.keys(item.tags).length) {
+                temp.push(item)
+
+            } else {
+                temp.push({ ...item,tags:[] })
+            }
+        })
+
+    }
+    let tagsTemp = []
+
+    return temp.reduce((groups, item) => {
+        let groupFound = groups.find(arrItem => item.externalUser.uuid === arrItem.externalUser.uuid)
+        tagsTemp = tagsTemp.concat(item.tags)
+        if (groupFound) {
+            groupFound.users.push(item.user)
+        } else {
+
+            let newGroup = {
+                ...item,
+                externalUser: item.externalUser,
+                users: [item.user],
+                tags: tagsTemp.reduce((groups,item)=>{
+                    let groupFound = groups.find(arrItem=>item.groupId===arrItem.groupId)
+                    if(groupFound){
+                        groupFound.tags.push(item.tags)
+                    }else{
+                        let newGroup = {
+                            groupName:item.groupName,
+                            groupId:item.groupId,
+                            tags: [item.tags]
+                        }
+                        groups.push(newGroup)
+                    }
+                    return groups
+                },[])
+            }
+            
+            Reflect.deleteProperty(newGroup,'user')
+
+            groups.push(newGroup)
+            tagsTemp = []
+        }
+
+        return groups
+    }, [])
+
+}
+*/
