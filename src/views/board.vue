@@ -12,24 +12,14 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import TagsDrawer from "@/components/TagsDrawer";
 import UserDrawer from "@/components/UserDrawer";
+import Cascader from '@/components/Cascader'
 export default {
   components: {
     TagsDrawer,
-    UserDrawer
-=======
-import TableDrawer from '@/components/TableDrawer'
-import UserDrawer from '@/components/UserDrawer'
-import Cascader from '@/components/Cascader'
-
-export default {
-  components: {
-    TableDrawer,
     UserDrawer,
     Cascader
->>>>>>> 68286aa6fece7a0626e95fef51a832c71f286827
   },
   data() {
     return {
