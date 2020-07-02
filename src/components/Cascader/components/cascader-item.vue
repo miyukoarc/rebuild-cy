@@ -1,88 +1,103 @@
 <template>
-  <div>
-      <!-- <div class="cascader-container" v-click-outside="close">
-        <div class="trigger" @click="toggle">
-            <slot></slot>
-        </div> -->
+    <div class="content cascader-item">
+        <div class="content-left">
+            <div class="label" v-for="(item,key) in options" :key="key">
+                <div @click="select(item)">
+            <div class="title">
+              <span>{{ item.name }}</span>
+              <el-button v-if="lists && lists.length" style="position:relative;left:0;right:0;" type="text" size="mini">
+                  <span style="margin-right:10px;">下级</span>
+                  <i class="el-icon-caret-right" style="position:absolute;right:0px;top:8px;" v-if="item.name===currentSelect.name"></i>
 
-        <div class="content" v-if="isVisible">
-            <div class="content-left">
-                <div v-for="(item,key) in options" :key="key">
-                    <div @click="select(item)">{{item.name}}</div>
-                </div>
+              </el-button>
             </div>
-            <div class="content-right">
-                <div v-for="(item,key) in lists" :key="key">
-                    <div>{{item.name}}</div>
-                </div>
-
+          </div>
+          <div class="department-container" >
+            <div v-for="(part,index) in item.department" :key="index">&emsp;{{part.name}}</div>
+          </div>
+          <div class="text-align-center">
+            <!-- <el-button
+              size="mini"
+              type="text"
+              @click.stop="showColumn = !showColumn"
+              >部门<i
+                :class="[
+                  showColumn ? 'el-icon-caret-top' : 'el-icon-caret-bottom'
+                ]"
+              ></i
+            ></el-button> -->
+          </div>
             </div>
-
-            <!-- --显示面板 -->
         </div>
-
-      <!-- </div> -->
-  </div>
+        <div class="content-right" v-if="lists && lists.length">
+            <CascaderItem :options="lists"></CascaderItem>
+        </div>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'Cascader',
-  directives: {
-      clickOutside:{
-          inserted(el,bingdings){//只在插入时绑定事件
-            document.addEventListener('click',e=>{
-                if(e.target===el||el.contains(e.target)){
-                    return;
+    name:"CascaderItem",
+    data(){
+        return {
+             currentSelect:null // 当前点击的第一层
+        }
+    },
+    methods:{
+        select(item){
+            this.currentSelect = item;
+        },
+    },
+    watch:{
+        options:{
+            handler(newVal,oldVal){
+                if(newVal&&newVal.length){
+                    this.currentSelect = newVal[0]
                 }
-                bingdings.value()
-            })
-          }
-      }
-  },
-  data(){
-      return {
-          isVisible: true,
-          currentSelect: null
-      }
-  },
-  computed: {
-      lists(){
-          return this.currentSelect&&this.currentSelect.children
-      }
-
-  },
-  methods:{
-      select(item){
-
-          this.currentSelect = item
-      },
-      close(){
-          this.isVisible = false
-      },
-      toggle(){
-          this.isVisible = !this.isVisible
-      }
-  },
-  props:{
-      options:{
-          type: Array,
-          default:()=>[]
-      }
-  }
+            },
+            immediate:true
+        }
+    },
+    computed: {
+        lists(){
+            return this.currentSelect && this.currentSelect.children
+        }
+    },
+    props:{
+        options:{
+            type:Array,
+            default:()=>[]
+        }
+    }
 }
 </script>
-<style lang="scss" scoped>
-.trigger{
-    width: 150px;
-    height:25px;
-    border: 1px solid #ccc
+
+<style>
+.cascader-item {
+ display: flex;
 }
-.cascader-container{
-    display: flex;
-    
+.content-left{
+    border: 1px solid #ccc;
+    min-height: 100px;
 }
-.content{
+.content-right{
+    margin-left:-1px;
+}
+.label{
+    /* width:60px; */
+    /* font-size: 12px; */
+    line-height: 20px;
+    color: #606266;
+    /* padding: 10px; */
+    /* cursor: pointer */
+}
+.label:hover{
+    background: #f5f7fa;
+}
+.title {
     display: flex;
+    line-height: 30px;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>
