@@ -31,7 +31,10 @@
             <div class="tag-container">
               <h4>
                 企业标签
-                <span class="side-title">最新更新{{ externalUserDetail.updatedAt }}</span>
+                <span class="side-title">
+                  <span>最新更新{{ externalUserDetail.updatedAt }}</span>
+                  <el-button type="text" @click="handleEditTags">编辑</el-button>
+                </span>
               </h4>
               <div class="tag-line">
                 <div v-if="companyTags.length">
@@ -236,15 +239,15 @@ export default {
     };
   },
   watch: {
-    $route: {
-      handler(newVal, oldVal) {
-        const str = `${newVal.params.uuid}?userId=${newVal.query.userId}`;
-        this.$once("hook:created", () => {
-          this.initDetail(str);
-        });
-      },
-      immediate: true
-    }
+    // $route: {
+    //   handler(newVal, oldVal) {
+    //     const str = `${newVal.params.uuid}`;
+    //     this.$once("hook:created", () => {
+    //       this.initDetail(str);
+    //     });
+    //   },
+    //   immediate: true
+    // }
   },
   computed: {
     ...mapState({
@@ -268,14 +271,13 @@ export default {
     }
   },
   created() {
-    console.log(this.$route);
+    console.log(this.$route,'999');
     const externalUuid = this.$route.params.uuid;
-    const userId = this.$route.query.userId;
     const payload = {
-      externalUuid,
-      userId
+      externalUuid
     };
     this.initGroupList(payload);
+    this.initDetail(this.$route.params.uuid);
   },
   mounted() {
     console.log(this.$route);
@@ -285,56 +287,56 @@ export default {
       this.$store
         .dispatch("externalUser/getDetail", payload)
         .then(() => {
-          let {
-            source,
-            qq,
-            remarkMobile,
-            age,
-            birthday,
-            microBlog,
-            address,
-            email,
-            createtime,
-            tags,
-            user,
-            description,
-            lastMsgTime,
-            externalUser
-          } = this.externalUserDetail;
-          const tagTypeUser = [];
-          const tagTypeCompany = [];
-          if (Object.keys(tags).length) {
-            tags.forEach(item => {
-              if (item.type === 1) {
-                tagTypeCompany.push(item);
-              }
-              if (item.type === 2) {
-                tagTypeUser.push(item);
-              }
-            });
-            this.companyTags = tagTypeCompany;
-          }
-          lastMsgTime = lastMsgTime.items;
-          user = {
-            ...user,
-            tags: tagTypeUser,
-            description,
-            lastMsgTime,
-            externalUser
-          };
-          console.log(user,'user')
-          this.user.push(user);
-          this.userInfo = {
-            source,
-            age,
-            address,
-            qq,
-            birthday,
-            email,
-            remarkMobile,
-            microBlog,
-            createtime
-          };
+          // let {
+          //   source,
+          //   qq,
+          //   remarkMobile,
+          //   age,
+          //   birthday,
+          //   microBlog,
+          //   address,
+          //   email,
+          //   createtime,
+          //   tags,
+          //   user,
+          //   description,
+          //   lastMsgTime,
+          //   externalUser
+          // } = this.externalUserDetail;
+          // const tagTypeUser = [];
+          // const tagTypeCompany = [];
+          // if (Object.keys(tags).length) {
+          //   tags.forEach(item => {
+          //     if (item.type === 1) {
+          //       tagTypeCompany.push(item);
+          //     }
+          //     if (item.type === 2) {
+          //       tagTypeUser.push(item);
+          //     }
+          //   });
+          //   this.companyTags = tagTypeCompany;
+          // }
+          // lastMsgTime = lastMsgTime.items;
+          // user = {
+          //   ...user,
+          //   tags: tagTypeUser,
+          //   description,
+          //   lastMsgTime,
+          //   externalUser
+          // };
+          // console.log(user, "user");
+          // this.user.push(user);
+          // this.userInfo = {
+          //   source,
+          //   age,
+          //   address,
+          //   qq,
+          //   birthday,
+          //   email,
+          //   remarkMobile,
+          //   microBlog,
+          //   createtime
+          // };
         })
         .catch(err => {
           console.error(err);
@@ -355,6 +357,13 @@ export default {
             message: err || "初始化失败"
           });
         });
+    },
+    // 用户信息模块 -- 标签 
+    handleEditTags(payload) {
+      this.$refs['formDialog'].event = 'EditTagsTemplate'
+      this.$refs['formDialog'].eventType = 'editTags'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = payload
     },
     handleDetail(index) {
       const userId = this.user[index].userId;
