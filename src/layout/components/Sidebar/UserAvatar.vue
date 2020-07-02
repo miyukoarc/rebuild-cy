@@ -5,8 +5,8 @@
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" />
           <div style="margin-left:10px;">
+            <div class="font-l" style="color:#fff;font-size:16px">{{roles[roleCode]}}</div>
             <div class="font-es color-info" style>{{name}}</div>
-            <div class="font-l" style="color:#fff">{{roles[roleCode]}}</div>
           </div>
           <!-- <i class="el-icon-caret-bottom" /> -->
         </div>

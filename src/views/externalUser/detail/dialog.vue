@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-27 22:34:57
- * @LastEditTime: 2020-06-28 20:42:43
- * @LastEditors: your name
+ * @LastEditTime: 2020-06-30 17:42:08
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\detail\dialog.vue
 --> 
@@ -20,13 +20,13 @@
 
 import CreateTemplate from './event-create.vue'
 import EditTemplate from './event-edit.vue'
-// import DistributeTemplate from './event-distribute'
+import EditTagsTemplate from './event-editTags.vue'
 import {mapState} from 'vuex'
 export default {
 components:{
     CreateTemplate,
     EditTemplate,
-    // DistributeTemplate
+    EditTagsTemplate
 },
   data() {
     return {
@@ -71,6 +71,10 @@ components:{
 
           if(this.eventType==='distribute'){
               return '添加动态'
+          }
+          
+          if(this.eventType==='editTags'){
+              return '标签编辑'
           }
           
       },

@@ -5,7 +5,7 @@
     </el-form-item>
 
     <el-form-item label="添加渠道：">
-      <el-select v-model="query.userId" clearable @change="handleChangeThird">
+      <el-select v-model="query.userId" clearable @change="handleSelectedChange">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -16,7 +16,7 @@
     </el-form-item>
 
     <el-form-item label="所属员工：">
-      <el-select v-model="query.userId" clearable @change="handleChangeThird">
+      <el-select v-model="query.userId" clearable @change="handleSelectedChange">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -34,7 +34,7 @@
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        @change="handleChangeFirst"
+        @change="handleSelectedTime"
       ></el-date-picker>
     </el-form-item>
 
@@ -44,7 +44,7 @@
         <el-select
           v-model="query.tagIds"
           clearable
-          @change="handleChangeSecond"
+          @change="handleSelectedChange"
           size="mini"
           multiple
         >
@@ -58,11 +58,11 @@
           </el-option-group>
         </el-select>
         <span class="tag-warp">
-          <el-radio-group v-model="query.radio">
-            <el-radio :label="1">包含任一</el-radio>
-            <el-radio :label="2">完全匹配</el-radio>
+          <el-radio-group v-model="query.flag">
+            <el-radio :label="true">包含任一</el-radio>
+            <el-radio :label="false">完全匹配</el-radio>
           </el-radio-group>
-          <el-tooltip placement="right-start">
+          <el-tooltip placement="right">
             <div slot="content">
               包含任一：有任意一个选择的标签的用户;
               <br />完全匹配：必须拥有全部选择的标签的用户。
@@ -89,29 +89,16 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      //   options: [
-      //     {
-      //       label: '待审核',
-      //       value: 'TO_BE_REVIEWED'
-      //     },
-      //     {
-      //       label: '审核通过',
-      //       value: 'APPROVED'
-      //     },
-      //     {
-      //       label: '审核不通过',
-      //       value: 'AUDIT_FAILED'
-      //     }
-      //   ],
       value: [],
       query: {
         name: "",
-        tagIds: "",
+        contractWayId: "",
         userId: "",
-        radio: 1
-        // roleUuid: ''
-      },
-      timer: null
+        tagIds: [],
+        flag: true,
+        startTime: "",
+        endTime: ""
+      }
     };
   },
   computed: {
@@ -122,25 +109,13 @@ export default {
     })
   },
   methods: {
-    handleChangeFirst(val) {
+    handleSelectedTime(val) {
       console.log(val);
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
       this.$emit("handleSearch", this.query);
     },
-    handleChangeFirst(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
-    },
-    handleChangeSecond(val) {
-      if(this.timer){
-          clearTimeout(this.timer)
-      }
-      this.timer = setTimeout(()=>{
-          this.$emit("handleSearch", this.query);
-      },1000)
-    },
-    handleChangeThird(val) {
+    handleSelectedChange(val) {
       console.log(val);
       this.$emit("handleSearch", this.query);
     },

@@ -3,7 +3,7 @@ import {
   getListGroup,
   getDetail,
   getExternalUserListMy,
-  getListAll,
+  getExternalUserListAll,
   getRunWayList,
   getRunWayListAll,
   getQuitUserRelationExUserList,
@@ -20,6 +20,11 @@ import {
   deleteExTrends,
   updateExTrends
 } from '@/api/externalUserTrends'
+
+import {
+  dataConversion
+} from '@/utils/externalUser.js'
+
 const state = {
   /**
    * 我的客户
@@ -51,7 +56,7 @@ const state = {
   /**
    * 所有客户
    */
-  listAll: [],
+  externalUserListAll: [],
   listAllPage: {
     total: 0,
     pageNumber: 0,
@@ -178,8 +183,8 @@ const mutations = {
   /**
    * 保存所有用户
    */
-  SAVE_LISTALL(state, payload) {
-    state.listAll = payload
+  SAVE_EXTERNALUSERLISTALL(state, payload) {
+    state.externalUserListAll = dataConversion(payload)
   },
   SET_LISTALLPAGE(state, payload) {
     const {
@@ -332,16 +337,16 @@ const actions = {
    * @param {*} param0 
    * @param {object} payload 
    */
-  getListAll({
+  getExternalUserListAll({
     commit
   }, payload) {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
-      getListAll(payload).then(res => {
-        commit('SAVE_LISTALL', res.items)
+      getExternalUserListAll(payload).then(res => {
+        commit('SAVE_EXTERNALUSERLISTALL', res.items)
         commit('SET_LISTALLPAGE', res)
         commit('TOGGLE_LOADING', false)
-        resolve()
+        resolve(res.items)
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         console.log(err)
@@ -558,6 +563,7 @@ const actions = {
   getDetail({
     commit
   }, payload) {
+    console.log(payload,'payload')
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getDetail(payload).then(res => {

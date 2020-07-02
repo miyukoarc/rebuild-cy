@@ -12,7 +12,7 @@
       <div>
         <el-table
           v-loading="loading"
-          :data="listAll"
+          :data="externalUserListAll"
           style="width: 100%"
           row-key="uuid"
           stripe
@@ -28,32 +28,30 @@
                   lazy
                   style="width:30px;height:30px;margin-right:10px"
                 ></el-image>
-                <span>{{scope.row.externalUser.name}}</span>
+                <div class="client-info">
+                  <span class="remark">{{scope.row.externalUser.remark}}</span>
+                  <div>{{scope.row.externalUser.externalUser.name}}</div>
+                </div>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
-              <div>{{scope.row.user.name}}</div>
+            <user-drawer :hasPop="true" :users="scope.row.users"></user-drawer>
             </template>
           </el-table-column>
           <el-table-column label="企业标签" align="left">
             <template v-slot="scope">
-              <div v-if="Object.keys(scope.row.tags).length">
-                <el-tag
-                  v-for="item in scope.row.tags"
-                  :key="item.uuid"
-                  style="margin: 0 5px 5px 0;"
-                >{{item.tagName}}</el-tag>
-              </div>
-              <div v-else>--</div>
+              <tags-drawer v-if="scope.row.tags.length>0" :tags="scope.row.tags"></tags-drawer>
             </template>
           </el-table-column>
-          <el-table-column label="添加时间" align="left" prop="createtime"></el-table-column>
+          <el-table-column label="添加时间" align="left" prop="externalUser.createtime"></el-table-column>
 
           <el-table-column label="来源渠道" align="left">
             <template v-slot="scope">
-              <div v-if="Object.keys(scope.row.contactWay).length">{{scope.row.contactWay.state}}</div>
+              <div
+                v-if="Object.keys(scope.row.externalUser.contactWay).length"
+              >{{scope.row.externalUser.contactWay.state}}</div>
               <div v-else>--</div>
             </template>
           </el-table-column>
@@ -64,7 +62,7 @@
                 :auth="permissionMap['externalUser']['externalUser_detail']"
                 type="primary"
                 size="mini"
-                @click.stop="handleDetail(scope.$index)"
+                @click.stop="handleDetail(scope.row)"
               >详情</el-t-button>
             </template>
           </el-table-column>
@@ -92,7 +90,10 @@ import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
- 
+
+ import UserDrawer from '@/components/UserDrawer'
+import TagsDrawer from '@/components/TagsDrawer'
+
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
@@ -100,7 +101,9 @@ export default {
     ListHeader,
     UserDetail,
     FormDialog,
-    ToolBar
+    ToolBar,
+    UserDrawer,
+    TagsDrawer
     // mHeadedr
   },
   data() {
@@ -117,7 +120,10 @@ export default {
         flag: true,
         name: "",
         tagIds: "",
-        userId: ""
+        userId: "",
+        startTime: "",
+        endTime: "",
+        contractWayId: ""
       }
     };
   },
@@ -127,7 +133,7 @@ export default {
       tagListAll: state => state.tag.tagListAll,
 
       loading: state => state.externalUser.loading,
-      listAll: state => state.externalUser.listAll,
+      externalUserListAll: state => state.externalUser.externalUserListAll,
       page: state => state.externalUser.listAllPage,
       permissionMap: state => state.permission.permissionMap
     }),
@@ -139,13 +145,16 @@ export default {
     this.initDataList(this.query);
     this.initFilter();
   },
+  mounted() {
+    console.log(this.externalUserListAll, "externalUserListAll");
+  },
   methods: {
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch("externalUser/getListAll", payload)
+        .dispatch("externalUser/getExternalUserListAll", payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1;
@@ -184,20 +193,24 @@ export default {
         });
     },
 
-    handleDetail(index) {
-      const userId = this.listAll[index].user.userId;
-      const uuid = this.listAll[index].externalUser.uuid;
+    handleDetail(row) {
+      const uuid = row.externalUser.externalUser.uuid;
       this.$router.push({
-        path: "/externalUser/detail/" + uuid,
-        query: { userId: userId }
+        path: "/externalUser/detail/" + uuid
       });
     },
     handleSearch(val) {
-      const { tagIds, name, userId } = val;
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds;
+      const { tagIds, name, userId, startTime, endTime, contractWayId,flag } = val;
+      this.query.tagIds = tagIds ? tagIds.join() : this.query.tagIds;
       this.query.name = name ? name : this.query.name;
       this.query.userId = userId ? userId : this.query.userId;
-      console.log(val, "handleSearch");
+      this.query.startTime = startTime ? startTime : this.query.startTime;
+      this.query.flag = flag ? true : false;
+      this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.query.contractWayId = contractWayId
+        ? contractWayId
+        : this.query.contractWayId;
+      console.log(val, "handleSearch",this.query);
       this.initDataList(this.query);
     },
     handleRefresh() {
@@ -221,6 +234,11 @@ export default {
 .user-card {
   display: flex;
   align-items: center;
+  .client-info{
+    .remark{
+      min-height: 16px;
+    }
+  }
 }
 </style>
 
