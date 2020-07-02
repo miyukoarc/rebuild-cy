@@ -4,19 +4,36 @@
     <div>
       <user-drawer :hasPop="true" :users="users"></user-drawer>
     </div>
+
+    <div>
+        <Cascader :options="tree" v-model="selected"></Cascader>
+    </div>
   </div>
 </template>
 
 <script>
+<<<<<<< HEAD
 import TagsDrawer from "@/components/TagsDrawer";
 import UserDrawer from "@/components/UserDrawer";
 export default {
   components: {
     TagsDrawer,
     UserDrawer
+=======
+import TableDrawer from '@/components/TableDrawer'
+import UserDrawer from '@/components/UserDrawer'
+import Cascader from '@/components/Cascader'
+
+export default {
+  components: {
+    TableDrawer,
+    UserDrawer,
+    Cascader
+>>>>>>> 68286aa6fece7a0626e95fef51a832c71f286827
   },
   data() {
     return {
+      selected: [],
       tagGroups: [
         {
           groupName: "4444",
@@ -273,6 +290,174 @@ export default {
           updatedAt: "2020-06-30 20:23:10",
           isFollowUser: true,
           status: 1
+        }
+      ],
+      tree: [
+        {
+          name: '中国总公司',
+          department: [
+            {
+              name: '人事部'
+            },
+            {
+              name: '市场部'
+            }
+          ],
+          children: [
+            {
+              name: '杭州分公司',
+              children: [
+                {
+                  name: '余杭营业部',
+                  department: [
+                    {
+                      name: '人事部'
+                    },
+                    {
+                      name: '市场部'
+                    }
+                  ]
+                },
+                {
+                  name: '萧山营业部',
+                  department: [
+                    {
+                      name: '人事部'
+                    },
+                    {
+                      name: '市场部'
+                    }
+                  ]
+                }
+              ],
+              department: [
+                {
+                  name: '人事部'
+                },
+                {
+                  name: '市场部'
+                }
+              ]
+            },
+            {
+              name: '南京分公司',
+              children: [
+                {
+                  name: '雨花台营业部',
+                  department: [
+                    {
+                      name: '人事部'
+                    },
+                    {
+                      name: '市场部'
+                    }
+                  ]
+                },
+                {
+                  name: '玄武营业部',
+                  department: [
+                    {
+                      name: '人事部'
+                    },
+                    {
+                      name: '市场部'
+                    }
+                  ]
+                }
+              ],
+              department: [
+                {
+                  name: '人事部'
+                },
+                {
+                  name: '市场部'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: '漂亮国总公司',
+          department: [
+            {
+              name: '人事部'
+            },
+            {
+              name: '市场部'
+            }
+          ],
+          children: [
+            {
+              name: '纽约分公司',
+              children: [
+                {
+                  name: '布鲁克林营业部',
+                  department: [
+                    {
+                      name: '人事部'
+                    },
+                    {
+                      name: '市场部'
+                    }
+                  ]
+                },
+                {
+                  name: '皇后营业部',
+                  department: [
+                    {
+                      name: '人事部'
+                    },
+                    {
+                      name: '市场部'
+                    }
+                  ]
+                }
+              ],
+              department: [
+                {
+                  name: '人事部'
+                },
+                {
+                  name: '市场部'
+                }
+              ]
+            },
+            {
+              name: '哥谭分公司',
+              children: [
+                {
+                  name: '离岛营业部',
+                  department: [
+                    {
+                      name: '人事部'
+                    },
+                    {
+                      name: '市场部'
+                    }
+                  ]
+                },
+                {
+                  name: '韦恩工业营业部',
+                  department: [
+                    {
+                      name: '人事部'
+                    },
+                    {
+                      name: '市场部'
+                    }
+                  ]
+                }
+              ],
+              department: [
+                {
+                  name: '人事部'
+                },
+                {
+                  name: '市场部'
+                }
+              ]
+            }
+          ]
         }
       ]
     };

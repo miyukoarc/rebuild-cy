@@ -98,7 +98,8 @@ export default {
         flag: true,
         startTime: "",
         endTime: ""
-      }
+      },
+      timer:null
     };
   },
   computed: {
@@ -115,7 +116,15 @@ export default {
       this.query.endTime = this.value[1];
       this.$emit("handleSearch", this.query);
     },
-    handleSelectedChange(val) {
+    handleChangeSecond(val) {
+      if(this.timer){
+          clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(()=>{
+          this.$emit("handleSearch", this.query);
+      },1000)
+    },
+    handleChangeThird(val) {
       console.log(val);
       this.$emit("handleSearch", this.query);
     },
