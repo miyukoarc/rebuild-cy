@@ -122,3 +122,5 @@ rebuild采用koa2构建了一个假后台，具体写法参考server目录
 	/dialog.vue
 页面主体为list，点击对应行弹出panel组件（Global），显示详细信息detail组件（Pravite），
 点击对应create/edit/delete按钮，弹出dialog（Private）。根据按钮不同渲染不同的form表单
+
+

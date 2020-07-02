@@ -31,6 +31,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
+import {removeToken} from '@/utils/auth'
 export default {
   name: 'user-avatar',
   computed: {
@@ -44,6 +45,9 @@ export default {
       //   await this.$store.dispatch('user/logout')
       this.removeToken()
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    removeToken(){
+        return removeToken()
     }
   }
 }

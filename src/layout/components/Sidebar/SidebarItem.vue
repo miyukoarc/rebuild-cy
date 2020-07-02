@@ -3,14 +3,15 @@
     <template
       v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow"
     >
-      <el-tooltip v-if="showAuth&&popAuth" placement="left">
+      <el-tooltip v-if="showAuth&&popAuth&&onlyOneChild.meta" placement="left">
         <div slot="content">
-          <div v-for="(item, index) in resolveAuth(onlyOneChild.meta.auth)" :key="index">{{item}}</div>
+          <div v-for="(item, index) in resolveAuth(onlyOneChild.meta.auth||{})" :key="index">{{item}}</div>
         </div>
         <app-link :to="resolvePath(onlyOneChild.path)">
           <el-menu-item
             :index="resolvePath(onlyOneChild.path)"
             :class="{'submenu-title-noDropdown':!isNest}"
+            v-if="onlyOneChild.meta"
           >
             <item
               :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)"
@@ -24,6 +25,7 @@
         <el-menu-item
           :index="resolvePath(onlyOneChild.path)"
           :class="{'submenu-title-noDropdown':!isNest}"
+          v-if="onlyOneChild.meta"
         >
           <item
             :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)"

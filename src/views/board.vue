@@ -6,7 +6,24 @@
     </div>
 
     <div>
-        <Cascader :options="tree" v-model="selected"></Cascader>
+      <Cascader :options="tree"></Cascader>
+    </div>
+
+    <div>
+      <!-- <select-tree  :options="options" :props="defaultProps" v-model="selected"></select-tree> -->
+      <el-select-tree
+        :default-expand-all="defaultExpandAll"
+        :multiple="multiple"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :popover-min-width="100"
+        :data="treeData"
+        :props="treeProps"
+        :disabled-values="disabledValues"
+        :check-strictly="checkStrictly"
+        :clearable="clearable"
+        v-model="value1"
+      ></el-select-tree>
     </div>
   </div>
 </template>
@@ -15,7 +32,6 @@
 import TableDrawer from '@/components/TableDrawer'
 import UserDrawer from '@/components/UserDrawer'
 import Cascader from '@/components/Cascader'
-
 export default {
   components: {
     TableDrawer,
@@ -24,7 +40,48 @@ export default {
   },
   data() {
     return {
-      selected: [],
+      clearable: true,
+      defaultExpandAll: true,
+      multiple: true,
+      placeholder: 'please choose',
+      disabled: false,
+      checkStrictly: false,
+      treeData: [
+        {
+          label: '新疆维吾尔自治区',
+          id: '1',
+          childrens: [
+            {
+              label: '乌鲁木齐市',
+              id: '2',
+              childrens: [
+                { label: '达坂城区', id: '7', childrens: [] },
+                { label: '头屯河区', id: '8', childrens: [] },
+                { label: '乌鲁木齐县', id: '9', childrens: [] }
+              ]
+            },
+            {
+              label: '克拉玛依市',
+              id: '3',
+              childrens: [
+                { label: '克拉玛依区', id: '10', childrens: [] },
+                { label: '白碱滩区', id: '11', childrens: [] },
+                { label: '独山子区', id: '12', childrens: [] }
+              ]
+            },
+            { label: '吐鲁番地区', id: '4', childrens: [] },
+            { label: '哈密地区', id: '5', childrens: [] },
+            { label: '昌吉回族自治州', id: '6', childrens: [] }
+          ]
+        }
+      ],
+      treeProps: {
+        value: 'id',
+        children: 'childrens',
+        label: 'label'
+      },
+      value1: [],
+      disabledValues: [],
       tagGroups: [
         {
           groupName: '4444',
@@ -283,7 +340,12 @@ export default {
           status: 1
         }
       ],
-      tree: [
+      tree: []
+    }
+  },
+  created(){
+      setTimeout(()=>{
+          this.tree = [
         {
           name: '中国总公司',
           department: [
@@ -366,92 +428,9 @@ export default {
               ]
             }
           ]
-        },
-        {
-          name: '漂亮国总公司',
-          department: [
-            {
-              name: '人事部'
-            },
-            {
-              name: '市场部'
-            }
-          ],
-          children: [
-            {
-              name: '纽约分公司',
-              children: [
-                {
-                  name: '布鲁克林营业部',
-                  department: [
-                    {
-                      name: '人事部'
-                    },
-                    {
-                      name: '市场部'
-                    }
-                  ]
-                },
-                {
-                  name: '皇后营业部',
-                  department: [
-                    {
-                      name: '人事部'
-                    },
-                    {
-                      name: '市场部'
-                    }
-                  ]
-                }
-              ],
-              department: [
-                {
-                  name: '人事部'
-                },
-                {
-                  name: '市场部'
-                }
-              ]
-            },
-            {
-              name: '哥谭分公司',
-              children: [
-                {
-                  name: '离岛营业部',
-                  department: [
-                    {
-                      name: '人事部'
-                    },
-                    {
-                      name: '市场部'
-                    }
-                  ]
-                },
-                {
-                  name: '韦恩工业营业部',
-                  department: [
-                    {
-                      name: '人事部'
-                    },
-                    {
-                      name: '市场部'
-                    }
-                  ]
-                }
-              ],
-              department: [
-                {
-                  name: '人事部'
-                },
-                {
-                  name: '市场部'
-                }
-              ]
-            }
-          ]
         }
       ]
-    }
+      },10)
   }
 }
 </script>

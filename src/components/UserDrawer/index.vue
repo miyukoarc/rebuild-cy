@@ -1,8 +1,8 @@
 <template>
   <div class="container-user-tag">
       <div class="text-align-center">
-          <div v-if="hasPop">
-              <el-tooltip v-for="item in alterUsers" :key="item.uuid" :enterable="true"  placement="right">
+          <!-- <div v-if="hasPop"> -->
+              <!-- <el-tooltip v-for="item in alterUsers" :key="item.uuid" :enterable="true"  placement="right">
                 <div slot="content">
                     <div v-for="(value,key) in item" :key="key">
                         <el-row style="width:200px">
@@ -47,11 +47,12 @@
                     </div>
                 </div>
                 <el-tag style="margin:0 0 3px 0;" type="info" size="small" ><i class="el-icon-user-solid"></i>{{item.name}}</el-tag>
-             </el-tooltip>
-          </div>
+             </el-tooltip> -->
+                <user-tag v-for="item in alterUsers" :user="item" :key="item.uuid" :hasPop="hasPop"></user-tag>
+          <!-- </div> -->
           
           
-          <el-tag v-else style="margin:0 0 3px 0;" type="info" size="small" v-for="item in alterUsers" :key="item.uuid"><i class="el-icon-user-solid"></i>{{item.name}}</el-tag>
+          <!-- <el-tag v-else style="margin:0 0 3px 0;" type="info" size="small" v-for="item in alterUsers" :key="item.uuid"><i class="el-icon-user-solid"></i>{{item.name}}</el-tag> -->
       </div>
       
         <div class="text-align-center">
@@ -63,6 +64,7 @@
 </template>
 
 <script>
+import UserTag from '@/components/UserTag'
 export default {
     props: {
         users: {
@@ -72,6 +74,9 @@ export default {
             type: Boolean,
             default: false
         }
+    },
+    components:{
+        UserTag
     },
     data (){
         return {

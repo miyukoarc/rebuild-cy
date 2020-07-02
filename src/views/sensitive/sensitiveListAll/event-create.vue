@@ -4,16 +4,25 @@
       <el-input v-model="form.word"></el-input>
     </el-form-item>
     <el-form-item label="通知人">
-        <el-select  multiple collapse-tags  v-model="form.toUser" placeholder="请选择">
-            <el-option
-                v-for="item in userListSelect"
-                :key="item.userId"
-                :label="item.name"
-                :value="item.userId"
-            ></el-option>
-        </el-select>
+      <el-select multiple collapse-tags v-model="form.toUser" placeholder="请选择">
+        <el-option
+          v-for="item in userListSelect"
+          :key="item.userId"
+          :label="item.name"
+          :value="item.userId"
+        ></el-option>
+      </el-select>
+
+      <div>
+        <div v-if="toUserTags.length">
+          <el-tag closable v-for="item in toUserTags" :key="item.uuid" style="margin-right:5px;" size="small">
+            <i class="el-icon-user-solid"></i>
+            <span>{{item.name}}</span>
+          </el-tag>
+        </div>
+      </div>
     </el-form-item>
-    
+
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
       <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
@@ -25,15 +34,16 @@
 import { mapState } from 'vuex'
 
 export default {
-    inject: ['reload'],
+  inject: ['reload'],
   data() {
     return {
       hasParent: false,
       form: {
         word: '',
         type: 'MSG',
-        toUser: [],
+        toUser: []
       },
+      toUserTags: [],
       rules: {
         word: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -47,14 +57,34 @@ export default {
     }
   },
   watch: {
+    toUser: {
+      handler(newValue, oldVal) {
+        console.log(newValue)
+        this.toUserTags = this.userListSelect.filter(item => {
+          return newValue.some(key => {
+            return item.userId === key
+          })
+        })
+        console.log(this.toUserTags)
+      },
+      deep: true
+    },
+    toUserTags: {
+      handler(newValue, oldVal) {
+        console.log(newValue)
+      },
+      deep: true
+    }
   },
   computed: {
-      ...mapState({
-          userListSelect: state => state.user.listSelect
-      })
+    ...mapState({
+      userListSelect: state => state.user.listSelect
+    }),
+    toUser() {
+      return this.form.toUser
+    }
   },
-  mounted(){
-  },
+  mounted() {},
   methods: {
     handleConfirm() {
       const payload = this.form
@@ -90,16 +120,19 @@ export default {
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
     },
-    handleChange(){},
+    handleChange() {},
     refresh() {
-      this.$store.dispatch('sensitive/getSensitiveListAll').then(()=>{
+      this.$store
+        .dispatch('sensitive/getSensitiveListAll')
+        .then(() => {
           this.reload()
-      }).catch(err => {
-        this.$message({
-          type: 'error',
-          message: err
         })
-      })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err
+          })
+        })
     }
   }
 }

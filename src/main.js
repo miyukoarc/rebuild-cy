@@ -31,6 +31,9 @@ import isElectron from 'is-electron'
  * 全局组件
  */
 import TButton from '@/components/ThrottleButton/index'
+import ElSelectTree from 'el-select-tree'
+
+Vue.use(ElSelectTree)
 
 
 /**
