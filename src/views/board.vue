@@ -6,7 +6,7 @@
     </div>
 
     <div>
-        <Cascader :options="tree"></Cascader>
+        <Cascader :options="tree" v-model="selected"></Cascader>
     </div>
   </div>
 </template>
@@ -24,6 +24,7 @@ export default {
   },
   data() {
     return {
+      selected: [],
       tagGroups: [
         {
           groupName: '4444',
