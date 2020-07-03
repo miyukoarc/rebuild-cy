@@ -45,7 +45,7 @@ const getDefaultState = () => {
     /**
      * show off userdetail
      */
-    userDetail:{}
+    userDetail: {}
   }
 }
 
@@ -95,7 +95,7 @@ const mutations = {
   SAVE_USERLIST(state, payload) {
     state.userList = payload
   },
-  SAVE_CURRENTROW(state,payload){
+  SAVE_CURRENTROW(state, payload) {
     state.currentRowUserList = payload
   },
   SET_USERPAGE(state, payload) {
@@ -112,14 +112,14 @@ const mutations = {
   /**
    * 保存user详细byID
    */
-  
-  SAVE_SHOWOFFUSER(state,payload){
-      state.userDetail = payload
+
+  SAVE_SHOWOFFUSER(state, payload) {
+    state.userDetail = payload
   },
   /**
    * 保存员工列表 无分页(筛选)
    */
-  SAVE_LISTSELECT(state,payload){
+  SAVE_LISTSELECT(state, payload) {
     state.listSelect = payload
   }
 
@@ -154,7 +154,7 @@ const actions = {
 
         resolve(res)
       }).catch(err => {
-          console.error(err)
+        console.error(err)
         reject(err)
       })
     })
@@ -213,32 +213,32 @@ const actions = {
    * @param {*} param0 
    * @param {*} payload 
    */
-  getDetail({commit},payload){
-     return new Promise((resolve,reject)=>{
-         getDetail(payload).then(res=>{
-             commit('SAVE_SHOWOFFUSER',res)
-             resolve()
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  getDetail({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      getDetail(payload).then(res => {
+        commit('SAVE_SHOWOFFUSER', res)
+        resolve()
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
   /**
    * 员工列表 筛选
    * @param {*} param0 
    * @param {*} payload 
    */
-  getUserListSelect({commit},payload){
-    return new Promise((resolve,reject)=>{
-        getUserListSelect(payload).then(res=>{
-            commit('SAVE_LISTSELECT',res)
-            resolve()
-        }).catch(err=>{
-            reject(err)
-        })
+  getUserListSelect({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      getUserListSelect(payload).then(res => {
+        commit('SAVE_LISTSELECT', res)
+        resolve()
+      }).catch(err => {
+        reject(err)
+      })
     })
- },
-  
+  },
+
 }
 
 export default {

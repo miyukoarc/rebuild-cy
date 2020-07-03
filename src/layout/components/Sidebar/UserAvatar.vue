@@ -30,11 +30,13 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from "vuex";
+import { removeToken } from "@/utils/auth";
+
 export default {
-  name: 'user-avatar',
+  name: "user-avatar",
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'name', 'roleCode']),
+    ...mapGetters(["sidebar", "avatar", "name", "roleCode"]),
     ...mapState({
       roles: state => state.enum.roles
     })
@@ -42,11 +44,11 @@ export default {
   methods: {
     logout() {
       //   await this.$store.dispatch('user/logout')
-      this.removeToken()
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      removeToken();
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

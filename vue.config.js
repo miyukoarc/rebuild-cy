@@ -52,82 +52,82 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
     port: 80,
     open: true,
     overlay: {
-        warnings: false,
-        errors: true
+      warnings: false,
+      errors: true
     },
     // host: 'www.sdk.com',
     disableHostCheck: true,
     proxy: {
-        [process.env.VUE_APP_BASE_API]: {
-            // target: 'http://47.111.161.128:9000/',
-            // target: 'http://10.10.10.65:9000', // 光
-            // target: 'http://10.10.10.84:80', // 杜亮
-            target: 'http://10.10.10.198:80', // 骋昊
-            // ws: true,
-            changeOrigin: true,
-            pathRewrite: {
-                ['^' + process.env.VUE_APP_BASE_API]: ''
-            }
-        },
-        '/public': {
-            target: 'http://47.111.161.128:9000/',
-            // target: 'http://10.10.10.198',
-            changeOrigin: true,
-        },
-        // "/api": {
-        //   target: "http://localhost:80",
-        //   secure: false,
-        //   autoRewrite: true,
-        //   pathRewrite: {
-        //     "^/api": ""
-        //   }
-        // },
-        // [process.env.VUE_APP_BASE_API]: {
-        //     headers: {
-        //         Host: 'sidebar.cyscrm.com'
-        //     },
-        //     target: 'http://47.111.161.128:9000/',
-        //     // target: "http://10.10.10.198", //陈浩
-        //     // target: "http://sidebar.cyscrm.com:9000"//线上
-        //     // target: "http://10.10.10.84:80", //杜亮
-        //     // target: 'http://10.10.10.65:9000', //光
-        //     // target: "http://47.111.161.128:80",
-        //     secure: false,
-        //     // ws: true,
-        //     pathRewrite: {
-        //         "^/api": ""
-        //     }
-        // },
-        "/api": {
-            headers: {
-                Host: 'sidebar.cyscrm.com'
-            },
-            // target: 'http://47.111.161.128:9000/',
-            target: "http://10.10.10.198:80", //陈浩
-            // target: "http://sidebar.cyscrm.com:9000"//线上
-            // target: "http://10.10.10.84:80", //杜亮
-            // target: 'http://10.10.10.65:9000', //光
-            // target: "http://47.111.161.128:80",
-            secure: false,
-            // ws: true,
-            pathRewrite: {
-                "^/api": ""
-            }
-        },
-        '/file': {
-            target: `http://192.168.1.198:9000/file`,
-            changeOrigin: true,
-            pathRewrite: {
-                '^/file': '',
-            },
-        },
-        '/ws': {
-            target: `http://10.10.10.65:9000`,
-            changeOrigin: true,
-            ws: true,
+      [process.env.VUE_APP_BASE_API]: {
+        // target: 'http://47.111.161.128:9000/',
+        // target: 'http://10.10.10.65:9000', // 光
+        // target: 'http://10.10.10.224:9000', // 杜亮
+        target: 'http://10.10.10.198:80', // 骋昊
+        // ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_BASE_API]: ''
         }
+      },
+      '/public': {
+        target: 'http://47.111.161.128:9000/',
+        // target: 'http://10.10.10.198',
+        changeOrigin: true,
+      },
+      // "/api": {
+      //   target: "http://localhost:80",
+      //   secure: false,
+      //   autoRewrite: true,
+      //   pathRewrite: {
+      //     "^/api": ""
+      //   }
+      // },
+      // [process.env.VUE_APP_BASE_API]: {
+      //     headers: {
+      //         Host: 'sidebar.cyscrm.com'
+      //     },
+      //     target: 'http://47.111.161.128:9000/',
+      //     // target: "http://10.10.10.198", //陈浩
+      //     // target: "http://sidebar.cyscrm.com:9000"//线上
+      //     // target: "http://10.10.10.84:80", //杜亮
+      //     // target: 'http://10.10.10.65:9000', //光
+      //     // target: "http://47.111.161.128:80",
+      //     secure: false,
+      //     // ws: true,
+      //     pathRewrite: {
+      //         "^/api": ""
+      //     }
+      // },
+      "/api": {
+        headers: {
+          Host: 'sidebar.cyscrm.com'
+        },
+        // target: 'http://47.111.161.128:9000/',
+        target: "http://10.10.10.198:80", //陈浩
+        // target: "http://sidebar.cyscrm.com:9000"//线上
+        // target: "http://10.10.10.224:9000", //杜亮
+        // target: 'http://10.10.10.65:9000', //光
+        // target: "http://47.111.161.128:80",
+        secure: false,
+        // ws: true,
+        pathRewrite: {
+          "^/api": ""
+        }
+      },
+      '/file': {
+        target: `http://192.168.1.198:9000/file`,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/file': '',
+        },
+      },
+      '/ws': {
+        target: `http://10.10.10.65:9000`,
+        changeOrigin: true,
+        ws: true,
+      }
     },
-}
+  }
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -234,13 +234,13 @@ module.exports = {
         }
       )
   },
-//   pluginOptions: {
-//     electronBuilder: {
-//       // List native deps here if they don't work
-//       externals: ['my-native-dep'],
-//       // If you are using Yarn Workspaces, you may have multiple node_modules folders
-//       // List them all here so that VCP Electron Builder can find them
-//       nodeModulesPath: ['../../node_modules', './node_modules']
-//     }
-//   }
+  //   pluginOptions: {
+  //     electronBuilder: {
+  //       // List native deps here if they don't work
+  //       externals: ['my-native-dep'],
+  //       // If you are using Yarn Workspaces, you may have multiple node_modules folders
+  //       // List them all here so that VCP Electron Builder can find them
+  //       nodeModulesPath: ['../../node_modules', './node_modules']
+  //     }
+  //   }
 }

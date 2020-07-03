@@ -7,7 +7,7 @@
 
     <!-- </el-header> -->
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport"></tool-bar>
+      <tool-bar @handleExport="doExport" @handleUpdate="handleUpdate" :usersNumber="userPage.total"></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -20,46 +20,65 @@
           stripe
           lazy
           highlight-current-row
+          @selection-change="handleSelectionChange"
         >
-          <!-- <el-table-column type="selection"></el-table-column> -->
+          <el-table-column type="selection"></el-table-column>
           <el-table-column prop="name" label="员工姓名" align="left"></el-table-column>
+
           <el-table-column label="部门" align="left">
             <template v-slot="scoped">
-              <div>{{scoped.row.departments.name?scoped.row.departments.name:'--'}}</div>
+              <div
+                v-if="scoped.row.departments"
+              >{{scoped.row.departments.name?scoped.row.departments.name:'--'}}</div>
             </template>
           </el-table-column>
+
           <el-table-column label="角色" align="left">
             <template v-slot="scoped">
-              <div>{{scoped.row.role.name}}</div>
+              <div v-if="scoped.row.role">{{scoped.row.role.name}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="授权状态" align="left">
+          <el-table-column prop="isMessageUser" label="会话存档授权" align="left">
+            <template v-slot="scope">
+              <div v-if="scope.row.isMessageUser">已授权</div>
+              <div v-else>未授权</div>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="允许登陆" align="left">
             <template v-slot="scoped">
-              <div>{{scoped.row.status}}</div>
+              <div v-if="scoped.row.visible">允许</div>
+              <div v-else>禁止</div>
             </template>
           </el-table-column>
-          <el-table-column label="是否开通客户联系功能" prop="isFollowUser">
-              <template v-slot="scope">
-                  <div>{{scope.row.isFollowUser?"是":"否"}}</div>
-              </template>
+
+          <el-table-column label="通讯录授权" prop="isFollowUser">
+            <template v-slot="scope">
+              <div v-if="scope.row.isFollowUser">已授权</div>
+              <div v-else>未授权</div>
+            </template>
           </el-table-column>
-          <el-table-column label="是否开通会话存档功能" prop="isMessageUser">
-              <template v-slot="scope">
-                  <div>{{scope.row.isMessageUser?"是":"否"}}</div>
-              </template>
-          </el-table-column>
+
           <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
-              <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" :popAuth="true" :auth="permissionMap['user']['user_detail']">详情</el-t-button>
+              <el-t-button type="text" size="mini" :popAuth="true">分配角色</el-t-button>
+
               <el-t-button
-                type="primary"
+                type="text"
                 size="mini"
                 :popAuth="true"
                 :auth="permissionMap['department']['department_allocation']"
                 @click.stop="handleDistribute(scope.$index)"
               >分配部门</el-t-button>
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
+
+              <el-t-button
+                type="text"
+                size="mini"
+                :popAuth="true"
+                :auth="permissionMap['user']['user_detail']"
+                @click.stop="handleDetail(scope.$index)"
+              >详情</el-t-button>
+
             </template>
           </el-table-column>
         </el-table>
@@ -82,11 +101,11 @@
 
 <script>
 // import mHeadedr from "./header";
-import UserDetail from './detail.vue'
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import UserDetail from "./detail.vue";
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -100,18 +119,22 @@ export default {
     return {
       pageConfig: {
         total: 0,
-        pageNumber: 0,
-        pageSize: 10
+        pageNumber: 1,
+        pageSize: 20
       },
 
       query: {
         page: 0,
-        size: 10,
-        userName: '',
-        departmentsUuid: '',
-        roleUuid: ''
+        size: 20,
+        userName: "",
+        departmentsUuid: "",
+        roleUuid: "",
+
+        isFollowUser: null,
+        isMessageUser: null,
+        visible: null
       }
-    }
+    };
   },
   watch: {},
   computed: {
@@ -120,19 +143,21 @@ export default {
       departmentList: state => state.department.departmentList,
 
       loading: state => state.user.loading,
-      userList: state => state.user.userList,
+      userList: state => {
+        console.log(state.user.userList);
+        return state.user.userList;
+      },
       userPage: state => state.user.userPage,
-
 
       permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
-      return this.routes
+      return this.routes;
     }
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   mounted() {
     // this.$bus.$on('showFormDialog', target => {
@@ -140,97 +165,119 @@ export default {
     //   this.$refs['formDialog'].eventType = 'create'
     //   this.$refs['formDialog'].dialogVisible = true
     // })
-    this.$bus.$on('handleRefresh',()=>{
-        this.initDataList(this.query)
-    })
+    this.$bus.$on("handleRefresh", () => {
+      this.initDataList(this.query);
+    });
   },
   beforeDestroy() {
-    this.$bus.$off('handleRefresh')
+    this.$bus.$off("handleRefresh");
   },
   methods: {
-    doExport(val) {
-      console.log(val)
+    handleSelectionChange(val) {
+      let payload = [];
+      val.map(obj => {
+        payload.push(obj.uuid);
+      });
+      console.log(payload);
     },
-
+    doExport(val) {
+      console.log(val);
+    },
+    handleUpdate() {
+      this.initDataList(this.query);
+    },
     handleDistribute(index) {
-      const payload = this.userList[index]
-      this.$store.commit('user/SAVE_CURRENTROW', payload)
-      this.$refs['formDialog'].event = 'DistributeTemplate'
-      this.$refs['formDialog'].eventType = 'distribute'
-      this.$refs['formDialog'].dialogVisible = true
+      const payload = this.userList[index];
+      this.$store.commit("user/SAVE_CURRENTROW", payload);
+      this.$refs["formDialog"].event = "DistributeTemplate";
+      this.$refs["formDialog"].eventType = "distribute";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     sortChange(val) {
-      this.initDataList()
+      this.initDataList();
     },
     pageChange() {
-      this.initDataList()
+      this.initDataList();
     },
     initFilter() {
-    //   this.$store
-    //     .dispatch('user/getUserListSelect')
-    //     .then(() => {
-    //     })
-    //     .catch(err => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '初始化失败'
-    //       })
-    //     })
+      //   this.$store
+      //     .dispatch('user/getUserListSelect')
+      //     .then(() => {
+      //     })
+      //     .catch(err => {
+      //       this.$message({
+      //         type: 'error',
+      //         message: '初始化失败'
+      //       })
+      //     })
 
       this.$store
-        .dispatch('department/getDepartmentListSelect')
+        .dispatch("department/getDepartmentListSelect")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
     initDataList(payload) {
       this.$store
-        .dispatch('user/getUserList', payload)
+        .dispatch("user/getUserList", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.userPage.pageNumber + 1
-          this.pageConfig.total = this.userPage.total
+          this.pageConfig.pageNumber = this.userPage.pageNumber + 1;
+          this.pageConfig.total = this.userPage.total;
         })
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
     handleDetail(val) {
-      const uuid = this.userList[val].uuid
+      const uuid = this.userList[val].uuid;
       this.$router.push({
-        path: '/user/detail/'+uuid
+        path: "/user/detail/" + uuid
         // query: { uuid: payload }
-      })
+      });
     },
     handleSearch(val) {
-      const { userName, departmentsUuid, roleUuid } = val
-      this.query.userName = userName ? userName : userName
+      console.log("wxawxawxa", val);
+      const {
+        userName,
+        departmentsUuid,
+        roleUuid,
+        isFollowUser,
+        isMessageUser,
+        visible
+      } = val;
+      this.query.userName = userName ? userName : userName;
       this.query.departmentsUuid = departmentsUuid
         ? departmentsUuid
-        : departmentsUuid
-      this.query.roleUuid = roleUuid ? roleUuid : roleUuid
-      console.log(val, 'handleSearch')
-      this.initDataList(this.query)
+        : departmentsUuid;
+      this.query.roleUuid = roleUuid ? roleUuid : roleUuid;
+
+      this.query.isFollowUser = isFollowUser ? isFollowUser : isFollowUser;
+      this.query.isMessageUser = isMessageUser ? isMessageUser : isMessageUser;
+      this.query.visible = visible ? visible : visible;
+      console.log(val, "handleSearch");
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      console.log('handleRefresh')
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      console.log("handleRefresh");
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      console.log(this.query);
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key;
+      this.initDataList(this.query);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

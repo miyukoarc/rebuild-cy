@@ -19,7 +19,7 @@ NProgress.configure({
   showSpinner: false
 }) // NProgress Configuration
 
-const whiteList = ['/login','/miniLogin','/board'] // no redirect whitelist
+const whiteList = ['/login', '/miniLogin', '/board'] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
   // start progress bar
@@ -68,10 +68,10 @@ router.beforeEach(async (to, from, next) => {
 
             // 
 
-          }).catch(err=>{
+          }).catch(err => {
             Message({
-              type:'error',
-              message:err || err.message
+              type: 'error',
+              message: err || err.message
             })
           })
 
@@ -90,12 +90,12 @@ router.beforeEach(async (to, from, next) => {
 
           router.addRoutes(
             //   accessed
-                [...accessed,
-              {
-                path: '*',
-                redirect: '/404',
-                hidden: true
-              }
+            [...accessed,
+            {
+              path: '*',
+              redirect: '/404',
+              hidden: true
+            }
             ]
           )
 
