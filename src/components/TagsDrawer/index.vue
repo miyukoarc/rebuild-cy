@@ -12,7 +12,7 @@
                 class="tag-unit text-ellipsis"
                 type="info"
                 size="mini"
-                v-for="tag in alterTags(group.tagnames)"
+                v-for="tag in alterTags(group.tags)"
                 :key="tag.tagId"
               >{{tag.tagName}}</el-tag>
             </div>
@@ -45,8 +45,7 @@ export default {
   watch: {
     tags: {
       handler(newVal, oldVal) {
-        console.log(newVal,'999')
-        if (newVal.length > 2) {
+         if (newVal.length > 2) {
           this.curly = true;
         } else {
           this.curly = false;

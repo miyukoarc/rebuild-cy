@@ -93,7 +93,7 @@ const actions = {
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         commit('TOGGLE_LOADING', false)
         reject()
       })
@@ -111,7 +111,7 @@ const actions = {
       addTagIsAudit(payload).then(res => {
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         reject()
       })
     })
@@ -128,7 +128,7 @@ const actions = {
       deleteTagIsAudit(payload).then(res => {
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         reject()
       })
     })
@@ -145,7 +145,7 @@ const actions = {
       updateTagIsAudit(payload).then(res => {
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         reject()
       })
     })
@@ -162,7 +162,7 @@ const actions = {
             commit('SAVE_LISTSELECT',res)
             resolve()
         }).catch(err=>{
-            console.log(err)
+            
             reject()
         })
       })

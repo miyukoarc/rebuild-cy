@@ -1,6 +1,7 @@
 import {
   getDepartmentDetail,
   addDepartment,
+  addWxDepartment,
   deleteDepartment,
   getDepartmentListAll,
   locateDepartmentLeader,
@@ -74,7 +75,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -88,14 +89,14 @@ const actions = {
   addDepartment({
     commit
   }, payload) {
-    commit('TOGGLE_LOADING', true)
+    // commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       addDepartment(payload).then(() => {
-        commit('TOGGLE_LOADING', false)
+        // commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-        commit('TOGGLE_LOADING', false)
-        console.log(err)
+        // commit('TOGGLE_LOADING', false)
+        
         reject(err)
       })
     })
@@ -116,7 +117,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -139,7 +140,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -160,7 +161,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -181,7 +182,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -222,6 +223,20 @@ const actions = {
     return new Promise((resolve,reject)=>{
         allocation(payload).then(res=>{
             resolve(res)
+        }).catch(err=>{
+            reject(err)
+        })
+    })
+ },
+ /**
+  * 创建组织
+  * @param {*} param0 
+  * @param {*} payload 
+  */
+ addWxDepartment({commit},payload){
+    return new Promise((resolve,reject)=>{
+        addWxDepartment(payload).then(res=>{
+            resolve()
         }).catch(err=>{
             reject(err)
         })

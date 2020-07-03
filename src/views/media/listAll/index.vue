@@ -285,7 +285,7 @@ export default {
             })
         })
         .catch(err => {
-          console.log(err)
+          
         })
     },
     handleRowClick(val) {
@@ -335,7 +335,7 @@ export default {
             })
         })
         .catch(err => {
-          console.log(err)
+          
         })
     },
     beforeImageUpload(file) {

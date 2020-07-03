@@ -73,7 +73,7 @@ const actions = {
                 commit('TOGGLE_LOADING',false)
                 resolve()
             }).catch(err=>{
-                console.log(err)
+                
                 commit('TOGGLE_LOADING',false)
                 reject()
             })

@@ -92,7 +92,7 @@ const actions = {
         commit('SAVE_DETAIL', res.items)
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         reject()
       })
     })
@@ -110,7 +110,7 @@ const actions = {
         commit('SAVE_LIST', res.items)
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         reject()
       })
     })
@@ -130,7 +130,7 @@ const actions = {
         commit('SAVE_LIST', res.items)
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         reject()
       })
     })

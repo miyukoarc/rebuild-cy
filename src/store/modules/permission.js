@@ -66,7 +66,8 @@ const state = {
   loading: false,
   routes: [],
   permissionList: [],
-  permissionMap: {}
+  permissionMap: {},
+  permissionRenderMap: {}
 
 }
 
@@ -83,6 +84,9 @@ const mutations = {
   },
   SET_PERMISSIONMAP(state,payload){
     state.permissionMap = payload
+  },
+  SET_PERMISSIONRENDERMAP(state,payload){
+      state.permissionRenderMap = payload
   }
 
 }
@@ -112,9 +116,11 @@ const actions = {
   }) {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
-      getListAll().then(() => {
+      getListAll().then((res) => {
+        // const accessed = setPermissionMap(res.items)
+        commit('SET_PERMISSIONRENDERMAP',res.items)
         commit('TOGGLE_LOADING', false)
-        resolve()
+        resolve(res.items)
       }).catch(err => {
         console.error(err)
         commit('TOGGLE_LOADING', false)

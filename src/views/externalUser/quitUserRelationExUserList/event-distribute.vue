@@ -74,7 +74,7 @@ export default {
               this.$bus.$emit('handleRefresh')
             })
             .catch(err => {
-              console.log(err)
+              
               this.$message({
                 type: 'error',
                 message: '操作失败'

@@ -327,7 +327,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -349,7 +349,7 @@ const actions = {
         resolve(res.items)
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -371,7 +371,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -393,7 +393,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -414,7 +414,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -435,7 +435,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject()
       })
     })
@@ -454,7 +454,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -473,7 +473,7 @@ const actions = {
         commit('SAVE_LISTGROUP', res.items)
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -494,7 +494,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })

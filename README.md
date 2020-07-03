@@ -74,7 +74,7 @@ _除非无替代方法，禁止通过污染prototype的方式绑定方法_
 			getMyInfo(payload).then(()=>{
 				resolve()
 			}).catch(err=>{
-				console.log(err)
+				
 				reject()
 			})
 		})

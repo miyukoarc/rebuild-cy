@@ -217,7 +217,7 @@ const actions = {
      return new Promise((resolve,reject)=>{
          getDetail(payload).then(res=>{
              commit('SAVE_SHOWOFFUSER',res)
-             resolve()
+             resolve(res)
          }).catch(err=>{
              reject(err)
          })

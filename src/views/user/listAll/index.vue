@@ -24,8 +24,9 @@
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column prop="name" label="员工姓名" align="left"></el-table-column>
           <el-table-column label="部门" align="left">
-            <template v-slot="scoped">
-              <div>{{scoped.row.departments.name?scoped.row.departments.name:'--'}}</div>
+            <template v-slot="{row}">
+              <div v-if="row.departments.length<2">{{row.departments.length?row.departments[0].name:'--'}}</div>
+              <div v-else :title="genTitle(row.departments)">{{row.departments[0].name}}...</div>
             </template>
           </el-table-column>
           <el-table-column label="角色" align="left">
@@ -148,6 +149,9 @@ export default {
     this.$bus.$off('handleRefresh')
   },
   methods: {
+      genTitle(arr){
+          return arr.map(item=>{return item.name}).join('/')
+      },
     doExport(val) {
       console.log(val)
     },

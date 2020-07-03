@@ -1,12 +1,29 @@
 <template>
   <div>
-    <table-drawer></table-drawer>
     <div>
-      <user-drawer :hasPop="true" :users="users"></user-drawer>
+      <tags-drawer :tags="tagGroups">
+          <!-- <user-tag/> -->
+      </tags-drawer>
+    </div>
+    <div>
+      <user-drawer :hasPop="true" :users="users">
+      </user-drawer>
     </div>
 
     <div>
+        <async-user-drawer :hasPop="true" :users="users"></async-user-drawer>
+    </div>
+
+    <!-- <div>
       <Cascader :options="tree"></Cascader>
+    </div>-->
+
+    <div>
+        <async-user-tag size="small" v-for="item in users" type="info" :key="item.uuid" :uuid="item.uuid"><i class="el-icon-user-solid"></i>{{item.name}}</async-user-tag>
+    </div>
+
+    <div>
+
     </div>
 
     <div>
@@ -29,17 +46,124 @@
 </template>
 
 <script>
-import TableDrawer from '@/components/TableDrawer'
+import UserTag from '@/components/UserTag'
+import TagsDrawer from '@/components/TagsDrawer'
 import UserDrawer from '@/components/UserDrawer'
 import Cascader from '@/components/Cascader'
+import AsyncUserTag from '@/components/AsyncUserTag'
+import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 export default {
   components: {
-    TableDrawer,
+    TagsDrawer,
     UserDrawer,
-    Cascader
+    Cascader,AsyncUserTag,
+    UserTag,
+    AsyncUserDrawer
   },
+//   directives: {
+//   loading: {
+//     // 指令的定义
+//     componentUpdated: function (el,binding) {
+//         if(binding.value){
+//             document.querySelector('#loading').style.display = ''
+//         }else{
+//             document.querySelector('#loading').style.display = 'none'
+//         }
+//     //   el.focus()
+//     }
+//   }
+// },
   data() {
     return {
+        loading: false,
+      msg: '',
+      status: false,
+      users: [
+        {
+          isMessageUser: false,
+          gender: 1,
+          isLeader: 0,
+          mobile: '',
+          avatar:
+            'http://wework.qpic.cn/wwhead/nMl9ssowtibVGyrmvBiaibzDqymbAQJztBK5wVJkGCVFPN28FBgE3KUKKoqBia13ZPLQLjyWuw5mjsI/0',
+          userId: 'gion',
+          version: 2,
+          uuid: 15,
+          createdAt: '2020-06-23 12:28:35',
+          deleted: false,
+          qrCode:
+            'https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=vcd1ad9b75459ce243',
+          name: '薛强强',
+          alias: '',
+          position: '',
+          updatedAt: '2020-06-30 20:23:10',
+          isFollowUser: true,
+          status: 1
+        },
+        {
+          isMessageUser: false,
+          gender: 1,
+          isLeader: 0,
+          mobile: '',
+          avatar:
+            'http://wework.qpic.cn/wwhead/nMl9ssowtibVGyrmvBiaibzDqymbAQJztBK5wVJkGCVFPN28FBgE3KUKKoqBia13ZPLQLjyWuw5mjsI/0',
+          userId: 'gion',
+          version: 2,
+          uuid: 1,
+          createdAt: '2020-06-23 12:28:35',
+          deleted: false,
+          qrCode:
+            'https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=vcd1ad9b75459ce243',
+          name: '薛强',
+          alias: '',
+          position: '',
+          updatedAt: '2020-06-30 20:23:10',
+          isFollowUser: true,
+          status: 1
+        },
+        {
+          isMessageUser: false,
+          gender: 1,
+          isLeader: 0,
+          mobile: '',
+          avatar:
+            'http://wework.qpic.cn/wwhead/nMl9ssowtibVGyrmvBiaibzDqymbAQJztBK5wVJkGCVFPN28FBgE3KUKKoqBia13ZPLQLjyWuw5mjsI/0',
+          userId: 'gion',
+          version: 2,
+          uuid: 2,
+          createdAt: '2020-06-23 12:28:35',
+          deleted: false,
+          qrCode:
+            'https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=vcd1ad9b75459ce243',
+          name: '薛强',
+          alias: '',
+          position: '',
+          updatedAt: '2020-06-30 20:23:10',
+          isFollowUser: true,
+          status: 1
+        },
+        {
+          isMessageUser: false,
+          gender: 1,
+          isLeader: 0,
+          mobile: '',
+          avatar:
+            'http://wework.qpic.cn/wwhead/nMl9ssowtibVGyrmvBiaibzDqymbAQJztBK5wVJkGCVFPN28FBgE3KUKKoqBia13ZPLQLjyWuw5mjsI/0',
+          userId: 'gion',
+          version: 2,
+          uuid: 3,
+          createdAt: '2020-06-23 12:28:35',
+          deleted: false,
+          qrCode:
+            'https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=vcd1ad9b75459ce243',
+          name: '薛强',
+          alias: '',
+          position: '',
+          updatedAt: '2020-06-30 20:23:10',
+          isFollowUser: true,
+          status: 1
+        }
+      ],
       clearable: true,
       defaultExpandAll: true,
       multiple: true,
@@ -254,98 +378,14 @@ export default {
           ]
         }
       ],
-      users: [
-        {
-          isMessageUser: false,
-          gender: 1,
-          isLeader: 0,
-          mobile: '',
-          avatar:
-            'http://wework.qpic.cn/wwhead/nMl9ssowtibVGyrmvBiaibzDqymbAQJztBK5wVJkGCVFPN28FBgE3KUKKoqBia13ZPLQLjyWuw5mjsI/0',
-          userId: 'gion',
-          version: 2,
-          uuid: 15,
-          createdAt: '2020-06-23 12:28:35',
-          deleted: false,
-          qrCode:
-            'https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=vcd1ad9b75459ce243',
-          name: '薛强强',
-          alias: '',
-          position: '',
-          updatedAt: '2020-06-30 20:23:10',
-          isFollowUser: true,
-          status: 1
-        },
-        {
-          isMessageUser: false,
-          gender: 1,
-          isLeader: 0,
-          mobile: '',
-          avatar:
-            'http://wework.qpic.cn/wwhead/nMl9ssowtibVGyrmvBiaibzDqymbAQJztBK5wVJkGCVFPN28FBgE3KUKKoqBia13ZPLQLjyWuw5mjsI/0',
-          userId: 'gion',
-          version: 2,
-          uuid: 1,
-          createdAt: '2020-06-23 12:28:35',
-          deleted: false,
-          qrCode:
-            'https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=vcd1ad9b75459ce243',
-          name: '薛强',
-          alias: '',
-          position: '',
-          updatedAt: '2020-06-30 20:23:10',
-          isFollowUser: true,
-          status: 1
-        },
-        {
-          isMessageUser: false,
-          gender: 1,
-          isLeader: 0,
-          mobile: '',
-          avatar:
-            'http://wework.qpic.cn/wwhead/nMl9ssowtibVGyrmvBiaibzDqymbAQJztBK5wVJkGCVFPN28FBgE3KUKKoqBia13ZPLQLjyWuw5mjsI/0',
-          userId: 'gion',
-          version: 2,
-          uuid: 2,
-          createdAt: '2020-06-23 12:28:35',
-          deleted: false,
-          qrCode:
-            'https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=vcd1ad9b75459ce243',
-          name: '薛强',
-          alias: '',
-          position: '',
-          updatedAt: '2020-06-30 20:23:10',
-          isFollowUser: true,
-          status: 1
-        },
-        {
-          isMessageUser: false,
-          gender: 1,
-          isLeader: 0,
-          mobile: '',
-          avatar:
-            'http://wework.qpic.cn/wwhead/nMl9ssowtibVGyrmvBiaibzDqymbAQJztBK5wVJkGCVFPN28FBgE3KUKKoqBia13ZPLQLjyWuw5mjsI/0',
-          userId: 'gion',
-          version: 2,
-          uuid: 3,
-          createdAt: '2020-06-23 12:28:35',
-          deleted: false,
-          qrCode:
-            'https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=vcd1ad9b75459ce243',
-          name: '薛强',
-          alias: '',
-          position: '',
-          updatedAt: '2020-06-30 20:23:10',
-          isFollowUser: true,
-          status: 1
-        }
-      ],
-      tree: []
+
+      tree: [],
+      tempUserDetail: {}
     }
   },
-  created(){
-      setTimeout(()=>{
-          this.tree = [
+  created() {
+    setTimeout(() => {
+      this.tree = [
         {
           name: '中国总公司',
           department: [
@@ -430,7 +470,17 @@ export default {
           ]
         }
       ]
-      },10)
+    }, 10)
+  },
+  mounted(){
+    //   console.log( document.querySelector('#loading'))
+  },
+  methods: {
+
+    handleDetail(uuid){
+        console.log(uuid)
+        
+    }
   }
 }
 </script>

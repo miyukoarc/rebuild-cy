@@ -139,7 +139,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -158,7 +158,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -174,7 +174,7 @@ const actions = {
       addGroup(payload).then(res => {
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         reject(err)
       })
     })

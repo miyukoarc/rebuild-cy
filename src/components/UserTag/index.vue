@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <div class="user-tooltip-container">
     <!-- <div v-if="hasPop"> -->
     <el-tooltip v-if="hasPop" :enterable="true" placement="right">
@@ -45,8 +45,12 @@
           </el-row>
         </div>
       </div>
+      <el-tag style="margin:0 3px 3px 0;" type="info" size="small">
+        <i class="el-icon-user-solid"></i>
+        {{user.name}}
+      </el-tag>
     </el-tooltip>
-    <el-tag v-else style="margin:0 0 3px 0;" type="info" size="small">
+    <el-tag v-else style="margin:0 3px 3px 0;" type="info" size="small">
       <i class="el-icon-user-solid"></i>
       {{user.name}}
     </el-tag>
@@ -56,14 +60,15 @@
 
 <script>
 export default {
+  name: 'UserTag',
   props: {
     user: {
       type: Object,
       default: () => {}
     },
     hasPop: {
-        type: Boolean,
-        default: true
+      type: Boolean,
+      default: true
     }
   }
 }

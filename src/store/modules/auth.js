@@ -28,7 +28,7 @@ const actions = {
                 commit('SAVE_LIST',res)
                 resolve()
             }).catch(err=>{
-                console.log(err)
+                
                 reject(err)
             })
         })

@@ -15,7 +15,7 @@ export const getList = () => {
  */
 export const getListAll = () => {
   return request({
-    url: '/permission/listAll',
+    url: '/permission/listSelect',
     method: 'get'
   })
 }
