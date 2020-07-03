@@ -24,6 +24,7 @@
           :data="listAll"
           style="width: 100%"
           row-key="uuid"
+          ref="dragTable"
           stripe
           lazy
           highlight-current-row
@@ -81,6 +82,8 @@ import FormDialog from './dialog'
 import ToolBar from './tool-bar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
+import Sortable from'sortablejs'
+
 export default {
   components: {
     ListHeader,
@@ -102,7 +105,10 @@ export default {
         size: 10,
         groupName: '',
         tagName: ''
-      }
+      },
+      sortable: null,
+      oldList: [],
+      newList: []
     }
   },
   watch: {},
@@ -166,6 +172,11 @@ export default {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
+          this.oldList = this.list.map(v=>v.id)
+            this.newList = this.oldList.slice()
+            this.$nextTick(()=>{
+                this.setSort()
+            })
         })
         .catch(err => {
           this.$message({
@@ -211,6 +222,26 @@ export default {
       this.$refs['formDialog'].eventType = 'create'
       this.$refs['formDialog'].event = 'CreateTemplate'
       this.$refs['formDialog'].dialogVisible = true
+    },
+
+    setSort() {
+      const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+      this.sortable = Sortable.create(el,{
+        ghostClass:'sortable-ghost', // Class name for the drop placeholder,
+        setData:function(dataTransfer) {
+          // to avoid Firefox bug
+          // Detail see : https://github.com/RubaXa/Sortable/issues/1012
+          dataTransfer.setData('Text','')
+        },
+        onEnd:evt=>{
+          const targetRow = this.list.splice(evt.oldIndex,1)[0]
+          this.list.splice(evt.newIndex,0,targetRow)
+
+          // for show the changes, you can delete in you code
+          const tempIndex = this.newList.splice(evt.oldIndex,1)[0]
+          this.newList.splice(evt.newIndex,0,tempIndex)
+        }
+      })
     }
   }
 }

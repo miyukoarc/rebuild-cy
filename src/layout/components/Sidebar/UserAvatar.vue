@@ -30,9 +30,14 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import { mapGetters, mapState } from "vuex";
 import { removeToken } from "@/utils/auth";
 
+=======
+import { mapGetters, mapState } from 'vuex'
+import {removeToken} from '@/utils/auth'
+>>>>>>> be765984093749dc73da08ec6660b845192ee961
 export default {
   name: "user-avatar",
   computed: {
@@ -44,8 +49,16 @@ export default {
   methods: {
     logout() {
       //   await this.$store.dispatch('user/logout')
+<<<<<<< HEAD
       removeToken();
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+=======
+      this.removeToken()
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    removeToken(){
+        return removeToken()
+>>>>>>> be765984093749dc73da08ec6660b845192ee961
     }
   }
 };

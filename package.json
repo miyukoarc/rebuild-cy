@@ -26,6 +26,7 @@
     "dayjs": "^1.8.28",
     "default-passive-events": "^1.0.10",
     "echarts": "4.2.1",
+    "el-select-tree": "^1.0.22",
     "element-ui": "2.13.0",
     "file-saver": "^2.0.2",
     "is-electron": "^2.2.0",

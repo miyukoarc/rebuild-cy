@@ -33,6 +33,7 @@ import Layout from '@/layout'
 import online from '@/views/signin'
 import offline from '@/views/login'
 import MiniLogin from '@/views/login-back-up'
+import welcome from '@/views/welcome'
 const loginPage = process.env.VUE_APP_WORK === 'offline' ? offline : online
 export const constantRoutes = [{
     path: '/login',
@@ -44,13 +45,17 @@ export const constantRoutes = [{
     path: '/miniLogin',
     component: MiniLogin,
     hidden: true
+  }, {
+    path: '/welcome',
+    component: welcome,
+    hidden: true,
   },
   {
-    path: '/',
+    path: '#',
     component: Layout,
-    redirect: '/dashboard',
+    // redirect: '/dashboard',
     children: [{
-      path: 'dashboard',
+      path: '/dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
       meta: {
@@ -62,6 +67,9 @@ export const constantRoutes = [{
       component: () => import('@/views/board.vue'),
       hidden: true,
     }, ]
+  },
+  {
+      path: '/',redirect: '/welcome'
   },
   /**
    * local test

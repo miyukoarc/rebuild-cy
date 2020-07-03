@@ -1,22 +1,24 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <!-- <router-view :key="key" /> -->
-      <keep-alive :include="cachedViews">
+      <el-scrollbar>
+        <keep-alive :include="cachedViews">
           <router-view></router-view>
-      </keep-alive>
+        </keep-alive>
+      </el-scrollbar>
+      <!-- <router-view :key="key" /> -->
     </transition>
   </section>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'AppMain',
   computed: {
     ...mapState({
-        cachedViews: state => state.tagsView.cachedViews
-    }),
+      cachedViews: state => state.tagsView.cachedViews
+    })
     // key() {
     //   return this.$route.path
     // }
@@ -27,16 +29,23 @@ export default {
 <style scoped>
 .app-main {
   /*50 = navbar  */
-  min-height: calc(100vh - 84px);
+  height: calc(100vh - 84px);
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow-y: scroll;
 }
-.fixed-header+.app-main {
+.fixed-header + .app-main {
   padding-top: 50px;
 }
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
 
-
+::-webkit-scrollbar-thumb {
+  background-color: rgba(144,147,153,.3);
+  border-radius: 3px;
+}
 </style>
 
 <style lang="scss">
@@ -53,7 +62,7 @@ export default {
     min-height: calc(100vh - 84px);
   }
 
-  .fixed-header+.app-main {
+  .fixed-header + .app-main {
     padding-top: 84px;
   }
 }

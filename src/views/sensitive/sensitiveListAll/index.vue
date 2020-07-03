@@ -7,8 +7,6 @@
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
         <div slot="right">
-          <!-- <el-button>新增用户</el-button> -->
-          <!-- <el-button type="primary">分配</el-button> -->
           <el-t-button
             type="primary"
             :popAuth="true"

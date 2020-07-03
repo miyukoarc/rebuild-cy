@@ -1,68 +1,108 @@
 <template>
   <div class="login-container">
+    <div id="qrcode-container"></div>
+    <div class="container">
+      <el-radio-group v-model="tenantId" size="small" @change="changeCorp">
+        <div class="choice" v-for="item in loginList" :key="item.tenantId">
+          <el-radio :label="item.tenantId">{{item.name}}</el-radio>
+        </div>
+      </el-radio-group>
+      <div>
+        <el-button size="small" @click="handleLogin">进入</el-button>
+      </div>
+    </div>
   </div>
 </template>
 
-<script>;
-
-import { wxLogin } from "@/api/user";
-
+<script>
+import { wxLogin } from '@/api/user'
+import {mapState} from 'vuex'
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     return {
       redirect: undefined,
       otherQuery: {},
-      wxQrCode: null
-    };
+      wxQrCode: null,
+      tenantId: ''
+    }
   },
   watch: {
     $route: {
       handler: function(route) {
-        const query = route.query;
+        const query = route.query
         if (query) {
-          this.redirect = query.redirect;
-          this.otherQuery = this.getOtherQuery(query);
+          this.redirect = query.redirect
+          this.otherQuery = this.getOtherQuery(query)
         }
       },
       immediate: true
     }
   },
+  computed: {
+    ...mapState({
+      loginList: state => state.auth.loginList
+    })
+  },
   created() {
-
+      this.initDataList()
   },
   mounted() {
-    this.getWxlogin();
-
+    // this.getWxlogin(this.$route.query.tenantId);
   },
   methods: {
-    getWxlogin() {
+    getWxlogin(payload) {
       this.$nextTick(async () => {
-        const res = await wxLogin();
+        const res = await wxLogin(payload)
         if (res) {
-          this.wxQrCode = res;
+          this.wxQrCode = res
           const style =
-            "<style>#login{width:100%;margin: 20px auto; text-align:center}</style>";
+            '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
 
-          document.write(this.addStr(this.wxQrCode, style));
+            console.log(document.querySelector('#qrcode-container'))
+          
+        //   document.querySelector('#qrcode-container').innerHTML = this.addStr(this.wxQrCode, style)
+          document.write(this.addStr(this.wxQrCode, style))
         }
-      });
+      })
     },
     addStr(str, style) {
-      const arr = str.split("</head>");
-      return `${arr[0]}${style}</head>${arr[1]}`;
+      const arr = str.split('</head>')
+      return `${arr[0]}${style}</head>${arr[1]}`
     },
 
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== "redirect") {
-          acc[cur] = query[cur];
+        if (cur !== 'redirect') {
+          acc[cur] = query[cur]
         }
-        return acc;
-      }, {});
+        return acc
+      }, {})
     },
+    changeCorp(val) {
+      this.$store.commit('auth/SAVE_LOGGEDCORP', val)
+    },
+    initDataList() {
+      this.$store
+        .dispatch('auth/getLoginList')
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err || '初始化错误'
+          })
+        })
+    },
+    handleLogin() {
+      const tenantId = this.tenantId + ''
+    //   this.$router.push({
+    //     path: '/login',
+    //     query: { tenantId }
+    //   })
+    this.getWxlogin(tenantId)
+    }
   }
-};
+}
 </script>
 
 <style lang="scss">
@@ -115,6 +155,13 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .qrcode-container {
+    width: 500px;
+    height: 500px;
+  }
   .el-input {
     display: inline-block;
     height: 47px;

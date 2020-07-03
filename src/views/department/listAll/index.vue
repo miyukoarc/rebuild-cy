@@ -23,13 +23,22 @@
         style="width: 100%"
         row-key="uuid"
         lazy
-        stripe
+        
         default-expand-all
-        class="fill"
         @row-click="handleDetail"
         :tree-props="{ children: 'children' }"
-      >
-        <el-table-column prop="name" label="名称" align="left"></el-table-column>
+       >
+        <el-table-column  label="名称" align="left">
+            <template v-slot="{row}">
+                {{row.name}}
+            </template>
+        </el-table-column>
+        <el-table-column label="标签">
+            <template v-slot="{row}">
+            
+                <span>{{row.orgNode?'组织':'部门'}}</span>
+            </template>
+        </el-table-column>
         <!-- <el-table-column prop="createdAt" label="创建时间" align="left"></el-table-column> -->
         <!-- <el-table-column prop="updatedAt" label="更新时间" align="left"></el-table-column> -->
         <el-table-column label="操作" align="left" width="240">
@@ -53,6 +62,10 @@
       </el-table>
     </el-card>
 
+    <!-- <el-card class="content-spacing">
+        <Cascader :options="departmentList" :props="{childre:'children',department:'nodes'}"></Cascader>
+    </el-card> -->
+
     <form-dialog ref="formDialog"></form-dialog>
   </div>
 </template>
@@ -63,6 +76,7 @@ import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
+import Cascader from '@/components/Cascader'
 
 import { mapState, mapMutations, mapActions } from 'vuex'
 
@@ -71,7 +85,8 @@ export default {
     ListHeader,
     UserDetail,
     FormDialog,
-    ToolBar
+    ToolBar,
+    Cascader
   },
   data() {
     return {}
