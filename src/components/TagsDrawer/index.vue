@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="drawer-container">
-      <div class="drawer-item" v-for="group in alterGroups" :key="group.groupId">
-        <el-row :gutter="5" type="flex" class="row-bg" justify="center" >
-          <el-col :span="10">
-            <div class="font-es group-name">{{group.groupName}}:</div>
+    <div class="drawer-container" v-if="alterGroups != null">
+      <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
+        <el-row type="flex" class="row-bg" justify="center">
+          <el-col :span="8">
+            <div class="font-es group-name">{{key}}：</div>
           </el-col>
-          <el-col :span="14">
+          <el-col :span="16">
             <div class="tags-container">
               <el-tag
                 class="tag-unit text-ellipsis"
@@ -26,6 +26,7 @@
         </el-button>
       </div>
     </div>
+    <div v-else>--</div>
   </div>
 </template>
 
@@ -33,7 +34,10 @@
 export default {
   props: {
     tags: {
-      type: Array
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   name: "tags-drawer",
@@ -92,8 +96,9 @@ export default {
   .drawer-item {
     margin-bottom: 3px;
     .group-name {
-      width: 80px;
-      line-height: 20px;
+      width: 82px;
+      line-height: 25px;
+      font-weight: 500;
     }
     .tags-container {
       .tag-unit {

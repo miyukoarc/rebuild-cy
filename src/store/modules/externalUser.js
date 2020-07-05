@@ -1,7 +1,7 @@
 import {
   getListOwner,
   getListGroup,
-  getDetail,
+  getExternalUserDetail,
   getExternalUserListMy,
   getExternalUserListAll,
   getRunWayList,
@@ -11,7 +11,6 @@ import {
   getQuitUserRelationExUserDetail,
   redistributionExUser,
   getGroupDetail,
-
   getCustomerStatistics
 } from '@/api/externalUser'
 
@@ -22,7 +21,9 @@ import {
 } from '@/api/externalUserTrends'
 
 import {
-  dataConversion
+  dataConversion,
+  tagsUuid,
+  externalUserDetailConversion
 } from '@/utils/externalUser.js'
 
 const state = {
@@ -121,6 +122,7 @@ const state = {
    * 客户详情
    */
   externalUserDetail: {},
+  editTagsUuid: [], // 客户详情已有标签 uuid
   /**
    * 所在群列表
    */
@@ -184,7 +186,7 @@ const mutations = {
    * 保存所有用户
    */
   SAVE_EXTERNALUSERLISTALL(state, payload) {
-    state.externalUserListAll = dataConversion(payload)
+    state.externalUserListAll = payload
   },
   SET_LISTALLPAGE(state, payload) {
     const {
@@ -294,8 +296,16 @@ const mutations = {
    * @param {*} state 
    * @param {*} payload 
    */
-  SAVE_EXTERNALUSER(state, payload) {
+  SAVE_EXTERNALUSERDETAIL(state, payload) {
     state.externalUserDetail = payload
+  },
+  /**
+   * 保存客户详情已有标签 弹框回显
+   * @param {*} state 
+   * @param {*} payload 
+   */
+  SAVE_EDITTAGSUUID(state, payload) {
+    state.editTagsUuid = tagsUuid(payload)
   },
   /**
    * 保存群列表
@@ -560,14 +570,14 @@ const actions = {
   /**
    * 客户详情
    */
-  getDetail({
+  getExternalUserDetail({
     commit
   }, payload) {
-    console.log(payload,'payload')
+    console.log(payload, 'payload')
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
-      getDetail(payload).then(res => {
-        commit('SAVE_EXTERNALUSER', res)
+      getExternalUserDetail(payload).then(res => {
+        commit('SAVE_EXTERNALUSERDETAIL', res)
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {

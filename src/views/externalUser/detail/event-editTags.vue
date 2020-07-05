@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-30 17:39:37
- * @LastEditTime: 2020-06-30 17:51:53
+ * @LastEditTime: 2020-07-05 18:06:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\detail\event-editTags.vue
@@ -11,10 +11,10 @@
     <div class="tag-warp">
       <div v-for="(tagGroup,index) in tagListSelect" :key="index" class="tag-list-warp">
         <el-row :gutter="20" type="flex" justify="center">
-          <el-col :span="6">
+          <el-col :span="8">
             <span class="lg-42">{{ tagGroup.groupName }}</span>
           </el-col>
-          <el-col :span="18">
+          <el-col :span="16">
             <div class="tag-list display-flex align-items-center flex-wrap">
               <el-checkbox-group
                 v-model="checkboxGroup"
@@ -26,6 +26,7 @@
                   :key="idx"
                   :label="tag.uuid"
                   border
+                  style="margin-bottom:5px"
                 >{{ tag.tagName }}</el-checkbox>
               </el-checkbox-group>
             </div>
@@ -44,38 +45,61 @@
 import { mapState } from "vuex";
 export default {
   props: {
-    // transfer: {
-    //   type: Object,
-    //   default: () => {}
-    // }
+    transfer: {
+      type: Object
+    }
   },
   data() {
     return {
-      form: {}
+      form: {},
+      checkboxGroup: [],
+      delTags: [],
+      addTags: []
     };
   },
   computed: {
     ...mapState({
-      tagListSelect: state => state.tag.tagListSelect
+      tagListSelect: state => state.tag.tagListSelect,
+      editTagsUuid: state => state.externalUser.editTagsUuid
     })
-  },
-  watch: {
-    // transfer: {
-    //   handler(newVal, oldVal) {
-    //     console.log(newVal);
-    //     this.form.uuid = newVal.uuid;
-    //     this.form.remark = newVal.remark;
+    // checkboxGroup: {
+    //   get: function() {
+    //     return this.editTagsUuid;
     //   },
-    //   immediate: true
+    //   set: function(val) {
+    //     console.log(val, "val");
+    //     return val;
+    //   }
     // }
+  },
+  watch: {},
+  created() {
+    this.editTagsUuid.map(item => {
+      this.checkboxGroup.push(item);
+    });
   },
   mounted() {},
   methods: {
     // 选择标签
-    handleCheckedTagsChange(tag, index) {},
+    handleCheckedTagsChange(tag, index) {
+      this.handleConfirm();
+    },
+    del(arr1, arr2) {
+      return arr1.filter(v => {
+        return arr2.indexOf(v) == -1; //第一个数组在第二个数组中不同的项
+      });
+    },
+    add(arr2, arr1) {
+      return arr2.filter(v => {
+        return arr1.indexOf(v) == -1; //第二个数组在第一个数组中不同的项
+      });
+    },
     // 确认提交修改标签
     handleConfirm() {
-      const payload = this.form;
+      this.delTags = this.del(this.editTagsUuid, this.checkboxGroup);
+      this.addTags = this.add(this.checkboxGroup, this.editTagsUuid);
+      console.log("删除", this.delTags, "新增", this.addTags);
+      // const payload = this.form;
 
       this.$refs["form"].validate(valid => {
         if (valid) {
@@ -114,13 +138,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-checkbox.is-bordered + .el-checkbox.is-bordered {
+  margin-left: 0;
+}
 .tag-warp {
   position: relative;
-  max-width: 60%;
   min-height: 50px;
-  background: #fbfbfb;
-  border-radius: 4px;
-  border: 1px solid #eee;
   padding: 14px 18px;
   .is-show {
     position: absolute;

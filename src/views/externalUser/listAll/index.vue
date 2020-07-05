@@ -5,9 +5,9 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
+      <tool-bar @handleExport="handleExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
     </el-card>
-
+    <!-- <el-button @click="ddd">详情</el-button> -->
     <el-card class="content-spacing">
       <div>
         <el-table
@@ -22,45 +22,45 @@
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="客户名" align="left">
             <template v-slot="scope">
-              <div class="user-card" v-if="scope.row.externalUser">
-                <el-image
+              <div class="user-card">
+                <!-- <el-image
                   :src="scope.row.externalUser.avatar"
                   lazy
                   style="width:30px;height:30px;margin-right:10px"
-                ></el-image>
+                ></el-image> -->
                 <div class="client-info">
-                  <span class="remark">{{scope.row.externalUser.remark}}</span>
-                  <div>{{scope.row.externalUser.externalUser.name}}</div>
+                  <span class="remark">{{scope.row.remarkName}}</span>
+                  <div>{{scope.row.wxNickName}}</div>
                 </div>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
-            <user-drawer :hasPop="true" :users="scope.row.users"></user-drawer>
+            <user-drawer :hasPop="true" :users="scope.row.user"></user-drawer>
             </template>
           </el-table-column>
           <el-table-column label="企业标签" align="left">
             <template v-slot="scope">
-              <tags-drawer v-if="scope.row.tags.length>0" :tags="scope.row.tags"></tags-drawer>
+              <tags-drawer v-if="scope.row.externalUserDetailCorpTagsList" :tags="scope.row.externalUserDetailCorpTagsList.corpTags"></tags-drawer>
             </template>
           </el-table-column>
-          <el-table-column label="添加时间" align="left" prop="externalUser.createtime"></el-table-column>
+          <el-table-column label="添加时间" align="left" prop="createdAt"></el-table-column> 
 
-          <el-table-column label="来源渠道" align="left">
+          <!-- <el-table-column label="来源渠道" align="left">
             <template v-slot="scope">
               <div
                 v-if="Object.keys(scope.row.externalUser.contactWay).length"
               >{{scope.row.externalUser.contactWay.state}}</div>
               <div v-else>--</div>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-t-button
                 :popAuth="true"
                 :auth="permissionMap['externalUser']['externalUser_detail']"
-                type="primary"
+                type="text"
                 size="mini"
                 @click.stop="handleDetail(scope.row)"
               >详情</el-t-button>
@@ -119,7 +119,7 @@ export default {
         size: 10,
         flag: true,
         name: "",
-        tagIds: "",
+        tagIds: [],
         userId: "",
         startTime: "",
         endTime: "",
@@ -194,14 +194,15 @@ export default {
     },
 
     handleDetail(row) {
-      const uuid = row.externalUser.externalUser.uuid;
+      console.log(row,'row')
+      const uuid = row.externalUuid;
       this.$router.push({
         path: "/externalUser/detail/" + uuid
       });
     },
     handleSearch(val) {
       const { tagIds, name, userId, startTime, endTime, contractWayId,flag } = val;
-      this.query.tagIds = tagIds ? tagIds.join() : this.query.tagIds;
+      this.query.tagIds = tagIds ? tagIds: this.query.tagIds;
       this.query.name = name ? name : this.query.name;
       this.query.userId = userId ? userId : this.query.userId;
       this.query.startTime = startTime ? startTime : this.query.startTime;
@@ -223,9 +224,15 @@ export default {
       this.pageConfig.pageNumber = key - 1;
       this.initDataList(this.query);
     },
-    doExport(val) {
+    handleExport(val) {
       console.log(val);
+    },
+    ddd(){
+      this.$router.push({
+        path: "/externalUser/detail/19" 
+      });
     }
+
   }
 };
 </script>
