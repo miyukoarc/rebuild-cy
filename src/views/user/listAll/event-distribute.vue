@@ -2,7 +2,7 @@
   <div>
     <el-form :model="form" ref="form" label-width="120px">
       <el-form-item label="名称" prop="name">
-        <el-select v-model="form.depUuid">
+        <el-select v-model="form.departmentUuids[0]">
           <el-option
             v-for="item in departments"
             :key="item.uuid"
@@ -21,15 +21,19 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       form: {
-        depUuid: '',
-        userId: ''
+        alias: "",
+        departmentUuids: [],
+        name: "",
+        position: "",
+        roleUuid: "",
+        uuid: ""
       }
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -40,37 +44,46 @@ export default {
   watch: {
     user: {
       handler(newVal, oldVal) {
-          this.form.userId = newVal.userId
+        this.form.alias = newVal.alias;
+        // this.form.departmentUuids[0] =
+        //   newVal.departments[newVal.departments.length - 1].uuid;
+        this.form.name = newVal.name;
+        this.form.position = newVal.position;
+        this.form.roleUuid = newVal.roleUuid;
+        this.form.uuid = newVal.uuid;
       },
-      immediate:true
+      immediate: true
     }
   },
   methods: {
     closeDialog() {
-      this.$parent.$parent.dialogVisible = false
+      this.$parent.$parent.dialogVisible = false;
     },
     handleCancel() {
-      this.closeDialog()
+      this.closeDialog();
     },
     handleConfrim() {
-        const payload = this.form
-        this.$store.dispatch('department/allocation',payload).then((res)=>{
-            this.$message({
-                type: 'success',
-                message: '操作成功'
-            })
-            this.$bus.$emit('handleRefresh')
-            this.closeDialog()
-        }).catch(err=>{
-            this.$message({
-                type: 'error',
-                message: err
-            })
-            // this.closeDialog()
+      const payload = this.form;
+      this.$store
+        .dispatch("user/user_update", payload)
+        .then(res => {
+          this.$message({
+            type: "success",
+            message: "操作成功"
+          });
+          this.$bus.$emit("handleRefresh");
+          this.closeDialog();
         })
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: err
+          });
+          // this.closeDialog()
+        });
     }
   }
-}
+};
 </script>
 
 <style>

@@ -50,18 +50,12 @@ router.beforeEach(async (to, from, next) => {
       const username = store.getters.name
 
       if (username) {
-        //   alert('username')
-
-
-
         next()
-
       } else {
 
         try {
 
           let accessed
-
           await store.dispatch('user/getMyInfo').then(() => {
             //   console.log(res)
             console.log(store.state.user.name)
@@ -75,21 +69,10 @@ router.beforeEach(async (to, from, next) => {
             })
           })
 
-
-
           await store.dispatch('menu/getMyMenuList')
           accessed = await store.dispatch('permission/getPermissionListMy')
 
-
-
-
-
-
-
-
-
           router.addRoutes(
-            //   accessed
             [...accessed,
             {
               path: '*',
@@ -98,13 +81,6 @@ router.beforeEach(async (to, from, next) => {
             }
             ]
           )
-
-
-
-
-
-
-
           next({
             ...to,
             replace: true

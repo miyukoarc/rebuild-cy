@@ -29,12 +29,12 @@
 </template>
 
 <script>
-import TableDrawer from '@/components/TableDrawer'
+import TagsDrawer from '@/components/TagsDrawer'
 import UserDrawer from '@/components/UserDrawer'
 import Cascader from '@/components/Cascader'
 export default {
   components: {
-    TableDrawer,
+    TagsDrawer,
     UserDrawer,
     Cascader
   },

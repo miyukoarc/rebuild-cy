@@ -6,7 +6,8 @@ import {
   getUserList,
   getAllUserList,
   getDetail,
-  getUserListSelect
+  getUserListSelect,
+  postUserUpdate,
 } from '@/api/user'
 import {
   getToken,
@@ -238,6 +239,16 @@ const actions = {
       })
     })
   },
+
+  user_update({ state, commit }, payload) {
+    return new Promise((resolve, reject) => {
+      postUserUpdate(payload).then((res) => {
+        resolve()
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  }
 
 }
 

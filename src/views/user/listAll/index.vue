@@ -28,8 +28,9 @@
           <el-table-column label="部门" align="left">
             <template v-slot="scoped">
               <div
-                v-if="scoped.row.departments"
-              >{{scoped.row.departments.name?scoped.row.departments.name:'--'}}</div>
+                v-if="scoped.row.departments[0]"
+              >{{scoped.row.departments[scoped.row.departments.length - 1 ].name}}</div>
+              <div v-else>--</div>
             </template>
           </el-table-column>
 
@@ -61,14 +62,20 @@
 
           <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
-              <el-t-button type="text" size="mini" :popAuth="true">分配角色</el-t-button>
+              <el-t-button
+                type="text"
+                size="mini"
+                :popAuth="true"
+                :auth="permissionMap['user']['user_update']"
+                @click.stop="handleDistributeRole(scope.$index)"
+              >分配角色</el-t-button>
 
               <el-t-button
                 type="text"
                 size="mini"
                 :popAuth="true"
                 :auth="permissionMap['department']['department_allocation']"
-                @click.stop="handleDistribute(scope.$index)"
+                @click.stop="handleDistributeDepartment(scope.$index)"
               >分配部门</el-t-button>
 
               <el-t-button
@@ -78,7 +85,6 @@
                 :auth="permissionMap['user']['user_detail']"
                 @click.stop="handleDetail(scope.$index)"
               >详情</el-t-button>
-
             </template>
           </el-table-column>
         </el-table>
@@ -133,7 +139,9 @@ export default {
         isFollowUser: null,
         isMessageUser: null,
         visible: null
-      }
+      },
+
+      checkedUserList: []
     };
   },
   watch: {},
@@ -143,10 +151,7 @@ export default {
       departmentList: state => state.department.departmentList,
 
       loading: state => state.user.loading,
-      userList: state => {
-        console.log(state.user.userList);
-        return state.user.userList;
-      },
+      userList: state => state.user.userList,
       userPage: state => state.user.userPage,
 
       permissionMap: state => state.permission.permissionMap
@@ -156,6 +161,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("role/getRoleList");
     this.initDataList(this.query);
     this.initFilter();
   },
@@ -174,23 +180,65 @@ export default {
   },
   methods: {
     handleSelectionChange(val) {
+      this.checkedUserList = val;
       let payload = [];
       val.map(obj => {
         payload.push(obj.uuid);
       });
-      console.log(payload);
     },
     doExport(val) {
-      console.log(val);
+      if (this.checkedUserList.length == 0) {
+        console.log("请求接口导出全部");
+      } else {
+        let header = [
+          "员工姓名",
+          "部门",
+          "角色",
+          "会话存档授权",
+          "允许登陆",
+          "通讯录授权"
+        ];
+        let data = [];
+
+        this.checkedUserList.map(obj => {
+          data.push([
+            obj.name,
+            obj.departments[obj.departments.length - 1].name,
+            obj.role.name,
+            obj.isMessageUser ? "已授权" : "未授权",
+            obj.visible ? "允许" : "禁止",
+            obj.isFollowUser ? "已授权" : "未授权"
+          ]);
+        });
+
+        import("@/vendor/Export2Excel").then(excel => {
+          excel.export_json_to_excel({
+            header, //表头 必填
+            data, //具体数据 必填
+            filename: "excel-list", //非必填
+            autoWidth: true, //非必填
+            bookType: "xlsx" //非必填
+          });
+        });
+      }
     },
     handleUpdate() {
       this.initDataList(this.query);
     },
-    handleDistribute(index) {
+    handleDistributeDepartment(index) {
       const payload = this.userList[index];
       this.$store.commit("user/SAVE_CURRENTROW", payload);
+      // 分配部门
       this.$refs["formDialog"].event = "DistributeTemplate";
       this.$refs["formDialog"].eventType = "distribute";
+      this.$refs["formDialog"].dialogVisible = true;
+    },
+    handleDistributeRole(index) {
+      const payload = this.userList[index];
+      this.$store.commit("user/SAVE_CURRENTROW", payload);
+      // 分配角色
+      this.$refs["formDialog"].event = "DistributeRoleTemplate";
+      this.$refs["formDialog"].eventType = "distributeRole";
       this.$refs["formDialog"].dialogVisible = true;
     },
     sortChange(val) {
@@ -244,7 +292,6 @@ export default {
       });
     },
     handleSearch(val) {
-      console.log("wxawxawxa", val);
       const {
         userName,
         departmentsUuid,

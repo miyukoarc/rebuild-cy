@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 export function wxLogin(tenantId) {
-    return request({
-      url:'/login/'+tenantId,
-      method: 'get'
-    })
-  }
+  return request({
+    url: '/login/' + tenantId,
+    method: 'get'
+  })
+}
 
 
 
@@ -125,5 +125,17 @@ export const getUserListSelect = () => {
   return request({
     url: '/user/listSelect',
     method: 'get'
+  })
+}
+
+
+/**
+ * 更新用户信息
+ */
+export const postUserUpdate = (payload) => {
+  return request({
+    url: '/user/update',
+    method: 'post',
+    data: payload
   })
 }
