@@ -27,6 +27,18 @@ export const addDepartment = (payload) => {
 }
 
 /**
+ * 创建组织
+ * @param {object} payload
+ */
+export const addWxDepartment = (payload)=>{
+    return request({
+        url: '/department/addWx',
+        method: 'post',
+        data: payload
+    })
+}
+
+/**
  * s删除部门
  * @param {string} payload 
  */

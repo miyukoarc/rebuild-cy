@@ -87,7 +87,7 @@ const actions = {
         console.log(res)
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         reject(err)
       })
     })
@@ -129,7 +129,7 @@ const actions = {
         console.log(res)
         resolve()
       }).catch(err => {
-        console.log(err)
+        
         reject(err)
       })
     })

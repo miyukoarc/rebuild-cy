@@ -44,7 +44,7 @@ const actions = {
               commit('TOGGLE_LOADING',false)
               resolve()
           }).catch(err=>{
-              console.log(err)
+              
               commit('TOGGLE_LOADING',false)
               reject(err)
           })
@@ -59,7 +59,7 @@ const actions = {
           addRole(payload).then(()=>{
               resolve()
           }).catch(err=>{
-              console.log(err)
+              
               reject(err)
           })
       })
@@ -73,7 +73,7 @@ const actions = {
           deleteRole(payload).then(()=>{
               resolve()
           }).catch(err=>{
-              console.log(err)
+              
               reject(err)
           })
       })
@@ -89,7 +89,7 @@ const actions = {
               commit('TOGGLE_LOADING',false)
               resolve()
           }).catch(err=>{
-              console.log(err)
+              
               commit('TOGGLE_LOADING',false)
               reject(err)
           })
@@ -108,7 +108,7 @@ const actions = {
               commit('TOGGLE_LOADING',false)
               resolve()
           }).catch(err=>{
-              console.log(err)
+              
               commit('TOGGLE_LOADING',false)
               reject(err)
           })

@@ -1,14 +1,12 @@
 <template>
   <div class="app-container">
-    <!-- <el-header height="auto" style="padding:0">
-      <list-header></list-header>
-    </el-header>-->
     <el-card class="content-spacing">
       <tool-bar :hasExport="false" :hasImport="false">
         <div slot="right">
           <el-t-button
             size="small"
             :popAuth="true"
+            type='primary'
             :auth="permissionMap['department']['department_add']"
             @click="handleCreate"
           >创建部门</el-t-button>
@@ -44,14 +42,14 @@
         <el-table-column label="操作" align="left" width="240">
           <template slot-scope="scope">
             <el-t-button
-              type="primary"
+              type="text"
               size="mini"
               :auth="permissionMap['department']['department_update']"
               :popAuth="true"
               @click.stop="handleEdit(scope.$index,scope.row)"
             >编辑</el-t-button>
             <el-t-button
-              type="danger"
+              type="text"
               :auth="permissionMap['department']['department_delete']"
               :popAuth="true"
               size="mini"
@@ -197,7 +195,7 @@ export default {
             })
         })
         .catch(err => {
-          console.log(err)
+          
         })
     },
     handleDetail() {},

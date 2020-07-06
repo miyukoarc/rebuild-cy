@@ -89,7 +89,7 @@ export default {
               this.refresh()
             })
             .catch(err => {
-              console.log(err)
+              
               this.$message({
                 type: 'error',
                 message: '操作失败'
@@ -110,9 +110,9 @@ export default {
       console.log('刷新')
       const payload = this.$route.params.org
       this.$store
-        .dispatch('departmentTemplate/templateQueryList', payload)
+        .dispatch('department/getDepartmentListAll', payload)
         .then(() => {
-          this.reload()
+        //   this.reload()
         })
         .catch(err => {
           this.$message({

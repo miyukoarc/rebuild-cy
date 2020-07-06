@@ -1,12 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2020-07-01 10:56:54
- * @LastEditTime: 2020-07-01 16:45:40
+ * @LastEditTime: 2020-07-03 16:08:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\utils\externalUser.js
  */
-export function dataConversion(res) {
+export const dataConversion = (res) => {
   let data = Object.values(res);
   let externalUserListData = [];
   console.log(data, 'data')
@@ -45,4 +45,29 @@ export function dataConversion(res) {
     externalUserListData.push(externalUserItemData);
   });
   return externalUserListData
+}
+
+
+export const tagsUuid = (uuids) => {
+  if (uuids != null) {
+    let b = [].concat(...Object.values(uuids));
+    let c = [];
+    b.map(item => {
+      c.push(Number(item.uuid));
+    });
+    return c;
+  }
+}
+
+export const externalUserDetailConversion = (payload) => {
+  let externalUserDetailData = {}
+  let externalUserDetailInfo = Object.assign({}, payload.externalUserDetailPerson, payload.externalUserDetailPublic)
+  delete externalUserDetailInfo.externalUserAvatar
+  delete externalUserDetailInfo.externalUserId
+  delete externalUserDetailInfo.externalUserName
+
+  externalUserDetailData.externalUserDetailCorpTagsList = payload.externalUserDetailCorpTagsList;
+  externalUserDetailData.externalUserDetailInfo = externalUserDetailInfo
+  console.log(externalUserDetailData, '99')
+  return externalUserDetailData
 }

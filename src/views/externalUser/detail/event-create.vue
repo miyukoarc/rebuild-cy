@@ -49,7 +49,7 @@ export default {
     })
   },
   mounted(){
-      this.form.externalUserId = this.externalUserDetail?.externalUser?.externalUserId
+      this.form.externalUserId = this.externalUserDetail?.externalUserDetail?.externalUserId
   },
   methods: {
     handleConfirm() {
@@ -69,7 +69,7 @@ export default {
               this.refresh()
             })
             .catch(err => {
-              console.log(err)
+              
               this.$message({
                 type: 'error',
                 message: '操作失败'

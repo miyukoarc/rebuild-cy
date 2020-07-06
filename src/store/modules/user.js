@@ -214,15 +214,15 @@ const actions = {
    * @param {*} param0 
    * @param {*} payload 
    */
-  getDetail({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      getDetail(payload).then(res => {
-        commit('SAVE_SHOWOFFUSER', res)
-        resolve()
-      }).catch(err => {
-        reject(err)
-      })
-    })
+  getDetail({commit},payload){
+     return new Promise((resolve,reject)=>{
+         getDetail(payload).then(res=>{
+             commit('SAVE_SHOWOFFUSER',res)
+             resolve(res)
+         }).catch(err=>{
+             reject(err)
+         })
+     })
   },
   /**
    * 员工列表 筛选

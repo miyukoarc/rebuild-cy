@@ -280,7 +280,7 @@ export default {
               this.initDataList(this.query)
             })
             .catch(err => {
-              console.log(err)
+              
               this.$message({
                 type: 'danger',
                 message: '操作失败'
@@ -288,7 +288,7 @@ export default {
             })
         })
         .catch(err => {
-          console.log(err)
+          
         })
     },
     /**
@@ -314,7 +314,7 @@ export default {
             })
           })
           .catch(err => {
-            console.log(err)
+            
             this.$message({
               type: 'error',
               message: '操作失败'
@@ -346,7 +346,7 @@ export default {
             })
           })
           .catch(err => {
-            console.log(err)
+            
             this.$message({
               type: 'error',
               message: '操作失败'

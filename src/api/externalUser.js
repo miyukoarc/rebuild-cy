@@ -5,7 +5,7 @@ import request from '@/utils/request'
  * 
  * @param {string} uuid 
  */
-export const getDetail = (uuid) => {
+export const getExternalUserDetail = (uuid) => {
   return request({
     url: '/externalUser/' + uuid,
     method: 'get',
@@ -56,7 +56,7 @@ export const getList = (payload) => {
  * 所有的客户的列表包含标签筛选,用户筛选，管理员可查看
  * @param {object} payload
  */
-export const getListAll = (payload) => {
+export const getExternalUserListAll = (payload) => {
   return request({
     url: '/externalUser/listAll',
     method: 'get',

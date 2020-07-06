@@ -30,11 +30,12 @@
       <el-date-picker
         v-model="value"
         type="daterange"
-        :value-format="'yyyy-MM-dd HH-mm-ss'"
+        :value-format="'yyyy-MM-dd HH:mm:ss'"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         @change="handleSelectedTime"
+        :default-time="['00:00:00', '23:59:59']"
       ></el-date-picker>
     </el-form-item>
 
@@ -44,7 +45,7 @@
         <el-select
           v-model="query.tagIds"
           clearable
-          @change="handleSelectedChange"
+          @change="handleChangeSecond"
           size="mini"
           multiple
         >
@@ -124,7 +125,7 @@ export default {
           this.$emit("handleSearch", this.query);
       },1000)
     },
-    handleChangeThird(val) {
+    handleSelectedChange(val) {
       console.log(val);
       this.$emit("handleSearch", this.query);
     },

@@ -30,7 +30,7 @@ const actions = {
             batchAuditTagConfirmation(payload).then(()=>{
                 resolve()
             }).catch(err=>{
-                console.log(err)
+                
                 reject(err)
             })
         })
@@ -45,7 +45,7 @@ const actions = {
             batchAuditPermissionConfirmation(payload).then(()=>{
                 resolve()
             }).catch(err=>{
-                console.log(err)
+                
                 reject(err)
             })
         })
@@ -60,7 +60,7 @@ const actions = {
             batchAuditMediaConfirmation(payload).then(()=>{
                 resolve()
             }).catch(err=>{
-                console.log(err)
+                
                 reject(err)
             })
         })
@@ -75,7 +75,7 @@ const actions = {
             batchAuditBatchTaskConfirmation(payload).then(()=>{
                 resolve()
             }).catch(err=>{
-                console.log(err)
+                
                 reject(err)
             })
         })

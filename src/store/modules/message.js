@@ -65,7 +65,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        console.log(err)
+        
         reject()
       })
     })

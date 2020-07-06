@@ -72,7 +72,7 @@ export default {
               this.refresh();
             })
             .catch(err => {
-              console.log(err);
+              ;
               this.$message({
                 type: "error",
                 message: "操作失败"

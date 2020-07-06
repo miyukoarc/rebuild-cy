@@ -1,6 +1,18 @@
 import request from '@/utils/request'
 
 /**
+ * 客户所有动态
+ * @param {object} payload
+ */
+export const getExternalUserTrendsListAll = (payload) => {
+  return request({
+    url: '/externalUserTrends/listAll',
+    method: 'get',
+    params: payload
+  })
+}
+
+/**
  * 添加客户动态
  * @param {object} payload
  */
@@ -30,10 +42,9 @@ export const deleteExTrends = (payload) => {
  * @param {object} payload
  */
 export const updateExTrends = (payload) => {
-    return request({
-      url: '/externalUserTrends/updateExTrends',
-      method: 'post',
-      data: payload
-    })
-  }
-  
+  return request({
+    url: '/externalUserTrends/updateExTrends',
+    method: 'post',
+    data: payload
+  })
+}

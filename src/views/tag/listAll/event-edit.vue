@@ -112,7 +112,7 @@ export default {
           this.handleFresh()
         })
         .catch(err => {
-          console.log(err)
+          
           this.$message({
             type: 'error',
             message: '操作失败',
@@ -162,7 +162,7 @@ export default {
                 type: 'error',
                 message: '操作失败',
               })
-              console.log(err)
+              
             })
 
             this.form = this.$options.data().form
@@ -170,7 +170,7 @@ export default {
             
         })
         .catch(err => {
-          console.log(err)
+          
         })
     },
     handleFresh(){

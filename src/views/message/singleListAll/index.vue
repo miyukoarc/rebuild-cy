@@ -188,7 +188,7 @@ export default {
           console.log(this.singleListAll, "singleListAll");
         })
         .catch(err => {
-          console.log(err);
+          ;
         });
     },
     handleSearch(val) {

@@ -4,9 +4,9 @@
       <list-header></list-header>
     </el-card>
 
-    <!-- <el-card class="content-spacing">
+    <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
-    </el-card>-->
+    </el-card>
 
     <el-card class="content-spacing">
       <div>
@@ -22,39 +22,35 @@
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="流失客户" align="left">
             <template v-slot="scope">
-              <div class="user-card" v-if="scope.row.externalUser">
+              <div class="user-card">
                 <el-image
                   :src="scope.row.externalUser.avatar"
                   lazy
                   style="width:30px;height:30px;margin-right:10px"
                 ></el-image>
-                <!-- <img :src="scope.row.externalUser.avatar" alt=""  style="width:30px;height:30px;margin-right:10px"> -->
-                <span>{{scope.row.externalUser.name}}</span>
+                <div class="client-info">
+                  <span class="remark">
+                    {{scope.row.remark}}
+                    <span
+                      class="main-color"
+                    >{{scope.row.externalUser.type==1?"@微信":'@企业微信' }}</span>
+                  </span>
+                  <div>{{scope.row.externalUser.name}}</div>
+                </div>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="所属客服" align="left">
+          <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
-              <div>{{scope.row.user.name}}</div>
+              <user-drawer :hasPop="true" :users="scope.row.user"></user-drawer>
             </template>
           </el-table-column>
           <el-table-column label="标签" align="left">
             <template v-slot="scope">
-              <div>
-                <div v-if="scope.row.tags.length">
-                  <el-tag
-                    style="margin-left:5px;"
-                    type="primary"
-                    v-for="item in scope.row.tags"
-                    :key="item.uuid"
-                  >{{item.tagName}}</el-tag>
-                </div>
-                <span v-else>--</span>
-              </div>
-              <!-- <div>{{scope.row.role.name}}</div> -->
+              <tags-drawer v-if="scope.row.tags" :tags="scope.row.tags.corpTags"></tags-drawer>
             </template>
           </el-table-column>
-          <el-table-column label="流失时间" align="left" prop="createtime"></el-table-column>
+          <el-table-column label="流失时间" align="left" prop="updatedAt"></el-table-column>
 
           <!-- <el-table-column label="渠道来源" align="left">
             <template v-slot="scope">
@@ -63,7 +59,7 @@
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-button
-                type="primary"
+                type="text"
                 size="mini"
                 @click.stop="handleDetail(scope.$index,scope.row)"
               >详情</el-button>
@@ -98,13 +94,18 @@ import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
 
+import UserDrawer from "@/components/UserDrawer";
+import TagsDrawer from "@/components/TagsDrawer";
+
 export default {
   name: "runWayListAll",
   components: {
     ListHeader,
     UserDetail,
     FormDialog,
-    ToolBar
+    ToolBar,
+    UserDrawer,
+    TagsDrawer
     // mHeadedr
   },
   data() {
@@ -222,6 +223,10 @@ export default {
 .user-card {
   display: flex;
   align-items: center;
+  .main-color {
+    font-size: 13px;
+    color: #409eff;
+  }
 }
 </style>
 
