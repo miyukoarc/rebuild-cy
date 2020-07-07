@@ -146,6 +146,11 @@ div:focus {
     text-align: right;
 }
 
+.el-table-header{
+    color: #000;
+}
+
+
 
 /*!*滚动条样式*!*/
 
@@ -243,6 +248,12 @@ body::-webkit-scrollbar-track-piece {
     background-color: #cccccc;
 }
 
-.ml {
-    margin-left: 10px;
+
+.ml{
+  margin-left: 10px;
 }
+
+.p-20{
+    padding: 20px;
+}
+

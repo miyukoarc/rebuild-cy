@@ -186,8 +186,9 @@ const actions = {
   }, payload) {
     return new Promise((resolve, reject) => {
       getAllUserList(payload).then(res => {
-        commit('SAVE_USERLISTALL', res)
-        resolve()
+        commit('SAVE_USERLISTALL', res.items)
+        // console.log(res)
+        resolve(res.items)
       }).catch(err => {
         reject(err)
       })

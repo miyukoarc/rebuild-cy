@@ -92,20 +92,13 @@ export default {
   methods: {
     handleShow() {
       this.status = true
-    //   console.log('移入')
-    //   this.watchFlag = true
-      // if(!Object.keys(this.propsData).length){
-      // this.$emit('moveon')
-      // }
       if (!Object.keys(this.tempUserDetail).length) {
         this.timer = setTimeout(() => {
-          this.initData(this.uuid)
+        //   this.initData(this.uuid)
         }, 100)
       }
     },
     handleClose() {
-    //   this.watchFlag = false
-    //   console.log('移出')
       this.status = false
     },
     initData(uuid) {

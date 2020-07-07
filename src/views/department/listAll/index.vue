@@ -37,8 +37,6 @@
                 <span>{{row.orgNode?'组织':'部门'}}</span>
             </template>
         </el-table-column>
-        <!-- <el-table-column prop="createdAt" label="创建时间" align="left"></el-table-column> -->
-        <!-- <el-table-column prop="updatedAt" label="更新时间" align="left"></el-table-column> -->
         <el-table-column label="操作" align="left" width="240">
           <template slot-scope="scope">
             <el-t-button
@@ -48,6 +46,7 @@
               :popAuth="true"
               @click.stop="handleEdit(scope.$index,scope.row)"
             >编辑</el-t-button>
+            <el-divider direction="vertical"></el-divider>
             <el-t-button
               type="text"
               :auth="permissionMap['department']['department_delete']"
@@ -64,7 +63,9 @@
         <Cascader :options="departmentList" :props="{childre:'children',department:'nodes'}"></Cascader>
     </el-card> -->
 
-    <form-dialog ref="formDialog"></form-dialog>
+    <form-dialog ref="formDialog">
+
+    </form-dialog>
   </div>
 </template>
 
@@ -103,7 +104,7 @@ export default {
   },
   created() {
     this.initDataList()
-    this.initFilter()
+    // this.initFilter()
   },
   mounted() {
     this.$bus.$on('showFormDialog', target => {

@@ -1,12 +1,20 @@
 <template>
   <div>
     <div>
-      <tags-drawer :tags="tagGroups">
-          <!-- <user-tag/> -->
-      </tags-drawer>
+      <!-- <tags-drawer :tags="tagGroups">
+      </tags-drawer> -->
+    </div>
+
+    <div>
+        <icon-tooltip>
+            <div slot="tips">
+                message
+            </div>
+        </icon-tooltip>
+
     </div>
     <div>
-      <user-drawer :hasPop="true" :users="users">
+      <user-drawer :hasPop="true" :users="users" >
       </user-drawer>
     </div>
 
@@ -42,23 +50,32 @@
         v-model="value1"
       ></el-select-tree>
     </div>
+
+    <div style="margin:30px 0;">
+        <complex-select v-model="selects" :options="departmentList"></complex-select>
+    </div>
   </div>
 </template>
 
 <script>
+import IconTooltip from '@/components/IconTooltip'
 import UserTag from '@/components/UserTag'
 import TagsDrawer from '@/components/TagsDrawer'
 import UserDrawer from '@/components/UserDrawer'
 import Cascader from '@/components/Cascader'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
+import ComplexSelect from '@/components/ComplexSelect'
+import { mapState } from 'vuex'
 export default {
   components: {
     TagsDrawer,
     UserDrawer,
     Cascader,AsyncUserTag,
     UserTag,
-    AsyncUserDrawer
+    AsyncUserDrawer,
+    IconTooltip,
+    ComplexSelect
   },
 //   directives: {
 //   loading: {
@@ -78,6 +95,7 @@ export default {
         loading: false,
       msg: '',
       status: false,
+      selects: [],
       users: [
         {
           isMessageUser: false,
@@ -383,6 +401,11 @@ export default {
       tempUserDetail: {}
     }
   },
+  computed: {
+      ...mapState({
+            departmentList: state => state.department.departmentList
+      })
+  },
   created() {
     setTimeout(() => {
       this.tree = [
@@ -471,6 +494,7 @@ export default {
         }
       ]
     }, 10)
+    this.initData()
   },
   mounted(){
     //   console.log( document.querySelector('#loading'))
@@ -480,7 +504,18 @@ export default {
     handleDetail(uuid){
         console.log(uuid)
         
-    }
+    },
+    initData() {
+      this.$store
+        .dispatch('department/getDepartmentListAll')
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err || '初始化失败'
+          })
+        })
+    },
   }
 }
 </script>

@@ -17,21 +17,20 @@
 </template>
 
 <script>
-// import EventDisable from './event-disable.vue'
-// import EventEnable from './event-enable.vue'
-// import EventKick from './event-kick.vue'
+import ChangeTemplate from './event-change'
 import CreateTemplate from './event-create.vue'
 import EditTemplate from './event-edit.vue'
 import {mapState} from 'vuex'
 export default {
 components:{
     CreateTemplate,
-    EditTemplate
+    EditTemplate,
+    ChangeTemplate
 },
   data() {
     return {
       dialogVisible: false,
-      event: 'CreateTemplate',
+      event: '',
       eventType: '',
       transfer: {}
     };
@@ -63,13 +62,22 @@ components:{
   methods: {
 
       genTitle(){
-          if(this.eventType==='create'){
-              return '创建模板'
+          const type = this.eventType
+          switch(type){
+              case 'create':
+                  return '创建模板'
+              case 'edit': 
+                  return '编辑模板'
+              case 'change':
+                  return '切换企业'
           }
+        //   if(this.eventType==='create'){
+        //       return '创建模板'
+        //   }
 
-          if(this.eventType==='edit'){
-              return '编辑模板'
-          }
+        //   if(this.eventType==='edit'){
+        //       return '编辑模板'
+        //   }
       },
       close(){
           this.event=''

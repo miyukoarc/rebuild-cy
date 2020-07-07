@@ -151,6 +151,28 @@ export function throttle(func, wait = 1000) {
     }, wait)
   }
 }
+/**
+ * 截取树
+ * @param {string} key 
+ * @param {any} value 
+ * @param {array} arr 
+ */
+export function intercept(key,value,arr){
+    let temp = []
+    const deep = (key,value,arr)=>{
+        arr.forEach(item=>{
+            if(item[key]===value){
+                temp.push(item)
+            }else{
+                if(item.children){
+                    deep(key,value,item.children)
+                }
+            }
+        })
+    }
+    deep(key,value,arr)
+    return temp
+}
 
 /**
  * 分组

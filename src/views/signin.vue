@@ -2,13 +2,13 @@
   <div class="login-container">
     <div id="qrcode-container"></div>
     <div class="container">
-      <el-radio-group v-model="tenantId" size="small" @change="changeCorp">
+      <!-- <el-radio-group v-model="tenantId" size="small" @change="changeCorp"> -->
         <div class="choice" v-for="item in loginList" :key="item.tenantId">
-          <el-radio :label="item.tenantId">{{item.name}}</el-radio>
+          <el-radio v-model="tenantId" size="small" @change="changeCorp" :label="item.tenantId">{{item.name}}</el-radio>
         </div>
-      </el-radio-group>
-      <div>
-        <el-button size="small" @click="handleLogin">进入</el-button>
+      <!-- </el-radio-group> -->
+      <div class="text-align-center">
+        <el-button type="primary" size="small" @click="handleLogin">进入</el-button>
       </div>
     </div>
   </div>
@@ -266,5 +266,8 @@ $light_gray: #eee;
       display: none;
     }
   }
+}
+.choice{
+    margin-bottom: 20px;
 }
 </style>
