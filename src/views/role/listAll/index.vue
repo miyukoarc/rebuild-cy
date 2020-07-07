@@ -166,12 +166,12 @@ export default {
               });
             });
         })
-        .catch(err => {
-          
-        })
+        .catch(err => {});
     },
     handlePermission() {},
-    handleDetail() {}
+    handleDetail() {
+      
+    }
   }
 };
 </script>

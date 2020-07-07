@@ -37,6 +37,7 @@ const getDefaultState = () => {
     userList: [],
     loading: false,
     currentRowUserList: {},
+    currentRowUsers: [],
     userPage: {
       total: 0,
       pageNumber: 0,
@@ -98,6 +99,10 @@ const mutations = {
   },
   SAVE_CURRENTROW(state, payload) {
     state.currentRowUserList = payload
+  },
+  // 用于批量分配角色和部门
+  SAVE_CURRENTROWS(state, payload) {
+    state.currentRowUsers = payload
   },
   SET_USERPAGE(state, payload) {
     const {
@@ -214,15 +219,15 @@ const actions = {
    * @param {*} param0 
    * @param {*} payload 
    */
-  getDetail({commit},payload){
-     return new Promise((resolve,reject)=>{
-         getDetail(payload).then(res=>{
-             commit('SAVE_SHOWOFFUSER',res)
-             resolve(res)
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  getDetail({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      getDetail(payload).then(res => {
+        commit('SAVE_SHOWOFFUSER', res)
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
   /**
    * 员工列表 筛选
@@ -240,7 +245,7 @@ const actions = {
     })
   },
 
-  user_update({ state, commit }, payload) {
+  user_update({ }, payload) {
     return new Promise((resolve, reject) => {
       postUserUpdate(payload).then((res) => {
         resolve()

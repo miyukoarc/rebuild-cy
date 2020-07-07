@@ -1,13 +1,17 @@
 <template>
   <div class="app-container">
-    <!-- <el-header height="auto" style="padding:0"> -->
     <el-card class="content-spacing">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 
-    <!-- </el-header> -->
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" @handleUpdate="handleUpdate" :usersNumber="userPage.total"></tool-bar>
+      <tool-bar
+        :usersNumber="userPage.total"
+        @handleExport="doExport"
+        @handleUpdate="handleUpdate"
+        @actionRole="actionRole"
+        @actionDepartment="actionDepartment"
+      ></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -181,10 +185,10 @@ export default {
   methods: {
     handleSelectionChange(val) {
       this.checkedUserList = val;
-      let payload = [];
-      val.map(obj => {
-        payload.push(obj.uuid);
-      });
+      // let payload = [];
+      // val.map(obj => {
+      //   payload.push(obj.uuid);
+      // });
     },
     doExport(val) {
       if (this.checkedUserList.length == 0) {
@@ -225,18 +229,30 @@ export default {
     handleUpdate() {
       this.initDataList(this.query);
     },
+
+    // 分配角色
+    handleDistributeRole(index) {
+      const payload = this.userList[index];
+      this.$store.commit("user/SAVE_CURRENTROW", payload);
+      this.$refs["formDialog"].event = "DistributeRoleTemplate";
+      this.$refs["formDialog"].eventType = "distributeRole";
+      this.$refs["formDialog"].dialogVisible = true;
+    },
+
+    // 分配部门
     handleDistributeDepartment(index) {
       const payload = this.userList[index];
       this.$store.commit("user/SAVE_CURRENTROW", payload);
-      // 分配部门
       this.$refs["formDialog"].event = "DistributeTemplate";
       this.$refs["formDialog"].eventType = "distribute";
       this.$refs["formDialog"].dialogVisible = true;
     },
-    handleDistributeRole(index) {
-      const payload = this.userList[index];
-      this.$store.commit("user/SAVE_CURRENTROW", payload);
-      // 分配角色
+    actionDepartment() {
+      console.log("批量分配部门");
+    },
+    actionRole() {
+      console.log("批量分配角色");
+      this.$store.commit("user/SAVE_CURRENTROWS", this.checkedUserList);
       this.$refs["formDialog"].event = "DistributeRoleTemplate";
       this.$refs["formDialog"].eventType = "distributeRole";
       this.$refs["formDialog"].dialogVisible = true;
