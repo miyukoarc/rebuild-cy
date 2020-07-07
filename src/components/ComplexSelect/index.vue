@@ -57,7 +57,14 @@
               <span>{{node.label}}</span>
               <el-tag size="mini" type="info">{{data.orgNode?'组织':'部门'}}</el-tag>
               <keep-alive>
-                <user-list v-if="false" :key="node.key"></user-list>
+              <user-list
+                v-if="currentDepart===node.key"
+                :index="node.key"
+                :uuid="node.key"
+                @output="handleOutput"
+                @cult="handleCult"
+                :key="node.key"
+              ></user-list>
               </keep-alive>
             </div>
           </el-tree>
@@ -67,11 +74,11 @@
         <div class="p-20" style="margin-top:52px;">
           <div class="line-tag color-info" v-for="item in selects" :key="item.uuid">
             <div>
-              <i class="el-icon-s-operation"></i>
+              <i class="el-icon-user-solid"></i>
               {{item.name}}
             </div>
             <div>
-              <span class="close-btn" @click="handleCloseTag(item)">
+              <span class="close-btn" @click="handleCloseUserTag(item)">
                 <i class="el-icon-close color-info"></i>
               </span>
             </div>
@@ -84,7 +91,7 @@
 
 <script>
 import UserList from './user-list'
-import { intercept } from '@/utils/common'
+import { intercept,myFilter } from '@/utils/common'
 export default {
   components: {
     UserList
@@ -92,7 +99,7 @@ export default {
   props: {
     section: {
       type: String,
-      default: 'department'
+      default: 'user'
     },
     selects: {
       type: Array,
@@ -118,7 +125,8 @@ export default {
         label: 'name',
         children: 'children'
       },
-      root: {}
+      currentDepart: null,
+      userListTemp: []
     }
   },
   watch: {
@@ -248,14 +256,48 @@ export default {
       arr.forEach((item, index) => {
         temp.push({ ...item })
       })
-      console.log(temp)
+
       this.$emit('change', temp)
     },
     /**
      * 点击node节点
      */
     handleNodeClick(data, node) {
-      console.log(node)
+
+      this.currentDepart = node.key
+    },
+    handleOutput(arr) {
+
+      let temp = this.userListTemp.concat(arr)
+
+      temp = myFilter(temp)
+
+      this.userListTemp = temp
+
+       this.$emit('change', temp)
+
+    },
+    handleCult(val){
+        let temp = []
+        if(val.length){
+            console.log('清空')
+            this.userListTemp = []
+        }else{
+            console.log('单点删除')
+            this.userListTemp.splice(this.userListTemp.findIndex(item=>{return item.uuid==val}),1)
+        }
+        console.log(this.userListTemp)
+        temp = this.userListTemp
+        this.$emit('change',temp)
+    },
+    /**
+     * 删除标签
+     */
+    handleCloseUserTag(val){
+        console.log(val)
+        let temp = this.selects
+        temp.splice(temp.findIndex(item=>{return item.uuid==val.uuid}),1)
+        this.$emit('change',temp)
     }
   }
 }
@@ -281,5 +323,13 @@ export default {
 }
 .close-btn {
   cursor: pointer;
+}
+</style>
+
+<style lang="scss">
+.select-container {
+  .el-tree-node__content {
+    height: auto;
+  }
 }
 </style>

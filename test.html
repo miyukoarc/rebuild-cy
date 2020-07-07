@@ -9,55 +9,48 @@
 
 <body>
     <script>
-        const tree = [{
-            uuid: 1,
-            children: [
-                {
-                    uuid: 2,
-                    children: [
-                        {
-                            uuid: 3
-                        },
-                        {
-                            uuid: 4,
-                            children: [
-                                {
-                                    uuid: 5
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }]
-
-        function intercept(key, value, arr) {
-            let temp = []
 
 
-            const deep = (key, value, arr) => {
-                arr.forEach(item => {
-                    if (item[key] === value) {
-                        temp.push(item)
-                    } else {
-                        if (item.children) {
-                            deep(key, value, item.children)
-                        }
-                    }
-                })
+        // let temp = []
+
+        const arr = [
+            {uuid:1},
+            {
+                uuid:2,
+            },
+            {
+                uuid:2
+            },{
+                uuid:2
+            },
+            {
+                uuid:1
             }
-            deep(key, value, arr)
-            return temp
+        ]
+
+        function myFilter(arr){
+
+            let temp = []
+            return arr.reduce((sum,curr)=>{
+                if(!temp.includes(curr.uuid)){
+                    sum.push(curr)
+                    temp.push(curr.uuid)
+                }
+                return sum
+            },[])
         }
 
-        const arr = intercept('uuid', 2, tree)
-        console.log(arr)
-        // function flatten(data) {
-        //     return data.reduce((arr, { uuid, children = [] }) => { arr.concat([{ uuid }], flatten(children)) }, [])
-        // }
+        console.log(myFilter(arr))
+        const target = [1,2,3]
+    
+        const source = [1,2]
 
-        const flatten = (data)=> data.reduce((arr, {uuid, children = []})=> arr.concat([{uuid}], flatten(children)), []);
-        console.log(flatten(arr))
+        function intersection(target,source){
+            return target.filter(item=>!source.includes(item))
+        }
+        console.log(intersection(source,target))
+
+
 
     </script>
 </body>

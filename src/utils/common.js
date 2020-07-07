@@ -175,6 +175,21 @@ export function intercept(key,value,arr){
 }
 
 /**
+ * 去重
+ */
+export function myFilter(arr){
+
+    let temp = []
+    return arr.reduce((sum,curr)=>{
+        if(!temp.includes(curr.uuid)){
+            sum.push(curr)
+            temp.push(curr.uuid)
+        }
+        return sum
+    },[])
+}
+
+/**
  * 分组
  * @param {*} obj 
  */
