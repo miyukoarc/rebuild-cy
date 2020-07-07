@@ -19,6 +19,7 @@
             <i class="el-icon-user-solid"></i>
             <span>{{item.name}}</span>
           </el-tag>
+          <!-- <async-user-tag closable @close="handleCloseTag" v-for="item in toUserTags" :key="item.uuid" :uuid="item.uuid" :hasPop="true" size="small"><i class="el-icon-user-solid"></i>{{item.name}}</async-user-tag> -->
         </div>
       </div>
     </el-form-item>
@@ -32,9 +33,12 @@
 
 <script>
 import { mapState } from 'vuex'
-
+import AsyncUserTag from '@/components/AsyncUserTag'
 export default {
   inject: ['reload'],
+  components:{
+      AsyncUserTag
+  },
   data() {
     return {
       hasParent: false,
@@ -59,19 +63,19 @@ export default {
   watch: {
     toUser: {
       handler(newValue, oldVal) {
-        console.log(newValue)
+
         this.toUserTags = this.userListSelect.filter(item => {
           return newValue.some(key => {
             return item.userId === key
           })
         })
-        console.log(this.toUserTags)
+
       },
       deep: true
     },
     toUserTags: {
       handler(newValue, oldVal) {
-        console.log(newValue)
+
       },
       deep: true
     }
@@ -121,6 +125,7 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     handleChange() {},
+    handleCloseTag(){},
     refresh() {
       this.$store
         .dispatch('sensitive/getSensitiveListAll')

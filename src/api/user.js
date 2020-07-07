@@ -77,10 +77,11 @@ export const getUserList = (payload) => {
  * 所有员工列表
  * 
  */
-export const getAllUserList = () => {
+export const getAllUserList = (payload) => {
   return request({
     url: '/user/listAll',
-    method: 'get'
+    method: 'get',
+    params: payload
   })
 }
 

@@ -5,14 +5,24 @@
     </el-form-item>
 
     <el-form-item label="上级">
-      <el-select v-model="form.parentUuid" placeholder="请选择">
+        <el-select-tree
+                :default-expand-all="true"
+                :multiple="false"
+                :placeholder="'请选择组织/部门'"
+                :popover-min-width="100"
+                :data="departmentList"
+                :props="{value:'uuid',children:'children',label:'name'}"
+                :check-strictly="true"
+                v-model="form.parentUuid"
+            ></el-select-tree>
+      <!-- <el-select v-model="form.parentUuid" placeholder="请选择">
         <el-option
           v-for="item in listSelect"
           :key="item.uuid"
           :label="item.name"
           :value="item.uuid"
         ></el-option>
-      </el-select>
+      </el-select> -->
 
     </el-form-item>
 
@@ -57,7 +67,8 @@ export default {
   computed: {
     ...mapState({
       currentDepartment: state => state.department.currentDepartment,
-      listSelect: state => state.department.listSelect
+      listSelect: state => state.department.listSelect,
+      departmentList: state => state.department.departmentList
     })
   },
   updated() {

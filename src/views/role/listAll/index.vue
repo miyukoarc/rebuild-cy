@@ -8,9 +8,25 @@
     <!-- </el-header> -->
 
     <el-card class="content-spacing">
-      <tool-bar :hasExport="false" :hasImport="false">
+      <tool-bar :hasExport="true" :hasImport="false" @handleExport="doExport">
+        <div slot="left">
+            <span class="font-l">XXXXXXXX公司</span>
+            <el-t-button
+            :popAuth="true"
+            :auth="permissionMap['role']['role_add']"
+            size="small"
+            type="text"
+            @click="handleChange"
+          >切换企业</el-t-button>
+        </div>
         <div slot="right">
-          <el-t-button :popAuth="true" :auth="permissionMap['role']['role_add']" type="small" @click="handleCreate">新建角色</el-t-button>
+          <el-t-button
+            :popAuth="true"
+            :auth="permissionMap['role']['role_add']"
+            size="small"
+            type="primary"
+            @click="handleCreate"
+          >新建角色</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -28,12 +44,35 @@
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column prop="name" label="角色名称" align="left"></el-table-column>
-          <el-table-column label="操作" align="left" >
+          <el-table-column label="备注" align="left">
+            <template v-slot="{row}">{{row.remark?row.remark:'--'}}</template>
+          </el-table-column>
+          <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-t-button size="mini" @click="handlePermission" :popAuth="true" :auth="permissionMap['role']['role_role']">权限</el-t-button>
-              <el-t-button type="primary" size="mini"  @click="handleEdit(scope.row)" :popAuth="true" :auth="permissionMap['role']['role_update']">编辑</el-t-button>
+              <el-t-button
+                type="text"
+                size="mini"
+                @click="handlePermission(scope.row)"
+                :popAuth="true"
+                :auth="permissionMap['role']['role_update']"
+              >配置权限</el-t-button>
+              <el-divider direction="vertical"></el-divider>
+              <el-t-button
+                type="text"
+                size="mini"
+                @click="handleEdit(scope.row)"
+                :popAuth="true"
+                :auth="permissionMap['role']['role_update']"
+              >编辑</el-t-button>
+              <el-divider direction="vertical"></el-divider>
 
-              <el-t-button type="danger" size="mini" @click="handleDelete(scope.row)" :popAuth="true" :auth="permissionMap['role']['role_delete']">删除</el-t-button>
+              <el-t-button
+                type="text"
+                size="mini"
+                @click="handleDelete(scope.row)"
+                :popAuth="true"
+                :auth="permissionMap['role']['role_delete']"
+              >删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -45,8 +84,6 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
@@ -56,7 +93,6 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar
     // mHeadedr
@@ -83,22 +119,14 @@ export default {
   mounted() {},
   beforeDestroy() {},
   methods: {
-    handleClick(val, e) {
-      e.stopPropagation()
-      this.handleDelete(val.uuid)
-      alert('点击')
-    },
-
+    doExport() {},
     handleCreate() {
       this.$refs['formDialog'].event = 'CreateTemplate'
       this.$refs['formDialog'].eventType = 'create'
       this.$refs['formDialog'].dialogVisible = true
     },
-    sortChange(val) {
-      this.initDataList()
-    },
-    pageChange() {
-      this.initDataList()
+    initFilter() {
+        // this.$store.dispatch
     },
     initDataList() {
       this.$store
@@ -111,19 +139,23 @@ export default {
           })
         })
     },
+    handleChange(){
+    this.$refs['formDialog'].event = 'ChangeTemplate'        
+    this.$refs['formDialog'].eventType = 'change'        
+        this.$refs['formDialog'].dialogVisible = true
+    },
     handleEdit(val) {
-        const {name,code,uuid} = val
-        const payload = {name,code,uuid}
-        // const payload = this.roleList[index]
+      const { name, code, uuid } = val
+      const payload = { name, code, uuid }
+      // const payload = this.roleList[index]
       this.$store.commit('role/SAVE_DETAIL', payload)
       this.$refs['formDialog'].event = 'EditTemplate'
       this.$refs['formDialog'].eventType = 'edit'
       this.$refs['formDialog'].dialogVisible = true
       this.$refs['formDialog'].transfer = payload
     },
-    handleDelete(index) {
-      console.log(index)
-      const uuid = this.roleList[index].uuid
+    handleDelete(val) {
+      const { uuid } = val
       const payload = { uuid }
       this.$confirm('是否删除当前角色', 'Warning', {
         confirmButtonText: '确定',
@@ -147,12 +179,14 @@ export default {
               })
             })
         })
-        .catch(err => {
-          
-        })
+        .catch(err => {})
     },
-    handlePermission(){},
-    handleDetail() {}
+    handlePermission(val) {
+      const { uuid } = val
+      this.$router.push({
+        path: '/role/detail/' + uuid
+      })
+    }
   }
 }
 </script>

@@ -150,6 +150,11 @@ div:focus {
     text-align: right; 
 }
 
+.el-table-header{
+    color: #000;
+}
+
+
 
 /*!*滚动条样式*!*/
 /*  ::-webkit-scrollbar {*/
@@ -224,3 +229,8 @@ body::-webkit-scrollbar-track-piece {
 .ml{
   margin-left: 10px;
 }
+
+.p-20{
+    padding: 20px;
+}
+

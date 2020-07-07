@@ -5,14 +5,26 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个敏感词`" :hasRefresh="true" @handleRefresh="handleRefresh">
         <div slot="right">
           <el-t-button
             type="primary"
             :popAuth="true"
             :auth="permissionMap['riskManagement']['riskManagement_add']"
             @click.stop="handleCreate"
-          >新建</el-t-button>
+          >新建敏感词</el-t-button>
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['riskManagement']['riskManagement_add']"
+            @click.stop="handleCreate"
+          >设置通知人</el-t-button>
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['riskManagement']['riskManagement_add']"
+            @click.stop="handleCreate"
+          >设置适用敏感词</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -27,35 +39,54 @@
           stripe
           lazy
           highlight-current-row
+          header-row-class-name="el-table-header"
         >
-          <!-- <el-table-column type="selection"></el-table-column> -->
+          <el-table-column type="selection"></el-table-column>
           <el-table-column label="敏感词" align="left" prop="word"></el-table-column>
-          <el-table-column label="通知人" align="left">
+          <el-table-column>
+            <template slot="header">
+              <span>
+                通知人
+                <el-tooltip placement="right">
+                  <div slot="content">1231231</div>
+
+                  <i class="el-icon-warning"></i>
+                </el-tooltip>
+              </span>
+            </template>
             <template v-slot="scope">
               <div>
-                <span v-for="item in scope.row.toUser" style="margin-left:5px;" :key="item.uuid">{{item.name}}</span>
+                <span
+                  v-for="item in scope.row.toUser"
+                  style="margin-left:5px;"
+                  :key="item.uuid"
+                >{{item.name}}</span>
               </div>
             </template>
           </el-table-column>
+          <el-table-column label="适用标签" align="left"></el-table-column>
+
           <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
-          <el-table-column label="状态" align="left">
-            <template v-slot="scope">
-              <div>{{scope.row.deleted?'无效':'有效'}}</div>
+          <el-table-column label="创建人" align="left">
+            <template v-slot="{row}">
+              <div></div>
             </template>
           </el-table-column>
+
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
               <el-t-button
-                type="primary"
+                type="text"
                 :popAuth="true"
                 :auth="permissionMap['riskManagement']['riskManagement_update']"
                 size="mini"
                 @click.stop="handleEdit(scope.$index)"
               >编辑</el-t-button>
 
+              <el-divider direction="vertical"></el-divider>
               <el-t-button
-                type="danger"
+                type="text"
                 :popAuth="true"
                 :auth="permissionMap['riskManagement']['riskManagement_delete']"
                 size="mini"
@@ -230,15 +261,15 @@ export default {
               })
             })
         })
-        .catch(err => {
-          
-        })
+        .catch(err => {})
     },
     handleEdit(index) {
-        let {toUser,type,uuid,word} = this.listAll[index]
-        toUser = toUser.map(item=>{return item.userId})
-        // console.log(toUser)
-        const payload = {toUser,type,uuid,word}
+      let { toUser, type, uuid, word } = this.listAll[index]
+      toUser = toUser.map(item => {
+        return item.userId
+      })
+      // console.log(toUser)
+      const payload = { toUser, type, uuid, word }
       this.$refs['formDialog'].event = 'EditTemplate'
       this.$refs['formDialog'].eventType = 'edit'
       this.$refs['formDialog'].dialogVisible = true
@@ -261,17 +292,7 @@ export default {
   text-align: center;
 }
 
-// .app-container {
-//   border-top: 1px solid #e9e9e9;
-//   background: white;
-//   .roles-table {
-//     margin-top: 30px;
-//   }
-//   .permission-tree {
-//     margin-bottom: 30px;
-//   }
-// }
-// header .el-header button {
-//   margin-right: 5px;
-// }
+.el-table-header {
+  color: #000;
+}
 </style>
