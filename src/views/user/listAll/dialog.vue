@@ -1,74 +1,73 @@
 <template>
-    <div>
-        <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body width="600px" center :close-on-click-modal="false">
-            <div>
-                <component :is="event" />
-            </div>
-        </el-dialog>
-    </div>
+  <div>
+    <el-dialog
+      :title="genTitle()"
+      :visible.sync="dialogVisible"
+      :modal-append-to-body="false"
+      append-to-body
+      width="600px"
+      center
+      :close-on-click-modal="false"
+    >
+      <div>
+        <component :is="event" />
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
-
-import CreateTemplate from './event-create.vue'
-import EditTemplate from './event-edit.vue'
-import DistributeTemplate from './event-distribute'
-import {mapState} from 'vuex'
+import CreateTemplate from "./event-create.vue";
+import EditTemplate from "./event-edit.vue";
+import DistributeTemplate from "./event-distribute";
+import DistributeRoleTemplate from "./event-distribute-role";
+import { mapState } from "vuex";
 export default {
-components:{
+  components: {
     CreateTemplate,
     EditTemplate,
-    DistributeTemplate
-},
+    DistributeTemplate,
+    DistributeRoleTemplate
+  },
   data() {
     return {
       dialogVisible: false,
-      event: 'DistributeTemplate',
-      eventType: ''
+      event: "",
+      eventType: ""
     };
   },
-  watch:{
-      eventType:{
-          handler(newVal,oldVal){
-              if(newVal){
-                  this.genTitle()
-
-              }
-          },
-          immediate: true,
-      }
-  },
-  computed:{
-      ...mapState({
-
-      })
-  },
-  mounted(){
-      
-      
-  },
-  updated(){
-
-  },
-  methods: {
-
-      genTitle(){
-        //   if(this.eventType==='create'){
-        //       return '创建模板'
-        //   }
-
-        //   if(this.eventType==='edit'){
-        //       return '编辑模板'
-        //   }
-
-          if(this.eventType==='distribute'){
-              return '分配部门'
-          }
-          
-          
+  watch: {
+    eventType: {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.genTitle();
+        }
       },
+      immediate: true
+    }
+  },
+  computed: {
+    ...mapState({})
+  },
+  mounted() {},
+  updated() {},
+  methods: {
+    genTitle() {
+      //   if(this.eventType==='create'){
+      //       return '创建模板'
+      //   }
+
+      //   if(this.eventType==='edit'){
+      //       return '编辑模板'
+      //   }
+
+      if (this.eventType === "distribute") {
+        return "分配部门";
+      } else if (this.eventType === "distributeRole") {
+        return "分配角色";
+      }
+    }
   }
-  
 };
 </script>
 

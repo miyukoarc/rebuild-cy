@@ -10,9 +10,11 @@
                 <div>{{ userDetail.name }}</div>
                 <span>共{{ idList.length }}位客户</span>
               </div>
-              <el-tag effect="plain" size="small" v-if="userDetail.role">{{
+              <el-tag effect="plain" size="small" v-if="userDetail.role">
+                {{
                 userDetail.role.name
-              }}</el-tag>
+                }}
+              </el-tag>
             </div>
           </div>
         </el-col>
@@ -73,7 +75,10 @@
         <!-- <el-table-column type="selection"></el-table-column> -->
         <el-table-column label="全部客户" align="left">
           <template v-slot="scope">
-            <div>{{ scope.row.externalUser.name }}</div>
+            <div class="avatar_name">
+              <img :src="scope.row.externalUser.avatar" width="40" height="40" />
+              <div>{{ scope.row.externalUser.name }}</div>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="标签" align="left">
@@ -86,8 +91,7 @@
                   style="margin-right:5px;"
                   v-for="item in scope.row.tags"
                   :key="item.tagId"
-                  >{{ item.tagName }}</el-tag
-                >
+                >{{ item.tagName }}</el-tag>
               </div>
               <div v-else>
                 <span>--</span>
@@ -95,16 +99,8 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          label="添加时间"
-          prop="createtime"
-          align="left"
-        ></el-table-column>
-        <el-table-column
-          label="上次对话时间"
-          prop="updatedAt"
-          align="left"
-        ></el-table-column>
+        <el-table-column label="添加时间" prop="createtime" align="left"></el-table-column>
+        <el-table-column label="上次对话时间" prop="updatedAt" align="left"></el-table-column>
         <el-table-column label="添加渠道" align="left">
           <template v-slot="scope">
             <div>{{ scope.row.source ? source : "--" }}</div>
@@ -112,8 +108,13 @@
         </el-table-column>
         <el-table-column label="操作" align="left">
           <template v-slot="scope">
-          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['externalUser']['externalUser_detail']" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-t-button>
-
+            <el-t-button
+              type="primary"
+              :popAuth="true"
+              :auth="permissionMap['externalUser']['externalUser_detail']"
+              size="mini"
+              @click.stop="handleDetail(scope.$index)"
+            >详情</el-t-button>
           </template>
         </el-table-column>
       </el-table>
@@ -253,11 +254,11 @@ export default {
         .format("YYYY-MM-DD HH:mm:ss");
       this.form.end = dayjs().format("YYYY-MM-DD HH:mm:ss");
     },
-    handleDetail(index){
-      const uuid = this.idList[index].externalUser.uuid
+    handleDetail(index) {
+      const uuid = this.idList[index].externalUser.uuid;
       this.$router.push({
-        path: '/externalUser/detail/'+uuid,
-      })
+        path: "/externalUser/detail/" + uuid
+      });
     },
     formatTime() {},
     changeTime() {}
@@ -266,6 +267,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.avatar_name {
+  display: flex;
+  align-items: center;
+  div {
+    margin-left: 8px;
+  }
+}
+
 .out-container {
   display: flex;
   justify-content: space-between;

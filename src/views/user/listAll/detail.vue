@@ -61,8 +61,6 @@
               @click="handleEvents(item)"
             >{{item}}</el-button>
           </el-form-item>
-
-
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="操作历史" name="logs" :disabled="!userDetail.logs.length">
@@ -73,13 +71,14 @@
               :key="item.uuid"
               :timestamp="item.createdAt"
             >
-                <div>
-                  {{item.operator.nickname}}
-                  <span style="font-size:12px;color:#E6A23C;">@{{item.org.name}}</span>
-                  <span class="font-sm">执行了</span>
-                  <span style="color:#F56C6C;">{{item.event}}</span>
-                </div>
-                
+              <div>
+                {{item.operator.nickname}}
+                <span
+                  style="font-size:12px;color:#E6A23C;"
+                >@{{item.org.name}}</span>
+                <span class="font-sm">执行了</span>
+                <span style="color:#F56C6C;">{{item.event}}</span>
+              </div>
             </el-timeline-item>
           </el-timeline>
         </el-scrollbar>
@@ -91,8 +90,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import EventDialog from './dialog'
+import { mapState, mapGetters } from "vuex";
+import EventDialog from "./dialog";
 
 export default {
   components: {
@@ -100,8 +99,8 @@ export default {
   },
   data() {
     return {
-      activeType: 'detail'
-    }
+      activeType: "detail"
+    };
   },
   watch: {},
   computed: {
@@ -115,47 +114,47 @@ export default {
   updated() {},
   methods: {
     sex(gender) {
-      if (gender == 'Gender_Type_Unknown' || !gender) {
-        return '未知'
+      if (gender == "Gender_Type_Unknown" || !gender) {
+        return "未知";
       }
-      if (gender == 'Gender_Type_Female') {
-        return '女'
+      if (gender == "Gender_Type_Female") {
+        return "女";
       }
-      if (gender == 'Gender_Type_Male') {
-        return '男'
+      if (gender == "Gender_Type_Male") {
+        return "男";
       }
     },
     initHandleEvents() {},
     isEmpty(obj) {
-      return isEmpty(obj)
+      return isEmpty(obj);
     },
     handleClose() {
-      this.$store.commit('component/TOGGLE_PANEL', false)
+      this.$store.commit("component/TOGGLE_PANEL", false);
     },
     handleEvents(type) {
-      console.log(this.$refs, type)
-      const temp = type
+      console.log(this.$refs, type);
+      const temp = type;
       switch (type) {
-        case 'enable':
-          type = 'EventEnable'
-          break
-        case 'kick':
-          type = 'EventKick'
-          break
-        case 'disable':
-          type = 'EventDisable'
-          break
+        case "enable":
+          type = "EventEnable";
+          break;
+        case "kick":
+          type = "EventKick";
+          break;
+        case "disable":
+          type = "EventDisable";
+          break;
         default:
-          return false
+          return false;
       }
-      this.$refs['eventDialog'].event = type
-      this.$refs['eventDialog'].eventType = temp
-      this.$refs['eventDialog'].dialogVisible = true
+      this.$refs["eventDialog"].event = type;
+      this.$refs["eventDialog"].eventType = temp;
+      this.$refs["eventDialog"].dialogVisible = true;
     },
     handleConfirm() {},
     initData() {}
   }
-}
+};
 </script>
 
 <style>

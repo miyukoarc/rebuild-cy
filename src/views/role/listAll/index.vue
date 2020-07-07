@@ -4,7 +4,6 @@
     <!-- <el-card class="content-spacing">
       <list-header></list-header>
     </el-card>-->
-
     <!-- </el-header> -->
 
     <el-card class="content-spacing">
@@ -30,7 +29,6 @@
         </div>
       </tool-bar>
     </el-card>
-
     <el-card class="content-spacing">
       <div>
         <el-table
@@ -88,7 +86,7 @@ import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
 
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -98,7 +96,7 @@ export default {
     // mHeadedr
   },
   data() {
-    return {}
+    return {};
   },
   watch: {},
   computed: {
@@ -110,34 +108,34 @@ export default {
       permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
-      return this.routes
+      return this.routes;
     }
   },
   created() {
-    this.initDataList()
+    this.initDataList();
   },
   mounted() {},
   beforeDestroy() {},
   methods: {
     doExport() {},
     handleCreate() {
-      this.$refs['formDialog'].event = 'CreateTemplate'
-      this.$refs['formDialog'].eventType = 'create'
-      this.$refs['formDialog'].dialogVisible = true
+      this.$refs["formDialog"].event = "CreateTemplate";
+      this.$refs["formDialog"].eventType = "create";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     initFilter() {
         // this.$store.dispatch
     },
     initDataList() {
       this.$store
-        .dispatch('role/getRoleList')
+        .dispatch("role/getRoleList")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
     handleChange(){
     this.$refs['formDialog'].event = 'ChangeTemplate'        
@@ -164,20 +162,20 @@ export default {
       })
         .then(async () => {
           await this.$store
-            .dispatch('role/deleteRole', payload)
+            .dispatch("role/deleteRole", payload)
             .then(() => {
               this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.initDataList()
+                type: "success",
+                message: "操作成功"
+              });
+              this.initDataList();
             })
             .catch(err => {
               this.$message({
-                type: 'error',
+                type: "error",
                 message: err
-              })
-            })
+              });
+            });
         })
         .catch(err => {})
     },
@@ -188,7 +186,7 @@ export default {
       })
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

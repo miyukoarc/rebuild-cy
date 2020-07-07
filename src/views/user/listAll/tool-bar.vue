@@ -2,9 +2,13 @@
   <div>
     <div class="tool-bar-container">
       <div class="left">
+        <span class="font-s">共{{usersNumber}}位员工</span>
+        <el-button type="text" @click="actionUpdate" v-if="hasUpdate">更新数据</el-button>
         <el-button type="primary" @click="actionExport" v-if="hasExport">导出Excel</el-button>
         <el-button type="primary" @click="actionImport" v-if="hasImport">导入Excel</el-button>
-                <span class="font-s color-info">{{msg}}</span>
+        <el-button type="primary" @click="actionDepartment" v-if="hasDepartment">分配部门</el-button>
+        <el-button type="primary" @click="actionRole" v-if="hasRole">分配角色</el-button>
+        <span class="font-s color-info">{{msg}}</span>
       </div>
 
       <div class="right">
@@ -17,6 +21,9 @@
 <script>
 export default {
   props: {
+    usersNumber: {
+      type: Number
+    },
     msg: {
       type: String
     },
@@ -27,17 +34,38 @@ export default {
     hasImport: {
       type: Boolean,
       default: false
+    },
+    hasUpdate: {
+      type: Boolean,
+      default: true
+    },
+    hasDepartment: {
+      type: Boolean,
+      default: true
+    },
+    hasRole: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
     actionExport() {
-      this.$emit('handleExport', '导出')
+      this.$emit("handleExport", "导出");
     },
     actionImport() {
-      this.$emit('handleImport', '导入')
+      this.$emit("handleImport", "导入");
+    },
+    actionUpdate() {
+      this.$emit("handleUpdate", "更新");
+    },
+    actionDepartment() {
+      this.$emit("actionDepartment", "分配部门");
+    },
+    actionRole() {
+      this.$emit("actionRole", "分配角色");
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

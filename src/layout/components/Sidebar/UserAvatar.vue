@@ -33,9 +33,9 @@
 import { mapGetters, mapState } from 'vuex'
 import {removeToken} from '@/utils/auth'
 export default {
-  name: 'user-avatar',
+  name: "user-avatar",
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'name', 'roleCode']),
+    ...mapGetters(["sidebar", "avatar", "name", "roleCode"]),
     ...mapState({
       roles: state => state.enum.roles
     })
@@ -50,7 +50,7 @@ export default {
         return removeToken()
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

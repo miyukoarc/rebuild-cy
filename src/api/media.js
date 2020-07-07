@@ -155,13 +155,13 @@ export const deleteMedia = (payload)=>{
  * 获取图片文件url
  * @param {string} payload
  */
-export const getImgUrl = (payload)=>{
-    return request({
-        url: '/media/getImgUrl',
-        method: 'get',
-        data: payload
-    })
-}
+// export const getImgUrl = (payload)=>{
+//     return request({
+//         url: '/media/getImgUrl',
+//         method: 'get',
+//         data: payload
+//     })
+// }
 
 
 /**

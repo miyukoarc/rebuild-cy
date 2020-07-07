@@ -19,7 +19,7 @@ NProgress.configure({
   showSpinner: false
 }) // NProgress Configuration
 
-const whiteList = ['/login','/miniLogin','/board'] // no redirect whitelist
+const whiteList = ['/login', '/miniLogin', '/board'] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
   // start progress bar
@@ -50,61 +50,37 @@ router.beforeEach(async (to, from, next) => {
       const username = store.getters.name
 
       if (username) {
-        //   alert('username')
-
-
-
         next()
-
       } else {
 
         try {
 
           let accessed
-
           await store.dispatch('user/getMyInfo').then(() => {
             //   console.log(res)
             console.log(store.state.user.name)
 
             // 
 
-          }).catch(err=>{
+          }).catch(err => {
             Message({
-              type:'error',
-              message:err || err.message
+              type: 'error',
+              message: err || err.message
             })
           })
-
-
 
           await store.dispatch('menu/getMyMenuList')
           accessed = await store.dispatch('permission/getPermissionListMy')
 
-
-
-
-
-
-
-
-
           router.addRoutes(
-            //   accessed
-                [...accessed,
-              {
-                path: '*',
-                redirect: '/404',
-                hidden: true
-              }
+            [...accessed,
+            {
+              path: '*',
+              redirect: '/404',
+              hidden: true
+            }
             ]
           )
-
-
-
-
-
-
-
           next({
             ...to,
             replace: true
