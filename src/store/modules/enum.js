@@ -39,6 +39,12 @@ const state ={
         menu: '菜单',
         contactWay: '渠道'
     },
+    orgType: {
+        HEAD: '总公司',
+        BRANCH: '分公司',
+        BUSINESS: '营业部',
+        DEPT: '普通部门'
+    }
 }
 
 const mutations={

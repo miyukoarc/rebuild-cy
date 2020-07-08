@@ -104,10 +104,7 @@ export default {
       loading: state => state.externalUser.loading,
       listGroup: state => state.externalUser.listGroup,
       listGroupPage: state => state.externalUser.listGroupPage
-    }),
-    routesData() {
-      return this.routes
-    }
+    })
   },
   created() {
     this.initDataList(this.query)

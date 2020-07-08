@@ -81,7 +81,7 @@ export default {
   methods: {
     initDetail(payload) {
       this.$store
-        .dispatch('permission/getRolePermissionList', payload)
+        .dispatch('permission/getRoleTemplatePermissionList', payload)
         .then(res => {
           for (let key in res) {
             res[key].forEach(item => {
@@ -158,7 +158,7 @@ export default {
 
     //   const payload = await this.form
 
-      this.$store.dispatch('permission/roleLinkPermissionIsAudit',this.form).then((res)=>{
+      this.$store.dispatch('roleTemplate/roleLinkPermission',this.form).then((res)=>{
           this.$message({
               type:'success',
               message: '操作成功'

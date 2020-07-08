@@ -126,10 +126,7 @@ export default {
       loading: state => state.sensitive.loading,
       listAll: state => state.sensitive.auditBatchSendTaskListAll,
       page: state => state.sensitive.auditBatchSendTaskPage
-    }),
-    routesData() {
-      return this.routes
-    }
+    })
   },
   created() {
     this.initDataList(this.query)

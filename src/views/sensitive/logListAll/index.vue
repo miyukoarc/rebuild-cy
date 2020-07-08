@@ -101,10 +101,7 @@ export default {
       loading: state => state.logRecords.loading,
       listAll: state => state.logRecords.logListAll,
       page: state => state.logRecords.logListPage
-    }),
-    routesData() {
-      return this.routes
-    }
+    })
   },
   created() {
     this.initDataList(this.query)

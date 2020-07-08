@@ -7,7 +7,7 @@
       <div class="middle-left">
         <el-button type="primary" @click="actionExport" v-if="hasExport">导出Excel</el-button>
         <el-button type="primary" @click="actionImport" v-if="hasImport">导入Excel</el-button>
-        <el-button type="text" @click="actionRefresh" v-if="hasRefresh">更新数据</el-button>
+        <el-button type="text" @click="handleRefresh" v-if="hasRefresh">更新数据</el-button>
         <span class="font-s color-info">{{msg}}</span>
       </div>
 
@@ -43,9 +43,6 @@ export default {
     },
     actionImport() {
       this.$emit('handleImport', '导入')
-    },
-    actionRefresh(){
-        this.$emit('handleRefresh')
     }
   }
 }

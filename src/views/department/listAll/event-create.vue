@@ -1,53 +1,32 @@
 <template>
   <div>
+    <div class="process-container">
+      <el-steps v-if="mode=='NEW'" :active="process[mode]" align-center>
+        <el-step title="基础信息" description></el-step>
+        <el-step title="关联企微" description></el-step>
+        <el-step title="角色配置" description></el-step>
+        <el-step title="审核通知人" description></el-step>
+      </el-steps>
+
+      <el-steps v-else :active="process[mode]" align-center>
+        <el-step title="基础信息" description></el-step>
+        <el-step title="角色配置" description></el-step>
+        <el-step title="审核通知人" description></el-step>
+      </el-steps>
+    </div>
     <transition-group name="fade-transform">
       <el-form
         key="form"
-        v-if="status!=='NEXT'"
+        v-if="process[mode]==1"
         :model="form"
         ref="form"
         :rules="rules"
         label-width="100px"
         label-position="left"
-        >
-        <el-form-item label="上级" prop="parentUuid">
-            <el-select-tree
-                :default-expand-all="true"
-                :multiple="false"
-                :placeholder="'请选择组织/部门'"
-                :popover-min-width="100"
-                :data="departmentList"
-                :props="{value:'uuid',children:'children',label:'name'}"
-                :check-strictly="true"
-                v-model="form.parentUuid"
-            ></el-select-tree>
-          <!-- <el-select v-model="form.parentUuid" placeholder="请选择">
-            <el-option
-              v-for="item in listSelect"
-              :key="item.uuid"
-              :label="item.name"
-              :value="item.uuid"
-            ></el-option>
-          </el-select> -->
-        </el-form-item>
-
-        <el-form-item label="创建类型">
-          <el-select v-model="type" placeholder="请选择">
-            <el-option
-              v-for="item in types"
-              :key="item.code"
-              :label="item.label"
-              :value="item.code"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="名称" prop="name">
-          <el-input v-model.trim="form.name"></el-input>
-        </el-form-item>
+      >
+        <el-form-item label="新建方式"></el-form-item>
 
         <div style="margin-bottom:20px;" v-if="type!=='NORMAL'">
-          <!-- <el-radio-group v-model="radio4" size="big"> -->
           <div class="radio-container">
             <div class="radio-item">
               <el-radio v-model="mode" label="OLD">
@@ -66,26 +45,59 @@
               </el-radio>
             </div>
           </div>
-          <!-- </el-radio-group> -->
         </div>
+        <el-form-item label="上级" prop="parentUuid">
+          <el-select-tree
+            :default-expand-all="true"
+            :multiple="false"
+            :placeholder="'请选择组织/部门'"
+            :popover-min-width="100"
+            :data="departmentList"
+            :props="{value:'uuid',children:'children',label:'name'}"
+            :check-strictly="true"
+            v-model="form.parentUuid"
+          ></el-select-tree>
+          <!-- <el-select v-model="form.parentUuid" placeholder="请选择">
+            <el-option
+              v-for="item in listSelect"
+              :key="item.uuid"
+              :label="item.name"
+              :value="item.uuid"
+            ></el-option>
+          </el-select>-->
+        </el-form-item>
 
-        <div class="text-align-center" style="margin-top">
+        <el-form-item label="创建类型">
+          <el-select v-model="type" placeholder="请选择">
+            <el-option
+              v-for="item in types"
+              :key="item.code"
+              :label="item.label"
+              :value="item.code"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="名称" prop="name">
+          <el-input v-model.trim="form.name"></el-input>
+        </el-form-item>
+
+        <!-- <div class="text-align-center" style="margin-top">
           <el-button size="small" @click="handleCancel">取消</el-button>
 
-          <el-button type="primary" size="small" @click="handleConfirm">{{mode==='NEW'?'下一步':'确定'}}</el-button>
-          <!-- <el-button type="primary" size="small" @click="handleNext">下一步</el-button> -->
-        </div>
+          <el-button type="primary" size="small" @click="handleConfirm">下一步</el-button>
+        </div>-->
       </el-form>
 
       <el-form
         key="formNext"
-        v-else
+        v-if="process['NEW']==2"
         :model="formNext"
         ref="formNext"
         :rules="rulesNext"
         label-width="150px"
         label-position="left"
-       >
+      >
         <el-form-item label="通讯录EncodingAESKey">
           <el-input v-model.trim="formNext.addressBookEncodingAESKey"></el-input>
         </el-form-item>
@@ -142,13 +154,33 @@
           <el-input v-model.trim="formNext.superUserId"></el-input>
         </el-form-item>
 
-        <div class="text-align-center">
+        <!-- <div class="text-align-center">
           <el-button size="small" @click="status='CURR'">返回</el-button>
           <el-button size="small" type="primary" @click="handleConfirmNext">完成</el-button>
-        </div>
+        </div>-->
+      </el-form>
+
+      <el-form
+        key="formNext"
+        v-if="process[mode]==3"
+        :model="formNext"
+        ref="formNext"
+        :rules="rulesNext"
+        label-width="150px"
+        label-position="left"
+      >
+        <el-form-item label="XXX"></el-form-item>
       </el-form>
     </transition-group>
 
+    <div class="text-align-center">
+      <el-button size="small" @click="handlePrev">{{process[mode]==1?'取消':'返回'}}</el-button>
+      <el-button
+        size="small"
+        type="primary"
+        @click="handleConfirm"
+      >{{process['NEW']==4||process['OLD']==3?'确定':'下一步'}}</el-button>
+    </div>
   </div>
 </template>
 
@@ -159,12 +191,19 @@ export default {
   inject: ['reload'],
   data() {
     return {
+      process: {
+        OLD: 1,
+        NEW: 1
+      },
       mode: '', //new //old
       status: 'CURR',
       form: {
         name: '',
         orgNode: true,
         parentUuid: ''
+      },
+      formBasic: {
+        roleUuidSet: [0]
       },
       formNext: {
         addressBookEncodingAESKey: '', //通讯录EncodingAESKey
@@ -228,62 +267,86 @@ export default {
     },
     parentUuid: {
       handler(newVal, oldVal) {
-          this.formNext.parentUuid = newVal
+        this.formNext.parentUuid = newVal
       },
       immediate: true
     }
   },
   computed: {
     ...mapState({
-      listSelect: state => state.department.listSelect,//list
-      departmentList: state => state.department.departmentList,//tree
+      listSelect: state => state.department.listSelect, //list
+      departmentList: state => state.department.departmentList //tree
     }),
-    parentUuid(){
-        return this.form.parentUuid
+    parentUuid() {
+      return this.form.parentUuid
     }
   },
   mounted() {},
   methods: {
-    handleConfirm() {
-      if (this.mode === 'NEW') {
-        this.status = 'NEXT'
-      } else {
-        const payload = this.form
-
-        this.$refs['form'].validate(valid => {
-          if (valid) {
-            console.log(payload)
-            this.$store
-              .dispatch('department/addDepartment', payload)
-              .then(() => {
-                this.$message({
-                  type: 'success',
-                  message: '操作成功'
-                })
-                this.handleCancel()
-                this.refresh()
-              })
-              .catch(err => {
-                
-                this.$message({
-                  type: 'error',
-                  message: '操作失败'
-                })
-              })
-          } else {
-            this.$message({
-              type: 'error',
-              message: '请检查输入'
-            })
-          }
-        })
+    handlePrev() {
+      if (this.process[this.mode] == 1) {
+        this.handleCancel()
       }
+      if (this.process['NEW'] != 1 || this.process['OLD'] != 1) {
+        this.process[this.mode]--
+      }
+    },
+    handleConfirm() {
+      if (this.process['NEW'] != 4 && this.process['OLD'] != 3) {
+        if (this.process[this.mode] == 1) {
+          this.$refs['form'].validate(valid => {
+            if (valid) {
+            this.process[this.mode]++
+
+            } else {
+              this.$message({
+                type: 'error',
+                message: '请检查输入'
+              })
+            }
+          })
+        }else{
+
+            this.process[this.mode]++
+        }
+      }
+    },
+    createWx() {},
+    createNormal() {
+      const payload = this.form
+
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          console.log(payload)
+          this.$store
+            .dispatch('department/addDepartment', payload)
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.handleCancel()
+              this.refresh()
+            })
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: '操作失败'
+              })
+            })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '请检查输入'
+          })
+        }
+      })
     },
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
     },
     handleConfirmNext() {
-        const payload = this.formNext
+      const payload = this.formNext
       this.$refs['formNext'].validate(valid => {
         if (valid) {
           console.log(payload)
@@ -298,7 +361,6 @@ export default {
               this.refresh()
             })
             .catch(err => {
-              
               this.$message({
                 type: 'error',
                 message: '操作失败'
@@ -347,5 +409,9 @@ export default {
       white-space: normal;
     }
   }
+}
+
+.process-container {
+  margin-bottom: 20px;
 }
 </style>

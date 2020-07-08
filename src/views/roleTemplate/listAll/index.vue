@@ -25,7 +25,7 @@
             size="small"
             type="primary"
             @click="handleCreate"
-          >新建角色</el-t-button>
+          >新建模板</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -33,7 +33,7 @@
       <div>
         <el-table
           v-loading="loading"
-          :data="roleList"
+          :data="listAll"
           style="width: 100%"
           row-key="uuid"
           stripe
@@ -52,25 +52,25 @@
                 size="mini"
                 @click="handlePermission(scope.row)"
                 :popAuth="true"
-                :auth="permissionMap['role']['role_update']"
+                :auth="permissionMap['roleTemplate']['roleTemplate_roleLinkPermission']"
               >配置权限</el-t-button>
-              <el-divider direction="vertical"></el-divider>
+              <!-- <el-divider direction="vertical"></el-divider>
               <el-t-button
                 type="text"
                 size="mini"
                 @click="handleEdit(scope.row)"
                 :popAuth="true"
                 :auth="permissionMap['role']['role_update']"
-              >编辑</el-t-button>
-              <el-divider direction="vertical"></el-divider>
+              >编辑</el-t-button> -->
+              <!-- <el-divider direction="vertical"></el-divider>
 
               <el-t-button
                 type="text"
                 size="mini"
                 @click="handleDelete(scope.row)"
                 :popAuth="true"
-                :auth="permissionMap['role']['role_delete']"
-              >删除</el-t-button>
+                :auth="permissionMap['roleTemplate']['roleTemplate_roleLinkPermission']"
+              >删除</el-t-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -103,9 +103,9 @@ export default {
   watch: {},
   computed: {
     ...mapState({
-      roleList: state => state.role.roleList,
+      listAll: state => state.roleTemplate.listAll,
       departmentList: state => state.department.departmentList,
-      loading: state => state.role.loading,
+      loading: state => state.roleTemplate.loading,
       corpInfo:state => state.auth.corpInfo,
 
       permissionMap: state => state.permission.permissionMap
@@ -129,7 +129,7 @@ export default {
     },
     initDataList() {
       this.$store
-        .dispatch("role/getRoleList")
+        .dispatch("roleTemplate/getListAll")
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -146,7 +146,7 @@ export default {
     handleEdit(val) {
       const { name, code, uuid, remark } = val
       const payload = { name, code, uuid, remark }
-      // const payload = this.roleList[index]
+      // const payload = this.listAll[index]
       this.$store.commit('role/SAVE_DETAIL', payload)
       this.$refs['formDialog'].event = 'EditTemplate'
       this.$refs['formDialog'].eventType = 'edit'
@@ -182,9 +182,8 @@ export default {
     },
     handlePermission(val) {
       const { uuid,code } = val
-    //   const roleCode = code
       this.$router.push({
-        path: '/role/detail/' + uuid,
+        path: '/roleTemplate/detail/' + uuid,
         query: {code}
       })
     }

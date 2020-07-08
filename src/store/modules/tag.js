@@ -91,7 +91,7 @@ const actions = {
         commit('SAVE_TAGLIST',accessed)
         commit('SET_TAGLISTPAGE',res)
         commit('TOGGLE_LOADING', false)
-        resolve()
+        resolve(accessed)
       }).catch(err => {
         
         commit('TOGGLE_LOADING', false)

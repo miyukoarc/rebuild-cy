@@ -123,10 +123,7 @@ export default {
       loading: state => state.externalUser.loading,
       runWayList: state => state.externalUser.runWayList,
       runWayPage: state => state.externalUser.runWayPage
-    }),
-    routesData() {
-      return this.routes
-    }
+    })
   },
   created() {
     this.initDataList(this.query)

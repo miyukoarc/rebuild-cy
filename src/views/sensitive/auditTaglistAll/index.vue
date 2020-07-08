@@ -125,10 +125,7 @@ export default {
       loading: state => state.sensitive.loading,
       listAll: state => state.sensitive.auditTaglist,
       page: state => state.sensitive.auditTagPage
-    }),
-    routesData() {
-      return this.routes
-    }
+    })
   },
   created() {
     this.initDataList(this.query)

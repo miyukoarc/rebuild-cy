@@ -155,10 +155,7 @@ export default {
       userPage: state => state.user.userPage,
 
       permissionMap: state => state.permission.permissionMap
-    }),
-    routesData() {
-      return this.routes;
-    }
+    })
   },
   created() {
     this.$store.dispatch("role/getRoleList");

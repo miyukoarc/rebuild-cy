@@ -137,7 +137,7 @@ const actions = {
         commit('SAVE_LIST', res.items)
         // commit('SAVE_FLATTENLIST',accessed)
         commit('TOGGLE_LOADING', false)
-        resolve()
+        resolve(res)
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
         

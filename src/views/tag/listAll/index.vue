@@ -21,14 +21,14 @@
       <div>
         <el-table
           v-loading="loading"
-          :data="listAll"
+          :data="list"
           style="width: 100%"
           row-key="uuid"
           ref="dragTable"
-          stripe
+          
           lazy
           highlight-current-row
-        >
+          >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="标签组名" align="left" prop="groupName" width="100"></el-table-column>
           <el-table-column label="标签" align="left">
@@ -107,6 +107,7 @@ export default {
         tagName: ''
       },
       sortable: null,
+      list: [],
       oldList: [],
       newList: []
     }
@@ -124,15 +125,6 @@ export default {
   created() {
     this.initDataList(this.query)
     // this.initFilter()
-  },
-  mounted(){
-    this.$bus.$on('handleFresh',res=>{
-        console.log('handleFresh')
-        this.initDataList(this.query)
-    })
-  },
-  beforeDestroy(){
-      this.$bus.$off('handleRefresh')
   },
   methods: {
     doExport(val) {
@@ -168,8 +160,9 @@ export default {
     initDataList(payload) {
       this.$store
         .dispatch('tag/getTagList', payload)
-        .then(() => {
+        .then((res) => {
           //初始化分页
+          this.list = res
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
           this.oldList = this.list.map(v=>v.id)
@@ -179,9 +172,10 @@ export default {
             })
         })
         .catch(err => {
+            console.log(err)
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: err||'初始化失败'
           })
         })
     },
@@ -234,8 +228,9 @@ export default {
           dataTransfer.setData('Text','')
         },
         onEnd:evt=>{
-          const targetRow = this.list.splice(evt.oldIndex,1)[0]
+            const targetRow = this.list.splice(evt.oldIndex,1)[0]
           this.list.splice(evt.newIndex,0,targetRow)
+            console.log(evt,targetRow)
 
           // for show the changes, you can delete in you code
           const tempIndex = this.newList.splice(evt.oldIndex,1)[0]
@@ -258,5 +253,13 @@ export default {
 .pager {
   padding: 20px 0;
   text-align: center;
+}
+</style>
+
+<style>
+.sortable-ghost{
+  opacity: .8;
+  color: #fff!important;
+  background: #42b983!important;
 }
 </style>

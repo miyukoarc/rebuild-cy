@@ -5,14 +5,14 @@
     </div>
     <div v-else>
       <div v-if="list.length">
-        <el-checkbox
+        <!-- <el-checkbox
           :indeterminate="isIndeterminate"
           v-model="checkAll"
           @change="handleCheckAllChange"
-        >全选</el-checkbox>
+        >全选</el-checkbox> -->
         <el-checkbox-group v-model="selects" @change="handleChange">
           <div v-for="item in list" :key="item.uuid" style="margin-bottom:3px;">
-            <el-checkbox :label="item.uuid" >
+            <el-checkbox :label="item.uuid">
               <el-tag size="mini" type="info">
                 <i class="el-icon-user-solid"></i>
                 {{item.name}}
@@ -57,38 +57,48 @@ export default {
       }
     },
     clearFlag: {
-        handler(newVal,oldVal){
-
-            console.log('清空')
-        }
+      handler(newVal, oldVal) {
+        console.log('清空')
+      }
     },
-    selects:{
-        handler(newVal,oldVal){
-            // console.log(newVal,oldVal)
-            const pick = (source,target) => source.filter(srcItem=>target.includes(srcItem.uuid))
+    selects: {
+      handler(newVal, oldVal) {
+        console.log(newVal, oldVal)
+        const pick = (source, target) =>
+          source.filter(srcItem => target.includes(srcItem.uuid))
 
-            const arr = pick(this.list,newVal)
+        const arr = pick(this.list, newVal)
 
-            if(newVal.length>oldVal.length){
-                
-                this.$emit('output',arr)
-                console.log('output')
-            }else {
+        if (newVal.length > oldVal.length) {
+          this.$emit('output', arr)
+          console.log('output')
+        } else if (newVal.length < oldVal.length) {
+          const intersection = oldVal.filter(item => !newVal.includes(item))
 
+          console.log(intersection)
 
-                const intersection = oldVal.filter(item=>!newVal.includes(item))
+          if (intersection.length < 2) {
+            console.log('单点删除')
+            this.$emit('cult', intersection[0])
+          } else {
+            console.log('清空')
+            this.$emit('cult', intersection)
+          }
+        } else {
+          console.log(
+            this.list.map(item => {
+              return item.uuid
+            }),
+            newVal
+          )
 
-                if(intersection.length<2){
-                    console.log('单点删除')
-                    this.$emit('cult',intersection[0])
-                }else{
-                    console.log('清空')
-                    this.$emit('cult',intersection)
-                }
+          const intersection = this.list.filter(
+            item => !newVal.includes(item.uuid)
+          )
 
-
-            }
+          console.log('unchecked', intersection)
         }
+      }
     }
   },
   computed: {
@@ -120,13 +130,12 @@ export default {
         })
     },
     handleCheckAllChange(val) {
-    //   console.log(val)
-        this.selects = val ? this.optionsUuid : [];
-        this.isIndeterminate = false;
-    //   this.$emit('output', this.selects)
-    
+      this.selects = val ? this.optionsUuid : []
+      this.isIndeterminate = false
+      //   this.$emit('output', this.selects)
     },
     handleChange(value) {
+      console.log(value)
       let checkedCount = value.length
       this.checkAll = checkedCount === this.optionsUuid.length
       this.isIndeterminate =

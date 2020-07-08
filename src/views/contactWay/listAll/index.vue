@@ -151,9 +151,6 @@ export default {
       page: state => state.contactWay.listPage,
       permissionMap: state => state.permission.permissionMap
     }),
-    routesData() {
-      return this.routes;
-    }
   },
   created() {
     this.initDataList(this.query);

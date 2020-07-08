@@ -77,8 +77,32 @@ export const updatePermission = (payload) => {
  */
 export const roleLinkPermissionIsAudit = (payload)=>{
     return request({
-        url: '',
+        url: '/permission/roleLinkPermissionIsAudit',
         method: 'post',
         data: payload
+    })
+}
+
+/**
+ * 获取角色对应的权限列表
+ * @param {*} payload 
+ */
+export const getRolePermissionList = (payload)=>{
+    return request({
+        url: '/permission/rolePermissionList',
+        method: 'get',
+        params: payload
+    })
+}
+
+/**
+ * 获取角色模板对应的权限列表
+ * @param {*} payload 
+ */
+export const getRoleTemplatePermissionList = (payload)=>{
+    return request({
+        url: '/permission/roleTemplatePermissionList',
+        method: 'get',
+        params: payload
     })
 }

@@ -1,11 +1,18 @@
 <template>
   <div class="login-container">
-    <div id="qrcode-container"></div>
+    <!-- <div class="iframe-container">
+      <iframe id="qrcode-container" :srcdoc="wxQrCode" style="width:400px;height:600px"></iframe>
+    </div> -->
     <div class="container">
       <!-- <el-radio-group v-model="tenantId" size="small" @change="changeCorp"> -->
-        <div class="choice" v-for="item in loginList" :key="item.tenantId">
-          <el-radio v-model="tenantId" size="small" @change="changeCorp" :label="item.tenantId">{{item.name}}</el-radio>
-        </div>
+      <div class="choice" v-for="item in loginList" :key="item.tenantId">
+        <el-radio
+          v-model="tenantId"
+          size="small"
+          @change="changeCorp(item)"
+          :label="item.tenantId"
+        >{{item.name}}</el-radio>
+      </div>
       <!-- </el-radio-group> -->
       <div class="text-align-center">
         <el-button type="primary" size="small" @click="handleLogin">进入</el-button>
@@ -16,7 +23,7 @@
 
 <script>
 import { wxLogin } from '@/api/user'
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'Login',
   data() {
@@ -45,7 +52,14 @@ export default {
     })
   },
   created() {
+    console.log()
+    const localStorage = JSON.parse(window.localStorage.getItem('corp'))
+    if (localStorage?.name) {
+      const tenantId = localStorage.tenantId + ''
+      this.getWxlogin(tenantId)
+    } else {
       this.initDataList()
+    }
   },
   mounted() {
     // this.getWxlogin(this.$route.query.tenantId);
@@ -59,10 +73,15 @@ export default {
           const style =
             '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
 
-            console.log(document.querySelector('#qrcode-container'))
-          
-        //   document.querySelector('#qrcode-container').innerHTML = this.addStr(this.wxQrCode, style)
-          document.write(this.addStr(this.wxQrCode, style))
+        //   console.log(document.querySelector('#qrcode-container'))
+        //   console.log(res)
+          // document.querySelector('#qrcode-container').innerHTML = res
+
+        //   document.querySelector('#qrcode-container').innerHTML = this.addStr(
+        //     this.wxQrCode,
+        //     style
+        //   )
+            document.write(this.addStr(this.wxQrCode, style))
         }
       })
     },
@@ -80,7 +99,8 @@ export default {
       }, {})
     },
     changeCorp(val) {
-      this.$store.commit('auth/SAVE_LOGGEDCORP', val)
+      window.localStorage.setItem('corp', JSON.stringify(val))
+      //   this.$store.commit('auth/SAVE_LOGGEDCORP', val)
     },
     initDataList() {
       this.$store
@@ -95,11 +115,11 @@ export default {
     },
     handleLogin() {
       const tenantId = this.tenantId + ''
-    //   this.$router.push({
-    //     path: '/login',
-    //     query: { tenantId }
-    //   })
-    this.getWxlogin(tenantId)
+      //   this.$router.push({
+      //     path: '/login',
+      //     query: { tenantId }
+      //   })
+      this.getWxlogin(tenantId)
     }
   }
 }
@@ -267,7 +287,11 @@ $light_gray: #eee;
     }
   }
 }
-.choice{
-    margin-bottom: 20px;
+.choice {
+  margin-bottom: 20px;
+}
+.iframe-container{
+    width: 300px;
+    height: 500px;
 }
 </style>

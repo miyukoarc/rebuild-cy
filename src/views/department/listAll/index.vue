@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-card class="content-spacing">
-      <tool-bar :hasExport="false" :hasImport="false">
+      <tool-bar :hasExport="true" :hasImport="false" :hasRefresh="true" @handleRefresh="initDataList" :msg="`共条${total}数据`">
         <div slot="right">
           <el-t-button
             size="small"
@@ -29,14 +29,17 @@
         <el-table-column  label="名称" align="left">
             <template v-slot="{row}">
                 {{row.name}}
+                <span style="margin-left:20px">
+                    <el-tag size="small" type="info">{{orgType[row.type]}}</el-tag>
+                </span>
             </template>
         </el-table-column>
-        <el-table-column label="标签">
+        <!-- <el-table-column label="标签">
             <template v-slot="{row}">
             
                 <span>{{row.orgNode?'组织':'部门'}}</span>
             </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="操作" align="left" width="240">
           <template slot-scope="scope">
             <el-t-button
@@ -88,19 +91,20 @@ export default {
     Cascader
   },
   data() {
-    return {}
+    return {
+        total: 0
+    }
   },
   watch: {},
   computed: {
     ...mapState({
       departmentList: state => state.department.departmentList,
       loading: state => state.department.loading,
+      orgType: state => state.enum.orgType,
+      
 
       permissionMap: state => state.permission.permissionMap
-    }),
-    routesData() {
-      return this.routes
-    }
+    })
   },
   created() {
     this.initDataList()
@@ -149,7 +153,10 @@ export default {
     initDataList() {
       this.$store
         .dispatch('department/getDepartmentListAll')
-        .then(() => {})
+        .then((res) => {
+            const {total} = res
+            this.total = total
+        })
         .catch(err => {
           this.$message({
             type: 'error',

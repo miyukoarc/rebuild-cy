@@ -57,14 +57,15 @@
               <span>{{node.label}}</span>
               <el-tag size="mini" type="info">{{data.orgNode?'组织':'部门'}}</el-tag>
               <keep-alive>
-              <user-list
-                v-if="currentDepart===node.key"
-                :index="node.key"
-                :uuid="node.key"
-                @output="handleOutput"
-                @cult="handleCult"
-                :key="node.key"
-              ></user-list>
+                <user-list
+                  ref="userList"
+                  v-if="currentDepart===node.key"
+                  :index="node.key"
+                  :uuid="node.key"
+                  @output="handleOutput"
+                  @cult="handleCult"
+                  :key="node.key"
+                ></user-list>
               </keep-alive>
             </div>
           </el-tree>
@@ -91,7 +92,7 @@
 
 <script>
 import UserList from './user-list'
-import { intercept,myFilter } from '@/utils/common'
+import { intercept, myFilter } from '@/utils/common'
 export default {
   components: {
     UserList
@@ -263,41 +264,79 @@ export default {
      * 点击node节点
      */
     handleNodeClick(data, node) {
-
       this.currentDepart = node.key
     },
     handleOutput(arr) {
-
       let temp = this.userListTemp.concat(arr)
 
       temp = myFilter(temp)
 
       this.userListTemp = temp
 
-       this.$emit('change', temp)
-
+      this.$emit('change', temp)
     },
-    handleCult(val){
-        let temp = []
-        if(val.length){
-            console.log('清空')
-            this.userListTemp = []
-        }else{
-            console.log('单点删除')
-            this.userListTemp.splice(this.userListTemp.findIndex(item=>{return item.uuid==val}),1)
-        }
-        console.log(this.userListTemp)
-        temp = this.userListTemp
-        this.$emit('change',temp)
+    handleCult(val) {
+      console.log(val)
+      let temp = []
+      if (val.length) {
+        console.log('清空')
+        val.forEach(item => {
+          this.userListTemp.splice(
+            this.userListTemp.findIndex(unit => {
+              return item.uuid == unit.uuid
+            }),
+            1
+          )
+        })
+        // this.userListTemp = []
+      } else {
+        console.log('单点删除')
+        this.userListTemp.splice(
+          this.userListTemp.findIndex(item => {
+            return item.uuid == val
+          }),
+          1
+        )
+      }
+      console.log(this.userListTemp)
+      temp = this.userListTemp
+      this.$emit('change', temp)
     },
     /**
      * 删除标签
      */
-    handleCloseUserTag(val){
-        console.log(val)
-        let temp = this.selects
-        temp.splice(temp.findIndex(item=>{return item.uuid==val.uuid}),1)
-        this.$emit('change',temp)
+    handleCloseUserTag(val) {
+      console.log(val.uuid)
+      const uuid = val.uuid
+      let temp = this.selects
+      temp.splice(
+        temp.findIndex(item => {
+          return item.uuid == val.uuid
+        }),
+        1
+      )
+
+    //   const trigger = this.selects.map(item=>{return item.uuid})
+
+    //   console.log(trigger)
+
+    //   this.$refs['userList'].handleChange(trigger)
+
+
+      this.$nextTick(() => {
+
+        let target = this.$refs['userList'].selects
+
+        target.splice(
+          target.findIndex(item => {
+            return item == val.uuid
+          }),
+          1
+        )
+      })
+
+      // console.log(target)
+      // this.$emit('change',temp)
     }
   }
 }

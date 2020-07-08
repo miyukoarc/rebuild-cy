@@ -93,10 +93,7 @@ export default {
       loading: state => state.sensitive.loading,
       listAll: state => state.sensitive.logListAll,
       page: state => state.sensitive.logListAllPage
-    }),
-    routesData() {
-      return this.routes
-    }
+    })
   },
   created() {
     this.initDataList(this.query)

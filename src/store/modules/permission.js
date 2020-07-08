@@ -2,7 +2,10 @@ import {
   getList,
   getListAll,
   getPermissionListMy,
-  getListRole
+  getListRole,
+  getRolePermissionList,
+  getRoleTemplatePermissionList,
+  roleLinkPermissionIsAudit
 } from '@/api/permission'
 
 import {
@@ -67,7 +70,13 @@ const state = {
   routes: [],
   permissionList: [],
   permissionMap: {},
-  permissionRenderMap: {}
+  permissionRenderMap: {},
+
+    /**
+     * 角色权限列表
+     */
+  rolePermissionList:[],
+  roleTemplatePermissionList:[]
 
 }
 
@@ -87,6 +96,16 @@ const mutations = {
   },
   SET_PERMISSIONRENDERMAP(state,payload){
       state.permissionRenderMap = payload
+  },
+
+  /**
+   * 保存角色权限列表
+   */
+  SAVE_ROLEPERMISSIONLIST(state,payload){
+      state.rolePermissionList = payload
+  },
+  SAVE_TEMPLATELIST(state,payload){
+      state.roleTemplatePermissionList = payload
   }
 
 }
@@ -173,10 +192,60 @@ const actions = {
       }).catch(err => {
         console.error(err)
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
+  /**
+   * 获取角色对应的权限列表
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  getRolePermissionList({commit},payload){
+      commit('TOGGLE_LOADING',true)
+     return new Promise((resolve,reject)=>{
+         getRolePermissionList(payload).then(res=>{
+             commit('SAVE_ROLEPERMISSIONLIST',res.items)
+             resolve(res.items)
+         }).catch(err=>{
+             reject(err)
+         }).finally(()=>{
+             commit('TOGGLE_LOADING',false)
+         })
+     })
+  },
+  /**
+   * 获取角色模板对应的权限列表
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  getRoleTemplatePermissionList({commit},payload){
+      commit('TOGGLE_LOADING',true)
+     return new Promise((resolve,reject)=>{
+         getRoleTemplatePermissionList(payload).then(res=>{
+             commit('SAVE_TEMPLATELIST',res.items)
+             resolve(res.items)
+         }).catch(err=>{
+             reject(err)
+         }).finally(()=>{
+             commit('TOGGLE_LOADING',false)
+         })
+     })
+  },
+  /**
+   * 角色赋予权限包含是否需要审核
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  roleLinkPermissionIsAudit({commit},payload){
+     return new Promise((resolve,reject)=>{
+         roleLinkPermissionIsAudit(payload).then(res=>{
+             resolve(res)
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  }
   
 }
 

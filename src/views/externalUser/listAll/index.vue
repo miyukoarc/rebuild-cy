@@ -136,10 +136,7 @@ export default {
       externalUserListAll: state => state.externalUser.externalUserListAll,
       page: state => state.externalUser.listAllPage,
       permissionMap: state => state.permission.permissionMap
-    }),
-    routesData() {
-      return this.routes;
-    }
+    })
   },
   created() {
     this.initDataList(this.query);

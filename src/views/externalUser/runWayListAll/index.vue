@@ -135,10 +135,7 @@ export default {
       loading: state => state.externalUser.loading,
       runWayListAll: state => state.externalUser.runWayListAll,
       runWayListAllPage: state => state.externalUser.runWayListAllPage
-    }),
-    routesData() {
-      return this.routes;
-    }
+    })
   },
   created() {
     this.initDataList(this.query);

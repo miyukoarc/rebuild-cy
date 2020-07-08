@@ -3,7 +3,8 @@ import {getLoginList} from '@/api/auth'
 
 const state = {
     loginList: [],
-    loggedCorp: ''
+    loggedCorp: '',
+    corpInfo: {}
 
 }
 
@@ -13,6 +14,9 @@ const mutations = {
     },
     SAVE_LOGGEDCORP(state,payload){
         state.loggedCorp = payload
+    },
+    SAVE_CORPINFO(state,payload){
+        state.corpInfo = payload
     }
 }
 

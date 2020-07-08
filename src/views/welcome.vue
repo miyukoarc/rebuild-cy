@@ -28,35 +28,18 @@ export default {
         }
     },
     computed:{
-        // ...mapState({
-        //     loginList:state => state.auth.loginList
-        // })
+
     },
     created(){
-        // this.initDataList()
+
+        const localStorage = JSON.parse(window.localStorage.getItem('corp'))
+        if(localStorage?.name){
+            this.$store.commit('auth/SAVE_CORPINFO',localStorage)
+        }
+
     },
     methods:{
-        // changeCorp(val){
-        //     this.$store.commit('auth/SAVE_LOGGEDCORP',val)
-        // },
-        // initDataList(){
-        //     this.$store.dispatch('auth/getLoginList').then(()=>{
 
-        //     })
-        //     .catch(err=>{
-        //         this.$message({
-        //             type:'error',
-        //             message:  err||'初始化错误'
-        //         })
-        //     })
-        // },
-        // handleLogin(){
-        //     const tenantId = this.tenantId+''
-        //     this.$router.push({
-        //         path:'/login',
-        //         query: {tenantId}
-        //     })
-        // },
         handleEnter(){
             this.$router.push({
                 path: '/dashboard'
