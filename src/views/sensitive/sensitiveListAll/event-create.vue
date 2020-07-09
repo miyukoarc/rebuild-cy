@@ -1,7 +1,6 @@
 <template>
-  <el-form :model="form" ref="form" :rules="rules" label-width="100px">
+  <el-form :model="form" ref="form" :rules="rules" label-width="100px" label-position="left">
     <el-form-item label="敏感词">
-      <!-- <el-input v-model="form.word"></el-input> -->
       <el-tag
         :key="tag"
         v-for="tag in form.words"
@@ -24,33 +23,40 @@
         <i class="el-icon-plus"></i>添加
       </el-button>
     </el-form-item>
-    <el-form-item label="通知人">
+    <el-form-item label="被通知人">
       <div>
         <el-radio v-model="form.informType" label="USER">员工通知</el-radio>
         <el-radio v-model="form.informType" label="ROLE">角色通知</el-radio>
       </div>
-
     </el-form-item>
 
-    <el-form-item label>
-        <keep-alive>
-      <div v-if="form.informType=='ROLE'">
-          <el-select >
-              <el-option
-                v-for="item in 10"
-                :key="item"
-                :label="item"
-                :value="item"
+    <el-form-item label></el-form-item>
+    <div class="mb-20">
+      <keep-alive>
+        <div class="role-container mb-20" v-if="form.informType=='ROLE'">
+          <el-select v-model="toRoles" multiple>
+            <el-option
+              v-for="item in listSelect"
+              :key="item.uuid"
+              :label="item.name"
+              :value="item.uuid"
             ></el-option>
           </el-select>
-      </div>
-      <div v-else>
+        </div>
+        <div v-else>
           <complex-select v-model="userSelects" :section="'user'" :options="departmentList"></complex-select>
-      </div>
-            
-        </keep-alive>
+        </div>
+      </keep-alive>
+      <span class="font-exs color-info">当员工触发敏感词后，除通知以上设置被通知人，触发的员工本人也将收到通知消息。</span>
+    </div>
 
+    <el-form-item label="符合标签">
+      <div>
+        <el-radio v-model="form.tagType" label="INSET">包含其一</el-radio>
+        <el-radio v-model="form.tagType" label="UNIONSET">完全匹配</el-radio>
+      </div>
     </el-form-item>
+    <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>
 
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
@@ -63,24 +69,29 @@
 import { mapState } from 'vuex'
 import ComplexSelect from '@/components/ComplexSelect'
 import AsyncUserTag from '@/components/AsyncUserTag'
+import TagSelect from '@/components/TagSelect'
+
 export default {
   inject: ['reload'],
   components: {
     AsyncUserTag,
-    ComplexSelect
+    ComplexSelect,
+    TagSelect
   },
   data() {
     return {
       userSelects: [],
+      tagSelects: [],
       inputVisible: false,
       inputValue: '',
       form: {
+        tagType: 'INSET', //INSET UNIONSET
         informType: 'USER', //USER,ROLE
-        words: [],
         type: 'MSG',
-        toUser: []
+        words: []
       },
       toUserTags: [],
+      toRoles: [],
       rules: {
         word: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -94,16 +105,29 @@ export default {
     }
   },
   watch: {
-    toUser: {
-      handler(newValue, oldVal) {
-        this.toUserTags = this.userListSelect.filter(item => {
-          return newValue.some(key => {
-            return item.userId === key
-          })
-        })
+    'form.informType': {
+      handler(newVal, oldVal) {
+        if (newVal == 'ROLE') {
+          this.$set(this.form, 'toRole', [])
+          this.$delete(this.form, 'toUser')
+        }
+        if (newVal == 'USER') {
+          this.$set(this.form, 'toUser', [])
+          this.$delete(this.form, 'toRole')
+        }
       },
-      deep: true
+      immediate: true
     },
+    // toUser: {
+    //   handler(newValue, oldVal) {
+    //     this.toUserTags = this.userListSelect.filter(item => {
+    //       return newValue.some(key => {
+    //         return item.userId === key
+    //       })
+    //     })
+    //   },
+    //   deep: true
+    // },
     toUserTags: {
       handler(newValue, oldVal) {},
       deep: true
@@ -112,7 +136,9 @@ export default {
   computed: {
     ...mapState({
       userListSelect: state => state.user.listSelect,
-      departmentList: state => state.department.departmentList
+      departmentList: state => state.department.departmentList,
+      listSelect: state => state.role.listSelect,
+      tagListSelect: state => state.tag.tagListSelect
     }),
     toUser() {
       return this.form.toUser
@@ -124,7 +150,7 @@ export default {
   methods: {
     initFilter() {
       this.$store
-        .dispatch('role/getRoleList')
+        .dispatch('role/getRoleListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -133,8 +159,18 @@ export default {
           })
         })
 
-        this.$store
+      this.$store
         .dispatch('department/getDepartmentListAll')
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err || '初始化失败'
+          })
+        })
+
+      this.$store
+        .dispatch('tag/getListSelect')
         .then(() => {})
         .catch(err => {
           this.$message({
@@ -144,11 +180,21 @@ export default {
         })
     },
     handleConfirm() {
+      if (this.form.informType == 'USER') {
+        this.form.toUser = this.userSelects.map(item => {
+          return item.uuid
+        })
+      } else {
+        this.form.toRole = this.toRoles
+      }
+      this.form.setTag = this.tagSelects.reduce((sum,curr)=>{
+          return sum.concat(curr)
+      },[])
       const payload = this.form
 
       this.$refs['form'].validate(valid => {
-        if (valid) {
           console.log(payload)
+        if (valid) {
           this.$store
             .dispatch('sensitive/add', payload)
             .then(() => {
@@ -227,4 +273,10 @@ export default {
   margin-left: 10px;
   vertical-align: bottom;
 }
+.role-container {
+  .el-select {
+    display: block;
+  }
+}
 </style>
+

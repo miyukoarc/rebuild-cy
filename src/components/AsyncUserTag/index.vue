@@ -6,7 +6,7 @@
           <div>
             <el-row style="width:200px">
               <el-col :span="6">
-                <el-image :src="tempUserDetail.avatar" style="width:36px;height:36px;"></el-image>
+                <img :src="tempUserDetail.avatar" style="width:36px;height:36px;" />
               </el-col>
               <el-col :span="18">
                 <el-row style="margin-bottom:10px;">
@@ -14,7 +14,7 @@
                     <div>公司</div>
                   </el-col>
                   <el-col :span="18">
-                    <div>XXXX</div>
+                    <div v-if="tempUserDetail.departments">{{tempUserDetail.departments[0].name}}</div>
                   </el-col>
                 </el-row>
                 <el-row style="margin-bottom:10px;">
@@ -94,7 +94,10 @@ export default {
       this.status = true
       if (!Object.keys(this.tempUserDetail).length) {
         this.timer = setTimeout(() => {
-        //   this.initData(this.uuid)
+            if(this.uuid){
+                console.log('请求')
+                this.initData(this.uuid)
+            }
         }, 100)
       }
     },

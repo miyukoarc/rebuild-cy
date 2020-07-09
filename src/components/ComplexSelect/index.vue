@@ -2,7 +2,7 @@
   <div v-if="section==='department'" class="select-container">
     <el-row>
       <el-col :span="12">
-        <div class="p-20">
+        <div class="">
           <el-input class="filter-input" placeholder="输入关键字" v-model.trim="filterText"></el-input>
           <el-tree
             ref="tree"
@@ -22,7 +22,7 @@
         </div>
       </el-col>
       <el-col :span="12">
-        <div class="p-20" style="margin-top:52px;">
+        <div  style="margin-top:32px;">
           <div class="line-tag color-info" v-for="item in selects" :key="item.uuid">
             <div>
               <i class="el-icon-s-operation"></i>
@@ -41,7 +41,7 @@
   <div v-else class="select-container">
     <el-row>
       <el-col :span="12">
-        <div class="p-20">
+        <div>
           <el-input class="filter-input" placeholder="输入组织/部门关键字" v-model.trim="filterText"></el-input>
           <el-tree
             :expand-on-click-node="false"
@@ -72,7 +72,7 @@
         </div>
       </el-col>
       <el-col :span="12">
-        <div class="p-20" style="margin-top:52px;">
+        <div style="margin-top:52px;">
           <div class="line-tag color-info" v-for="item in selects" :key="item.uuid">
             <div>
               <i class="el-icon-user-solid"></i>
@@ -141,12 +141,11 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$refs['tree'].getCurrentKey())
     //   this.initNodeData()
   },
   methods: {
     filterNode(value, data) {
-      console.log(value, data)
+
       if (!value) return true
       return data.name.indexOf(value) !== -1
     },
@@ -166,7 +165,7 @@ export default {
       this.$store
         .dispatch('user/getAllUserList', payload)
         .then(res => {
-          console.log()
+          
         })
         .catch(err => {
           this.$message({
@@ -222,7 +221,7 @@ export default {
             }
           })
         })
-        console.log(queue)
+        
         /**
          * 右删除
          */
@@ -233,7 +232,7 @@ export default {
         this.$emit('change', temp)
       })
 
-      console.log(queue)
+      
       //   queue.push(item)
 
       /**
@@ -276,10 +275,10 @@ export default {
       this.$emit('change', temp)
     },
     handleCult(val) {
-      console.log(val)
+      
       let temp = []
       if (val.length) {
-        console.log('清空')
+        
         val.forEach(item => {
           this.userListTemp.splice(
             this.userListTemp.findIndex(unit => {
@@ -290,7 +289,7 @@ export default {
         })
         // this.userListTemp = []
       } else {
-        console.log('单点删除')
+        
         this.userListTemp.splice(
           this.userListTemp.findIndex(item => {
             return item.uuid == val
@@ -298,7 +297,7 @@ export default {
           1
         )
       }
-      console.log(this.userListTemp)
+      
       temp = this.userListTemp
       this.$emit('change', temp)
     },
@@ -306,7 +305,7 @@ export default {
      * 删除标签
      */
     handleCloseUserTag(val) {
-      console.log(val.uuid)
+      
       const uuid = val.uuid
       let temp = this.selects
       temp.splice(
@@ -347,15 +346,12 @@ export default {
   max-width: 240px;
   line-height: 26px;
   justify-content: space-between;
-  // margin: 5px;
   &:hover {
     background-color: #f5f7fa;
   }
 }
 
 .select-container {
-  width: 800px;
-  padding: 20px;
   .filter-input {
     margin-bottom: 20px;
   }
@@ -367,6 +363,7 @@ export default {
 
 <style lang="scss">
 .select-container {
+    margin-bottom: 20px;
   .el-tree-node__content {
     height: auto;
   }

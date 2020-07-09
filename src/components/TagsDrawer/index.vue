@@ -4,7 +4,7 @@
       <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
         <el-row type="flex" class="row-bg" justify="center">
           <el-col :span="8">
-            <div class="font-es group-name">{{key}}：</div>
+            <div class="font-exs color-info group-name">{{group.groupName}}：</div>
           </el-col>
           <el-col :span="16">
             <div class="tags-container">
@@ -36,7 +36,7 @@ export default {
     tags: {
       type: Object,
       default: () => {
-        return {};
+        return [];
       }
     }
   },
@@ -96,7 +96,6 @@ export default {
   .drawer-item {
     margin-bottom: 3px;
     .group-name {
-      width: 82px;
       line-height: 25px;
       font-weight: 500;
     }

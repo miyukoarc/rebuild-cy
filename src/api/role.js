@@ -66,3 +66,16 @@ export const getRoleList = () => {
 }
 
 
+/**
+ * 角色列表
+ * @param {}  
+ */
+
+export const getRoleListSelect = () => {
+    return request({
+        url: '/role/listSelect',
+        method: 'get',
+    })
+}
+
+

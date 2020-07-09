@@ -19,12 +19,12 @@
             :auth="permissionMap['riskManagement']['riskManagement_add']"
             @click.stop="handleCreate"
           >设置通知人</el-t-button>
-          <el-t-button
+          <!-- <el-t-button
             type="primary"
             :popAuth="true"
             :auth="permissionMap['riskManagement']['riskManagement_add']"
             @click.stop="handleCreate"
-          >设置适用敏感词</el-t-button>
+          >设置适用敏感词</el-t-button> -->
         </div>
       </tool-bar>
     </el-card>
@@ -48,28 +48,44 @@
               <span>
                 通知人
                 <el-tooltip placement="right">
-                  <div slot="content">1231231</div>
+                  <div slot="content">
+                      <span class="font-exs color-info">除了发送者，设置人也会收到触发通知。</span>
+                  </div>
 
-                  <i class="el-icon-warning"></i>
+                  <i class="el-icon-question"></i>
                 </el-tooltip>
               </span>
             </template>
-            <template v-slot="scope">
-              <div>
-                <span
-                  v-for="item in scope.row.toUser"
-                  style="margin-left:5px;"
-                  :key="item.uuid"
-                >{{item.name}}</span>
+            <template v-slot="{row}">
+              <div v-if="Object.keys(row.toUser).length">
+                <async-user-drawer :hasPop="true" :users="row.toUser"></async-user-drawer>
+              </div>
+              <div v-if="Object.keys(row.toRole).length">
+                  <role-drawer :roles="row.toRole"></role-drawer>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="适用标签" align="left"></el-table-column>
+          <el-table-column align="left">
+              <template slot="header">
+              <span>
+                适用标签
+                <el-tooltip placement="right">
+                  <div slot="content">
+                      <span class="font-exs color-info">员工与不满足该标签的人沟通时，不会被监控。</span>
+                  </div>
+                  <i class="el-icon-question"></i>
+                </el-tooltip>
+              </span>
+            </template>
+          </el-table-column>
 
           <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
           <el-table-column label="创建人" align="left">
             <template v-slot="{row}">
-              <div></div>
+              <div v-if="Object.keys(row.creator).length">
+                  <async-user-tag :uuid="row.creator.uuid"  size="small"  type="info"><i class="el-icon-user-solid"></i>{{row.creator.name}}</async-user-tag>
+              </div>
+              <div v-else>--</div>
             </template>
           </el-table-column>
 
@@ -118,6 +134,10 @@ import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
+import AsyncUserTag from '@/components/AsyncUserTag'
+import AsyncUserDrawer from '@/components/AsyncUserDrawer'
+import TagsDrawer from  '@/components/TagsDrawer'
+import RoleDrawer from '@/components/RoleDrawer'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -125,7 +145,11 @@ export default {
     ListHeader,
     UserDetail,
     FormDialog,
-    ToolBar
+    ToolBar,
+    AsyncUserTag,
+    AsyncUserDrawer,
+    RoleDrawer,
+    TagsDrawer
     // mHeadedr
   },
   data() {

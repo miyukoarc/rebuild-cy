@@ -3,14 +3,16 @@ import {
   addRole,
   deleteRole,
   updateRole,
-  getRoleList
+  getRoleList,
+  getRoleListSelect
 } from '@/api/role'
 const state = {
     /**
      * 角色列表
      */
     loading: false,
-    roleList: []
+    roleList: [],
+    listSelect:[]
 }
 
 const mutations = {
@@ -28,6 +30,14 @@ const mutations = {
     SAVE_DETAIL(state, payload){
         state.currentRole = payload
         console.log(state.currentRole,'state.currentRole')
+    },
+    /**
+     * 保存角色列表 select
+     * @param {*} state 
+     * @param {*} payload 
+     */
+    SAVE_LISTSELECT(state,payload){
+        state.listSelect = payload
     }
 }
 
@@ -114,6 +124,21 @@ const actions = {
           })
       })
   },
+  /**
+   * 角色列表
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  getRoleListSelect({commit}){
+     return new Promise((resolve,reject)=>{
+         getRoleListSelect().then(res=>{
+             commit('SAVE_LISTSELECT',res.items)
+             resolve(res)
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  }
 }
 
 

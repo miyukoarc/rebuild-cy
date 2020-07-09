@@ -1,8 +1,8 @@
 <template>
   <div>
     <div>
-      <!-- <tags-drawer :tags="tagGroups">
-      </tags-drawer> -->
+      <tags-drawer :tags="tagGroups">
+      </tags-drawer>
     </div>
 
     <div>
@@ -54,6 +54,10 @@
     <div style="margin:30px 0;">
         <complex-select v-model="selects" :options="departmentList"></complex-select>
     </div>
+
+    <div class="mb-20">
+        <tag-select v-model="result" :options="tagListSelect"></tag-select>
+    </div>
   </div>
 </template>
 
@@ -66,6 +70,7 @@ import Cascader from '@/components/Cascader'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import ComplexSelect from '@/components/ComplexSelect'
+import TagSelect from '@/components/TagSelect'
 import { mapState } from 'vuex'
 export default {
   components: {
@@ -75,7 +80,8 @@ export default {
     UserTag,
     AsyncUserDrawer,
     IconTooltip,
-    ComplexSelect
+    ComplexSelect,
+    TagSelect
   },
 //   directives: {
 //   loading: {
@@ -92,6 +98,7 @@ export default {
 // },
   data() {
     return {
+        result: [],
         loading: false,
       msg: '',
       status: false,
@@ -403,7 +410,8 @@ export default {
   },
   computed: {
       ...mapState({
-            departmentList: state => state.department.departmentList
+            departmentList: state => state.department.departmentList,
+            tagListSelect: state => state.tag.tagListSelect
       })
   },
   created() {
@@ -514,6 +522,14 @@ export default {
             type: 'error',
             message: err || '初始化失败'
           })
+        })
+
+        this.$store.dispatch('tag/getListSelect').then(()=>{})
+        .catch(err=>{
+            this.$message({
+                type: 'error',
+                message: err || '初始化失败'
+            })
         })
     },
   }

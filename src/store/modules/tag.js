@@ -163,7 +163,7 @@ const actions = {
             resolve()
         }).catch(err=>{
             
-            reject()
+            reject(err)
         })
       })
   }

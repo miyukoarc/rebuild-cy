@@ -53,17 +53,17 @@ export default {
   watch: {
     uuid: {
       handler(newVal, oldVal) {
-        console.log(newVal, oldVal)
+        // console.log(newVal, oldVal)
       }
     },
     clearFlag: {
       handler(newVal, oldVal) {
-        console.log('清空')
+        // console.log('清空')
       }
     },
     selects: {
       handler(newVal, oldVal) {
-        console.log(newVal, oldVal)
+        // console.log(newVal, oldVal)
         const pick = (source, target) =>
           source.filter(srcItem => target.includes(srcItem.uuid))
 
@@ -71,32 +71,32 @@ export default {
 
         if (newVal.length > oldVal.length) {
           this.$emit('output', arr)
-          console.log('output')
+        //   console.log('output')
         } else if (newVal.length < oldVal.length) {
           const intersection = oldVal.filter(item => !newVal.includes(item))
 
-          console.log(intersection)
+        //   console.log(intersection)
 
           if (intersection.length < 2) {
-            console.log('单点删除')
+            // console.log('单点删除')
             this.$emit('cult', intersection[0])
           } else {
-            console.log('清空')
+            // console.log('清空')
             this.$emit('cult', intersection)
           }
         } else {
-          console.log(
-            this.list.map(item => {
-              return item.uuid
-            }),
-            newVal
-          )
+        //   console.log(
+        //     this.list.map(item => {
+        //       return item.uuid
+        //     }),
+        //     newVal
+        //   )
 
           const intersection = this.list.filter(
             item => !newVal.includes(item.uuid)
           )
 
-          console.log('unchecked', intersection)
+        //   console.log('unchecked', intersection)
         }
       }
     }

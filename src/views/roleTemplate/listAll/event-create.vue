@@ -67,7 +67,7 @@ export default {
         if (valid) {
           console.log(payload)
           this.$store
-            .dispatch('role/addRole', payload)
+            .dispatch('roleTemplate/add', payload)
             .then(() => {
               this.$message({
                 type: 'success',
