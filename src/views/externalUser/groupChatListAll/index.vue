@@ -157,7 +157,6 @@ export default {
         ? externalUuid
         : this.query.externalUuid
       this.query.userId = userId ? userId : this.query.userId
-      console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },
     handleRefresh() {

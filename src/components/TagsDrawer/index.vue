@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="drawer-container" v-if="alterGroups != null">
+    <div class="drawer-container" v-if="alterGroups != null ">
       <div v-if="propsType">
         <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
           <el-row type="flex" class="row-bg" justify="center">
@@ -33,7 +33,7 @@
                   class="tag-unit text-ellipsis"
                   type="info"
                   size="mini"
-                  v-for="tag in alterTags(group.tags)"
+                  v-for="tag in alterTags(group)"
                   :key="tag.tagId"
                 >{{tag.tagName}}</el-tag>
               </div>
@@ -43,31 +43,40 @@
       </div>
       <div class="text-align-center" v-if="Object.values(tags).length>2">
         <el-button type="text" size="mini" @click="curly=!curly">
-          展开
+          <span>{{curly?'展开':'收起'}}</span>
           <i :class="[curly?'el-icon-caret-bottom':'el-icon-caret-top']"></i>
         </el-button>
       </div>
     </div>
-    <div v-else>--</div>
+    <span v-else>--</span>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['tags'],
-  name: 'tags-drawer',
+  props: ["tags"],
+  name: "tags-drawer",
   data() {
     return {
       curly: false
-    }
+    };
   },
   watch: {
     tags: {
       handler(newVal, oldVal) {
-        if (newVal.length > 2) {
-          this.curly = true
+        console.log(newVal, "99");
+        if (newVal && Array.isArray(newVal)) {
+          if (newVal.length > 2) {
+            this.curly = true;
+          } else {
+            this.curly = false;
+          }
         } else {
-          this.curly = false
+          if (Object.keys(newVal).length > 2) {
+            this.curly = true;
+          } else {
+            this.curly = false;
+          }
         }
       },
       immediate: true
@@ -75,29 +84,56 @@ export default {
   },
   computed: {
     total() {
-      return this.tags.length
+      if (this.tags) {
+        if (Array.isArray(this.tags)) {
+          return this.tags.length;
+        } else {
+          return Object.keys(this.tags).length;
+        }
+      } else {
+        return 0;
+      }
     },
     alterGroups() {
-      if (this.curly) {
-        return this.tags.slice(0, 2)
-      } else {
-        return this.tags
+      if (this.tags) {
+        if (Array.isArray(this.tags)) {
+          if (this.curly) {
+            return this.tags.slice(0, 2);
+          } else {
+            return this.tags;
+          }
+        } else {
+          let group = Object.keys(this.tags);
+          if (this.curly) {
+            return group.reduce((pre, cur, index) => {
+              if (index < 2) {
+                pre[cur] = this.tags[cur];
+              }
+              return pre;
+            }, {});
+          } else {
+            return group.reduce((pre, cur, index) => {
+              pre[cur] = this.tags[cur];
+              return pre;
+            }, {});
+          }
+        }
       }
     },
     propsType() {
-      return Array.isArray(this.tags)
+      return Array.isArray(this.tags);
     }
   },
   methods: {
     alterTags(arr) {
       if (this.curly) {
-        return arr.slice(0, 1)
+        return arr.slice(0, 1);
       } else {
-        return arr
+        return arr;
       }
     }
   }
-}
+};
 </script>
 
 <style>

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-01 10:56:54
- * @LastEditTime: 2020-07-03 16:08:13
+ * @LastEditTime: 2020-07-06 23:34:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\utils\externalUser.js
@@ -53,11 +53,12 @@ export const tagsUuid = (uuids) => {
     let b = [].concat(...Object.values(uuids));
     let c = [];
     b.map(item => {
-      c.push(Number(item.uuid));
+      c.push(item.tagId);
     });
     return c;
   }
 }
+
 
 export const externalUserDetailConversion = (payload) => {
   let externalUserDetailData = {}

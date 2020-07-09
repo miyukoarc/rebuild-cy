@@ -65,7 +65,7 @@ export default {
       }
   },
   mounted(){
-      this.form.externalUserId = this.externalUserDetail?.externalUser?.externalUserId
+      this.form.externalUserId = this.externalUserDetail?.externalUserDetail?.externalUserId
   },
   methods: {
     handleConfirm() {

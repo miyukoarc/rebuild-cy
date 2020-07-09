@@ -7,7 +7,6 @@
     <el-card class="content-spacing">
       <tool-bar @handleExport="handleExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
     </el-card>
-    <!-- <el-button @click="ddd">详情</el-button> -->
     <el-card class="content-spacing">
       <div>
         <el-table
@@ -27,7 +26,7 @@
                   :src="scope.row.externalUser.avatar"
                   lazy
                   style="width:30px;height:30px;margin-right:10px"
-                ></el-image> -->
+                ></el-image>-->
                 <div class="client-info">
                   <span class="remark">{{scope.row.remarkName}}</span>
                   <div>{{scope.row.wxNickName}}</div>
@@ -37,15 +36,18 @@
           </el-table-column>
           <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
-            <user-drawer :hasPop="true" :users="scope.row.user"></user-drawer>
+              <user-drawer :hasPop="true" :users="scope.row.user"></user-drawer>
             </template>
           </el-table-column>
           <el-table-column label="企业标签" align="left">
             <template v-slot="scope">
-              <tags-drawer v-if="scope.row.externalUserDetailCorpTagsList" :tags="scope.row.externalUserDetailCorpTagsList.corpTags"></tags-drawer>
+              <tags-drawer
+                v-if="scope.row.externalUserDetailCorpTagsList.corpTags !==null"
+                :tags="scope.row.externalUserDetailCorpTagsList.corpTags"
+              ></tags-drawer>
             </template>
           </el-table-column>
-          <el-table-column label="添加时间" align="left" prop="createdAt"></el-table-column> 
+          <el-table-column label="添加时间" align="left" prop="createdAt"></el-table-column>
 
           <!-- <el-table-column label="来源渠道" align="left">
             <template v-slot="scope">
@@ -54,7 +56,7 @@
               >{{scope.row.externalUser.contactWay.state}}</div>
               <div v-else>--</div>
             </template>
-          </el-table-column> -->
+          </el-table-column>-->
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-t-button
@@ -85,14 +87,13 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
 import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 
- import UserDrawer from '@/components/UserDrawer'
-import TagsDrawer from '@/components/TagsDrawer'
+import UserDrawer from "@/components/UserDrawer";
+import TagsDrawer from "@/components/TagsDrawer";
 
 import { mapState, mapMutations, mapActions } from "vuex";
 
@@ -104,7 +105,6 @@ export default {
     ToolBar,
     UserDrawer,
     TagsDrawer
-    // mHeadedr
   },
   data() {
     return {
@@ -131,10 +131,9 @@ export default {
   computed: {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
-
       loading: state => state.externalUser.loading,
       externalUserListAll: state => state.externalUser.externalUserListAll,
-      page: state => state.externalUser.listAllPage,
+      listAllPage: state => state.externalUser.listAllPage,
       permissionMap: state => state.permission.permissionMap
     })
   },
@@ -154,13 +153,13 @@ export default {
         .dispatch("externalUser/getExternalUserListAll", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1;
-          this.pageConfig.total = this.page.total;
+          this.pageConfig.pageNumber = this.listAllPage.pageNumber + 1;
+          this.pageConfig.total = this.listAllPage.total;
         })
         .catch(err => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "err"
           });
         });
     },
@@ -191,24 +190,32 @@ export default {
     },
 
     handleDetail(row) {
-      console.log(row,'row')
+      console.log(row, "row");
       const uuid = row.externalUuid;
       this.$router.push({
         path: "/externalUser/detail/" + uuid
       });
     },
     handleSearch(val) {
-      const { tagIds, name, userId, startTime, endTime, contractWayId,flag } = val;
-      this.query.tagIds = tagIds ? tagIds: this.query.tagIds;
+      const {
+        tagIds,
+        name,
+        userId,
+        startTime,
+        endTime,
+        contractWayId,
+        flag
+      } = val;
+      this.query.tagIds = tagIds ? tagIds + "" : this.query.tagIds;
       this.query.name = name ? name : this.query.name;
       this.query.userId = userId ? userId : this.query.userId;
       this.query.startTime = startTime ? startTime : this.query.startTime;
       this.query.flag = flag ? true : false;
       this.query.endTime = endTime ? endTime : this.query.endTime;
-      this.query.contractWayId = contractWayId
-        ? contractWayId
-        : this.query.contractWayId;
-      console.log(val, "handleSearch",this.query);
+      // this.query.contractWayId = contractWayId
+      //   ? contractWayId
+      //   : this.query.contractWayId;
+      console.log(val, "handleSearch", this.query);
       this.initDataList(this.query);
     },
     handleRefresh() {
@@ -223,13 +230,7 @@ export default {
     },
     handleExport(val) {
       console.log(val);
-    },
-    ddd(){
-      this.$router.push({
-        path: "/externalUser/detail/19" 
-      });
     }
-
   }
 };
 </script>
@@ -238,8 +239,8 @@ export default {
 .user-card {
   display: flex;
   align-items: center;
-  .client-info{
-    .remark{
+  .client-info {
+    .remark {
       min-height: 16px;
     }
   }

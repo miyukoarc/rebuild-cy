@@ -35,12 +35,15 @@
                 企业标签
                 <span class="side-title">
                   <span>最新更新{{ externalUserDetail.updatedAt }}</span>
-                  <el-button type="text" @click="handleEditTags">编辑</el-button>
+                  <el-button
+                    type="text"
+                    @click="handleEditTags(externalUserDetail.externalUserDetail.externalUuid)"
+                  >编辑</el-button>
                 </span>
               </h4>
               <div
                 class="tag-line"
-                v-if="(externalUserDetail.externalUserDetailCorpTagsList.corpTags) !== null"
+                v-if="externalUserDetail.externalUserDetailCorpTagsList.corpTags !=null"
               >
                 <span
                   v-for="(companyTags,key,index) in externalUserDetail.externalUserDetailCorpTagsList.corpTags"
@@ -64,26 +67,33 @@
               <h4>客户资料</h4>
               <div>
                 <el-row>
-                  <el-col :span="8" v-for="(value, key) in externalUserDetailInfo" :key="key">
+                  <el-col
+                    :span="8"
+                    v-for="(item, key) in externalUserDetail.externalUserDetailPublic"
+                    :key="key"
+                    @click.native.stop
+                  >
                     <div
                       style="display:flex;justify-content:space-between;"
-                      @mouseenter="mouseEnter(value,key)"
+                      @mouseenter="mouseEnter(item,key)"
                     >
-                      <span class="label">{{ key }}</span>
+                      <span class="label">{{ item.label }}：</span>
                       <el-input
-                        @click.native.stop
                         size="mini"
-                        :placeholder="value"
-                        v-if="currentInput ===key"
+                        :placeholder="item.value"
+                        v-if="currentInput ===item.label"
                         v-model="inputValue"
                       ></el-input>
-                      <span class="value" v-else>{{ value ? value : "--" }}</span>
+                      <span class="value" v-else>{{ item.value ? item.value : "--" }}</span>
 
                       <span
                         class="edit-info"
-                        v-if="(key == currentIndex) || currentInput===key"
-                        @click.stop="editInfo(value,key)"
-                      >{{(currentInput===key)?'保存':'编辑'}}</span>
+                        v-if="(item.label == currentIndex) || currentInput===item.label"
+                        @click.stop="editInfo(item,key)"
+                      >
+                        <span v-if="currentInput===item.label">保存</span>
+                        <i class="el-icon-edit" v-else></i>
+                      </span>
                     </div>
                   </el-col>
                 </el-row>
@@ -109,6 +119,13 @@
                   </div>
                 </template>
               </el-table-column>
+              <el-table-column label="添加渠道" align="left">
+                <template v-slot="scope">
+                  <span
+                    v-if="scope.row.contactWay"
+                  >{{scope.row.contactWay.remark ?scope.row.contactWay.remark :'--' }}</span>
+                </template>
+              </el-table-column>
               <el-table-column label="对客户的描述" align="left">
                 <template v-slot="scope">
                   <div>{{ scope.row.description || "--" }}</div>
@@ -117,13 +134,14 @@
               <el-table-column label="个人标签" align="left">
                 <template v-slot="scope">
                   <div>
-                    <div v-if="scope.row.individualTags != null">
+                    <div v-if="scope.row.individualTags">
                       <el-tag
                         size="mini"
                         type="primary"
-                        v-for="item in scope.row.individualTags"
-                        :key="item.tagId"
-                      >{{ item.tagName }}</el-tag>
+                        v-for="(item,index) in scope.row.individualTags"
+                        :key="index"
+                        style="margin-right:3px;"
+                      >{{ item }}</el-tag>
                     </div>
                     <span v-else>--</span>
                   </div>
@@ -137,7 +155,7 @@
               <el-table-column label="操作" align="left">
                 <template v-slot="scope">
                   <div>
-                    <el-t-button size="mini" type="primary" @click="handleDetail(scope.$index)">聊天记录</el-t-button>
+                    <el-t-button size="mini" type="primary" @click="handleDetail(scope.row)">聊天记录</el-t-button>
                   </div>
                 </template>
               </el-table-column>
@@ -215,7 +233,7 @@
                     placement="top"
                   >
                     <el-card>
-                      <div>{{ item.remark }}</div>
+                      <div class="word-break">{{ item.remark }}</div>
                       <p style="margin:0px;text-align:right;">
                         <el-t-button
                           :popAuth="true"
@@ -262,6 +280,9 @@
 import defaultAvatar from "@/assets/2.jpg";
 import FormDialog from "./dialog";
 import { mapState } from "vuex";
+
+import { isMobilePhone } from "@/utils/validate.js";
+
 export default {
   components: { FormDialog },
   inject: ["reload"],
@@ -280,18 +301,8 @@ export default {
         createtime: "时间"
       },
       currentIndex: "",
-      currentInput: false,
+      currentInput: "",
       inputValue: "",
-      inputKey: "",
-      externalUserDetailInfo: {
-        mobile: null,
-        qq: "莱昂纳德",
-        wxType: "WX",
-        年龄: "白色aaa",
-        微博: "这是微博",
-        生日: "这是生日",
-        邮箱: "这是邮箱"
-      },
       // 群
       limited: true,
       // 客户动态
@@ -327,7 +338,7 @@ export default {
       loading: state => state.externalUser.loading,
       listGroup: state => state.externalUser.listGroup,
       externalUserDetail: state => state.externalUser.externalUserDetail,
-      page: state => state.externalUserTrends.externalUserTrendsListAllPage,
+      externalUserTrendsListAllPage: state => state.externalUserTrends.externalUserTrendsListAllPage,
       externalUserTrendsListAll: state =>
         state.externalUserTrends.externalUserTrendsListAll,
       permissionMap: state => state.permission.permissionMap
@@ -358,16 +369,19 @@ export default {
     this.initExternalUserTrendsListAll(this.query);
   },
   mounted() {
+    document.addEventListener("click", () => {
+      this.currentInput = "";
+      this.currentIndex = "";
+    });
     // window.addEventListener('scroll',this.handleScroll);
   },
   methods: {
     // 初始化详情数据
     initDetail(payload) {
       this.$store
-        .dispatch("externalUser/getExternalUserDetail", 19)
+        .dispatch("externalUser/getExternalUserDetail", payload)
         .then(() => {})
         .catch(err => {
-          console.error(err);
           this.$message({
             type: "error",
             message: err || "初始化失败"
@@ -379,8 +393,8 @@ export default {
       this.$store
         .dispatch("externalUserTrends/getExternalUserTrendsListAll", payload)
         .then(() => {
-          this.pageConfig.pageNumber = this.page.pageNumber + 1;
-          this.pageConfig.total = this.page.total;
+          this.pageConfig.pageNumber = this.externalUserTrendsListAllPage.pageNumber + 1;
+          this.pageConfig.total = this.externalUserTrendsListAllPage.total;
         })
         .catch(err => {
           console.error(err);
@@ -415,23 +429,25 @@ export default {
       this.$refs["formDialog"].event = "EditTagsTemplate";
       this.$refs["formDialog"].eventType = "editTags";
       this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].uuid = payload + "";
       this.$store.commit(
         "externalUser/SAVE_EDITTAGSUUID",
         this.externalUserDetail.externalUserDetailCorpTagsList.corpTags
       );
     },
     // 聊天
-    handleDetail(index) {
-      const userId = this.user[index].userId;
-      const externalUserId = this.user[index].externalUser.externalUserId;
-      const query = {
-        userId,
-        externalUserId
-      };
-      this.$router.push({
-        path: "/message/singleListAll",
-        query
-      });
+    handleDetail(row) {
+      console.log(row, "row");
+      // const userId = row.userId;
+      // const externalUserId = this.user[index].externalUser.externalUserId;
+      // const query = {
+      //   userId,
+      //   externalUserId
+      // };
+      // this.$router.push({
+      //   path: "/message/singleListAll",
+      //   query
+      // });
     },
     // 群
     handleGroupRouter(item) {
@@ -444,13 +460,57 @@ export default {
       });
     },
     mouseEnter(value, key) {
-      this.currentIndex = key;
+      this.currentIndex = value.label;
     },
     editInfo(value, key, index) {
       if (this.currentIndex == this.currentInput) {
-        this.currentInput = "";
+        if (value.label == "手机号") {
+          if (!isMobilePhone(this.inputValue)) {
+            this.$message({
+              message: "请输入正确的手机号",
+              type: "warning"
+            });
+            return;
+          }
+        }
+        if (this.inputValue != value.value) {
+          const payload = {
+            externalUserUuid: this.query.uuid,
+            propertyDtoList: [
+              {
+                propertyUuid: value.propertyUuid,
+                sort: 0,
+                value: this.inputValue
+              }
+            ]
+          };
+          this.$store
+            .dispatch(
+              "externalUser/propertyUpdateExternalUserProperty",
+              payload
+            )
+            .then(res => {
+              this.currentInput = "";
+              this.inputValue = "";
+              this.$message({
+                type: "success",
+                message: "操作成功"
+              });
+              this.initDetail(this.query.uuid);
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message({
+                type: "error",
+                message: err
+              });
+            });
+        } else {
+          this.currentInput = "";
+          this.inputValue = "";
+        }
       } else {
-        this.currentInput = key;
+        this.currentInput = value.label;
       }
     },
     // 群 展开
@@ -498,9 +558,7 @@ export default {
               });
             });
         })
-        .catch(err => {
-          ;
-        });
+        .catch(err => {});
     },
     handleScroll() {
       var scrollTop =
@@ -521,11 +579,6 @@ export default {
       }
     },
     load() {
-      console.log(
-        "3333",
-        this.page,
-        Math.ceil(this.page.total / this.page.pageSize)
-      );
       let a = Math.ceil(this.page.total / this.page.pageSize);
       this.query.page++;
       if (this.query.page >= a) {
@@ -725,6 +778,9 @@ export default {
     line-height: 32px;
     color: rgba(0, 0, 0, 0.45);
     text-align: center;
+  }
+  .word-break {
+    word-wrap: break-word;
   }
   // .member-status-content-h {
   //   max-height: 600px;

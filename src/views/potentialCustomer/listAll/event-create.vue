@@ -1,22 +1,22 @@
 <template>
   <el-form :model="form[0]" ref="form" :rules="rules" label-width="100px">
-    <el-form-item label="客户名" prop="name">
+    <el-form-item label="客户名">
       <el-input v-model="form[0].name"></el-input>
     </el-form-item>
+
+    <el-form-item label="持有人">
+      <el-select v-model="form[0].userUuid" style="width:100%">
+        <el-option
+          v-for="item in userListAll"
+          :key="item.userId"
+          :label="item.name"
+          :value="item.uuid"
+        ></el-option>
+      </el-select>
+    </el-form-item>
+
     <el-form-item label="手机号" prop="mobile">
       <el-input v-model="form[0].mobile"></el-input>
-    </el-form-item>
-    <el-form-item label="备注" prop="remark">
-      <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form[0].remark"></el-input>
-      <!-- <el-select  v-model="form.parent" placeholder="请选择">
-            <el-option
-                :disabled="!hasParent"
-                v-for="item in 10"
-                :key="item"
-                :label="item"
-                :value="item"
-            ></el-option>
-      </el-select>-->
     </el-form-item>
 
     <div class="text-align-center">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from 'vuex'
 
 import { isMobilePhone } from "@/utils/validate.js";
 
@@ -48,24 +48,16 @@ export default {
         {
           mobile: "",
           name: "",
-          remark: ""
+          userUuid: ""
         }
       ],
       rules: {
-        name: [
-          { required: true, message: "请输入客户名称", trigger: "blur" },
-          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
-        ],
         mobile: [
           { required: true, message: "请输入手机号", trigger: "blur" },
           {
             validator: validatePhone,
             trigger: ["blur", "change"]
           }
-        ],
-        remark: [
-          { required: true, message: "请输入备注", trigger: "blur" },
-          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
         ]
       }
     };
@@ -82,9 +74,14 @@ export default {
     }
   },
   computed: {
-    ...mapState({})
+    ...mapGetters(['uuid']),
+    ...mapState({
+      userListAll: state => state.user.listSelect,
+    })
   },
-  mounted() {},
+  mounted() {
+    this.form[0].userUuid = this.uuid
+  },
   methods: {
     handleConfirm() {
       const payload = this.form;

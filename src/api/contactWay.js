@@ -59,7 +59,7 @@ export const getList = (payload)=>{
  * 更新客户渠道
  * @param {object} payload 
  */
-export const update = (payload)=>{
+export const contactWayUpdate = (payload)=>{
     return request({
         url: '/contactWay/update',
         method: 'post',

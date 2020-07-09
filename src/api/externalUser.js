@@ -219,21 +219,33 @@ export const getSensitiveListAll = (payload) => {
  * @param {object} payload 
  */
 export const getQuitUserRelationExUserDetail = (payload) => {
-    return request({
-      url: '/externalUser/quitUserRelationExUserDetail',
-      method: 'get',
-      params: payload
-    })
-  }
+  return request({
+    url: '/externalUser/quitUserRelationExUserDetail',
+    method: 'get',
+    params: payload
+  })
+}
 
 /**
  * 群详情
  * @param {object} payload 
  */
-  export const getGroupDetail = (payload) => {
-    return request({
-      url: '/externalUser/groupDetail',
-      method: 'get',
-      params: payload
-    })
-  }
+export const getGroupDetail = (payload) => {
+  return request({
+    url: '/externalUser/groupDetail',
+    method: 'get',
+    params: payload
+  })
+}
+
+/**
+ * 编辑标签
+ * @param {object} payload 
+ */
+export const externalUserUpdateTag = (payload) => {
+  return request({
+    url: '/externalUser/updateTag',
+    method: 'post',
+    data: payload
+  })
+}

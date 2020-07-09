@@ -1,85 +1,82 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-27 22:34:57
- * @LastEditTime: 2020-07-02 15:04:58
+ * @LastEditTime: 2020-07-07 10:32:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\detail\dialog.vue
 --> 
 <template>
-    <div>
-        <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body min-width="600px" center :close-on-click-modal="false">
-            <div>
-                <component :is="event" :transfer="transfer"/>
-            </div>
-        </el-dialog>
-    </div>
+  <div>
+    <el-dialog
+      :title="genTitle()"
+      :visible.sync="dialogVisible"
+      :modal-append-to-body="false"
+      append-to-body
+      min-width="600px"
+      center
+      :close-on-click-modal="false"
+    >
+      <div>
+        <component :is="event" :transfer="transfer" :uuid="uuid" />
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
-
-import CreateTemplate from './event-create.vue'
-import EditTemplate from './event-edit.vue'
-import EditTagsTemplate from './event-editTags.vue'
-import {mapState} from 'vuex'
+import CreateTemplate from "./event-create.vue";
+import EditTemplate from "./event-edit.vue";
+import EditTagsTemplate from "./event-editTags.vue";
+import { mapState } from "vuex";
 export default {
-components:{
+  components: {
     CreateTemplate,
     EditTemplate,
     EditTagsTemplate
-},
+  },
   data() {
     return {
       dialogVisible: false,
-      event: 'CreateTemplate',
-      eventType: '',
-      transfer: {}
+      event: "CreateTemplate",
+      eventType: "",
+      transfer: "",
+      uuid: ""
     };
   },
-  watch:{
-      eventType:{
-          handler(newVal,oldVal){
-              if(newVal){
-                  this.genTitle()
-              }
-          },
-          immediate: true,
-      }
-  },
-  computed:{
-      ...mapState({
-
-      })
-  },
-  mounted(){
-      
-      console.log(this.transfer,'ddd')
-  },
-  updated(){
-
-  },
-  methods: {
-
-      genTitle(){
-          if(this.eventType==='create'){
-              return '添加动态'
-          }
-
-          if(this.eventType==='edit'){
-              return '编辑动态'
-          }
-
-          if(this.eventType==='distribute'){
-              return '添加动态'
-          }
-          
-          if(this.eventType==='editTags'){
-              return '标签编辑'
-          }
-          
+  watch: {
+    eventType: {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.genTitle();
+        }
       },
+      immediate: true
+    }
+  },
+  computed: {
+    ...mapState({})
+  },
+  updated() {},
+  methods: {
+    genTitle() {
+      if (this.eventType === "create") {
+        return "添加动态";
+      }
+
+      if (this.eventType === "edit") {
+        return "编辑动态";
+      }
+
+      if (this.eventType === "distribute") {
+        return "添加动态";
+      }
+
+      if (this.eventType === "editTags") {
+        return "标签编辑";
+      }
+    }
   }
-  
 };
 </script>
 
