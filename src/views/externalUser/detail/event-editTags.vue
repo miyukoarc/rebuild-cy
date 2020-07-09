@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-30 17:39:37
- * @LastEditTime: 2020-07-05 18:06:07
+ * @LastEditTime: 2020-07-09 19:23:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\detail\event-editTags.vue
@@ -9,7 +9,7 @@
 <template>
   <el-form :model="form" ref="form">
     <div class="tag-warp">
-      <div v-for="(tagGroup,index) in tagListSelect" :key="index" class="tag-list-warp">
+      <div v-for="(tagGroup,index) in b" :key="index" class="tag-list-warp">
         <el-row :gutter="20" type="flex" justify="center">
           <el-col :span="8">
             <span class="lg-42">{{ tagGroup.groupName }}</span>
@@ -19,12 +19,12 @@
               <el-checkbox-group
                 v-model="checkboxGroup"
                 size="small"
-                @change="handleCheckedTagsChange(tagGroup,index)"
+                @change="handleCheckedTagsChange"
               >
                 <el-checkbox
                   v-for="(tag,idx) in tagGroup.tagList"
                   :key="idx"
-                  :label="tag.uuid"
+                  :label="tag.tagId"
                   border
                   style="margin-bottom:5px"
                 >{{ tag.tagName }}</el-checkbox>
@@ -43,10 +43,11 @@
 
 <script>
 import { mapState } from "vuex";
+import { truncate } from "fs";
 export default {
   props: {
-    transfer: {
-      type: Object
+    uuid: {
+      type: String
     }
   },
   data() {
@@ -54,7 +55,9 @@ export default {
       form: {},
       checkboxGroup: [],
       delTags: [],
-      addTags: []
+      addTags: [],
+      arrayData1: [],
+      arrayData2: []
     };
   },
   computed: {
@@ -62,27 +65,18 @@ export default {
       tagListSelect: state => state.tag.tagListSelect,
       editTagsUuid: state => state.externalUser.editTagsUuid
     })
-    // checkboxGroup: {
-    //   get: function() {
-    //     return this.editTagsUuid;
-    //   },
-    //   set: function(val) {
-    //     console.log(val, "val");
-    //     return val;
-    //   }
-    // }
   },
   watch: {},
   created() {
-    this.editTagsUuid.map(item => {
-      this.checkboxGroup.push(item);
-    });
+    this.checkboxGroup = this.editTagsUuid;
   },
-  mounted() {},
+  mounted() {
+    
+  },
   methods: {
     // 选择标签
     handleCheckedTagsChange(tag, index) {
-      this.handleConfirm();
+      // this.handleConfirm();
     },
     del(arr1, arr2) {
       return arr1.filter(v => {
@@ -99,13 +93,17 @@ export default {
       this.delTags = this.del(this.editTagsUuid, this.checkboxGroup);
       this.addTags = this.add(this.checkboxGroup, this.editTagsUuid);
       console.log("删除", this.delTags, "新增", this.addTags);
-      // const payload = this.form;
-
+      const payload = {
+        addTags: this.addTags,
+        externalUserUuid: this.uuid,
+        removeTags: this.delTags
+      };
+      console.log(payload);
       this.$refs["form"].validate(valid => {
         if (valid) {
           console.log(payload);
           this.$store
-            .dispatch("externalUser/updateExTrends", payload)
+            .dispatch("externalUser/externalUserUpdateTag", payload)
             .then(() => {
               this.$message({
                 type: "success",
@@ -115,7 +113,6 @@ export default {
               this.refresh();
             })
             .catch(err => {
-              ;
               this.$message({
                 type: "error",
                 message: "操作失败"
@@ -132,6 +129,20 @@ export default {
     // 取消关闭弹框
     handleCancel() {
       this.$parent.$parent.dialogVisible = false;
+    },
+    refresh() {
+      this.$store
+        .dispatch(
+          "externalUser/getExternalUserDetail",
+          this.$route.params.uuid + ""
+        )
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: err
+          });
+        });
     }
   }
 };

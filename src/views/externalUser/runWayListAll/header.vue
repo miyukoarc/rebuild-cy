@@ -4,24 +4,35 @@
       <el-input v-model.trim="query.name" clearable></el-input>
     </el-form-item>
 
-    <el-form-item label="添加渠道：">
-      <el-select v-model="query.userId" clearable @change="handleSelectedChange">
+    <!-- <el-form-item label="添加渠道：">
+      <el-select v-model="query.contractWayId" clearable @change="handleSelectedChange">
         <el-option
-          v-for="item in userListAll"
-          :key="item.userId"
-          :label="item.name"
-          :value="item.userId"
+          v-for="(item,index) in contractWay"
+          :key="index"
+          :label="item.type"
+          :value="item.id"
+        ></el-option>
+      </el-select>
+    </el-form-item>-->
+
+    <el-form-item label="流失类型：">
+      <el-select v-model="query.delFollow" clearable @change="handleSelectedChange">
+        <el-option
+          v-for="(item,index) in typeOptions"
+          :key="index"
+          :label="item.label"
+          :value="item.value"
         ></el-option>
       </el-select>
     </el-form-item>
 
     <el-form-item label="所属员工：">
-      <el-select v-model="query.userId" clearable @change="handleSelectedChange">
+      <el-select v-model="query.userUuid" clearable @change="handleSelectedChange">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
           :label="item.name"
-          :value="item.userId"
+          :value="item.uuid"
         ></el-option>
       </el-select>
     </el-form-item>
@@ -39,17 +50,6 @@
       ></el-date-picker>
     </el-form-item>
 
-    <el-form-item label="流失类型：">
-      <el-select v-model="query.sort" clearable @change="handleSelectedChange">
-        <el-option
-          v-for="(item,index) in typeOptions"
-          :key="index"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-    </el-form-item>
-
     <!-- <div class="tag-warp"> -->
     <el-form-item label="客户标签：">
       <div class="tag-border">
@@ -65,7 +65,7 @@
               v-for="child in item.tagList"
               :key="child.uuid"
               :label="child.tagName"
-              :value="child.tagId"
+              :value="child.uuid"
             ></el-option>
           </el-option-group>
         </el-select>
@@ -101,27 +101,40 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      typeOptions: [
-        {
-          label: "主动删除客户",
-          value: "1"
-        },
-        {
-          label: "被客户删除",
-          value: "2"
-        }
-      ],
       value: [],
       query: {
         name: "",
-        contractWayId: "",
-        userId: "",
+        userUuid: "",
         tagIds: [],
         flag: true,
         startTime: "",
         endTime: "",
-        sort: 1
+        delFollow: ''
       },
+      typeOptions: [
+        {
+          label: "主动删除客户",
+          value: false
+        },
+        {
+          label: "被客户删除",
+          value: true
+        }
+      ],
+      contractWay: [
+        {
+          type: "员工主动添加",
+          id: "1"
+        },
+        {
+          type: "员工被动添加",
+          id: "2"
+        },
+        {
+          type: "二维码扫码添加",
+          id: "3"
+        }
+      ],
       timer: null
     };
   },
@@ -155,8 +168,9 @@ export default {
       this.$emit("handleSearch", this.query);
     },
     handleRefresh() {
-      this.$emit("handleRefresh");
       this.query = this.$options.data().query;
+      this.$emit("handleRefresh");
+      
     }
   }
 };

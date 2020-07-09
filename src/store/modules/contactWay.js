@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-06-28 00:35:52
+ * @LastEditTime: 2020-07-08 17:46:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\contactWay.js
@@ -10,6 +10,7 @@ import {
   getList,
   getContactWayDetail,
   contactWayAdd,
+  contactWayUpdate,
   deleteContactWay
 } from '@/api/contactWay'
 const state = {
@@ -94,7 +95,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject()
       })
     })
@@ -116,7 +117,29 @@ const actions = {
         resolve(res)
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
+        reject()
+      })
+    })
+  },
+
+
+  /**
+   * 更新渠道码
+   * @param {*} param0 
+   * @param {object} payload 
+   */
+  contactWayUpdate({
+    commit
+  }, payload) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      contactWayUpdate(payload).then(res => {
+        commit('TOGGLE_LOADING', false)
+        resolve(res)
+      }).catch(err => {
+        commit('TOGGLE_LOADING', false)
+
         reject()
       })
     })
@@ -137,7 +160,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject()
       })
     })
@@ -158,7 +181,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject()
       })
     })

@@ -11,7 +11,8 @@ import {
   getQuitUserRelationExUserDetail,
   redistributionExUser,
   getGroupDetail,
-  getCustomerStatistics
+  getCustomerStatistics,
+  externalUserUpdateTag
 } from '@/api/externalUser'
 
 import {
@@ -19,6 +20,10 @@ import {
   deleteExTrends,
   updateExTrends
 } from '@/api/externalUserTrends'
+
+import {
+  propertyUpdateExternalUserProperty
+} from '@/api/property'
 
 import {
   dataConversion,
@@ -337,7 +342,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -359,7 +364,7 @@ const actions = {
         resolve(res.items)
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -381,7 +386,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -403,7 +408,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -424,7 +429,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -445,7 +450,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject()
       })
     })
@@ -464,7 +469,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -483,7 +488,7 @@ const actions = {
         commit('SAVE_LISTGROUP', res.items)
         resolve()
       }).catch(err => {
-        
+
         reject(err)
       })
     })
@@ -504,7 +509,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -586,6 +591,44 @@ const actions = {
       })
     })
   },
+
+  /**
+   * 客户详情标签编辑
+   */
+  externalUserUpdateTag({
+    commit
+  }, payload) {
+    console.log(payload, 'payload')
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      externalUserUpdateTag(payload).then(res => {
+        commit('TOGGLE_LOADING', false)
+        resolve()
+      }).catch(err => {
+        commit('TOGGLE_LOADING', false)
+        reject(err)
+      })
+    })
+  },
+  
+  /**
+   * 客户详情修改客户属性配置
+   */
+  propertyUpdateExternalUserProperty({
+    commit
+  }, payload) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      propertyUpdateExternalUserProperty(payload).then(res => {
+        commit('TOGGLE_LOADING', false)
+        resolve()
+      }).catch(err => {
+        commit('TOGGLE_LOADING', false)
+        reject(err)
+      })
+    })
+  },
+
   /**
    * 添加动态
    */

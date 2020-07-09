@@ -35,7 +35,12 @@ import offline from '@/views/login'
 import MiniLogin from '@/views/login-back-up'
 import welcome from '@/views/welcome'
 const loginPage = process.env.VUE_APP_WORK === 'offline' ? offline : online
-export const constantRoutes = [{
+export const constantRoutes = [
+  {
+    path: '/zeness',
+    component: () => import('@/views/zeness.vue'),
+    hidden: true,
+  },{
     path: '/login',
     component: loginPage,
     hidden: true
@@ -66,10 +71,15 @@ export const constantRoutes = [{
       path: '/board',
       component: () => import('@/views/board.vue'),
       hidden: true,
+    }, {
+      path: '/zeness',
+      component: () => import('@/views/zeness.vue'),
+      hidden: true,
     }, ]
   },
   {
-      path: '/',redirect: '/welcome'
+    path: '/',
+    redirect: '/welcome'
   },
   /**
    * local test

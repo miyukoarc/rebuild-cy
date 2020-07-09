@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :hasExport="false" @handleExport="doExport">
+      <tool-bar :hasExport="false" @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
         <div slot="right">
           <el-t-button
             type="primary"
@@ -66,25 +66,31 @@
           </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-t-button :popAuth="true" :auth="permissionMap['contactWay']['contactWay_detail']" 
+              <el-t-button
+                :popAuth="true"
+                :auth="permissionMap['contactWay']['contactWay_detail']"
                 type="primary"
                 size="mini"
                 class="button-s"
                 @click.stop="handleDetail(scope.$index,scope.row)"
               >详情</el-t-button>
-              <el-t-button 
+              <el-t-button
                 type="primary"
                 size="mini"
                 class="button-s"
                 @click.stop="downLoad(scope.row)"
               >下载</el-t-button>
-              <el-t-button :popAuth="true" :auth="permissionMap['contactWay']['contactWay_update']" 
+              <el-t-button
+                :popAuth="true"
+                :auth="permissionMap['contactWay']['contactWay_update']"
                 type="primary"
                 size="mini"
                 class="button-s"
                 @click.stop="handleEdit(scope.row)"
               >编辑</el-t-button>
-              <el-t-button :popAuth="true" :auth="permissionMap['contactWay']['contactWay_delete']" 
+              <el-t-button
+                :popAuth="true"
+                :auth="permissionMap['contactWay']['contactWay_delete']"
                 type="danger"
                 size="mini"
                 class="button-s"
@@ -154,7 +160,7 @@ export default {
   },
   created() {
     this.initDataList(this.query);
-    this.initFilter();
+    // this.initFilter();
   },
   methods: {
     doExport(val) {
@@ -180,7 +186,7 @@ export default {
         .catch(err => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: err
           });
         });
 
@@ -190,7 +196,7 @@ export default {
         .catch(err => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: err
           });
         });
       // this.$store
@@ -278,14 +284,13 @@ export default {
     newChannelCode() {
       this.$router.push({
         path: `/contactWay/detail`,
-        query: { way: "add" }
       });
     },
     handleEdit(row) {
       console.log(row, "row");
       this.$router.push({
         path: `/contactWay/detail`,
-        query: { way: "edit", uuid: row.uuid }
+        query: { uuid: row.uuid }
       });
     },
     // 删除渠道码

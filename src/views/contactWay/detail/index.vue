@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-11 11:15:45
- * @LastEditTime: 2020-07-05 17:37:01
+ * @LastEditTime: 2020-07-09 11:17:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\contactWay\detail.vue
@@ -75,6 +75,134 @@
             </el-form-item>
           </div>
         </div>
+
+        <div class="set-welcome-message">
+          <h5>设置欢迎语</h5>
+          <div class="info-warp">
+            <div class="tip">
+              <i class="el-icon-warning warning"></i>
+              <span>
+                因企业微信限制，若使用成员已在
+                <b>「企业微信后台」</b> 配置了欢迎语，这里的欢迎语将不会生效
+              </span>
+            </div>
+            <el-form-item label="设置欢迎语:">
+              <el-radio-group v-model="ruleForm.welComeType">
+                <el-radio :label="'MYWEL'">渠道欢迎语</el-radio>
+                <el-radio :label="'DEFAULTWEL'">默认欢迎语</el-radio>
+                <el-radio :label="'DISWEL'">不发送欢迎语</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="欢迎语1:" v-show="ruleForm.welComeType == 'MYWEL'">
+              <div class="msg-textarea-box full-w">
+                <div class="insert-btn">
+                  <el-button
+                    type="text"
+                    class="clickable no-select"
+                    :disabled="!insertName"
+                    @click="insertionMemberName(memberNick)"
+                  >[插入客户昵称]</el-button>
+                </div>
+                <inputEdit ref="chatInput" v-model="ruleForm.welcomeContent" style="height:200px" />
+                <!-- <el-input
+                  contenteditable="true"
+                  type="textarea"
+                  :rows="6"
+                  maxlength="1000"
+                  show-word-limit
+                  placeholder="请输入内容"
+                  v-model="ruleForm.welcomeContent"
+                ></el-input>-->
+              </div>
+            </el-form-item>
+            <el-form-item label="欢迎语2:" v-show="ruleForm.welComeType == 'MYWEL'">
+              <div class="msg-textarea-box full-w">
+                <div class="message-box-content">
+                  <el-radio-group v-model="ruleForm.welComeMediaType">
+                    <el-radio :label="'IMG'">图片</el-radio>
+                    <el-radio :label="'LINK'">链接</el-radio>
+                  </el-radio-group>
+                  <section
+                    class="message-content display-flex"
+                    v-show="ruleForm.welComeMediaType == 'IMG'"
+                  >
+                    <div class="img-warp">
+                      <el-upload
+                        class="avatar-uploader"
+                        action="/upload"
+                        :show-file-list="false"
+                        :on-success="handleSetMessageImage"
+                        :before-upload="beforeAvatarUpload"
+                      >
+                        <img v-if="messageImage" :src="messageImage" class="avatar" />
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        <el-button
+                          size="small"
+                          type="text"
+                          v-if="messageImage"
+                          class="re-chose"
+                        >重新上传</el-button>
+                      </el-upload>
+                      <i
+                        class="el-icon-circle-close close"
+                        v-if="messageImage"
+                        @click.stop="handleDelMessageImage"
+                      ></i>
+                    </div>
+                  </section>
+                  <div class="message-content" v-show="ruleForm.welComeMediaType == 'LINK'">
+                    <el-select
+                      :popper-append-to-body="false"
+                      v-model="ruleForm.link"
+                      clearable
+                      placeholder="请选择"
+                      style="width:80%"
+                      popper-class="selectinfo"
+                      @change="handleChoseLink"
+                      class="label-warp"
+                    >
+                      <div
+                        class="display-flex align-items-center label-input"
+                        slot="prefix"
+                        v-if="ruleForm.link"
+                      >
+                        <img style="width:20px;height:20px" :src="welcomecontentT.img" alt />
+                        <div style="margin-left:5px;line-height:14px ;text-align:left">
+                          <span>{{welcomecontentT.value}}</span>
+                          <div>{{welcomecontentT.label}}</div>
+                        </div>
+                      </div>
+                      <el-option
+                        v-for="(item,index) in cities"
+                        :key="index"
+                        :label="item.label"
+                        :value="item.value"
+                      >
+                        <div class="option-warp flex-between-alinecenter">
+                          <div class="link-img">
+                            <img class="option-img" :src="item.img" />
+                          </div>
+                          <div class="option-content flex-1">
+                            <p>{{ item.value }}</p>
+                            <p>{{item.label}}</p>
+                          </div>
+                        </div>
+                      </el-option>
+                    </el-select>
+                  </div>
+                </div>
+              </div>
+            </el-form-item>
+            <el-form-item
+              label=" "
+              v-show="ruleForm.welComeType == 'DEFAULTWEL'"
+              class="default-wel"
+            >
+              <span>将发送成员已设置的欢迎语，若所选成员未设置欢迎语，则不会发送欢迎语</span>
+            </el-form-item>
+          </div>
+        </div>
+
         <div class="contact-way-detail-feature-set">
           <h5>功能设置</h5>
           <div class="info-warp">
@@ -89,12 +217,25 @@
                 <i class="el-icon-question" />
               </el-tooltip>
             </el-form-item>
-            <!-- <el-form-item label="开启时间:" prop="openTime">
+            <el-form-item label="开启时间:" prop="openTime">
               <el-radio-group v-model="ruleForm.openTime">
                 <el-radio label="1">全天开启</el-radio>
                 <el-radio label="2">选择时间段</el-radio>
               </el-radio-group>
-            </el-form-item>-->
+            </el-form-item>
+            <el-form-item label=" " v-show="ruleForm.openTime == '2'">
+              <el-time-select
+                placeholder="起始时间"
+                v-model="startTime"
+                :picker-options="{start: '07:30',step: '00:15',end: '18:30'}"
+              ></el-time-select>
+              <el-time-select
+                placeholder="结束时间"
+                v-model="endTime"
+                :picker-options="{start: '07:30',step: '00:15',end: '23:59',minTime: startTime}"
+              ></el-time-select>
+              <div>在非开启「自动通过好友」时间段添加的好友，需要客服手动通过好友验证后才可添加</div>
+            </el-form-item>
             <el-form-item label="二维码预览：" prop="qrCode">
               <div class="qr-code display-flex">
                 <div class="qr-code-warp">
@@ -112,7 +253,7 @@
                   <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                   <div v-else class="upload-img flex-column-center-alinecenter">
                     <i class="el-icon-plus avatar-uploader-icon" />
-                    <p>更换头像</p>
+                    <span>更换头像</span>
                   </div>
                 </el-upload>
               </div>
@@ -139,11 +280,18 @@
 import qrCode from "@/assets/0.png";
 import { mapState, mapMutations, mapActions } from "vuex";
 
+import inputEdit from "@/components/inputEdit";
+
 export default {
   name: "ContactWayDetail",
+  components: {
+    inputEdit
+  },
   data() {
     return {
-      qrCode: qrCode,
+      way: "", // 编辑 新增
+      // 基本信息
+      uuid: "", // 回显标签
       isShow: false,
       checkboxGroup: [],
       addNewGroupformData: [],
@@ -152,7 +300,11 @@ export default {
         member: [],
         options: [],
         autoAddFriend: true,
-        openTime: "1"
+        openTime: "1",
+        welComeType: "MYWEL",
+        welcomeContent: "",
+        welComeMediaType: "IMG",
+        link: ""
       },
       rules: {
         name: [
@@ -163,12 +315,49 @@ export default {
           { required: true, message: "请选择客服人员", trigger: "change" }
         ]
       },
+      // 设置欢迎语
+      messageImage: "",
+      mediaId: "",
+      insertName: true,
+      cities: [
+        {
+          value: "Beijing北京北京北京北京",
+          label: "北京北京北京北京北京北京北京北京北京北京",
+          img: qrCode
+        },
+        {
+          value: "Shanghai",
+          label: "上海",
+          img: qrCode
+        },
+        {
+          value: "Nanjing",
+          label: "南京",
+          img: qrCode
+        }
+      ],
+      welcomecontentT: {},
+      memberNick: "客户昵称",
+      // 功能设置
+      qrCode: qrCode,
       imageUrl: "",
-      uuid: "",
-      way: "",
+      imgId: "",
       configId: "",
-      imgId: ""
+      startTime: "",
+      endTime: ""
     };
+  },
+  watch: {
+    "ruleForm.welcomeContent": {
+      handler(newVal, oldVal) {
+        if (newVal.indexOf('<span class="nickName">客户昵称</span>') > -1) {
+          this.insertName = false;
+        } else {
+          this.insertName = true;
+        }
+      },
+      immediate: true
+    }
   },
   computed: {
     ...mapState({
@@ -186,10 +375,11 @@ export default {
     }
   },
   created() {
-    if (this.$route.query && this.$route.query.way) {
-      this.way = this.$route.query.way;
-      if (this.$route.query.way == "add") {
-      } else if (this.$route.query.way == "edit") {
+    this.initFilter();
+    console.log(new Date(2016, 9, 10, 18, 40), "777");
+    if (this.$route.query.uuid) {
+      if (!this.$route.query.uuid) {
+      } else {
         this.uuid = this.$route.query.uuid;
         this.getContactWayDetail(this.uuid);
       }
@@ -204,6 +394,10 @@ export default {
           this.qrCode = res.qrCode;
           this.ruleForm.name = res.remark;
           this.ruleForm.autoAddFriend = res.skipVerify;
+          this.ruleForm.welComeType = res.welComeType;
+          this.ruleForm.welcomeContent = res.welcomeContent;
+          this.ruleForm.welComeMediaType = res.welComeMediaType;
+          this.messageImage = res.welcomeMediaContent;
           res.serviceUsers.map(item => {
             this.ruleForm.member.push(item.userId);
           });
@@ -213,58 +407,114 @@ export default {
         })
         .catch(err => {});
     },
+    /**
+     * 初始化筛选信息
+     */
+    initFilter() {
+      // this.$store
+      //   .dispatch('tag/getListAllTag')
+      //   .then(() => {})
+      //   .catch(err => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: '初始化失败'
+      //     })
+      //   })
+
+      this.$store
+        .dispatch("tag/getListSelect")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: err
+          });
+        });
+
+      this.$store
+        .dispatch("user/getUserListSelect")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: err
+          });
+        });
+      // this.$store
+      //   .dispatch('user/getAllUserList')
+      //   .then(() => {})
+      //   .catch(err => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: '初始化失败'
+      //     })
+      //   })
+    },
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          // if (this.way == "add") {
           let params = {
             remark: this.ruleForm.name,
             scene: 2,
             skipVerify: this.ruleForm.autoAddFriend,
             tags: this.checkboxGroup,
             type: this.ruleForm.member.length > 1 ? 2 : 1,
-            user: this.ruleForm.member
+            user: this.ruleForm.member,
+            welComeMediaType: this.ruleForm.welComeMediaType,
+            welComeType: this.ruleForm.welComeType,
+            welcomeContent: this.ruleForm.welcomeContent
           };
-          if (this.imgId != "") {
-            params.imgId = this.imgId;
+          if (this.ruleForm.welComeType != "MYWEL") {
+            params.welcomeContent = "";
+          } else {
+            // if (!this.insertName) {
+            //   // let welcomeContent = this.ruleForm.welcomeContent.replace(
+            //   //   this.memberNick,
+            //   //   `#${this.memberNick}#`
+            //   // );
+            //   // console.log(welcomeContent, "3333");
+            //   params.welcomeContent = this.ruleForm.welcomeContent;
+            //   console.log(params, "888");
+            // }
+            if (this.ruleForm.welComeMediaType == "IMG" && this.mediaId != "") {
+              params.welcomeMediaContent = this.mediaId;
+            }
           }
-          this.$store
-            .dispatch("contactWay/contactWayAdd", params)
-            .then(() => {
-              this.$message({
-                message: "保存成功",
-                type: "success"
-              });
-              // this.$router.push({
-              //   path: `/contactWay/listAll`
-              // });
-            })
-            .catch(err => {});
-          // } else {
-          // const params = {
-          //   configId: this.configId,
-          //   remark: this.ruleForm.name,
-          //   scene: 2,
-          //   skipVerify: this.ruleForm.autoAddFriend,
-          //   tags: this.checkboxGroup,
-          //   type: this.ruleForm.member.length > 1 ? 2 : 1,
-          //   user: this.ruleForm.member
-          // };
-          // if (this.imgId != "") {
-          //   params.imgId = this.imgId;
-          // }
-
-          // await contactWayUpdate(params)
-          //   .then(() => {
-          //     this.$message({
-          //       message: "保存成功",
-          //       type: "success"
-          //     });
-          //   })
-          //   .catch(err => {});
-          // }
+          if (!this.$route.query.uuid) {
+            if (this.imgId != "") {
+              params.imgId = this.imgId;
+            }
+            this.$store
+              .dispatch("contactWay/contactWayAdd", params)
+              .then(() => {
+                this.$message({
+                  message: "保存成功",
+                  type: "success"
+                });
+                this.$router.push({
+                  path: `/contactWay/listAll`
+                });
+              })
+              .catch(err => {});
+          } else {
+            params.configId = this.configId;
+            if (this.imgId != "") {
+              params.imgId = this.imgId;
+            }
+            this.$store
+              .dispatch("contactWay/contactWayUpdate", params)
+              .then(() => {
+                this.$message({
+                  message: "保存成功",
+                  type: "success"
+                });
+                this.$router.push({
+                  path: `/contactWay/listAll`
+                });
+              })
+              .catch(err => {});
+          }
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -272,7 +522,14 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    handleDelMessageImage() {
+      this.messageImage = "";
+    },
     handleCheckedTagsChange(tag, index) {},
+    handleSetMessageImage(res, file) {
+      this.messageImage = URL.createObjectURL(file.raw);
+      this.mediaId = res.id;
+    },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
       this.imgId = res.id;
@@ -289,6 +546,35 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
+    },
+    insertionMemberName(memberNick) {
+      this.insertName = false;
+      this.ruleForm.welcomeContent =
+        this.ruleForm.welcomeContent +
+        `<span class="nickName">${memberNick}</span>&#8203;`;
+      // });
+      console.log(this.ruleForm.welcomeContent, "99");
+
+      // this.ruleForm.welcomeContent = this.ruleForm.welcomeContent + val;
+      // this.welcomecontentT = "#" + val + "#";
+      // let start = this.ruleForm.welcomeContent.indexOf("ddd");
+      // this.ruleForm.welcomeContent.substring(start, start + "ddd".length);
+      // console.log(
+      //   this.ruleForm.welcomeContent,
+      //   "000",
+      //   start,
+      //   this.ruleForm.welcomeContent.substring(start, start + "ddd".length)
+      // );
+    },
+    handleChoseLink(val) {
+      console.log(val, "val===");
+
+      this.welcomecontentT = this.cities.find(function(item) {
+        return item.value === val;
+      });
+      //obj 就是被选中的那个对象，也就能拿到label值了。
+      // console.log(obj.fruitName)//label值
+      console.log(this.welcomecontentT, "77777"); //value值
     }
   }
 };
@@ -383,10 +669,156 @@ export default {
       }
     }
   }
+  .set-welcome-message {
+    .warning {
+      color: #faad14;
+    }
+    div.tip {
+      width: 50%;
+      margin-left: 40px;
+      font-size: 14px;
+      background: #fff7f0;
+      border-radius: 3px;
+      padding: 14px 6px 14px 13px;
+      margin-right: 16px;
+      margin-bottom: 24px;
+      color: #b5692d;
+      word-break: break-all;
+    }
+    .msg-textarea-box {
+      width: 48%;
+      background: #fbfbfb;
+      border-radius: 2px;
+      border: 1px solid #eee;
+      font-size: 14px;
+      line-height: 20px;
+      -webkit-box-flex: 1;
+      flex: 1;
+      .re-chose {
+        // margin-top: 145px;
+        position: absolute;
+        right: -60px;
+        bottom: 0;
+        color: #1890ff;
+        cursor: pointer;
+      }
+      .insert-btn {
+        border-bottom: 1px dashed #e9e9e9;
+        padding: 6px 15px;
+        color: #e8971d;
+        .clickable {
+          // cursor: pointer;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+        .no-select {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+      }
+      .textarea-box {
+        padding: 6px 13px;
+        span {
+          color: #e8971d;
+        }
+      }
+      .message-box-content {
+        padding: 6px 15px;
+      }
+    }
+  }
+}
+.message-content {
+  .el-select-dropdown {
+    .el-select-dropdown__item {
+      height: auto;
+      line-height: 1px;
+    }
+  }
 }
 </style>
+
 <style lang='scss'>
+.default-wel {
+  .el-form-item__content {
+    line-height: 16px;
+  }
+}
+img.option-img {
+  width: 46px;
+  height: 46px;
+}
+.option-content {
+  margin-left: 10px;
+  color: #8492a6;
+  font-size: 13px;
+  line-height: 14px;
+}
+.label-warp {
+  .el-input__prefix {
+    width: 94%;
+  }
+  .label-input {
+    background-color: #fff;
+    color: #606266;
+    font-size: 13px;
+    height: 38px;
+    outline: 0;
+    padding: 0px 15px;
+    margin-top: 1px;
+    width: 100%;
+  }
+}
 .contact-way-detail {
+  .message-content {
+    margin: 20px 0;
+    .img-warp {
+      position: relative;
+      width: 165px;
+      height: 165px;
+      .close {
+        position: absolute;
+        right: -5px;
+        top: -5px;
+        font-size: 18px;
+        cursor: pointer;
+        color: #d5d5d5;
+      }
+    }
+
+    .avatar-uploader {
+      .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        // overflow: hidden;
+      }
+      .el-upload:hover {
+        border-color: #409eff;
+      }
+      .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 165px;
+        height: 165px;
+        line-height: 178px;
+        text-align: center;
+      }
+    }
+    .avatar {
+      width: 165px;
+      height: 165px;
+      display: block;
+    }
+  }
+  .el-textarea .el-textarea__inner {
+    border: none;
+  }
   .el-checkbox.is-bordered + .el-checkbox.is-bordered {
     margin-left: 0;
   }
@@ -396,11 +828,13 @@ export default {
       left: 185px;
       bottom: 0px;
       .upload-img {
+        width: 66px;
+        height: 66px;
         text-align: center;
         vertical-align: middle;
-        p {
-          font-size: 14px;
-          line-height: 30px;
+        span {
+          font-size: 12px;
+          line-height: 20px;
         }
       }
       .el-upload {
@@ -414,10 +848,10 @@ export default {
         border-color: #409eff;
       }
       .avatar-uploader-icon {
-        font-size: 24px;
+        font-size: 18px;
+        line-height: 18px;
         color: #8c939d;
-        width: 66px;
-        line-height: 36px;
+        text-align: center;
       }
       .avatar {
         width: 66px;
