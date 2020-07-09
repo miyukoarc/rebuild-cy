@@ -58,7 +58,8 @@ export default {
   name: 'tags-drawer',
   data() {
     return {
-      curly: false
+      curly: false,
+      propsType: true
     }
   },
   watch: {
@@ -69,6 +70,7 @@ export default {
         } else {
           this.curly = false
         }
+        this.propsType = Array.isArray(this.tags)
       },
       immediate: true
     }
@@ -78,14 +80,23 @@ export default {
       return this.tags.length
     },
     alterGroups() {
-      if (this.curly) {
-        return this.tags.slice(0, 2)
-      } else {
-        return this.tags
-      }
-    },
-    propsType() {
-      return Array.isArray(this.tags)
+
+        if(this.propsType){
+            return this.curly?this.tags.slice(0,2):this.tags
+        }else{
+            const temp = this.tags
+            const keys = Object.keys(this.tags)
+            if(keys.length>2){
+                return this.tags
+            }else{
+                for(let i=0;i<keys.length-2;i++){
+                    Reflect.deleteProperty(temp,keys[i])
+                }
+                return temp
+            }
+            
+
+        }
     }
   },
   methods: {

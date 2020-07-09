@@ -23,7 +23,7 @@ components:{
   data() {
     return {
       dialogVisible: false,
-      event: 'DistributeTemplate',
+      event: '',
       eventType: '',
       transfer: {}
     };
