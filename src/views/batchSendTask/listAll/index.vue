@@ -1,15 +1,10 @@
 <template>
   <div class="app-container">
-    <!-- <el-card class="content-spacing">
-      <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
-    </el-card> -->
-
     <el-card class="content-spacing">
-      <tool-bar :hasExport="false" @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
-          <div slot="right">
-              <el-t-button :popAuth="true" :auth="permissionMap['batchSendTask']['batchSendTask_add']" type="primary">新建群发</el-t-button>
-          </div>
-      </tool-bar>
+      <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
+    </el-card>
+    <el-card class="content-spacing">
+      <tool-bar @handleExport="doExport" @actionDepartment="actionDepartment"></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -37,9 +32,9 @@
             </template>
           </el-table-column>
           <el-table-column label="发送者" align="left">
-              <template v-slot="scope">
-                  <div>{{scope.row.sender.name}}</div>
-              </template>
+            <template v-slot="scope">
+              <div>{{scope.row.sender.name}}</div>
+            </template>
           </el-table-column>
           <el-table-column label="群发类型" align="left" prop="sendType"></el-table-column>
           <el-table-column label="内容" align="left" prop="textContent"></el-table-column>
@@ -69,12 +64,11 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from './detail.vue'
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import UserDetail from "./detail.vue";
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -82,7 +76,6 @@ export default {
     UserDetail,
     FormDialog,
     ToolBar
-    // mHeadedr
   },
   data() {
     return {
@@ -91,17 +84,11 @@ export default {
         pageNumber: 0,
         pageSize: 10
       },
-
       query: {
         page: 0,
-        size: 10,
-        // flag: true,
-        // name: '',
-        // tagIds: '',
-        // userId: '',
-        // roleUuid: ''
+        size: 10
       }
-    }
+    };
   },
   watch: {},
   computed: {
@@ -116,81 +103,85 @@ export default {
     })
   },
   created() {
-    this.initDataList(this.query)
+    this.initDataList(this.query);
     // this.initFilter()
   },
   methods: {
     doExport(val) {
-      console.log(val)
+      console.log(val);
     },
     /**
      * 初始化筛选信息
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListSelect')
+        .dispatch("tag/getListSelect")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
 
       this.$store
-        .dispatch('user/getAllUserList')
+        .dispatch("user/getAllUserList")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('batchSendTask/getList', payload)
+        .dispatch("batchSendTask/getList", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
         })
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
     handleDetail(val) {
-      const payload = this.userList[val].uuid
+      const payload = this.userList[val].uuid;
       this.$router.push({
-        path: '/user/detail',
+        path: "/user/detail",
         query: { uuid: payload }
-      })
+      });
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
-      console.log(val, 'handleSearch')
-      this.initDataList(this.query)
+      const { tagIds, name } = val;
+      this.query.tagIds = tagIds ? tagIds : this.query.tagIds;
+      this.query.name = name ? name : this.query.name;
+      console.log(val, "handleSearch");
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      console.log('handleRefresh')
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      console.log("handleRefresh");
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
+    },
+
+    actionDepartment(a) {
+      console.log(a);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

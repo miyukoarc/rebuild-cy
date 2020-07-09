@@ -36,7 +36,6 @@ router.beforeEach(async (to, from, next) => {
   console.log(hasToken)
 
   if (hasToken) {
-
     if (to.path === '/login') {
       //if is logged in, redirect to the home page
       //   alert('login')
@@ -47,12 +46,12 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // alert('hasLogin')
 
+
       const username = store.getters.name
 
       if (username) {
         next()
       } else {
-
         try {
 
           let accessed
@@ -81,6 +80,7 @@ router.beforeEach(async (to, from, next) => {
             }
             ]
           )
+
           next({
             ...to,
             replace: true
@@ -96,7 +96,6 @@ router.beforeEach(async (to, from, next) => {
     }
 
   } else {
-
     if (whiteList.indexOf(to.path) !== -1) {
       //   console.log(router, '1')
       next()

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-form :model="form" ref="form" label-width="120px">
+    <el-form ref="form" label-width="120px">
       <el-form-item label="名称" prop="name">
-        <el-select v-model="form.roleUuid">
+        <el-select v-model="roleUuid">
           <el-option
             v-for="item in roleList"
             :key="item.uuid"
@@ -24,33 +24,61 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+      // 变更为的角色
+      roleUuid: "",
+      // 单人修改角色
       form: {
         alias: "",
         departmentUuids: [],
         name: "",
         position: "",
-        roleUuid: "",
         uuid: ""
-      }
+      },
+      // 多人修改角色
+      forms: [],
+      // 是否为多人修改角色，默认为否，即单人
+      isBatchUpdate: false
     };
   },
   watch: {
     user: {
       handler(newVal, oldVal) {
-        this.form.alias = newVal.alias;
-        this.form.departmentUuids[0] =
-          newVal.departments[newVal.departments.length - 1].uuid;
-        this.form.name = newVal.name;
-        this.form.position = newVal.position;
-        this.form.roleUuid = newVal.roleUuid;
-        this.form.uuid = newVal.uuid;
+        if (Object.keys(newVal) != 0) {
+          this.roleUuid = newVal.role.uuid;
+          this.isBatchUpdate = false;
+
+          this.form.alias = newVal.alias;
+          this.form.name = newVal.name;
+          this.form.position = newVal.position;
+          this.form.uuid = newVal.uuid;
+        }
+      },
+      immediate: true
+    },
+    users: {
+      handler(newVal, oldVal) {
+        if (newVal.length > 0) {
+          this.isBatchUpdate = true;
+          this.roleUuid = newVal[0].role.uuid;
+          newVal.map((obj, index) => {
+            this.forms[index] = {
+              alias: obj.alias,
+              name: obj.name,
+              position: obj.position,
+              uuid: obj.uuid
+            };
+          });
+        }
       },
       immediate: true
     }
   },
   computed: {
     ...mapState({
+      // 修改单个角色
       user: state => state.user.currentRowUserList,
+      // 批量修改多个角色
+      users: state => state.user.currentRowUsers,
       roleList: state => state.role.roleList
     })
   },
@@ -61,24 +89,47 @@ export default {
     handleCancel() {
       this.closeDialog();
     },
+
     handleConfrim() {
-      const payload = this.form;
-      this.$store
-        .dispatch("user/user_update", payload)
-        .then(res => {
+      if (!this.isBatchUpdate) {
+        const payload = { ...this.form, roleUuid: this.roleUuid };
+        this.$store
+          .dispatch("user/user_update", payload)
+          .then(res => {
+            this.$message({
+              type: "success",
+              message: "操作成功"
+            });
+            this.$bus.$emit("handleRefresh");
+            this.closeDialog();
+          })
+          .catch(err => {
+            this.$message({
+              type: "error",
+              message: err
+            });
+          });
+      } else {
+        try {
+          this.forms.map(async payload => {
+            await this.$store.dispatch("user/user_update", {
+              ...payload,
+              roleUuid: this.roleUuid
+            });
+          });
           this.$message({
             type: "success",
             message: "操作成功"
           });
           this.$bus.$emit("handleRefresh");
           this.closeDialog();
-        })
-        .catch(err => {
+        } catch (error) {
           this.$message({
             type: "error",
             message: err
           });
-        });
+        }
+      }
     }
   }
 };

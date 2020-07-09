@@ -82,9 +82,9 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
 
 import { mapState, mapMutations, mapActions } from "vuex";
 
@@ -125,7 +125,7 @@ export default {
       this.$refs["formDialog"].dialogVisible = true;
     },
     initFilter() {
-        // this.$store.dispatch
+      // this.$store.dispatch
     },
     initDataList() {
       this.$store
@@ -138,28 +138,28 @@ export default {
           });
         });
     },
-    handleChange(){
-    this.$refs['formDialog'].event = 'ChangeTemplate'        
-    this.$refs['formDialog'].eventType = 'change'        
-        this.$refs['formDialog'].dialogVisible = true
+    handleChange() {
+      this.$refs["formDialog"].event = "ChangeTemplate";
+      this.$refs["formDialog"].eventType = "change";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     handleEdit(val) {
       const { name, code, uuid, remark } = val
       const payload = { name, code, uuid, remark }
       // const payload = this.roleList[index]
-      this.$store.commit('role/SAVE_DETAIL', payload)
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
-      this.$refs['formDialog'].dialogVisible = true
-      this.$refs['formDialog'].transfer = payload
+      this.$store.commit("role/SAVE_DETAIL", payload);
+      this.$refs["formDialog"].event = "EditTemplate";
+      this.$refs["formDialog"].eventType = "edit";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = payload;
     },
     handleDelete(val) {
-      const { uuid } = val
-      const payload = { uuid }
-      this.$confirm('是否删除当前角色', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      const { uuid } = val;
+      const payload = { uuid };
+      this.$confirm("是否删除当前角色", "Warning", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(async () => {
           await this.$store
@@ -178,7 +178,7 @@ export default {
               });
             });
         })
-        .catch(err => {})
+        .catch(err => {});
     },
     handlePermission(val) {
       const { uuid,code } = val
