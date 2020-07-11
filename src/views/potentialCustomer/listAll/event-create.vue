@@ -1,11 +1,11 @@
 <template>
-  <el-form :model="form[0]" ref="form" :rules="rules" label-width="100px">
+  <el-form :model="form" ref="form" label-position="left" :rules="rules" label-width="100px">
     <el-form-item label="客户名">
-      <el-input v-model="form[0].name"></el-input>
+      <el-input v-model="form.name"></el-input>
     </el-form-item>
 
     <el-form-item label="持有人">
-      <el-select v-model="form[0].userUuid" style="width:100%">
+      <el-select v-model="form.belongUuid" style="width:100%">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -16,8 +16,20 @@
     </el-form-item>
 
     <el-form-item label="手机号" prop="mobile">
-      <el-input v-model="form[0].mobile"></el-input>
+      <el-input v-model="form.mobile"></el-input>
     </el-form-item>
+
+    <el-form-item label="预设标签">
+      <label slot="label" class="tag-label">
+        预设标签
+        <el-tooltip class="item" effect="dark" content="添加成为用户后，将自动打上预设标签" placement="right">
+          <i class="el-icon-question tip"></i>
+        </el-tooltip>
+      </label>
+    </el-form-item>
+    <div>
+      <tag-select v-model="form.tagsUuid" :options="tagListSelect"></tag-select>
+    </div>
 
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
@@ -27,12 +39,16 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from "vuex";
+import TagSelect from "@/components/TagSelect";
 
 import { isMobilePhone } from "@/utils/validate.js";
 
 export default {
   inject: ["reload"],
+  components: {
+    TagSelect
+  },
   data() {
     // 验证手机号
     const validatePhone = (rule, value, callback) => {
@@ -44,13 +60,12 @@ export default {
     };
     return {
       hasParent: false,
-      form: [
-        {
-          mobile: "",
-          name: "",
-          userUuid: ""
-        }
-      ],
+      form: {
+        belongUuid: "",
+        mobile: "",
+        name: "",
+        tagsUuid: [0]
+      },
       rules: {
         mobile: [
           { required: true, message: "请输入手机号", trigger: "blur" },
@@ -59,7 +74,8 @@ export default {
             trigger: ["blur", "change"]
           }
         ]
-      }
+      },
+      result: []
     };
   },
   watch: {
@@ -74,21 +90,41 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['uuid']),
+    ...mapGetters(["uuid"]),
     ...mapState({
       userListAll: state => state.user.listSelect,
+      tagListSelect: state => state.tag.tagListSelect
     })
   },
+  created() {
+    this.initFilter();
+  },
   mounted() {
-    this.form[0].userUuid = this.uuid
+    this.form.belongUuid = this.uuid;
   },
   methods: {
+    /**
+     * 初始化筛选信息
+     */
+    initFilter() {
+      this.$store
+        .dispatch("tag/getListSelect")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: "初始化失败"
+          });
+        });
+    },
     handleConfirm() {
       const payload = this.form;
 
       this.$refs["form"].validate(valid => {
         if (valid) {
           console.log(payload);
+          let tagsUuids = Array.prototype.concat.apply([], payload.tagsUuid);
+          payload.tagsUuid = tagsUuids;
           this.$store
             .dispatch("potentialCustomer/batchAdd", payload)
             .then(() => {
@@ -119,9 +155,9 @@ export default {
     },
     refresh() {
       this.$store
-        .dispatch("potentialCustomer/getListMy")
+        .dispatch("potentialCustomer/getList")
         .then(() => {
-          this.reload();
+          // this.reload();
         })
         .catch(err => {
           this.$message({
@@ -134,5 +170,16 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.tag-label {
+  text-align: right;
+  vertical-align: middle;
+  float: left;
+  font-size: 14px;
+  color: #606266;
+  line-height: 40px;
+  padding: 0 12px 0 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
 </style>

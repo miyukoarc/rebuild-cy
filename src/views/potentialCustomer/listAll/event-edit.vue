@@ -1,23 +1,23 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" label-width="100px">
-    <el-form-item label="客户名" prop="name">
+    <el-form-item label="客户名">
       <el-input v-model="form.name"></el-input>
     </el-form-item>
     <el-form-item label="手机号" prop="mobile">
       <el-input v-model="form.mobile" disabled></el-input>
     </el-form-item>
-    <el-form-item label="备注" prop="remark">
-      <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.remark"></el-input>
-      <!-- <el-select  v-model="form.parent" placeholder="请选择">
-            <el-option
-                :disabled="!hasParent"
-                v-for="item in 10"
-                :key="item"
-                :label="item"
-                :value="item"
-            ></el-option>
-      </el-select>-->
+
+    <el-form-item label="预设标签">
+      <label slot="label" class="tag-label">
+        预设标签
+        <el-tooltip class="item" effect="dark" content="添加成为用户后，将自动打上预设标签" placement="right">
+          <i class="el-icon-question tip"></i>
+        </el-tooltip>
+      </label>
     </el-form-item>
+    <div>
+      <tag-select v-model="form.tagsUuid" :options="tagListSelect"></tag-select>
+    </div>
 
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
@@ -28,7 +28,7 @@
 
 <script>
 import { mapState } from "vuex";
-
+import TagSelect from "@/components/TagSelect";
 export default {
   inject: ["reload"],
   props: {
@@ -37,13 +37,16 @@ export default {
       default: () => {}
     }
   },
+  components: {
+    TagSelect
+  },
   data() {
     return {
       hasParent: false,
       form: {
         mobile: "",
         name: "",
-        remark: "",
+        tagsUuid: "",
         uuid: ""
       },
       rules: {
@@ -65,18 +68,20 @@ export default {
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        // console.log(newVal)
-        const { name, remark, uuid, mobile } = newVal;
-        this.form.name = name;
-        this.form.remark = remark;
+        console.log(newVal, "newVal");
+        const { belong, uuid, selectedTag } = newVal;
+        this.form.name = belong.name;
         this.form.uuid = uuid;
-        this.form.mobile = mobile;
+        this.form.mobile = belong.mobile;
+        this.form.tagsUuid = selectedTag;
       },
       immediate: true
     }
   },
   computed: {
-    ...mapState({})
+    ...mapState({
+      tagListSelect: state => state.tag.tagListSelect
+    })
   },
   mounted() {},
   methods: {

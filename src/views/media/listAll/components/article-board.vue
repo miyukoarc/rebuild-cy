@@ -9,6 +9,7 @@
             lazy
             highlight-current-row
             :show-header="true"
+             header-row-class-name="el-table-header"
           >
             <el-table-column label="创建人">
                 <template v-slot="scope">

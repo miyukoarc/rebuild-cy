@@ -22,6 +22,7 @@
           stripe
           lazy
           highlight-current-row
+           header-row-class-name="el-table-header"
           @selection-change="handleSelectionChange"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->

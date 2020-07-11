@@ -32,20 +32,38 @@
           lazy
           highlight-current-row
           @selection-change="handleSelectionChange"
+          header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="客户名" align="left" prop="name"></el-table-column>
           <el-table-column label="手机号" align="left" prop="mobile"></el-table-column>
+          <el-table-column>
+            <template slot="header">
+              <span>
+                预设标签
+                <el-tooltip placement="right">
+                  <div slot="content">
+                    <span class="font-exs color-info">添加成为用户后，将自动打上预设标签。</span>
+                  </div>
+                  <i class="el-icon-question"></i>
+                </el-tooltip>
+              </span>
+            </template>
+            <template v-slot="{row}">
+              <!-- <div>{{row}}</div> -->
+              <tags-drawer :tags="row.potentialCustomerTags"></tags-drawer>
+            </template>
+          </el-table-column>
           <el-table-column label="批量添加次数" align="left" prop="tryCount"></el-table-column>
           <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
           <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
-              <div>{{scope.row.belong.name}}</div>
+              <!-- <user-tag :user="scope.row.user" :hasPop="hasPop"></user-tag> -->
             </template>
           </el-table-column>
           <el-table-column label="添加员工" align="left">
             <template v-slot="scope">
-              <div>{{scope.row.creator.name}}</div>
+              <!-- <user-tag :user="scope.row.user" :hasPop="hasPop"></user-tag> -->
             </template>
           </el-table-column>
           <el-table-column label="操作" align="left">
@@ -54,7 +72,7 @@
                 size="mini"
                 :popAuth="true"
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
-                @click.stop="handleEdit(scope.$index)"
+                @click.stop="handleEdit(scope.row)"
               >编辑</el-t-button>
               <el-t-button
                 type="danger"
@@ -91,6 +109,7 @@
 // import mHeadedr from "./header";
 import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
+import TagsDrawer from "@/components/TagsDrawer";
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
@@ -101,7 +120,8 @@ export default {
     ListHeader,
     UserDetail,
     FormDialog,
-    ToolBar
+    ToolBar,
+    TagsDrawer
     // mHeadedr
   },
   data() {
@@ -158,15 +178,15 @@ export default {
      * 初始化筛选信息
      */
     initFilter() {
-      // this.$store
-      //   .dispatch('tag/getListSelect')
-      //   .then(() => {})
-      //   .catch(err => {
-      //     this.$message({
-      //       type: 'error',
-      //       message: '初始化失败'
-      //     })
-      //   })
+      this.$store
+        .dispatch("tag/getListSelect")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: "初始化失败"
+          });
+        });
 
       this.$store
         .dispatch("user/getUserListSelect")
@@ -274,10 +294,18 @@ export default {
         });
       }
     },
-    handleEdit(index) {
-      const { name, remark, mobile, uuid } = this.listAll[index];
-      const payload = { name, remark, mobile, uuid };
-      // console.log(payload)
+    handleEdit(row) {
+      console.log(row, "row");
+      const { belong, uuid } = row;
+      let selectedTag = [];
+      row.potentialCustomerTags.map(item => {
+        item.tags.map(tag => {
+          selectedTag.push(tag.uuid);
+        });
+      });
+      console.log(selectedTag, "aaaa");
+      const payload = { belong, uuid, selectedTag };
+      console.log(payload, "88");
       this.$refs["formDialog"].event = "EditTemplate";
       this.$refs["formDialog"].eventType = "edit";
       this.$refs["formDialog"].dialogVisible = true;

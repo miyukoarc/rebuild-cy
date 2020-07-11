@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-09 17:59:52
- * @LastEditTime: 2020-07-09 19:10:50
+ * @LastEditTime: 2020-07-10 11:38:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\TagDrawerObj\index.vue
 --> 
 <template>
   <div>
-    <div class="drawer-container" v-if="alterGroups != '{}'">
+    <div class="drawer-container" v-if="(JSON.stringify(alterGroups) != '{}')">
       <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
         <el-row type="flex" class="row-bg" justify="center">
           <el-col :span="8">
@@ -34,6 +34,7 @@
         </el-button>
       </div>
     </div>
+
     <span v-else>--</span>
   </div>
 </template>
@@ -78,30 +79,24 @@ export default {
     },
     alterGroups() {
       if (this.tags) {
-        if (Array.isArray(this.tags)) {
-          if (this.curly) {
-            return this.tags.slice(0, 2);
-          } else {
-            return this.tags;
-          }
-        } else {
-          let group = Object.keys(this.tags);
-          if (this.curly) {
-            return group.reduce((pre, cur, index) => {
-              if (index < 2) {
-                pre[cur] = this.tags[cur];
-              }
-              return pre;
-            }, {});
-          } else {
-            return group.reduce((pre, cur, index) => {
+        let group = Object.keys(this.tags);
+        if (this.curly) {
+          return group.reduce((pre, cur, index) => {
+            if (index < 2) {
               pre[cur] = this.tags[cur];
-              return pre;
-            }, {});
-          }
+            }
+            return pre;
+          }, {});
+        } else {
+          return group.reduce((pre, cur, index) => {
+            pre[cur] = this.tags[cur];
+            return pre;
+          }, {});
         }
       }
     }
+  },
+  mounted() {
   },
   methods: {
     alterTags(arr) {

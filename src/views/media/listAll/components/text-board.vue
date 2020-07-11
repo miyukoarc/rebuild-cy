@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-28 20:55:30
+ * @LastEditTime: 2020-07-09 19:48:15
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\media\listAll\components\text-board.vue
+--> 
 <template>
   <div>
       <div class="btn-container">
@@ -9,6 +17,7 @@
             lazy
             highlight-current-row
             :show-header="true"
+             header-row-class-name="el-table-header"
           >
             <el-table-column label="创建人">
                 <template v-slot="scope">

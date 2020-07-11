@@ -27,6 +27,7 @@
           lazy
           fit
           highlight-current-row
+           header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="二维码" align="left">

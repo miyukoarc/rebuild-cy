@@ -25,6 +25,7 @@
           lazy
           highlight-current-row
           @selection-change="handleSelectionChange"
+           header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column prop="name" label="员工姓名" align="left"></el-table-column>

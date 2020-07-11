@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-30 17:39:37
- * @LastEditTime: 2020-07-09 19:23:41
+ * @LastEditTime: 2020-07-11 10:24:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\detail\event-editTags.vue
@@ -9,7 +9,7 @@
 <template>
   <el-form :model="form" ref="form">
     <div class="tag-warp">
-      <div v-for="(tagGroup,index) in b" :key="index" class="tag-list-warp">
+      <div v-for="(tagGroup,index) in tagListSelect" :key="index" class="tag-list-warp">
         <el-row :gutter="20" type="flex" justify="center">
           <el-col :span="8">
             <span class="lg-42">{{ tagGroup.groupName }}</span>
@@ -56,8 +56,7 @@ export default {
       checkboxGroup: [],
       delTags: [],
       addTags: [],
-      arrayData1: [],
-      arrayData2: []
+      newTagsList: []
     };
   },
   computed: {
@@ -71,7 +70,16 @@ export default {
     this.checkboxGroup = this.editTagsUuid;
   },
   mounted() {
-    
+    this.newTagsList = JSON.parse(JSON.stringify(this.tagListSelect));
+    this.newTagsList.map((item, index) => {
+      item.tagList.map(tag => {
+        if (this.checkboxGroup.includes(tag.tagId)) {
+          const itemData = item;
+          this.tagListSelect.splice(index, 1);
+          this.tagListSelect.unshift(itemData);
+        }
+      });
+    });
   },
   methods: {
     // 选择标签

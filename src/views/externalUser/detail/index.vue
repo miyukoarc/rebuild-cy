@@ -110,6 +110,7 @@
               stripe
               lazy
               highlight-current-row
+               header-row-class-name="el-table-header"
             >
               <el-table-column label="所属员工" align="left">
                 <template v-slot="scope">

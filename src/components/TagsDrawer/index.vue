@@ -1,60 +1,45 @@
 <template>
   <div>
-    <div class="drawer-container" v-if="alterGroups != null ">
-      <div v-if="propsType">
-        <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
-          <el-row type="flex" class="row-bg" justify="center">
-            <el-col :span="8">
-              <div class="font-exs color-info group-name">{{group.groupName}}：</div>
-            </el-col>
-            <el-col :span="16">
-              <div class="tags-container">
-                <el-tag
-                  class="tag-unit text-ellipsis"
-                  type="info"
-                  size="mini"
-                  v-for="tag in alterTags(group.tags)"
-                  :key="tag.tagId"
-                >{{tag.tagName}}</el-tag>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
+    <div class="drawer-container" v-if="alterGroups != null">
+      <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
+        <el-row type="flex" class="row-bg" justify="center">
+          <el-col :span="8">
+            <div class="font-exs color-info group-name">{{group.groupName}}：</div>
+          </el-col>
+          <el-col :span="16">
+            <div class="tags-container">
+              <el-tag
+                class="tag-unit text-ellipsis"
+                type="info"
+                size="mini"
+                v-for="tag in alterTags(group.tags)"
+                :key="tag.tagId"
+              >{{tag.tagName}}</el-tag>
+            </div>
+          </el-col>
+        </el-row>
       </div>
-      <div v-else>
-        <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
-          <el-row type="flex" class="row-bg" justify="center">
-            <el-col :span="8">
-              <div class="font-exs color-info group-name">{{key}}：</div>
-            </el-col>
-            <el-col :span="16">
-              <div class="tags-container">
-                <el-tag
-                  class="tag-unit text-ellipsis"
-                  type="info"
-                  size="mini"
-                  v-for="tag in alterTags(group)"
-                  :key="tag.tagId"
-                >{{tag.tagName}}</el-tag>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </div>
-      <div class="text-align-center" v-if="Object.values(tags).length>2">
+      <div class="text-align-center" v-if="tags.length>2">
         <el-button type="text" size="mini" @click="curly=!curly">
-          <span>{{curly?'展开':'收起'}}</span>
+          展开
           <i :class="[curly?'el-icon-caret-bottom':'el-icon-caret-top']"></i>
         </el-button>
       </div>
     </div>
-    <span v-else>--</span>
+    <div v-else>--</div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["tags"],
+  props: {
+    tags: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    }
+  },
   name: "tags-drawer",
   data() {
     return {
@@ -64,19 +49,10 @@ export default {
   watch: {
     tags: {
       handler(newVal, oldVal) {
-        console.log(newVal, "99");
-        if (newVal && Array.isArray(newVal)) {
-          if (newVal.length > 2) {
-            this.curly = true;
-          } else {
-            this.curly = false;
-          }
+        if (newVal.length > 2) {
+          this.curly = true;
         } else {
-          if (Object.keys(newVal).length > 2) {
-            this.curly = true;
-          } else {
-            this.curly = false;
-          }
+          this.curly = false;
         }
       },
       immediate: true
@@ -84,44 +60,14 @@ export default {
   },
   computed: {
     total() {
-      if (this.tags) {
-        if (Array.isArray(this.tags)) {
-          return this.tags.length;
-        } else {
-          return Object.keys(this.tags).length;
-        }
-      } else {
-        return 0;
-      }
+      return this.tags.length;
     },
     alterGroups() {
-      if (this.tags) {
-        if (Array.isArray(this.tags)) {
-          if (this.curly) {
-            return this.tags.slice(0, 2);
-          } else {
-            return this.tags;
-          }
-        } else {
-          let group = Object.keys(this.tags);
-          if (this.curly) {
-            return group.reduce((pre, cur, index) => {
-              if (index < 2) {
-                pre[cur] = this.tags[cur];
-              }
-              return pre;
-            }, {});
-          } else {
-            return group.reduce((pre, cur, index) => {
-              pre[cur] = this.tags[cur];
-              return pre;
-            }, {});
-          }
-        }
+      if (this.curly) {
+        return this.tags.slice(0, 2);
+      } else {
+        return this.tags;
       }
-    },
-    propsType() {
-      return Array.isArray(this.tags);
     }
   },
   methods: {

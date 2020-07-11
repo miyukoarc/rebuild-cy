@@ -35,6 +35,7 @@
           highlight-current-row
           :default-sort="{order:'ascending',prop:'auditState'}"
           @selection-change="handleSelectionChange"
+           header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column align="center" label="角色名称" prop="roleName"></el-table-column>
