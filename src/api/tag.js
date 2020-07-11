@@ -82,3 +82,15 @@ export const updateTagIsAudit = (payload)=>{
 //         params: payload
 //     })
 // }
+
+/**
+ * 改变标签组序号
+ * @param {*} payload 
+ */
+export const updateTagSort = (payload)=>{
+    return request({
+        url: '/tag/updateTagSort',
+        method: 'post',
+        data: payload
+    })
+}

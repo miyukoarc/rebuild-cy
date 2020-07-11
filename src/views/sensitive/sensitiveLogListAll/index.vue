@@ -5,8 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
-      </tool-bar>
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}条记录`"></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -20,20 +19,25 @@
           lazy
           highlight-current-row
         >
-          <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="事件" align="left" prop="param"></el-table-column>
-          <el-table-column label="模块" align="left" prop="type"></el-table-column>
-          <el-table-column label="发生时间" align="left" prop="createdAt"></el-table-column>
-          <el-table-column label="操作人" align="left">
-              
-            <template slot-scope="scope">
-                <div v-if="scope.row.triggerUser">{{scope.row.triggerUser.name}}</div>
-              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
+          <el-table-column type="selection"></el-table-column>
+          <el-table-column label="触发内容" align="left">
+            <template v-slot="{row}">
+              <dir>{{row.sensitive.word}}</dir>
             </template>
           </el-table-column>
+          <el-table-column label="触发员工" align="left">
+            <template v-slot="{row}">
+              <async-user-tag
+                size="small"
+                type="info"
+                :uuid="row.triggerUser.uuid"
+              >
+                <i class="el-icon-user-solid"></i>
+                {{row.triggerUser.name}}
+              </async-user-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="触发事件" align="left" prop="createdAt"></el-table-column>
         </el-table>
 
         <el-pagination
@@ -54,16 +58,16 @@
 
 <script>
 // import mHeadedr from "./header";
-import UserDetail from './detail.vue'
+// import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
 import { mapState, mapMutations, mapActions } from 'vuex'
-
+import AsyncUserTag from '@/components/AsyncUserTag'
 export default {
   components: {
     ListHeader,
-    UserDetail,
+    AsyncUserTag,
     FormDialog,
     ToolBar
     // mHeadedr
@@ -81,14 +85,14 @@ export default {
         size: 10,
         param: '',
         startTime: '',
-        endTime: '',
+        endTime: ''
       }
     }
   },
   watch: {},
   computed: {
     ...mapState({
-    //   tagListAll: state => state.tag.tagListAll,
+      //   tagListAll: state => state.tag.tagListAll,
 
       loading: state => state.sensitive.loading,
       listAll: state => state.sensitive.logListAll,

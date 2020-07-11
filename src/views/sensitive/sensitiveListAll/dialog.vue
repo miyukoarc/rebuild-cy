@@ -13,12 +13,14 @@
 import CreateTemplate from './event-create.vue'
 import EditTemplate from './event-edit.vue'
 import DistributeTemplate from './event-distribute'
+import ChangeTemplate from './event-change'
 import {mapState} from 'vuex'
 export default {
 components:{
     CreateTemplate,
     EditTemplate,
-    DistributeTemplate
+    DistributeTemplate,
+    ChangeTemplate
 },
   data() {
     return {
@@ -55,15 +57,15 @@ components:{
 
       genTitle(){
           if(this.eventType==='create'){
-              return '创建模板'
+              return '新建敏感词'
           }
 
           if(this.eventType==='edit'){
-              return '编辑模板'
+              return '编辑敏感词'
           }
 
-          if(this.eventType==='distribute'){
-              return '分配部门'
+          if(this.eventType==='change'){
+              return '修改通知人'
           }
           
           

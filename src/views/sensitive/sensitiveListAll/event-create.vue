@@ -135,7 +135,6 @@ export default {
   },
   computed: {
     ...mapState({
-      userListSelect: state => state.user.listSelect,
       departmentList: state => state.department.departmentList,
       listSelect: state => state.role.listSelect,
       tagListSelect: state => state.tag.tagListSelect

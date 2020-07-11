@@ -12,6 +12,7 @@ import getPageTitle from '@/utils/get-page-title'
 import {
   resolvePlugin
 } from '@babel/core'
+import Watermark from '@/utils/watermark'
 
 
 
@@ -50,16 +51,23 @@ router.beforeEach(async (to, from, next) => {
       const username = store.getters.name
 
       if (username) {
+
+        store.commit('app/SET_WATERMARK', username)
+
+
         next()
       } else {
         try {
 
           let accessed
-          await store.dispatch('user/getMyInfo').then(() => {
+          await store.dispatch('user/getMyInfo').then((res) => {
             //   console.log(res)
-            console.log(store.state.user.name)
+            // console.log(store.state.user.name)
 
-            // 
+            const name = res.name
+
+            window.watermark = new Watermark(name)
+            window.watermark.create()
 
           }).catch(err => {
             Message({

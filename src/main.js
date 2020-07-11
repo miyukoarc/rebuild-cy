@@ -59,6 +59,7 @@ Vue.use(ElSelectTree)
 
 if (isElectron()) {
     // console.log('electron')
+    /*
     const electron = window.require('electron')
     const {
       ipcRenderer,
@@ -69,6 +70,7 @@ if (isElectron()) {
     Vue.prototype.$isElectron = isElectron
     const {BrowserWindow} = remote
     Vue.prototype.$BrowserWindow = BrowserWindow
+    */
   
     // console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
   

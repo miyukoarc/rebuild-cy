@@ -118,7 +118,8 @@ export default {
 
   .no-redirect {
     color: #97a8be;
-    cursor: text;
+    // cursor: text;
+    user-select: none;
   }
 }
 </style>

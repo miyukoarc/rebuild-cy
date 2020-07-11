@@ -1,11 +1,14 @@
 import Cookies from 'js-cookie'
+import Watermark from '@/utils/watermark'
 
 const state = {
   sidebar: {
     opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
     withoutAnimation: false
   },
-  device: 'desktop'
+  device: 'desktop',
+  watermark: null
+  
 }
 
 const mutations = {
@@ -25,7 +28,14 @@ const mutations = {
   },
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
-  }
+  },
+  SET_WATERMARK(state,payload){
+    state.watermark = new Watermark(payload)
+    },
+    REMOVE_WATERMARK(state){
+        state.watermark.remove()
+        state.watermark = null
+    }
 }
 
 const actions = {

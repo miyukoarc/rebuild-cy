@@ -1,36 +1,17 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" label-width="100px" label-position="left">
-    <el-form-item label="敏感词">
-      <el-tag
-        :key="tag"
-        v-for="tag in form.words"
-        closable
-        size="big"
-        style="margin-right:5px;"
-        :disable-transitions="false"
-        @close="handleClose(tag)"
-      >{{tag}}</el-tag>
-      <el-input
-        class="input-new-tag"
-        v-if="inputVisible"
-        v-model="inputValue"
-        ref="saveTagInput"
-        size="small"
-        @keyup.enter.native="handleInputConfirm"
-        @blur="handleInputConfirm"
-      ></el-input>
-      <el-button v-else class="button-new-tag" size="small" @click="showInput">
-        <i class="el-icon-plus"></i>添加
-      </el-button>
+    <el-form-item label="敏感词" prop="word">
+      <el-input v-model.trim="form.word"></el-input>
     </el-form-item>
-    <el-form-item label="被通知人">
+
+    <!-- <el-form-item label="被通知人">
       <div>
         <el-radio v-model="form.informType" label="USER">员工通知</el-radio>
         <el-radio v-model="form.informType" label="ROLE">角色通知</el-radio>
       </div>
-    </el-form-item>
+    </el-form-item>-->
 
-    <el-form-item label></el-form-item>
+    <!-- <el-form-item label></el-form-item>
     <div class="mb-20">
       <keep-alive>
         <div class="role-container mb-20" v-if="form.informType=='ROLE'">
@@ -48,9 +29,9 @@
         </div>
       </keep-alive>
       <span class="font-exs color-info">当员工触发敏感词后，除通知以上设置被通知人，触发的员工本人也将收到通知消息。</span>
-    </div>
+    </div>-->
 
-    <el-form-item label="符合标签">
+    <el-form-item label="重置标签">
       <div>
         <el-radio v-model="form.tagType" label="INSET">包含其一</el-radio>
         <el-radio v-model="form.tagType" label="UNIONSET">完全匹配</el-radio>
@@ -73,6 +54,14 @@ import TagSelect from '@/components/TagSelect'
 
 export default {
   inject: ['reload'],
+  props: {
+    transfer: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
+  },
   components: {
     AsyncUserTag,
     ComplexSelect,
@@ -82,20 +71,23 @@ export default {
     return {
       userSelects: [],
       tagSelects: [],
+      tagOriginSelects: null,
+      indexTemp: [],
       inputVisible: false,
       inputValue: '',
       form: {
-        tagType: 'INSET', //INSET UNIONSET
-        informType: 'USER', //USER,ROLE
-        type: 'MSG',
-        words: []
+        // tagType: 'INSET', //INSET UNIONSET
+        // informType: 'USER', //USER,ROLE
+        // type: 'MSG',
+        // word: '',
+        // uuid: null
       },
       toUserTags: [],
       toRoles: [],
       rules: {
         word: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          { required: true, message: '请输入敏感词', trigger: 'blur' },
+          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
         code: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -105,32 +97,68 @@ export default {
     }
   },
   watch: {
-    'form.informType': {
-      handler(newVal, oldVal) {
-        if (newVal == 'ROLE') {
-          this.$set(this.form, 'toRole', [])
-          this.$delete(this.form, 'toUser')
-        }
-        if (newVal == 'USER') {
-          this.$set(this.form, 'toUser', [])
-          this.$delete(this.form, 'toRole')
-        }
+      transfer: {
+          handler(newVal,oldVal){
+              this.tagSelects = this.$options.data().tagSelects
+              console.log(newVal)
+
+          },
+          immediate: true
+      },
+    currentWord: {
+      handler: function(newVal, oldVal) {
+        this.tagSelects = this.$options.data().tagSelects
+        console.log(newVal)
+        const {
+          uuid,
+          type,
+          informType,
+          tagType,
+          sensitiveSetTag,
+          toUser,
+          toRole,
+          word
+        } = newVal
+
+        this.$set(this.form, 'uuid', uuid)
+        this.$set(this.form, 'type', type)
+        this.$set(this.form, 'informType', informType)
+        this.$set(this.form, 'tagType', tagType)
+        this.$set(this.form, 'word', word)
+        console.log(sensitiveSetTag)
+
+        // let indexTemp = []
+
+        this.indexTemp = sensitiveSetTag.reduce((sum, curr) => {
+          return sum.concat(
+            curr.tags.map(item => {
+              return item.uuid
+            })
+          )
+        }, [])
+
+        //回显
+        // setTimeout(() => {
+          this.tagListMap.forEach((row, rowIndex) => {
+            this.tagSelects.push([])
+
+            row.forEach((col, colIndex) => {
+              if (this.indexTemp.includes(this.tagListMap[rowIndex][colIndex])) {
+
+                  let temp = this.tagSelects[rowIndex]
+                  temp.push(this.tagListMap[rowIndex][colIndex])
+                  this.tagSelects.splice(rowIndex,1,temp)
+                  
+
+
+                // let temp = this.tagSelects[rowIndex].splice(0,1,this.tagListMap[rowIndex][colIndex])
+                console.log(this.tagListMap[rowIndex][colIndex])
+              }
+            })
+          })
+        // },1000)
       },
       immediate: true
-    },
-    // toUser: {
-    //   handler(newValue, oldVal) {
-    //     this.toUserTags = this.userListSelect.filter(item => {
-    //       return newValue.some(key => {
-    //         return item.userId === key
-    //       })
-    //     })
-    //   },
-    //   deep: true
-    // },
-    toUserTags: {
-      handler(newValue, oldVal) {},
-      deep: true
     }
   },
   computed: {
@@ -138,15 +166,18 @@ export default {
       userListSelect: state => state.user.listSelect,
       departmentList: state => state.department.departmentList,
       listSelect: state => state.role.listSelect,
-      tagListSelect: state => state.tag.tagListSelect
+      tagListSelect: state => state.tag.tagListSelect,
+      currentWord: state => state.sensitive.currentWord,
+      tagListMap: state => state.tag.tagListMap
     }),
     toUser() {
       return this.form.toUser
     }
   },
-  mounted() {
+  created() {
     this.initFilter()
   },
+  updated() {},
   methods: {
     initFilter() {
       this.$store
@@ -171,7 +202,17 @@ export default {
 
       this.$store
         .dispatch('tag/getListSelect')
-        .then(() => {})
+        .then(res => {
+          let temp = []
+          res.forEach(item => {
+            temp.push(
+              item.tagList.map(unit => {
+                return unit.uuid
+              })
+            )
+          })
+          this.tagOriginSelects = temp
+        })
         .catch(err => {
           this.$message({
             type: 'error',
@@ -180,37 +221,37 @@ export default {
         })
     },
     handleConfirm() {
-      if (this.form.informType == 'USER') {
-        this.form.toUser = this.userSelects.map(item => {
-          return item.uuid
-        })
-      } else {
-        this.form.toRole = this.toRoles
-      }
-      this.form.setTag = this.tagSelects.reduce((sum,curr)=>{
-          return sum.concat(curr)
-      },[])
+    //   if (this.form.informType == 'USER') {
+    //     this.form.toUser = this.userSelects.map(item => {
+    //       return item.uuid
+    //     })
+    //   } else {
+    //     this.form.toRole = this.toRoles
+    //   }
+      this.form.setTag = this.tagSelects.reduce((sum, curr) => {
+        return sum.concat(curr)
+      }, [])
       const payload = this.form
 
       this.$refs['form'].validate(valid => {
-          console.log(payload)
+        console.log(payload)
         if (valid) {
-          this.$store
-            .dispatch('sensitive/add', payload)
-            .then(() => {
-              this.$message({
-                type: 'success',
-                message: '操作成功'
+            this.$store
+              .dispatch('sensitive/update', payload)
+              .then(() => {
+                this.$message({
+                  type: 'success',
+                  message: '操作成功'
+                })
+                this.handleCancel()
+                this.refresh()
               })
-              this.handleCancel()
-              this.refresh()
-            })
-            .catch(err => {
-              this.$message({
-                type: 'error',
-                message: '操作失败'
+              .catch(err => {
+                this.$message({
+                  type: 'error',
+                  message: '操作失败'
+                })
               })
-            })
         } else {
           this.$message({
             type: 'error',

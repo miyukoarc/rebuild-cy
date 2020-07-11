@@ -7,6 +7,7 @@ import {
   getAuditBatchSendTaklistAll,
   add,
   deleteSensitive,
+  updateNoticeUser,
   update
 } from '@/api/sensitive'
 const state = {
@@ -40,6 +41,7 @@ const state = {
    * 敏感词
    */
   sensitiveListAll: [],
+  currentWord:{},
   sensitivePage: {
     total: 0,
     pageSize: 0,
@@ -144,6 +146,9 @@ const mutations = {
     state.sensitivePage.total = total
     state.sensitivePage.pageNumber = pageNumber
     state.sensitivePage.pageSize = pageSize
+  },
+  SAVE_CURRENTWORD(state, payload){
+      state.currentWord = payload
   },
 
   /**
@@ -373,6 +378,21 @@ const actions = {
      return new Promise((resolve,reject)=>{
          update(payload).then(res=>{
              resolve()
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  },
+  /**
+   * 批量设置通知人
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  updateNoticeUser({commit},payload){
+     return new Promise((resolve,reject)=>{
+         updateNoticeUser(payload).then(res=>{
+             
+             resolve(res)
          }).catch(err=>{
              reject(err)
          })

@@ -1,5 +1,5 @@
 <template>
-  <div class="tag-select-container">
+  <div class="tag-select-container" >
     <div v-for="(group,groupIndex) in alterArr" :key="group.groupId" class="tag-group">
       <el-row>
         <el-col class="tips" :span="8">

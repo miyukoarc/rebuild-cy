@@ -42,6 +42,7 @@
 <script>
 import { mapState } from 'vuex'
 export default {
+    inject: ['reload'],
   data() {
     return {
       form: {
@@ -76,6 +77,7 @@ export default {
       handler(newVal, oldVal) {
         this.form.groupName = newVal.groupName
         this.form.groupId = newVal.groupId
+        this.form.sort = newVal.sort
         this.$set(
           this.form,
           'tagList',
@@ -90,6 +92,7 @@ export default {
       immediate: true
     }
   },
+  
   methods: {
     handleAddTag() {
       this.form.tagList.push({
@@ -109,7 +112,8 @@ export default {
             type: 'success',
             message: '操作成功',
           })
-          this.handleFresh()
+          this.reload()
+        //   this.handleFresh()
         })
         .catch(err => {
           
@@ -155,7 +159,8 @@ export default {
                 message: '操作成功',
               })
             
-              this.handleFresh()
+            this.reload()
+            //   this.handleFresh()
             })
             .catch(err => {
               this.$message({
@@ -174,7 +179,7 @@ export default {
         })
     },
     handleFresh(){
-        this.$bus.$emit('handleFresh')
+        this.$bus.$emit('handleRequset')
     }
   }
 }

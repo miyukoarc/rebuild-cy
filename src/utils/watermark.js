@@ -59,7 +59,7 @@ export default class Watermark {
     /**
      * 移除水印
      */
-    remove() {
+    static remove() {
 
         clearInterval(this.timer)
 

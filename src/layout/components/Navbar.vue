@@ -1,13 +1,15 @@
 <template>
   <div class="navbar">
-    <hamburger
+    <!-- <hamburger
       :is-active="sidebar.opened"
       class="hamburger-container"
       @toggleClick="toggleSideBar"
-    />
+    /> -->
 
 
     <breadcrumb class="breadcrumb-container" />
+
+    <window-button class="window-button"></window-button>
 
   </div>
 </template>
@@ -16,11 +18,13 @@
 import { mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
+import WindowButton from './WindowButton'
 import { removeToken } from "@/utils/auth";
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    WindowButton
   },
   computed: {
     ...mapGetters(["sidebar", "avatar"])
@@ -60,6 +64,9 @@ export default {
 
   .breadcrumb-container {
     float: left;
+  }
+  .window-button{
+      float: right;
   }
 
   .left-menu {

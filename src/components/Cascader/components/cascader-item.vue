@@ -72,12 +72,7 @@ export default {
       this.$refs['department'][index].showDepartment = status
 
     },
-    // buildStateArr() {
-    //   const count = this.$refs['department'].length
-    //   const stateArr = new Array(count).fill(false)
-    //   stateArr[0] = true
-    //   this.stateArr = stateArr
-    // },
+
     select(item) {
       this.currentSelect = item
     }
