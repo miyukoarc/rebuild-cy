@@ -2,7 +2,7 @@
     <div>
         <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body width="600px" center :close-on-click-modal="false">
             <div>
-                <component :is="event" :transfer="transfer"/>
+                <component :is="event" />
             </div>
         </el-dialog>
     </div>
@@ -13,21 +13,18 @@
 import CreateTemplate from './event-create.vue'
 import EditTemplate from './event-edit.vue'
 import DistributeTemplate from './event-distribute'
-import ChangeTemplate from './event-change'
 import {mapState} from 'vuex'
 export default {
 components:{
     CreateTemplate,
     EditTemplate,
-    DistributeTemplate,
-    ChangeTemplate
+    DistributeTemplate
 },
   data() {
     return {
       dialogVisible: false,
-      event: '',
-      eventType: '',
-      transfer: {}
+      event: 'DistributeTemplate',
+      eventType: ''
     };
   },
   watch:{
@@ -56,16 +53,16 @@ components:{
   methods: {
 
       genTitle(){
-          if(this.eventType==='create'){
-              return '新建敏感词'
-          }
+        //   if(this.eventType==='create'){
+        //       return '创建模板'
+        //   }
 
-          if(this.eventType==='edit'){
-              return '编辑敏感词'
-          }
+        //   if(this.eventType==='edit'){
+        //       return '编辑模板'
+        //   }
 
-          if(this.eventType==='change'){
-              return '修改通知人'
+          if(this.eventType==='distribute'){
+              return '分配部门'
           }
           
           

@@ -1,24 +1,26 @@
 <template>
   <div>
-    <div class="drawer-container" v-if="alterGroups != null">
-      <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
-        <el-row type="flex" class="row-bg" justify="center">
-          <el-col :span="8">
-            <div class="font-exs color-info group-name">{{group.groupName}}：</div>
-          </el-col>
-          <el-col :span="16">
-            <div class="tags-container">
-              <el-tag
-                class="tag-unit text-ellipsis"
-                type="info"
-                size="mini"
-                v-for="tag in alterTags(group.tags)"
-                :key="tag.tagId"
-              >{{tag.tagName}}</el-tag>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
+    <div class="drawer-container">
+      <!-- <div v-if="propsType"> -->
+        <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
+          <el-row type="flex" class="row-bg" justify="center">
+            <el-col :span="8">
+              <div class="font-exs color-info group-name">{{group.groupName}}：</div>
+            </el-col>
+            <el-col :span="16">
+              <div class="tags-container">
+                <el-tag
+                  class="tag-unit text-ellipsis"
+                  type="info"
+                  size="mini"
+                  v-for="tag in alterTags(group.tags||group.tagList)"
+                  :key="tag.tagId"
+                >{{tag.tagName}}</el-tag>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+      <!-- </div> -->
       <div class="text-align-center" v-if="tags.length>2">
         <el-button type="text" size="mini" @click="curly=!curly">
           展开
@@ -26,7 +28,6 @@
         </el-button>
       </div>
     </div>
-    <div v-else>--</div>
   </div>
 </template>
 
@@ -43,31 +44,25 @@ export default {
   name: "tags-drawer",
   data() {
     return {
-      curly: false
-    };
+      curly: false,
+      propsType: true
+    }
   },
   watch: {
     tags: {
       handler(newVal, oldVal) {
-        if (newVal.length > 2) {
-          this.curly = true;
-        } else {
-          this.curly = false;
-        }
+
+        this.curly = newVal.length>2?true:false
       },
       immediate: true
     }
   },
   computed: {
     total() {
-      return this.tags.length;
+      return this.tags.length
     },
     alterGroups() {
-      if (this.curly) {
-        return this.tags.slice(0, 2);
-      } else {
-        return this.tags;
-      }
+        return this.curly?this.tags.slice(0,2):this.tags
     }
   },
   methods: {

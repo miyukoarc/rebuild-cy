@@ -45,6 +45,7 @@ export default {
     return {
       form: {
         groupName: '',
+        sort: 0,
         tagList: [
           {
             tagName: ''
@@ -65,8 +66,20 @@ export default {
   },
   computed: {
     ...mapState({
-      permissionMap: state => state.permission.permissionMap
+      permissionMap: state => state.permission.permissionMap,
+      tagListAll: state => state.tag.tagListAll
     })
+  },
+  watch:{
+      'tagListAll.length':{
+          handler(newVal,oldVal){
+              console.log(newVal)
+              this.form.sort = newVal+1
+          },immediate:true
+      }
+  },
+  mounted(){
+    //   this.form.sort = this.tagListAll.length+1
   },
   methods: {
     handleAddTag() {
@@ -77,6 +90,7 @@ export default {
     handleApply() {
       // const payload = this.form
       // console.log(this.form)
+      const sort = this.form.sort
       let groupName
       let addTagName
       let payload
@@ -89,6 +103,7 @@ export default {
 
         payload = {
           groupName,
+          sort,
           addTagName
         }
       } else {
@@ -102,9 +117,12 @@ export default {
 
         payload = {
           groupName,
+          sort,
           tagList
         }
       }
+
+      console.log(payload)
 
       this.closeDialog()
       this.$refs['form'].validate(valid => {
@@ -141,7 +159,7 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     handleRefresh(){
-        this.$bus.$emit('handleFresh')
+        this.$bus.$emit('handleRequest')
     }
   }
 }

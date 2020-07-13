@@ -131,6 +131,18 @@ export const getLog = (payload) => {
 }
 
 
+/**
+ * 批量设置通知人
+ * @param {object} payload 
+ */
+export const updateNoticeUser = (payload) => {
+    return request({
+        url: '/riskManagement/updateNoticeUser',
+        method: 'post',
+        data: payload
+    })
+}
+
 
 
 

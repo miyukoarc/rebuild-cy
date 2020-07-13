@@ -1,11 +1,17 @@
 import Cookies from 'js-cookie'
+import Watermark from '@/utils/watermark'
 
 const state = {
   sidebar: {
     opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
     withoutAnimation: false
   },
-  device: 'desktop'
+  device: 'desktop',
+  watermark: null,
+  windowHeight: '600px',
+  windowWidth: '800px',
+  maximumFlag: false,
+  
 }
 
 const mutations = {
@@ -25,6 +31,14 @@ const mutations = {
   },
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
+  },
+  SAVE_WINDOWSIZE:(state,payload)=>{
+      const {windowHeight,windowWidth} = payload
+      state.windowHeight = windowHeight 
+      state.windowWidth = windowWidth 
+  },
+  TOGGLE_ISMAXIMUM(state,payload){
+      state.maximumFlag = payload
   }
 }
 

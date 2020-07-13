@@ -29,6 +29,7 @@ export function classifyTag(arr) {
       temp.push({
         groupName: arr[i].groupName,
         groupId: arr[i].groupId,
+        sort: arr[i].sort,
         tags: []
       })
       tempId = arr[i].groupId

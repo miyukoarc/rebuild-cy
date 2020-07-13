@@ -2,7 +2,7 @@
   <div class="login-container">
     <!-- <div class="iframe-container">
       <iframe id="qrcode-container" :srcdoc="wxQrCode" style="width:400px;height:600px"></iframe>
-    </div> -->
+    </div>-->
     <div class="container">
       <!-- <el-radio-group v-model="tenantId" size="small" @change="changeCorp"> -->
       <div class="choice" v-for="item in loginList" :key="item.tenantId">
@@ -73,15 +73,15 @@ export default {
           const style =
             '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
 
-        //   console.log(document.querySelector('#qrcode-container'))
-        //   console.log(res)
+          //   console.log(document.querySelector('#qrcode-container'))
+          //   console.log(res)
           // document.querySelector('#qrcode-container').innerHTML = res
 
-        //   document.querySelector('#qrcode-container').innerHTML = this.addStr(
-        //     this.wxQrCode,
-        //     style
-        //   )
-            document.write(this.addStr(this.wxQrCode, style))
+          //   document.querySelector('#qrcode-container').innerHTML = this.addStr(
+          //     this.wxQrCode,
+          //     style
+          //   )
+          document.write(this.addStr(this.wxQrCode, style))
         }
       })
     },
@@ -142,42 +142,22 @@ $cursor: #fff;
   width: 100%;
   margin: 20px auto;
   text-align: center;
+  -webkit-app-region: drag;
+  iframe {
+    -webkit-app-region: no-drag;
+  }
 }
-// .login-warp {
-//   background-color: #fff;
-//   .el-tabs__nav-scroll {
-//     background-color: #fff;
-//     padding: 5px 10px 0 10px;
-//   }
-//   .qywx {
-//     background-color: #fff;
-//     text-align: center;
-//   }
 
-//   .el-form-item__content {
-//     background-color: #2d3a4b;
-//   }
-//   .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
-//     color: #1890ff;
-//     cursor: pointer;
-//   }
-//   .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
-//     color: #1890ff;
-//     cursor: pointer;
-//   }
-//   .login-container .el-form-item {
-//     background-color: #283443;
-//   }
-//   .yhdl {
-//     padding: 20px 20px;
-//   }
-// }
 
 /* reset element-ui css */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  -webkit-app-region: drag;
+  .container {
+    -webkit-app-region: no-drag;
+  }
   .qrcode-container {
     width: 500px;
     height: 500px;
@@ -290,8 +270,8 @@ $light_gray: #eee;
 .choice {
   margin-bottom: 20px;
 }
-.iframe-container{
-    width: 300px;
-    height: 500px;
+.iframe-container {
+  width: 300px;
+  height: 500px;
 }
 </style>

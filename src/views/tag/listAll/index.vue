@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个标签`">
         <div slot="right">
           <el-t-button
             @click.stop="handleCreate"
@@ -25,11 +25,11 @@
           style="width: 100%"
           row-key="uuid"
           ref="dragTable"
-          
           lazy
           highlight-current-row
            header-row-class-name="el-table-header"
-          >
+          :default-sort = "{prop: 'sort', order: 'descending'}"
+        >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="标签组名" align="left" prop="groupName" width="100"></el-table-column>
           <el-table-column label="标签" align="left">
@@ -83,9 +83,10 @@ import FormDialog from './dialog'
 import ToolBar from './tool-bar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
-import Sortable from'sortablejs'
+import Sortable from 'sortablejs'
 
 export default {
+  inject: ['reload'],
   components: {
     ListHeader,
     UserDetail,
@@ -93,6 +94,7 @@ export default {
     ToolBar
     // mHeadedr
   },
+  name: 'TagListAll',
   data() {
     return {
       pageConfig: {
@@ -110,14 +112,27 @@ export default {
       sortable: null,
       list: [],
       oldList: [],
-      newList: []
+      newList: [],
+
+      form: {
+        tagSorts: [
+          {
+            sort: 0,
+            tagGroupId: ''
+          },
+          {
+            sort: 0,
+            tagGroupId: ''
+          }
+        ]
+      }
     }
   },
   watch: {},
   computed: {
     ...mapState({
       loading: state => state.tag.loading,
-      listAll: state => state.tag.tagListAll,
+      //   listAll: state => state.tag.tagListAll,
       page: state => state.tag.tagListPage,
 
       permissionMap: state => state.permission.permissionMap
@@ -126,6 +141,15 @@ export default {
   created() {
     this.initDataList(this.query)
     // this.initFilter()
+    this.$bus.$on('handleRequest',()=>{
+        this.handleRequest()
+    })
+    this.$once('hook:beforeDestory',()=>{
+        this.$bus.$off('handleRequest')
+    })
+  },
+  mounted() {
+    this.setSort()
   },
   methods: {
     doExport(val) {
@@ -161,22 +185,22 @@ export default {
     initDataList(payload) {
       this.$store
         .dispatch('tag/getTagList', payload)
-        .then((res) => {
+        .then(res => {
           //初始化分页
-          this.list = res
+          this.list = JSON.parse(JSON.stringify(res))
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
-          this.oldList = this.list.map(v=>v.id)
-            this.newList = this.oldList.slice()
-            this.$nextTick(()=>{
-                this.setSort()
-            })
+          this.oldList = this.list.map(v => v.groupId)
+          this.newList = this.oldList.slice()
+          //   this.$nextTick(() => {
+          // this.setSort()
+          //   })
         })
         .catch(err => {
-            console.log(err)
+          console.log(err)
           this.$message({
             type: 'error',
-            message: err||'初始化失败'
+            message: err || '初始化失败'
           })
         })
     },
@@ -191,17 +215,18 @@ export default {
       const { tagIds, name } = val
       this.query.tagIds = tagIds ? tagIds : this.query.tagIds
       this.query.name = name ? name : this.query.name
-      console.log(val, 'handleSearch')
+
       this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log('handleRefresh')
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },
+    handleRequest(){
+        this.initDataList(this.query)
+    },
     handleEdit(index, row) {
-      console.log(index, row)
-      const payload = this.listAll[index]
+      const payload = this.list[index]
       this.$store.commit('tag/SAVE_GROUP', payload)
 
       this.$refs['formDialog'].eventType = 'edit'
@@ -220,24 +245,49 @@ export default {
     },
 
     setSort() {
-      const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
-      this.sortable = Sortable.create(el,{
-        ghostClass:'sortable-ghost', // Class name for the drop placeholder,
-        setData:function(dataTransfer) {
-          // to avoid Firefox bug
-          // Detail see : https://github.com/RubaXa/Sortable/issues/1012
-          dataTransfer.setData('Text','')
-        },
-        onEnd:evt=>{
-            const targetRow = this.list.splice(evt.oldIndex,1)[0]
-          this.list.splice(evt.newIndex,0,targetRow)
-            console.log(evt,targetRow)
+      const el = this.$refs.dragTable.$el.querySelectorAll(
+        '.el-table__body-wrapper > table > tbody'
+      )[0]
+      console.log(el)
+      this.sortable = Sortable.create(el, {
+        ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
+        // setData: function(dataTransfer) {
+        //   // to avoid Firefox bug
+        //   // Detail see : https://github.com/RubaXa/Sortable/issues/1012
+        //   dataTransfer.setData('Text', '')
+        // },
+        onEnd: evt => {
+          const { newIndex, oldIndex } = evt
+          this.form.tagSorts[0].sort = this.list[newIndex].sort
+          this.form.tagSorts[1].sort = this.list[oldIndex].sort
+          this.form.tagSorts[1].tagGroupId = this.list[newIndex].groupId
+          this.form.tagSorts[0].tagGroupId = this.list[oldIndex].groupId
+          let temp = this.list[0].sort
+          this.list[0].sort = this.list[1].sort
+          this.list[1].sort = temp
+        //   this.handleChangeSort()
+
+          const targetRow = this.list.splice(evt.oldIndex, 1)[0]
+          this.$nextTick(() => {
+            this.list.splice(evt.newIndex, 0, targetRow)
+          })
 
           // for show the changes, you can delete in you code
-          const tempIndex = this.newList.splice(evt.oldIndex,1)[0]
-          this.newList.splice(evt.newIndex,0,tempIndex)
+          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+          this.newList.splice(evt.newIndex, 0, tempIndex)
         }
       })
+    },
+    handleChangeSort() {
+      this.$store
+        .dispatch('tag/updateTagSort', this.form)
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err
+          })
+        })
     }
   }
 }
@@ -258,9 +308,9 @@ export default {
 </style>
 
 <style>
-.sortable-ghost{
-  opacity: .8;
-  color: #fff!important;
-  background: #42b983!important;
+.sortable-ghost {
+  opacity: 0.8;
+  color: #fff !important;
+  background: #42b983 !important;
 }
 </style>

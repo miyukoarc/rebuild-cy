@@ -1,58 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-
 <body>
     <script>
-
-
-        // let temp = []
-
-        const arr = [
-            {uuid:1},
-            {
-                uuid:2,
-            },
-            {
-                uuid:2
-            },{
-                uuid:2
-            },
-            {
-                uuid:1
+        class ResizeObserver{
+            observe(){
+                window.addEventListener()
             }
-        ]
-
-        function myFilter(arr){
-
-            let temp = []
-            return arr.reduce((sum,curr)=>{
-                if(!temp.includes(curr.uuid)){
-                    sum.push(curr)
-                    temp.push(curr.uuid)
-                }
-                return sum
-            },[])
         }
-
-        console.log(myFilter(arr))
-        const target = [1,2,3]
-    
-        const source = [1,2]
-
-        function intersection(target,source){
-            return target.filter(item=>!source.includes(item))
-        }
-        console.log(intersection(source,target))
-
-
-
     </script>
 </body>
-
 </html>

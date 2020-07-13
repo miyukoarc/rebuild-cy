@@ -9,10 +9,13 @@
           <div>
               <el-button size="small" @click="handleLogin">进入</el-button>
           </div> -->
+          <div class="info-container">
           <h1>SocialCRM</h1>
           <h5>把您的企业服务建立到微信上</h5>
           <div class="text-align-center">
               <el-button size="small" @click="handleEnter" type="primary">进入</el-button>
+          </div>
+
           </div>
 
 
@@ -57,10 +60,15 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    .welcome{
-        width: 400px;
-        height: 400px;
-        outline: 1px;
+    background-color: #fff;
+    -webkit-app-region: drag;
+    .info-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+        -webkit-app-region: no-drag;
     }
 }
 </style>
