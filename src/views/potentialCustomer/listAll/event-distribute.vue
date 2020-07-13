@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-27 14:05:27
- * @LastEditTime: 2020-07-11 16:44:32
+ * @LastEditTime: 2020-07-13 20:30:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\potentialCustomer\listAll\event-distribute.vue
@@ -9,7 +9,7 @@
 <template>
   <div>
     <el-form :model="form" ref="form" label-width="120px">
-      <el-form-item label="名称" prop="name">
+      <!-- <el-form-item label="名称" prop="name">
         <el-select v-model="form.userUuid">
           <el-option
             v-for="item in userListSelect"
@@ -18,7 +18,10 @@
             :value="item.uuid"
           ></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
+      <div>
+        <complex-select v-model="selects" :options="departmentList"></complex-select>
+      </div>
       <!-- {{user.uuid}} -->
       <div class="text-align-center">
         <el-button size="small" @click="handleCancel">取消</el-button>
@@ -29,7 +32,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
+import ComplexSelect from "@/components/ComplexSelect";
 export default {
   props: {
     transfer: {
@@ -37,61 +41,79 @@ export default {
       default: () => {}
     }
   },
+  components: {
+    ComplexSelect
+  },
   data() {
     return {
+      selects: [],
       form: {
-        userUuid: '',
-        uuid: [],
+        userUuid: "",
+        uuid: []
       }
-    }
+    };
   },
-  watch:{
+  watch: {
     transfer: {
-      handler(newVal,oldVal){
-        console.log(newVal,'77')  
-        const {uuid} = newVal
-        this.form.uuid = uuid
-      }
-      ,immediate:true
+      handler(newVal, oldVal) {
+        console.log(newVal, "8888");
+        const { uuid } = newVal;
+        this.form.uuid = uuid;
+      },
+      immediate: true
     }
   },
   computed: {
     ...mapState({
       // user: state => state.user.currentRowUserList,
-      // departments: state => state.department.departments
+      departmentList: state => state.department.departmentList,
       userListSelect: state => state.user.listSelect
     })
   },
   methods: {
     closeDialog() {
-      this.$parent.$parent.dialogVisible = false
+      this.$parent.$parent.dialogVisible = false;
     },
     handleCancel() {
-      this.closeDialog()
+      this.closeDialog();
     },
     handleConfrim() {
-      const payload = this.form
-      this.$store.dispatch('potentialCustomer/allocation',payload).then(()=>{
-        this.$message({
-          type: 'success',
-          message: '操作成功'
+      this.selects.map(item => {
+        this.form.userUuid = item.uuid;
+      });
+      this.$store
+        .dispatch("potentialCustomer/allocation", this.form)
+        .then(res => {
+          switch (res.code) {
+            case 1:
+              this.$message({
+                type: "error",
+                message: "分配失败"
+              });
+              this.closeDialog();
+              break;
+            default:
+              this.$message({
+                type: "success",
+                message: "操作成功"
+              });
+              this.closeDialog();
+              this.handleRefresh();
+              break;
+          }
         })
-        this.closeDialog()
-        this.handleRefresh()
-        
-      }).catch(err=>{
-        this.$message({
-          type: 'error',
-          message: err
-        })
-
-      })
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: err
+          });
+        });
     },
-    handleRefresh(){
-      this.$bus.$emit('handleRefresh')
+    handleRefresh() {
+      this.$bus.$emit("handleRefresh");
     }
   }
-}
+};
 </script>
 
 <style>

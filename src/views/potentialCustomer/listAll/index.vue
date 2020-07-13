@@ -70,13 +70,21 @@
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-t-button
+                type="text"
+                size="mini"
+                :popAuth="true"
+                :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
+                @click.stop="handleAllocation(scope.row)"
+              >分配</el-t-button>
+              <el-t-button
+                type="text"
                 size="mini"
                 :popAuth="true"
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
                 @click.stop="handleEdit(scope.row)"
               >编辑</el-t-button>
               <el-t-button
-                type="danger"
+                type="text"
                 :popAuth="true"
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_delete']"
                 size="mini"
@@ -194,6 +202,16 @@ export default {
         });
 
       this.$store
+        .dispatch("department/getDepartmentListAll")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: err || "初始化失败"
+          });
+        });
+
+      this.$store
         .dispatch("user/getUserListSelect")
         .then(() => {})
         .catch(err => {
@@ -299,17 +317,25 @@ export default {
         });
       }
     },
+    handleAllocation(row) {
+      console.log(row, "row");
+      row.uuid = [row.uuid];
+      this.$refs["formDialog"].event = "DistributeTemplate";
+      this.$refs["formDialog"].eventType = "distribute";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = row;
+    },
     handleEdit(row) {
       console.log(row, "row");
-      const { belong, uuid } = row;
+      const { belong, uuid, mobile } = row;
       let selectedTag = [];
       row.potentialCustomerTags.map(item => {
         item.tags.map(tag => {
-          selectedTag.push(tag.uuid);
+          selectedTag.push(tag.tagId);
         });
       });
       console.log(selectedTag, "aaaa");
-      const payload = { belong, uuid, selectedTag };
+      const payload = { belong, uuid, selectedTag, mobile };
       console.log(payload, "88");
       this.$refs["formDialog"].event = "EditTemplate";
       this.$refs["formDialog"].eventType = "edit";

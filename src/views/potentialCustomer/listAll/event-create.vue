@@ -28,7 +28,12 @@
       </label>
     </el-form-item>
     <div>
-      <tag-select v-model="form.tagsUuid" :options="tagListSelect"></tag-select>
+      <tags-selected
+        @change="handleCheckedTagsChange"
+        :tagListSelect="tagListSelect"
+        :checkboxGroup="form.tagId"
+      ></tags-selected>
+      <!-- <tag-select v-model="form.tagsUuid" :options="tagListSelect"></tag-select> -->
     </div>
 
     <div class="text-align-center">
@@ -40,14 +45,14 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import TagSelect from "@/components/TagSelect";
+import TagsSelected from "@/components/TagsSelected";
 
 import { isMobilePhone } from "@/utils/validate.js";
 
 export default {
   inject: ["reload"],
   components: {
-    TagSelect
+    TagsSelected
   },
   data() {
     // 验证手机号
@@ -64,7 +69,7 @@ export default {
         belongUuid: "",
         mobile: "",
         name: "",
-        tagsUuid: [0]
+        tagId: []
       },
       rules: {
         mobile: [
@@ -117,16 +122,19 @@ export default {
           });
         });
     },
+    // 选择标签
+    handleCheckedTagsChange(tag, index) {
+      this.checkboxGroup = tag;
+    },
     handleConfirm() {
-      const payload = this.form;
-
+      this.form.tagId = this.checkboxGroup;
       this.$refs["form"].validate(valid => {
         if (valid) {
-          console.log(payload);
-          let tagsUuids = Array.prototype.concat.apply([], payload.tagsUuid);
-          payload.tagsUuid = tagsUuids;
+          // console.log(payload, "8888");
+          // let tagsUuids = Array.prototype.concat.apply([], payload.tagId);
+          // payload.tagId = tagsUuids;
           this.$store
-            .dispatch("potentialCustomer/batchAdd", payload)
+            .dispatch("potentialCustomer/batchAdd", this.form)
             .then(() => {
               this.$message({
                 type: "success",

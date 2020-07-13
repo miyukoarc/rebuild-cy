@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-11 11:14:09
- * @LastEditTime: 2020-07-11 21:32:48
+ * @LastEditTime: 2020-07-13 17:32:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\tagsSelected\index.vue
@@ -55,7 +55,7 @@ export default {
   computed: {
     ...mapState({
       // tagListSelect: state => state.tag.tagListSelect,
-      editTagsUuid: state => state.externalUser.editTagsUuid
+      // editTagsUuid: state => state.externalUser.editTagsUuid
     })
   },
   data() {
@@ -70,16 +70,14 @@ export default {
     if (this.checkedGroup.length > 0) {
       this.newTagsList = JSON.parse(JSON.stringify(this.tagListSelect));
       this.newTagsList.map((item, index) => {
-        let a = item.tagList.some(tag => this.checkedGroup.includes(tag.tagId)) 
-        console.log(a,'a')
-        if(a){
-          this.newTagsList.splice(index,1)
+        let isTrue = item.tagList.some(tag =>
+          this.checkedGroup.includes(tag.tagId)
+        );
+        if (isTrue) {
+          this.newTagsList.splice(index, 1);
           this.newTagsList.unshift(item);
         }
-        // this.tagListSelect.slice(index,1)
-        // this.tagListSelect.unshift(a);
       });
-      console.log(this.newTagsList, "=1");
     } else {
       this.newTagsList = JSON.parse(JSON.stringify(this.tagListSelect));
     }

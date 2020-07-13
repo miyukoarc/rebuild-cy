@@ -98,13 +98,38 @@ export default {
       console.log(payload, "payload");
       this.$store
         .dispatch("externalUser/redistributionExUser", payload)
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "操作成功"
-          });
-          this.handleCancel();
-          this.$bus.$emit("handleRefresh");
+        .then((res) => {
+          console.log(res, "999");
+              switch (res) {
+                case 0:
+                  this.$message({
+                    type: "error",
+                    message: "分配出现异常，部分未成功"
+                  });
+                  this.handleCancel();
+                  break;
+                case -1:
+                  this.$message({
+                    type: "error",
+                    message: "分配失败"
+                  });
+                  this.handleCancel();
+                  break;
+                default:
+                  this.$message({
+                    type: "success",
+                    message: "操作成功"
+                  });
+                  this.handleCancel();
+                  this.refresh();
+                  break;
+              }
+          // this.$message({
+          //   type: "success",
+          //   message: "操作成功"
+          // });
+          // this.handleCancel();
+          // this.$bus.$emit("handleRefresh");
         })
         .catch(err => {
           this.$message({

@@ -32,13 +32,24 @@
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="离职员工" align="left">
-            <template>
+            <template v-slot="scope">
+              <div class="user-card">
+                <el-image
+                  :src="scope.row.avatar"
+                  lazy
+                  style="width:30px;height:30px;margin-right:10px"
+                ></el-image>
+                <div class="client-info">
+                  <span class="remark">{{scope.row.name}}</span>
+                  <div>{{scope.row.role.name}}</div>
+                </div>
+              </div>
             </template>
           </el-table-column>
 
           <el-table-column label="公司" align="left">
             <template v-slot="scope">
-              <div v-for="(item,index) in scope.row.departments" :key="index"> 
+              <div v-for="(item,index) in scope.row.departments" :key="index">
                 <p>{{item.name}}</p>
               </div>
             </template>
@@ -49,13 +60,15 @@
 
           <el-table-column label="状态" align="left">
             <template v-slot="scope">
-              <!-- <span>{{scope.row}}</span> -->
+              <el-tag
+                :type="scope.row.userStatus === 'ALLOCATE'?'success':'info'"
+              >{{quitUserRelationExUserListUserStatus[scope.row.userStatus]}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-t-button
-                type="primary"
+                type="text"
                 size="mini"
                 :popAuth="true"
                 :auth="permissionMap['externalUser']['externalUser_redistributionExUser']"
@@ -64,9 +77,9 @@
               <el-t-button
                 :popAuth="true"
                 :auth="permissionMap['externalUser']['externalUser_quitUserRelationExUserList']"
-                type="primary"
+                type="text"
                 size="mini"
-                @click.stop="handleDetail(scope.$index)"
+                @click.stop="handleDetail(scope.row)"
               >详情</el-t-button>
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
@@ -97,6 +110,7 @@ import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
+
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
@@ -134,6 +148,8 @@ export default {
     ...mapState({
       //   tagListAll: state => state.tag.tagListAll,
       loading: state => state.externalUser.loading,
+      quitUserRelationExUserListUserStatus: state =>
+        state.enum.quitUserRelationExUserListUserStatus,
       quitUserRelationExUserList: state =>
         state.externalUser.quitUserRelationExUserList,
       permissionMap: state => state.permission.permissionMap
@@ -204,12 +220,17 @@ export default {
           });
         });
     },
-    handleDetail(index) {
-      const userId = this.quitUserRelationExUserList[index].userId;
+    handleDetail(row) {
+      console.log(row, "row");
+      const uuid = row.uuid;
       this.$router.push({
-        path: "/externalUser/quitUserRelationExUserDetail",
-        query: { userId: userId }
+        path: "/user/detail/" + uuid
+        // query: { uuid: payload }
       });
+      // this.$router.push({
+      //   path: "/externalUser/quitUserRelationExUserDetail",
+      //   query: { userId: userId }
+      // });
     },
     handleDistribute() {
       if (this.selectedAllData.length) {
@@ -252,6 +273,9 @@ export default {
 .user-card {
   display: flex;
   align-items: center;
+}
+.success {
+  color: #67c23a;
 }
 </style>
 

@@ -133,7 +133,7 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
       loading: state => state.externalUser.loading,
-      externalUserListAll: state => state.externalUser.externalUserListAll,
+      externalUserListAll: state => state.externalUser.list,
       listAllPage: state => state.externalUser.listAllPage,
       permissionMap: state => state.permission.permissionMap
     })
@@ -149,7 +149,7 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch("externalUser/getExternalUserListAll", payload)
+        .dispatch("externalUser/getExternalUserListMy", payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.listAllPage.pageNumber + 1;
