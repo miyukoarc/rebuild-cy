@@ -33,6 +33,7 @@ export default {
   width: 100%;
   position: relative;
   overflow-y: scroll;
+  background-color: #fff;
 }
 .fixed-header + .app-main {
   padding-top: 50px;

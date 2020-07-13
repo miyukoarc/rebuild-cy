@@ -52,7 +52,7 @@ router.beforeEach(async (to, from, next) => {
 
       if (username) {
 
-        store.commit('app/SET_WATERMARK', username)
+
 
 
         next()

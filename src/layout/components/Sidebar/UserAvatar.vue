@@ -32,7 +32,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 import {removeToken} from '@/utils/auth'
-import Watermark from '@/utils/watermark'
+
 export default {
   name: "user-avatar",
   computed: {
@@ -45,7 +45,8 @@ export default {
     logout() {
       //   await this.$store.dispatch('user/logout')
       this.removeToken()
-    //   Watermark.remove()
+      console.log(window)
+      window.watermark.remove()
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     removeToken(){

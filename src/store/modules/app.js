@@ -7,7 +7,10 @@ const state = {
     withoutAnimation: false
   },
   device: 'desktop',
-  watermark: null
+  watermark: null,
+  windowHeight: '600px',
+  windowWidth: '800px',
+  maximumFlag: false,
   
 }
 
@@ -29,13 +32,14 @@ const mutations = {
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
   },
-  SET_WATERMARK(state,payload){
-    state.watermark = new Watermark(payload)
-    },
-    REMOVE_WATERMARK(state){
-        state.watermark.remove()
-        state.watermark = null
-    }
+  SAVE_WINDOWSIZE:(state,payload)=>{
+      const {windowHeight,windowWidth} = payload
+      state.windowHeight = windowHeight 
+      state.windowWidth = windowWidth 
+  },
+  TOGGLE_ISMAXIMUM(state,payload){
+      state.maximumFlag = payload
+  }
 }
 
 const actions = {

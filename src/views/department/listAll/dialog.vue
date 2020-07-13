@@ -1,52 +1,55 @@
 <template>
-    <div>
-        <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" center append-to-body width="600px" :close-on-click-modal="false">
-            <div>
-                <component :is="event" />
-            </div>
-        </el-dialog>
-    </div>
+  <div>
+    <el-dialog
+      :title="genTitle()"
+      :visible.sync="dialogVisible"
+      :modal-append-to-body="false"
+      center
+      append-to-body
+      width="600px"
+      destroy-on-close
+      :close-on-click-modal="false"
+    >
+      <div>
+        <component :is="event" />
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
-
 import CreateTemplate from './event-create.vue'
 import EditTemplate from './event-edit.vue'
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 export default {
-components:{
+  components: {
     CreateTemplate,
     EditTemplate
-},
+  },
   data() {
     return {
       dialogVisible: false,
       event: 'CreateTemplate',
       eventType: ''
-    };
+    }
   },
-  watch:{
-      eventType:{
-          handler(newVal,oldVal){
-            //   console.log(newVal)
-              if(newVal){
-                  this.genTitle()
-                //   this.toggleComponent(newVal)
-              }
-          },
-          immediate: true,
-      }
+  watch: {
+    eventType: {
+      handler(newVal, oldVal) {
+        //   console.log(newVal)
+        if (newVal) {
+          this.genTitle()
+          //   this.toggleComponent(newVal)
+        }
+      },
+      immediate: true
+    }
   },
-  computed:{
-      ...mapState({
-
-      })
+  computed: {
+    ...mapState({})
   },
-  mounted(){
-      
-      
-  },
-  updated(){
+  mounted() {},
+  updated() {
     //   console.warn(this.genTitle())
   },
   methods: {
@@ -58,20 +61,17 @@ components:{
     //           this.event = 'CreateTemplate'
     //       }
     //   },
-      genTitle(){
-          if(this.eventType==='create'){
-              return '创建模板'
-          }
+    genTitle() {
+      if (this.eventType === 'create') {
+        return '创建模板'
+      }
 
-          if(this.eventType==='edit'){
-              return '编辑模板'
-          }
-          
-          
-      },
+      if (this.eventType === 'edit') {
+        return '编辑模板'
+      }
+    }
   }
-  
-};
+}
 </script>
 
 <style>

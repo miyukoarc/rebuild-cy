@@ -48,6 +48,7 @@ export default {
   position: relative;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  -webkit-app-region: drag;
 
   .hamburger-container {
     line-height: 46px;
@@ -67,6 +68,7 @@ export default {
   }
   .window-button{
       float: right;
+      -webkit-app-region: no-drag;
   }
 
   .left-menu {

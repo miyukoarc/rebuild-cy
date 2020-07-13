@@ -1,13 +1,14 @@
 'use strict'
 
-const  { app, protocol, BrowserWindow,BrowserView, Tray ,Menu} = require('electron')
+const  { app, protocol, BrowserWindow,BrowserView, Tray ,Menu,ipcMain} = require('electron')
+const {VUEJS_DEVTOOLS} = require('electron-devtools-installer')
+const installExtension = require('electron-devtools-installer')
 // const {createProtocol} = require('vue-cli-plugin-electron-builder/lib')
 // import {
 //   createProtocol,
 //   /* installVueDevtools */
 // } from 'vue-cli-plugin-electron-builder/lib'
 
-const {ipcMain} = require('electron')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const path = require('path')
@@ -17,8 +18,6 @@ const os = require('os')
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
-
-console.log(process.env.NODE_ENV)
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
@@ -37,7 +36,9 @@ function createWindow () {
     
     webPreferences: {
       sanbox: true,//微信扫码登录
-      nodeIntegration: true
+      nodeIntegration: true,
+      preload: path.resolve('./src/preload.js')
+    //   path.join(__dirname, 'preload.js')
   } })
 
 
@@ -111,6 +112,12 @@ app.on('ready', async () => {
 
 })
 
+app.whenReady().then(() => {
+    installExtension(VUEJS_DEVTOOLS)
+        .then((name) => console.log(`Added Extension:  ${name}`))
+        .catch((err) => console.log('An error occurred: ', err));
+});
+
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
@@ -125,3 +132,19 @@ if (isDevelopment) {
     })
   }
 }
+
+ipcMain.on('minimizeWindow',e=>{
+    win.minimize()
+})
+
+ipcMain.on('maximizeWindow',e=>{
+    win.maximize()
+})
+
+ipcMain.on('restoreWindow',e=>{
+
+})
+
+ipcMain.on('closeWindow',e=>{
+    win.close()
+})

@@ -58,7 +58,8 @@ Vue.use(ElSelectTree)
  */
 
 if (isElectron()) {
-    // console.log('electron')
+    console.log(window)
+    Vue.prototype.$isElectron = isElectron
     /*
     const electron = window.require('electron')
     const {
@@ -67,7 +68,6 @@ if (isElectron()) {
     } = electron
     Vue.prototype.$ipcRenderer = ipcRenderer
     Vue.prototype.$remote = remote
-    Vue.prototype.$isElectron = isElectron
     const {BrowserWindow} = remote
     Vue.prototype.$BrowserWindow = BrowserWindow
     */

@@ -1,16 +1,21 @@
 <template>
   <div>
     <div class="process-container">
-      <el-steps v-if="mode=='NEW'" :active="process[mode]" align-center>
+      <el-steps v-if="mode=='COMPLEX'" :active="process[mode]" align-center>
         <el-step title="基础信息" description></el-step>
         <el-step title="关联企微" description></el-step>
         <el-step title="角色配置" description></el-step>
         <el-step title="审核通知人" description></el-step>
       </el-steps>
 
-      <el-steps v-else :active="process[mode]" align-center>
+      <el-steps v-if="mode=='SIMPLE'" :active="process[mode]" align-center>
         <el-step title="基础信息" description></el-step>
         <el-step title="角色配置" description></el-step>
+        <el-step title="审核通知人" description></el-step>
+      </el-steps>
+
+      <el-steps v-if="mode=='NONE'" :active="process[mode]" align-center>
+        <el-step title="基础信息" description></el-step>
         <el-step title="审核通知人" description></el-step>
       </el-steps>
     </div>
@@ -29,14 +34,14 @@
         <div style="margin-bottom:20px;" v-if="type!=='NORMAL'">
           <div class="radio-container">
             <div class="radio-item">
-              <el-radio v-model="mode" label="OLD">
+              <el-radio v-model="mode" label="SIMPLE">
                 <span class="title">上级所在的企业微信中添加</span>
                 <br />
                 <span class="radio-tips">在上级所在的企业微信中，直接创建新的组织或部门</span>
               </el-radio>
             </div>
             <div class="radio-item">
-              <el-radio v-model="mode" label="NEW">
+              <el-radio v-model="mode" label="COMPLEX">
                 <span class="title">以新的企业微信号关联</span>
                 <br />
                 <span
@@ -57,20 +62,13 @@
             :check-strictly="true"
             v-model="form.parentUuid"
           ></el-select-tree>
-          <!-- <el-select v-model="form.parentUuid" placeholder="请选择">
-            <el-option
-              v-for="item in listSelect"
-              :key="item.uuid"
-              :label="item.name"
-              :value="item.uuid"
-            ></el-option>
-          </el-select>-->
+
         </el-form-item>
 
         <el-form-item label="创建类型">
-          <el-select v-model="type" placeholder="请选择">
+          <el-select v-model="form.type" placeholder="请选择">
             <el-option
-              v-for="item in types"
+              v-for="item in orgTypes"
               :key="item.code"
               :label="item.label"
               :value="item.code"
@@ -91,7 +89,7 @@
 
       <el-form
         key="formNext"
-        v-if="process['NEW']==2"
+        v-if="process['COMPLEX']==2"
         :model="formNext"
         ref="formNext"
         :rules="rulesNext"
@@ -153,23 +151,39 @@
         <el-form-item label="预设超级管理员的userid">
           <el-input v-model.trim="formNext.superUserId"></el-input>
         </el-form-item>
-
-        <!-- <div class="text-align-center">
-          <el-button size="small" @click="status='CURR'">返回</el-button>
-          <el-button size="small" type="primary" @click="handleConfirmNext">完成</el-button>
-        </div>-->
       </el-form>
 
       <el-form
         key="formNext"
-        v-if="process[mode]==3"
+        v-if="process[mode]==4"
         :model="formNext"
         ref="formNext"
         :rules="rulesNext"
         label-width="150px"
         label-position="left"
       >
-        <el-form-item label="XXX"></el-form-item>
+        <el-form-item label="通知审核人"></el-form-item>
+      </el-form>
+
+      <el-form
+        key="formRole"
+        v-if="process['SIMPLE']==2||process['COMPLEX']==3"
+        :model="formRole"
+        ref="formRole"
+        :roles="rulesRole"
+        label-position="left"
+        label-width="150px"
+      >
+        <el-form-item label="角色模板">
+          <el-select multiple v-model="formRole.roleUuidSet">
+            <el-option
+              v-for="item in roleTemplates"
+              :key="item.uuid"
+              :value="item.uuid"
+              :label="item.name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
     </transition-group>
 
@@ -179,7 +193,7 @@
         size="small"
         type="primary"
         @click="handleConfirm"
-      >{{process['NEW']==4||process['OLD']==3?'确定':'下一步'}}</el-button>
+      >{{process['NEW']==4||process['SIMPLE']==3?'确定':'下一步'}}</el-button>
     </div>
   </div>
 </template>
@@ -192,18 +206,29 @@ export default {
   data() {
     return {
       process: {
-        OLD: 1,
-        NEW: 1
+        SIMPLE: 1,//DEPT
+        COMPLEX: 1, //BRANCH||BUSSINESS
+        NONE:1
       },
-      mode: '', //new //old
-      status: 'CURR',
+      mode: 'NONE', //new //old
+      orgTypes: [
+          {
+              code: 'BRANCH',
+              label: '分公司'
+          },
+          {
+              code: 'BUSINESS',
+              label: '营业部'
+          },{
+              code: 'DEPT',
+              label: '普通部门'
+          }
+      ],
       form: {
         name: '',
-        orgNode: true,
-        parentUuid: ''
-      },
-      formBasic: {
-        roleUuidSet: [0]
+        orgNode: false,
+        parentUuid: '',
+        type: ''
       },
       formNext: {
         addressBookEncodingAESKey: '', //通讯录EncodingAESKey
@@ -224,6 +249,9 @@ export default {
         sidebarUrl: '', //侧边栏url
         superUserId: '' //预设超级管理员的userid
       },
+      formRole: {
+        roleUuidSet: []
+      },
       rulesNext: {},
       type: 'WX',
       types: [
@@ -236,6 +264,7 @@ export default {
           label: '部门'
         }
       ],
+      rulesRole: {},
       rules: {
         parentUuid: [
           { required: true, message: '请输入部门名称', trigger: 'blur' }
@@ -252,15 +281,25 @@ export default {
     }
   },
   watch: {
-    type: {
+    'form.type': {
       handler(newVal, oldVal) {
+          console.log(newVal)
+          if(newVal=='NONE'){
+              this.form.orgNode = false
+              this.mode='NONE'
+
+          }
         if (newVal === 'NORMAL') {
-          this.mode = ''
-          this.$delete(this.form, 'orgNode')
+          this.mode = 'SIMPLE'
+          this.type = 'NORMAL'
+            this.$delete(this.form, 'type')
         }
         if (newVal === 'WX') {
-          this.$set(this.form, 'orgNode', true)
-          this.mode = 'OLD'
+          this.form.orgNode = true
+
+
+            this.$set(this.form, 'type', 'BRANCH')
+          this.mode = 'SIMPLE'
         }
       },
       immediate: true
@@ -275,29 +314,61 @@ export default {
   computed: {
     ...mapState({
       listSelect: state => state.department.listSelect, //list
-      departmentList: state => state.department.departmentList //tree
+      departmentList: state => state.department.departmentList, //tree
+      roleTemplates: state => state.roleTemplate.listAll
     }),
     parentUuid() {
       return this.form.parentUuid
     }
   },
+  created() {
+    this.initData()
+  },
   mounted() {},
   methods: {
+    initData() {
+      this.$store
+        .dispatch('roleTemplate/getListAll')
+        .then(() => {})
+        .catch(err => {
+          console.error(err)
+        })
+    },
     handlePrev() {
       if (this.process[this.mode] == 1) {
         this.handleCancel()
       }
-      if (this.process['NEW'] != 1 || this.process['OLD'] != 1) {
+      if (this.process['COMPLEX'] != 1 || this.process['SIMPLE'] != 1) {
         this.process[this.mode]--
       }
     },
     handleConfirm() {
-      if (this.process['NEW'] != 4 && this.process['OLD'] != 3) {
+      if (this.process['COMPLEX'] == 4 || this.process['SIMPLE'] == 3) {
+          //创建普通部门
+        if (this.mode == 'SIMPLE' && this.type == 'NORMAL') {
+          const roleUuidSet = this.formRole.roleUuidSet
+          const payload = { ...this.form, roleUuidSet, type: 'DEPT' }
+          this.$store
+            .dispatch('department/addDepartment', payload)
+            .then(() => {})
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: err
+              })
+            })
+        }
+        //创建营业部/分公司
+        if(this.mode=='SIMPLE'&&this.type=='WX'){
+            // const roleUuidSet = this.formRole.roleUuidSet
+          const payload = { ...this.form, type: 'DEPT' }
+        }
+      }
+      if (this.process['COMPLEX'] != 4 && this.process['SIMPLE'] != 3) {
         if (this.process[this.mode] == 1) {
           this.$refs['form'].validate(valid => {
             if (valid) {
-            this.process[this.mode]++
-
+              this.process[this.mode]++
             } else {
               this.$message({
                 type: 'error',
@@ -305,9 +376,8 @@ export default {
               })
             }
           })
-        }else{
-
-            this.process[this.mode]++
+        } else {
+          this.process[this.mode]++
         }
       }
     },
