@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-09 17:59:52
- * @LastEditTime: 2020-07-10 11:38:22
+ * @LastEditTime: 2020-07-11 14:47:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\TagDrawerObj\index.vue
@@ -20,8 +20,8 @@
                 class="tag-unit text-ellipsis"
                 type="info"
                 size="mini"
-                v-for="tag in alterTags(group)"
-                :key="tag.tagId"
+                v-for="(tag,index) in alterTags(group)"
+                :key="index"
               >{{tag.tagName}}</el-tag>
             </div>
           </el-col>
@@ -96,8 +96,7 @@ export default {
       }
     }
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     alterTags(arr) {
       if (this.curly) {

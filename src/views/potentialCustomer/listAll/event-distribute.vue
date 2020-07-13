@@ -1,8 +1,16 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-27 14:05:27
+ * @LastEditTime: 2020-07-11 16:44:32
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\potentialCustomer\listAll\event-distribute.vue
+--> 
 <template>
   <div>
     <el-form :model="form" ref="form" label-width="120px">
       <el-form-item label="名称" prop="name">
-        <el-select v-model="form.userId">
+        <el-select v-model="form.userUuid">
           <el-option
             v-for="item in userListSelect"
             :key="item.uuid"
@@ -32,7 +40,7 @@ export default {
   data() {
     return {
       form: {
-        userId: '',
+        userUuid: '',
         uuid: [],
       }
     }
@@ -40,7 +48,7 @@ export default {
   watch:{
     transfer: {
       handler(newVal,oldVal){
-        console.log(newVal)  
+        console.log(newVal,'77')  
         const {uuid} = newVal
         this.form.uuid = uuid
       }

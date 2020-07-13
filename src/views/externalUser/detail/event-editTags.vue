@@ -1,15 +1,15 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-30 17:39:37
- * @LastEditTime: 2020-07-11 10:24:18
+ * @LastEditTime: 2020-07-11 18:16:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\detail\event-editTags.vue
 --> 
 <template>
-  <el-form :model="form" ref="form">
-    <div class="tag-warp">
-      <div v-for="(tagGroup,index) in tagListSelect" :key="index" class="tag-list-warp">
+  <el-form ref="form">
+    <!-- <div class="tag-warp">
+      <div v-for="(tagGroup,index) in newTagsList" :key="index" class="tag-list-warp">
         <el-row :gutter="20" type="flex" justify="center">
           <el-col :span="8">
             <span class="lg-42">{{ tagGroup.groupName }}</span>
@@ -33,7 +33,8 @@
           </el-col>
         </el-row>
       </div>
-    </div>
+    </div> -->
+    <tags-selected @change="handleCheckedTagsChange" :tagListSelect="tagListSelect" :checkboxGroup="checkboxGroup"></tags-selected>
     <div class="text-align-center">
       <el-t-button size="small" @click="handleCancel">取消</el-t-button>
       <el-t-button type="primary" size="small" @click="handleConfirm">确定</el-t-button>
@@ -43,16 +44,21 @@
 
 <script>
 import { mapState } from "vuex";
-import { truncate } from "fs";
+
+import TagsSelected from "@/components/TagsSelected";
+
 export default {
   props: {
     uuid: {
       type: String
     }
   },
+  components: {
+    TagsSelected
+  },
   data() {
     return {
-      form: {},
+      // form: {},
       checkboxGroup: [],
       delTags: [],
       addTags: [],
@@ -68,23 +74,29 @@ export default {
   watch: {},
   created() {
     this.checkboxGroup = this.editTagsUuid;
+    console.log(this.checkboxGroup, "ffff");
   },
   mounted() {
-    this.newTagsList = JSON.parse(JSON.stringify(this.tagListSelect));
-    this.newTagsList.map((item, index) => {
-      item.tagList.map(tag => {
-        if (this.checkboxGroup.includes(tag.tagId)) {
-          const itemData = item;
-          this.tagListSelect.splice(index, 1);
-          this.tagListSelect.unshift(itemData);
-        }
-      });
-    });
+    // this.newTagsList = JSON.parse(JSON.stringify(this.tagListSelect));
+    // this.newTagsList.map((item, index) => {
+    //   item.tagList.map(tag => {
+    //     if (this.checkboxGroup.includes(tag.tagId)) {
+    //       const itemData = item;
+    //       console.log(itemData, "ttt", index);
+    //       this.newTagsList.splice(index, 1);
+    //       this.newTagsList.unshift(itemData);
+    //       console.log(this.newTagsList, "222");
+    //     }
+    //   });
+    // });
+
+    // console.log(this.newTagsList, "3333", this.tagListSelect);
   },
   methods: {
     // 选择标签
     handleCheckedTagsChange(tag, index) {
-      // this.handleConfirm();
+      console.log(tag, "tag");
+      this.checkboxGroup = tag;
     },
     del(arr1, arr2) {
       return arr1.filter(v => {
@@ -106,33 +118,23 @@ export default {
         externalUserUuid: this.uuid,
         removeTags: this.delTags
       };
-      console.log(payload);
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          console.log(payload);
-          this.$store
-            .dispatch("externalUser/externalUserUpdateTag", payload)
-            .then(() => {
-              this.$message({
-                type: "success",
-                message: "操作成功"
-              });
-              this.handleCancel();
-              this.refresh();
-            })
-            .catch(err => {
-              this.$message({
-                type: "error",
-                message: "操作失败"
-              });
-            });
-        } else {
+      console.log(payload, "99");
+      this.$store
+        .dispatch("externalUser/externalUserUpdateTag", payload)
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "操作成功"
+          });
+          this.handleCancel();
+          this.refresh();
+        })
+        .catch(err => {
           this.$message({
             type: "error",
-            message: "请检查输入"
+            message: "操作失败"
           });
-        }
-      });
+        });
     },
     // 取消关闭弹框
     handleCancel() {

@@ -30,13 +30,14 @@
           row-key="uuid"
           stripe
           lazy
+          fit
           highlight-current-row
           @selection-change="handleSelectionChange"
           header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="客户名" align="left" prop="name"></el-table-column>
-          <el-table-column label="手机号" align="left" prop="mobile"></el-table-column>
+          <el-table-column label="客户名" align="left" prop="name" width="150"></el-table-column>
+          <el-table-column label="手机号" align="left" prop="mobile" width="150"></el-table-column>
           <el-table-column>
             <template slot="header">
               <span>
@@ -50,22 +51,22 @@
               </span>
             </template>
             <template v-slot="{row}">
-              <!-- <div>{{row}}</div> -->
               <tags-drawer :tags="row.potentialCustomerTags"></tags-drawer>
             </template>
           </el-table-column>
           <el-table-column label="批量添加次数" align="left" prop="tryCount"></el-table-column>
-          <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
+
           <el-table-column label="所属员工" align="left">
-            <template v-slot="scope">
-              <!-- <user-tag :user="scope.row.user" :hasPop="hasPop"></user-tag> -->
+            <template v-slot="{row}">
+              <user-tag :user="row.belong"></user-tag>
             </template>
           </el-table-column>
           <el-table-column label="添加员工" align="left">
-            <template v-slot="scope">
-              <!-- <user-tag :user="scope.row.user" :hasPop="hasPop"></user-tag> -->
+            <template v-slot="{row}">
+              <user-tag :user="row.creator"></user-tag>
             </template>
           </el-table-column>
+          <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-t-button
@@ -109,7 +110,10 @@
 // import mHeadedr from "./header";
 import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
+
 import TagsDrawer from "@/components/TagsDrawer";
+import UserTag from "@/components/UserTag";
+
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
@@ -121,7 +125,8 @@ export default {
     UserDetail,
     FormDialog,
     ToolBar,
-    TagsDrawer
+    TagsDrawer,
+    UserTag
     // mHeadedr
   },
   data() {
@@ -342,7 +347,7 @@ export default {
       console.log(val);
       const arr = val;
       this.selects = arr.map(item => {
-        return item.uuid + "";
+        return item.uuid;
       });
     }
   }

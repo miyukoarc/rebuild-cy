@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-27 14:05:27
- * @LastEditTime: 2020-07-10 12:08:00
- * @LastEditors: your name
+ * @LastEditTime: 2020-07-13 11:24:07
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\potentialCustomer\listAll\dialog.vue
 --> 
@@ -70,7 +70,7 @@ export default {
       //   }
 
       if (this.eventType === "distribute") {
-        return "分配部门";
+        return "分配客户";
       }
     },
     close() {

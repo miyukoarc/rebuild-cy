@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-27 22:34:57
- * @LastEditTime: 2020-07-07 10:32:57
+ * @LastEditTime: 2020-07-11 15:38:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\detail\dialog.vue
@@ -15,6 +15,7 @@
       append-to-body
       min-width="600px"
       center
+      @close="close"
       :close-on-click-modal="false"
     >
       <div>
@@ -75,6 +76,9 @@ export default {
       if (this.eventType === "editTags") {
         return "标签编辑";
       }
+    },
+    close() {
+      this.event = "";
     }
   }
 };

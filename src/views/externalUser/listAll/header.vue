@@ -48,10 +48,10 @@
           size="mini"
           multiple
         >
-          <el-option-group v-for="item in tagListAll" :key="item.groupId" :label="item.groupName">
+          <el-option-group v-for="(item,key) in tagListAll" :key="key" :label="item.groupName">
             <el-option
-              v-for="child in item.tagList"
-              :key="child.uuid"
+              v-for="(child,index) in item.tagList"
+              :key="index"
               :label="child.tagName"
               :value="child.uuid"
             ></el-option>

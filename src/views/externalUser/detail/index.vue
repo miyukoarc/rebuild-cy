@@ -43,7 +43,7 @@
               </h4>
               <div
                 class="tag-line"
-                v-if="externalUserDetail.externalUserDetailCorpTagsList.corpTags !=null"
+                v-if="externalUserDetail.externalUserDetailCorpTagsList.corpTags != '{}'"
               >
                 <span
                   v-for="(companyTags,key,index) in externalUserDetail.externalUserDetailCorpTagsList.corpTags"
@@ -110,7 +110,7 @@
               stripe
               lazy
               highlight-current-row
-               header-row-class-name="el-table-header"
+              header-row-class-name="el-table-header"
             >
               <el-table-column label="所属员工" align="left">
                 <template v-slot="scope">
@@ -142,7 +142,7 @@
                         v-for="(item,index) in scope.row.individualTags"
                         :key="index"
                         style="margin-right:3px;"
-                      >{{ item }}</el-tag>
+                      >{{ item.tagName }}</el-tag>
                     </div>
                     <span v-else>--</span>
                   </div>
@@ -339,7 +339,8 @@ export default {
       loading: state => state.externalUser.loading,
       listGroup: state => state.externalUser.listGroup,
       externalUserDetail: state => state.externalUser.externalUserDetail,
-      externalUserTrendsListAllPage: state => state.externalUserTrends.externalUserTrendsListAllPage,
+      externalUserTrendsListAllPage: state =>
+        state.externalUserTrends.externalUserTrendsListAllPage,
       externalUserTrendsListAll: state =>
         state.externalUserTrends.externalUserTrendsListAll,
       permissionMap: state => state.permission.permissionMap
@@ -394,7 +395,8 @@ export default {
       this.$store
         .dispatch("externalUserTrends/getExternalUserTrendsListAll", payload)
         .then(() => {
-          this.pageConfig.pageNumber = this.externalUserTrendsListAllPage.pageNumber + 1;
+          this.pageConfig.pageNumber =
+            this.externalUserTrendsListAllPage.pageNumber + 1;
           this.pageConfig.total = this.externalUserTrendsListAllPage.total;
         })
         .catch(err => {
@@ -452,11 +454,11 @@ export default {
     },
     // 群
     handleGroupRouter(item) {
-      // console.log(item)
+      console.log(item)
       this.$router.push({
         path: "/externalUser/groupDetail",
         query: {
-          chatId: item.chatId
+          chatId: item.groupId
         }
       });
     },

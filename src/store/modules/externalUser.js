@@ -311,7 +311,11 @@ const mutations = {
      */
     SAVE_EDITTAGSUUID(state, payload) {
         console.log(payload, 'payload0')
-        state.editTagsUuid = tagsUuid(payload)
+        if (payload != null) {
+            state.editTagsUuid = tagsUuid(payload)
+        } else {
+            state.editTagsUuid = []
+        }
     },
     /**
      * 保存群列表
