@@ -1,6 +1,6 @@
 <template>
-  <el-form :model="form" ref="form" label-width="100px">
-    <el-form-item label="分组名称">
+  <el-form :model="form" ref="form" :rules="rules" label-width="100px" label-position="left">
+    <el-form-item label="分组名称" prop="groupName">
       <el-input
         v-model.trim="form.groupName"
         maxlength="20"
@@ -34,6 +34,12 @@ export default {
       form: {
         groupName: "",
         uuid: ''
+      },
+      rules: {
+        groupName: [
+          { required: true, message: '请输入组名', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ]
       }
     };
   },
@@ -72,10 +78,10 @@ export default {
               this.refresh();
             })
             .catch(err => {
-              ;
+              
               this.$message({
                 type: "error",
-                message: "操作失败"
+                message: err||"操作失败"
               });
             });
         } else {

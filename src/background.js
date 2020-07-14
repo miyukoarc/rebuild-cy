@@ -1,8 +1,18 @@
 'use strict'
 
-const  { app, protocol, BrowserWindow,BrowserView, Tray ,Menu,ipcMain} = require('electron')
-const {VUEJS_DEVTOOLS} = require('electron-devtools-installer')
-const installExtension = require('electron-devtools-installer')
+const {
+  app,
+  protocol,
+  BrowserWindow,
+  BrowserView,
+  Tray,
+  Menu,
+  ipcMain
+} = require('electron')
+const {
+  default: installExtension,
+  VUEJS_DEVTOOLS
+} = require('electron-devtools-installer');
 // const {createProtocol} = require('vue-cli-plugin-electron-builder/lib')
 // import {
 //   createProtocol,
@@ -20,50 +30,66 @@ let win
 
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
+protocol.registerSchemesAsPrivileged([{
+  scheme: 'app',
+  privileges: {
+    secure: true,
+    standard: true
+  }
+}])
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({ 
-    frame: false,//无边框窗口
-    width: 800, 
+  win = new BrowserWindow({
+    frame: false, //无边框窗口
+    width: 800,
     height: 600,
     minHeight: 600,
-    minWidth:800,
+    minWidth: 800,
     // maximizable: false,
     // transparent: true, 
     // show: false,
-    
+
     webPreferences: {
-      sanbox: true,//微信扫码登录
+      sanbox: true, //微信扫码登录
       nodeIntegration: true,
       preload: path.resolve('./src/preload.js')
-    //   path.join(__dirname, 'preload.js')
-  } })
+      //   path.join(__dirname, 'preload.js')
+    }
+  })
+
+
 
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
+
   } else {
     // createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html') //electron-builder
     // win.loadURL('./dist/index.html')
-    
+
   }
 
 
-  win.on('ready-to-show',()=>{
+  win.on('ready-to-show', () => {
     win.show()
   })
-  win.on('closed', (event,args) => {
+  win.on('closed', (event, args) => {
     win = null
     // win.hide(); 
     // win.setSkipTaskbar(true);
     event.preventDefault();
   })
+
+//   win.on('maximize',(event,args)=>{
+    //   console.log('最大化')
+//   })
+
+
 }
 
 // Quit when all windows are closed.
@@ -81,6 +107,10 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
+  console.log(BrowserWindow.addDevToolsExtension)
+  BrowserWindow.addDevToolsExtension(
+    path.join(os.homedir(), '/Microsoft/Edge/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd')
+  )
 })
 
 /***
@@ -107,15 +137,19 @@ app.on('ready', async () => {
     //   console.error('Vue Devtools failed to install:', e.toString())
     // }
 
+
   }
   createWindow()
+
+
 
 })
 
 app.whenReady().then(() => {
-    installExtension(VUEJS_DEVTOOLS)
-        .then((name) => console.log(`Added Extension:  ${name}`))
-        .catch((err) => console.log('An error occurred: ', err));
+
+  // installExtension(VUEJS_DEVTOOLS)
+  //     .then((name) => console.log(`Added Extension:  ${name}`))
+  //     .catch((err) => console.log('An error occurred: ', err));
 });
 
 // Exit cleanly on request from parent process in development mode.
@@ -133,18 +167,18 @@ if (isDevelopment) {
   }
 }
 
-ipcMain.on('minimizeWindow',e=>{
-    win.minimize()
+ipcMain.on('minimizeWindow', e => {
+  win.minimize()
 })
 
-ipcMain.on('maximizeWindow',e=>{
-    win.maximize()
+ipcMain.on('maximizeWindow', e => {
+  win.maximize()
 })
 
-ipcMain.on('restoreWindow',e=>{
-
+ipcMain.on('restoreWindow', e => {
+  win.restore()
 })
 
-ipcMain.on('closeWindow',e=>{
-    win.close()
+ipcMain.on('closeWindow', e => {
+  win.close()
 })

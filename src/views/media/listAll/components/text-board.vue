@@ -1,5 +1,11 @@
 <template>
   <div>
+          <board-header
+      @selectAll="handleSelectAll"
+      @batchTransfer="handleBatchTransfer"
+      @batchDelete="handleBatchDelete"
+      @addMedia="handleAddMedia"
+    ></board-header>
       <div class="btn-container">
           <el-table
             v-loading="loading"
@@ -34,7 +40,11 @@
 
 <script>
 import {mapState} from 'vuex'
+import BoardHeader from './board-header'
 export default {
+    components:{
+        BoardHeader
+    },
     data(){
         return {
         }
@@ -54,6 +64,12 @@ export default {
         handleDelete(index){
             const payload = this.listAll[index]
             this.$emit('handleDeleteText',payload)
+        },
+        handleSelectAll() {},
+        handleBatchTransfer() {},
+        handleBatchDelete() {},
+        handleAddMedia() {
+            this.$emit('handleCreateText')
         }
     }
 }

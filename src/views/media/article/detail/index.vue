@@ -21,7 +21,7 @@
               { required: true, message: '*分类不能为空', trigger: ['blur','change'] },
             ]"
           >
-            <el-select v-model="form.groupUuid" placeholder="请选择活动区域">
+            <el-select v-model="groupUuid" placeholder="请选择活动区域">
               <el-option
                 v-for="item in mediaGroupListAll"
                 :key="item.uuid"
@@ -70,9 +70,9 @@ export default {
         title: '',
         description: '',
         content: '',
-        imgId: '',
-        groupUuid: ''
+        imgId: ''
       },
+      groupUuid: '',
       type: 'ARTICLE'
     }
   },
@@ -124,7 +124,7 @@ export default {
           this.form.content = articleContent
           this.form.description = description
           this.form.title = title
-          this.form.groupUuid = groupUuid
+          this.groupUuid = groupUuid
         })
         .catch(err => {
           this.$message({
@@ -146,9 +146,9 @@ export default {
         })
     },
     beforeUpload() {},
-    onSuccess(res,file) {
-        this.form.imgId = res.id
-        this.coverUrl = URL.createObjectURL(file.raw)
+    onSuccess(res, file) {
+      this.form.imgId = res.id
+      this.coverUrl = URL.createObjectURL(file.raw)
     },
     beforeup(file) {
       // 图片上传
@@ -173,41 +173,54 @@ export default {
       return true
     },
     handleConfirm() {
-        // alert(this.mode)
-        console.log(this.mode)
-        if(this.mode==='UPDATE'){
-            const payload = this.form
-            const uuid = this.$route.params.uuid
-            this.handleUpdate({...payload,uuid})
-        }
-        if(this.mode==='CREATE'){
-            const payload = this.form
-            const type = this.type
-            console.log({...payload,type})
-            this.handleCreate()
-
-        }
+      // alert(this.mode)
+      console.log(this.mode)
+      if (this.mode === 'UPDATE') {
+        const payload = this.form
+        const groupUuid = this.groupUuid
+        const uuid = this.$route.params.uuid
+        this.handleUpdate({data:{...payload,uuid},params:{groupUuid}})
+      }
+      if (this.mode === 'CREATE') {
+        const payload = this.form
+        const type = this.type
+        const groupUuid = this.groupUuid
+        // console.log({data:payload,params:{type,groupUuid}})
+        this.handleCreate({ data: payload, params: { type, groupUuid } })
+      }
     },
-    handleUpdate(payload){
-        this.$store.dispatch('media/updataArticle',payload).then(()=>{
-            return Promise.resolve()
-        }).catch(err=>{
-            this.$message({
-                type: 'error',
-                message: err
-            })
-            return Promise.reject(new Error(err))
+    handleUpdate(payload) {
+      this.$store
+        .dispatch('media/updataArticle', payload)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功'
+          })
+        })
+        .catch(err => {
+          console.error(err)
+          this.$message({
+            type: 'error',
+            message: err
+          })
         })
     },
-    handleCreate(payload){
-        this.$store.dispatch('media/addMedia',payload).then(()=>{
-            return Promise.resolve()
-        }).catch(err=>{
-            this.$message({
-                type: 'error',
-                message: err
-            })
-            return Promise.reject(err||'错误')
+    handleCreate(payload) {
+      this.$store
+        .dispatch('media/addMediaIsAudit', payload)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功'
+          })
+        })
+        .catch(err => {
+          console.error(err)
+          this.$message({
+            type: 'error',
+            message: err
+          })
         })
     }
   }

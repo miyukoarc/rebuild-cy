@@ -20,9 +20,9 @@
 import CreateGroupTemplate from './event-create-group.vue'
 import EditGroupTemplate from './event-edit-group.vue'
 import CreateTextTemplate from './event-create-text.vue'
-// import CreateImageTemplate from './event-create-image.vue'
+import CreateImageTemplate from './event-create-image.vue'
 import CreateFileTemplate from './event-create-file.vue'
-import CreateArticleTemplate from './event-create-article.vue'
+// import CreateArticleTemplate from './event-create-article.vue'
 import CreateVideoTemplate from './event-create-video.vue'
 
 import EditTextTemplate from './event-edit-text'
@@ -34,8 +34,8 @@ export default {
     EditGroupTemplate,
     CreateTextTemplate,
     EditTextTemplate,
+    CreateImageTemplate,
     CreateFileTemplate,
-    CreateArticleTemplate,
     CreateVideoTemplate
   },
   data() {

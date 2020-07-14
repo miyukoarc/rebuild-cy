@@ -55,7 +55,7 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
+        <!-- <el-pagination
           background
           class="pager"
           layout="total,prev, pager, next,jumper"
@@ -63,7 +63,9 @@
           :current-page.sync="pageConfig.pageNumber"
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
-        />
+        /> -->
+
+        <customer-pagination :pageConfig="pageConfig" @currentChange="changePage"></customer-pagination>
       </div>
     </el-card>
 
@@ -77,10 +79,12 @@ import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
+import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {
+    CustomerPagination,
     ListHeader,
     UserDetail,
     FormDialog,

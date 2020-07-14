@@ -1,10 +1,11 @@
 <template>
   <div>
     <board-header
-      :hasAdd="false"
+    :hasAdd="false"
       @selectAll="handleSelectAll"
       @batchTransfer="handleBatchTransfer"
       @batchDelete="handleBatchDelete"
+      @addMedia="handleAddMedia"
     ></board-header>
     <div class="btn-container">
       <el-table

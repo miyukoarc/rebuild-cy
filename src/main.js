@@ -58,7 +58,6 @@ Vue.use(ElSelectTree)
  */
 
 if (isElectron()) {
-    console.log(window)
     Vue.prototype.$isElectron = isElectron
     /*
     const electron = window.require('electron')

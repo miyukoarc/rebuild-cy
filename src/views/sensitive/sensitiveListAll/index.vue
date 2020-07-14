@@ -45,7 +45,7 @@
           lazy
           highlight-current-row
           header-row-class-name="el-table-header"
-           @selection-change="handleSelectionChange"
+          @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="敏感词" align="left" prop="word"></el-table-column>
@@ -84,8 +84,11 @@
               </span>
             </template>
             <template v-slot="{row}">
+              <div>
+                <div>{{row.tagType=='INSET'?'包含其一':'全部满足'}}</div>
+                <tags-drawer :tags="row.sensitiveSetTag"></tags-drawer>
+              </div>
               <!-- <div v-if="Object.keys(row.sensitiveSetTag).length>1"> -->
-              <tags-drawer :tags="row.sensitiveSetTag"></tags-drawer>
               <!-- </div> -->
               <!-- <div v-else>--</div> -->
             </template>
@@ -313,36 +316,36 @@ export default {
         .catch(err => {})
     },
     handleEdit(index) {
-        // let { toUser, type, uuid, word } = this.listAll[index]
+      // let { toUser, type, uuid, word } = this.listAll[index]
       //   toUser = toUser.map(item => {
       //     return item.userId
       //   })
       // console.log(toUser)
       //   const payload = { toUser, type, uuid, word }
       let {
-            uuid,
-            type,
-            informType,
-            tagType,
-            sensitiveSetTag,
-            toUser,
-            toRole,
-            word
-          } = this.listAll[index]
-    sensitiveSetTag = JSON.parse(JSON.stringify(sensitiveSetTag))
-    toUser = JSON.parse(JSON.stringify(toUser))
-    toRole = JSON.parse(JSON.stringify(toRole))
+        uuid,
+        type,
+        informType,
+        tagType,
+        sensitiveSetTag,
+        toUser,
+        toRole,
+        word
+      } = this.listAll[index]
+      sensitiveSetTag = JSON.parse(JSON.stringify(sensitiveSetTag))
+      toUser = JSON.parse(JSON.stringify(toUser))
+      toRole = JSON.parse(JSON.stringify(toRole))
 
       const transfer = {
-            uuid,
-            type,
-            informType,
-            tagType,
-            sensitiveSetTag,
-            toUser,
-            toRole,
-            word
-          }
+        uuid,
+        type,
+        informType,
+        tagType,
+        sensitiveSetTag,
+        toUser,
+        toRole,
+        word
+      }
       const payload = this.listAll[index]
       this.$store.commit('sensitive/SAVE_CURRENTWORD', payload)
       this.$refs['formDialog'].event = 'EditTemplate'
@@ -350,33 +353,26 @@ export default {
       this.$refs['formDialog'].dialogVisible = true
       this.$refs['formDialog'].transfer = transfer
     },
-    handleBatchChange(){
-
-        if(this.rowSelects.length){
-            let sensitiveUuid = this.rowSelects.map(item=>{return item.uuid})
-            // sensitiveUuid = JSON.parse(JSON.stringify(sensitiveUuid))
-            const transfer = {sensitiveUuid}
-            this.$refs['formDialog'].event = 'ChangeTemplate'
-            this.$refs['formDialog'].eventType = 'change'
-            this.$refs['formDialog'].dialogVisible = true
-            this.$refs['formDialog'].transfer = transfer
-
-        }else{
-
-            this.$message({
-                type:'warning',
-                message: '请至少选择一项'
-            })
-
-        }
-
-
-
-
+    handleBatchChange() {
+      if (this.rowSelects.length) {
+        let sensitiveUuid = this.rowSelects.map(item => {
+          return item.uuid
+        })
+        // sensitiveUuid = JSON.parse(JSON.stringify(sensitiveUuid))
+        const transfer = { sensitiveUuid }
+        this.$refs['formDialog'].event = 'ChangeTemplate'
+        this.$refs['formDialog'].eventType = 'change'
+        this.$refs['formDialog'].dialogVisible = true
+        this.$refs['formDialog'].transfer = transfer
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请至少选择一项'
+        })
+      }
     },
-    handleSelectionChange(val){
-
-        this.rowSelects = val
+    handleSelectionChange(val) {
+      this.rowSelects = val
     }
   }
 }

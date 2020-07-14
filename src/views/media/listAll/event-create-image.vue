@@ -86,10 +86,11 @@ export default {
   },
   data() {
     return {
+      fileList: [],
       tagSelects: [],
       content: [''],
       form: {},
-      type: 'TEXT',
+      type: 'IMAGE',
       groupUuid: '',
       matchFormat: 'CONTAINS_ANY'
     }

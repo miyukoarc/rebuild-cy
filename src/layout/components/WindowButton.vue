@@ -27,12 +27,13 @@ export default {
         handleMaximize: 'maximizeWindow',
         handleClose: 'closeWindow',
         handleRestore: 'restoreWindow'
-      }
+      },
+      maximumFlag: false
     }
   },
   computed: {
     ...mapState({
-      maximumFlag: state => state.app.maximumFlag
+    //   maximumFlag: state => state.app.maximumFlag
     })
   },
   methods: {
@@ -41,6 +42,7 @@ export default {
       this.handleIpcRenderer(event)
     },
     handleMaximize() {
+        this.maximumFlag = !this.maximumFlag
       const event = this.strategy['handleMaximize']
       this.handleIpcRenderer(event)
     },
@@ -49,6 +51,7 @@ export default {
       this.handleIpcRenderer(event)
     },
     handleRestore() {
+        this.maximumFlag = !this.maximumFlag
       const event = this.strategy['handleRestore']
       this.handleIpcRenderer(event)
     },

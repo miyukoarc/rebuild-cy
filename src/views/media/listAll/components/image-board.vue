@@ -1,5 +1,11 @@
 <template>
   <div>
+       <board-header
+      @selectAll="handleSelectAll"
+      @batchTransfer="handleBatchTransfer"
+      @batchDelete="handleBatchDelete"
+      @addMedia="handleAddMedia"
+    ></board-header>
       <div class="btn-container">
       </div>
   </div>
@@ -7,7 +13,9 @@
 
 <script>
 import {mapState} from 'vuex'
+import BoardHeader from './board-header'
 export default {
+    components:{BoardHeader},
     data(){
         return {
 
@@ -17,6 +25,14 @@ export default {
         ...mapState({
             permissionMap: state => state.permission.permissionMap
         })
+    },
+    methods: {
+        handleSelectAll() {},
+    handleBatchTransfer() {},
+    handleBatchDelete() {},
+    handleAddMedia() {
+        this.$emit('handleCreateImage')
+    }
     }
 }
 </script>

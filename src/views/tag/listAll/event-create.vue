@@ -70,15 +70,16 @@ export default {
       tagListAll: state => state.tag.tagListAll
     })
   },
-  watch:{
-      'tagListAll.length':{
-          handler(newVal,oldVal){
-              console.log(newVal)
-              this.form.sort = newVal+1
-          },immediate:true
-      }
+  watch: {
+    'tagListAll.length': {
+      handler(newVal, oldVal) {
+        console.log(newVal)
+        this.form.sort = newVal + 1
+      },
+      immediate: true
+    }
   },
-  mounted(){
+  mounted() {
     //   this.form.sort = this.tagListAll.length+1
   },
   methods: {
@@ -110,10 +111,9 @@ export default {
         groupName = this.form.groupName
 
         // tagList = this.form.tagList.reduce((sum,curr)=>{[].push({tagName:curr.tagName})},[])
-        this.form.tagList.forEach(item=>{
-            tagList.push({tagName:item.tagName})
+        this.form.tagList.forEach(item => {
+          tagList.push({ tagName: item.tagName })
         })
-
 
         payload = {
           groupName,
@@ -124,7 +124,6 @@ export default {
 
       console.log(payload)
 
-      this.closeDialog()
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.$store
@@ -136,6 +135,7 @@ export default {
               })
               this.form = this.$options.data().form
               this.handleRefresh()
+              this.closeDialog()
             })
             .catch(err => {
               this.$message({
@@ -158,8 +158,8 @@ export default {
     closeDialog() {
       this.$parent.$parent.dialogVisible = false
     },
-    handleRefresh(){
-        this.$bus.$emit('handleRequest')
+    handleRefresh() {
+      this.$bus.$emit('handleRequest')
     }
   }
 }

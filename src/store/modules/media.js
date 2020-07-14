@@ -5,6 +5,7 @@ import {
   updataArticle,
   deleteMedia,
   getArticleDetail,
+  addMediaIsAudit
 } from '@/api/media'
 
 import {
@@ -297,6 +298,20 @@ const actions = {
          })
      })
   },
+  /**
+   * 新建素材是否包含审核
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  addMediaIsAudit({commit},payload){
+     return new Promise((resolve,reject)=>{
+         addMediaIsAudit(payload).then(res=>{
+             resolve(res)
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  }
 
 }
 

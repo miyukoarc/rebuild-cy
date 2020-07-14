@@ -19,7 +19,8 @@ export const addMedia = (payload)=>{
     return request({
         url: '/media/add',
         method: 'post',
-        data: payload
+        data: payload.data,
+        params: payload.params
     })
 }
 
@@ -32,7 +33,8 @@ export const addMediaIsAudit = (payload)=>{
     return request({
         url: '/media/addMediaIsAudit',
         method: 'post',
-        data: payload
+        data: payload.data,
+        params: payload.params
     })
 }
 
@@ -120,7 +122,8 @@ export const updataArticle = (payload)=>{
     return request({
         url: '/media/article/update',
         method: 'post',
-        data: payload
+        data: payload.data,
+        params: payload.params
     })
 }
 
@@ -185,6 +188,19 @@ export const getArticleListAll = (payload)=>{
         url: '/media/article/listAll',
         method: 'get',
         params: payload
+    })
+}
+
+
+/**
+ * 删除素材是否够需要审核
+ * @param {string} payload
+ */
+export const deleteMediaIsAudit = (payload)=>{
+    return request({
+        url: '/media/deleteMediaIsAudit',
+        method: 'post',
+        data: payload
     })
 }
 

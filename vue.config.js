@@ -60,8 +60,8 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
   proxy: {
     [process.env.VUE_APP_BASE_API]: {
       // target: 'http://47.111.161.128:9000/',
-      target: 'http://10.10.10.4:9000', // 光
-    //   target: 'http://10.10.10.134:9000', // 杜亮
+    //   target: 'http://10.10.10.4:9000', // 光
+      target: 'http://10.10.10.211', // 杜亮
     //   target: 'http://10.10.10.198', // 骋昊
       // ws: true,
       changeOrigin: true,
@@ -89,8 +89,8 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
       // target: 'http://47.111.161.128:9000/',
     //   target: "http://10.10.10.198", //陈浩
       // target: "http://sidebar.cyscrm.com:9000"//线上
-    //   target: "http://10.10.10.134:9000", //杜亮
-      target: 'http://10.10.10.4:9000', //光
+      target: "http://10.10.10.211", //杜亮
+    //   target: 'http://10.10.10.4:9000', //光
       // target: "http://47.111.161.128:80",
       secure: false,
       // ws: true,
@@ -105,8 +105,8 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
       // target: 'http://47.111.161.128:9000/',
     //   target: "http://10.10.10.198", //陈浩
       // target: "http://sidebar.cyscrm.com:9000"//线上
-    //   target: "http://10.10.10.134:9000", //杜亮
-      target: 'http://10.10.10.4:9000', //光
+      target: "http://10.10.10.211", //杜亮
+    //   target: 'http://10.10.10.4:9000', //光
       // target: "http://47.111.161.128:80",
       secure: false,
       // ws: true,

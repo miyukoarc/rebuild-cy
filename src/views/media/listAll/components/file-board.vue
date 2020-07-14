@@ -1,24 +1,38 @@
 <template>
   <div>
-      <div class="btn-container">
-          <!-- <el-t-button size="mini" :auth="permissionMap['media']['media_add']">上传素材</el-t-button> -->
-      </div>
+    <board-header
+      @selectAll="handleSelectAll"
+      @batchTransfer="handleBatchTransfer"
+      @batchDelete="handleBatchDelete"
+      @addMedia="handleAddMedia"
+    ></board-header>
+    <div class="btn-container">
+      <!-- <el-t-button size="mini" :auth="permissionMap['media']['media_add']">上传素材</el-t-button> -->
+    </div>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
+import BoardHeader from './board-header'
 export default {
-    data(){
-        return {
-
-        }
-    },
-    computed:{
-        ...mapState({
-            permissionMap: state => state.permission.permissionMap
-        })
-    }
+  components: {
+    BoardHeader
+  },
+  data() {
+    return {}
+  },
+  computed: {
+    ...mapState({
+      permissionMap: state => state.permission.permissionMap
+    })
+  },
+  methods: {
+    handleSelectAll() {},
+    handleBatchTransfer() {},
+    handleBatchDelete() {},
+    handleAddMedia() {}
+  }
 }
 </script>
 

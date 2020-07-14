@@ -29,9 +29,9 @@
         label-width="100px"
         label-position="left"
       >
-        <el-form-item label="新建方式"></el-form-item>
+        <el-form-item label="新建方式" v-if="form.type!=='DEPT'"></el-form-item>
 
-        <div style="margin-bottom:20px;" v-if="type!=='NORMAL'">
+        <div style="margin-bottom:20px;" v-if="form.type!=='DEPT'">
           <div class="radio-container">
             <div class="radio-item">
               <el-radio v-model="mode" label="SIMPLE">
@@ -62,7 +62,6 @@
             :check-strictly="true"
             v-model="form.parentUuid"
           ></el-select-tree>
-
         </el-form-item>
 
         <el-form-item label="创建类型">
@@ -79,12 +78,6 @@
         <el-form-item label="名称" prop="name">
           <el-input v-model.trim="form.name"></el-input>
         </el-form-item>
-
-        <!-- <div class="text-align-center" style="margin-top">
-          <el-button size="small" @click="handleCancel">取消</el-button>
-
-          <el-button type="primary" size="small" @click="handleConfirm">下一步</el-button>
-        </div>-->
       </el-form>
 
       <el-form
@@ -123,9 +116,7 @@
         <el-form-item label="外部联系人token">
           <el-input v-model.trim="formNext.externalUserToken"></el-input>
         </el-form-item>
-        <el-form-item label="是否只允许内网使用">
-          <el-input v-model.trim="formNext.localNetwork" type="number"></el-input>
-        </el-form-item>
+
         <el-form-item label="会话存档secret">
           <el-input v-model.trim="formNext.messageArchiveSecret"></el-input>
         </el-form-item>
@@ -140,9 +131,6 @@
           <el-input v-model.trim="formNext.privateKey"></el-input>
         </el-form-item>
 
-        <el-form-item label="公网地址">
-          <el-input v-model.trim="formNext.publicIp"></el-input>
-        </el-form-item>
 
         <el-form-item label="侧边栏url">
           <el-input v-model.trim="formNext.sidebarUrl"></el-input>
@@ -155,7 +143,7 @@
 
       <el-form
         key="formNext"
-        v-if="process[mode]==4"
+        v-if="process['NONE']==2||process['SIMPLE']==3||process['COMPLEX']==4"
         :model="formNext"
         ref="formNext"
         :rules="rulesNext"
@@ -163,6 +151,7 @@
         label-position="left"
       >
         <el-form-item label="通知审核人"></el-form-item>
+        <complex-select v-model="selects" :options="departmentList"></complex-select>
       </el-form>
 
       <el-form
@@ -193,42 +182,47 @@
         size="small"
         type="primary"
         @click="handleConfirm"
-      >{{process['NEW']==4||process['SIMPLE']==3?'确定':'下一步'}}</el-button>
+      >{{process['COMPLEX']==4||process['SIMPLE']==3||process['NONE']==2?'确定':'下一步'}}</el-button>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-
+import ComplexSelect from '@/components/ComplexSelect'
 export default {
   inject: ['reload'],
+  components: {
+    ComplexSelect
+  },
   data() {
     return {
       process: {
-        SIMPLE: 1,//DEPT
+        SIMPLE: 1, //DEPT
         COMPLEX: 1, //BRANCH||BUSSINESS
-        NONE:1
+        NONE: 1
       },
       mode: 'NONE', //new //old
       orgTypes: [
-          {
-              code: 'BRANCH',
-              label: '分公司'
-          },
-          {
-              code: 'BUSINESS',
-              label: '营业部'
-          },{
-              code: 'DEPT',
-              label: '普通部门'
-          }
+        {
+          code: 'BRANCH',
+          label: '分公司'
+        },
+        {
+          code: 'BUSINESS',
+          label: '营业部'
+        },
+        {
+          code: 'DEPT',
+          label: '普通部门'
+        }
       ],
+      selects: [],
       form: {
         name: '',
         orgNode: false,
         parentUuid: '',
-        type: ''
+        type: 'DEPT'
       },
       formNext: {
         addressBookEncodingAESKey: '', //通讯录EncodingAESKey
@@ -240,12 +234,12 @@ export default {
         externalUserEncodingAESKey: '', //外部联系人EncodingAESKey
         externalUserSecret: '', //客户应用secret
         externalUserToken: '', //外部联系人token
-        localNetwork: '', //是否只允许内网使用
+        // localNetwork: '', //是否只允许内网使用
         messageArchiveSecret: '', //会话存档secret
         msgSeq: '', //消息加密
         parentUuid: '', //上级的uuid
         privateKey: '', //会话存档私钥
-        publicIp: '', //公网地址
+        // publicIp: '', //公网地址
         sidebarUrl: '', //侧边栏url
         superUserId: '' //预设超级管理员的userid
       },
@@ -267,7 +261,7 @@ export default {
       rulesRole: {},
       rules: {
         parentUuid: [
-          { required: true, message: '请输入部门名称', trigger: 'blur' }
+          { required: true, message: '请选择上级部门', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '请输入部门名称', trigger: 'blur' },
@@ -283,22 +277,17 @@ export default {
   watch: {
     'form.type': {
       handler(newVal, oldVal) {
-          console.log(newVal)
-          if(newVal=='NONE'){
-              this.form.orgNode = false
-              this.mode='NONE'
-
-          }
-        if (newVal === 'NORMAL') {
-          this.mode = 'SIMPLE'
-          this.type = 'NORMAL'
-            this.$delete(this.form, 'type')
+        console.log(newVal)
+        if (newVal == 'DEPT') {
+          this.form.orgNode = false
+          this.mode = 'NONE'
         }
-        if (newVal === 'WX') {
+        if (newVal == 'BRANCH') {
           this.form.orgNode = true
-
-
-            this.$set(this.form, 'type', 'BRANCH')
+          this.mode = 'SIMPLE'
+        }
+        if (newVal == 'BUSINESS') {
+          this.form.orgNode = true
           this.mode = 'SIMPLE'
         }
       },
@@ -338,19 +327,34 @@ export default {
       if (this.process[this.mode] == 1) {
         this.handleCancel()
       }
-      if (this.process['COMPLEX'] != 1 || this.process['SIMPLE'] != 1) {
+      if (
+        this.process['COMPLEX'] != 1 ||
+        this.process['SIMPLE'] != 1 ||
+        this.process['NONE'] != 1
+      ) {
         this.process[this.mode]--
       }
     },
     handleConfirm() {
-      if (this.process['COMPLEX'] == 4 || this.process['SIMPLE'] == 3) {
-          //创建普通部门
-        if (this.mode == 'SIMPLE' && this.type == 'NORMAL') {
-          const roleUuidSet = this.formRole.roleUuidSet
-          const payload = { ...this.form, roleUuidSet, type: 'DEPT' }
+      if (
+        this.process['COMPLEX'] == 4 ||
+        this.process['SIMPLE'] == 3 ||
+        this.process['NONE'] == 2
+      ) {
+        //创建普通部门
+        if (this.mode == 'NONE') {
+          const payload = { ...this.form }
+          console.log('create normal department')
           this.$store
             .dispatch('department/addDepartment', payload)
-            .then(() => {})
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.handleCancel()
+              this.reload()
+            })
             .catch(err => {
               this.$message({
                 type: 'error',
@@ -359,12 +363,57 @@ export default {
             })
         }
         //创建营业部/分公司
-        if(this.mode=='SIMPLE'&&this.type=='WX'){
-            // const roleUuidSet = this.formRole.roleUuidSet
-          const payload = { ...this.form, type: 'DEPT' }
+        if (this.mode == 'SIMPLE') {
+          const roleUuidSet = this.formRole.roleUuidSet
+          const payload = { ...this.form, roleUuidSet }
+          this.$store
+            .dispatch('department/addDepartment', payload)
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.handleCancel()
+              this.reload()
+            })
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: err
+              })
+            })
+          console.log('create nomal branch & business')
+        }
+
+        if (this.mode == 'COMPLEX') {
+          const roleUuidSet = this.formRole.roleUuidSet
+          const { type, parentUuid } = this.form
+          const payload = { type, parentUuid, roleUuidSet, ...this.formNext }
+          console.log(payload)
+          this.$store
+            .dispatch('department/addWxDepartment', payload)
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.handleCancel()
+              this.reload()
+            })
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: err
+              })
+            })
+          console.log('create new wx branch & business')
         }
       }
-      if (this.process['COMPLEX'] != 4 && this.process['SIMPLE'] != 3) {
+      if (
+        this.process['COMPLEX'] != 4 &&
+        this.process['SIMPLE'] != 3 &&
+        this.process['NONE'] != 2
+      ) {
         if (this.process[this.mode] == 1) {
           this.$refs['form'].validate(valid => {
             if (valid) {
@@ -380,37 +429,6 @@ export default {
           this.process[this.mode]++
         }
       }
-    },
-    createWx() {},
-    createNormal() {
-      const payload = this.form
-
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-          console.log(payload)
-          this.$store
-            .dispatch('department/addDepartment', payload)
-            .then(() => {
-              this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.handleCancel()
-              this.refresh()
-            })
-            .catch(err => {
-              this.$message({
-                type: 'error',
-                message: '操作失败'
-              })
-            })
-        } else {
-          this.$message({
-            type: 'error',
-            message: '请检查输入'
-          })
-        }
-      })
     },
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
@@ -428,7 +446,7 @@ export default {
                 message: '操作成功'
               })
               this.handleCancel()
-              this.refresh()
+              this.reload()
             })
             .catch(err => {
               this.$message({

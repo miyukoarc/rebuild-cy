@@ -1,19 +1,27 @@
 <template>
   <div class="app-container">
-    <el-card class="content-spacing">
+    <!-- <el-card class="content-spacing">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
-    </el-card>
+    </el-card>-->
 
     <el-row>
       <el-col :span="5">
-        <el-card class="content-spacing" style="min-height:66vh;margin-right:20px;">
-          <div style="margin-bottom:20px;">
+        <el-card class="content-spacing" style="min-height:84vh;margin-right:20px;">
+          <el-form label-position="left" label-width="100px">
+            <el-form-item label="搜索：">
+              <el-input v-model="search" @change="handleSearch"></el-input>
+            </el-form-item>
+          </el-form>
+          <div class="text-align-center" style="margin-bottom:20px;">
             <el-t-button
+              type="text"
               :popAuth="true"
               :auth="permissionMap['mediaGroup']['mediaGroup_add']"
               size="mini"
               @click.stop="handleCreateGroup"
-            >添加分组</el-t-button>
+            >
+              <i class="el-icon-plus"></i>添加分组
+            </el-t-button>
           </div>
           <el-table
             v-loading="loading"
@@ -51,10 +59,19 @@
         </el-card>
       </el-col>
       <el-col :span="19">
-        <el-card class="content-spacing" style="min-height:66vh;">
+        <el-card class="content-spacing" style="min-height:84vh;">
+          <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
+
+          <el-divider></el-divider>
           <el-tabs v-model="activeName">
+            <el-tab-pane lazy label="全部" name="zero">
+              <!-- <div class="operater-container">
+                <el-t-button type="primary" size="mini">占位按钮</el-t-button>
+              </div> -->
+              <all-board></all-board>
+            </el-tab-pane>
             <el-tab-pane lazy label="文本" name="first">
-              <div class="operater-container">
+              <!-- <div class="operater-container">
                 <el-t-button
                   type="primary"
                   size="mini"
@@ -62,14 +79,14 @@
                   :auth="permissionMap['media']['media_add']"
                   @click="handleCreateText"
                 >新建文本</el-t-button>
-              </div>
-              <text-board @handleEditText="handleEditText" @handleDeleteText="handleDeleteText"></text-board>
+              </div> -->
+              <text-board @handleCreateText="handleCreateText" @handleEditText="handleEditText" @handleDeleteText="handleDeleteText"></text-board>
             </el-tab-pane>
             <el-tab-pane lazy label="图片" name="second">
               <div class="operater-container">
                 <el-upload
-                  action="/media/add"
-                  :show-file-list="false"
+                  action="/upload"
+                  :show-file-list="true"
                   :before-upload="beforeImageUpload"
                   :on-success="onSuccess"
                   :headers="{
@@ -87,7 +104,7 @@
                   <div slot="tip" class="el-upload__tip">图片支持png、jpg、jpeg，大小不超过2M。</div>
                 </el-upload>
               </div>
-              <image-board></image-board>
+              <image-board @handleCreateImage="handleCreateImage"></image-board>
             </el-tab-pane>
             <el-tab-pane lazy label="视频" name="third">
               <div class="operater-container">
@@ -114,7 +131,7 @@
               <video-board></video-board>
             </el-tab-pane>
             <el-tab-pane lazy label="文章" name="fourth">
-              <div class="operater-container">
+              <!-- <div class="operater-container">
                 <el-t-button
                   type="primary"
                   size="mini"
@@ -122,7 +139,7 @@
                   :auth="permissionMap['media']['media_add']"
                   @click="handleCreateArticle"
                 >新建文章</el-t-button>
-              </div>
+              </div> -->
               <article-board
                 @handleEditArticle="handleEditArticle"
                 @handleDeleteArticle="handleDeleteArticle"
@@ -168,6 +185,7 @@ import ImageBoard from './components/image-board'
 import VideoBoard from './components/video-board'
 import ArticleBoard from './components/article-board'
 import FileBoard from './components/file-board'
+import AllBoard from './components/all-board'
 import { mapState } from 'vuex'
 export default {
   components: {
@@ -177,10 +195,12 @@ export default {
     ImageBoard,
     VideoBoard,
     ArticleBoard,
-    FileBoard
+    FileBoard,
+    AllBoard
   },
   data() {
     return {
+      search: '',
       activeName: 'first',
       currentGroup: {},
       uploadImage: {
@@ -195,7 +215,8 @@ export default {
         groupUuid: '',
         type: 'FILE'
       },
-      imageTypes: ['image/jpeg', 'image/gif', 'image/png']
+      imageTypes: ['image/jpeg', 'image/gif', 'image/png'],
+      timer: null
     }
   },
   watch: {
@@ -225,6 +246,18 @@ export default {
   },
   mounted() {},
   methods: {
+    handleSearch() {
+        console.log('sousuo')
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(() => {
+          const groupName = this.search
+          const payload = {groupName}
+        this.initDataList(payload)
+        // this.$emit("handleSearch", this.query);
+      }, 1000)
+    },
     initDataList(payload) {
       this.$store
         .dispatch('media/getMediaGroupListAll', payload)
@@ -284,9 +317,7 @@ export default {
               })
             })
         })
-        .catch(err => {
-          
-        })
+        .catch(err => {})
     },
     handleRowClick(val) {
       console.log(val)
@@ -307,6 +338,12 @@ export default {
       this.$refs['formDialog'].dialogVisible = true
       this.$refs['formDialog'].event = 'EditTextTemplate'
       this.$refs['formDialog'].eventType = 'editText'
+    },
+    handleCreateImage(){
+        this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].event = 'CreateImageTemplate'
+      this.$refs['formDialog'].eventType = 'createImage'
+      this.$refs['formDialog'].transfer = this.currentGroup
     },
     handleDeleteText(val) {
       console.log(val)
@@ -334,9 +371,7 @@ export default {
               })
             })
         })
-        .catch(err => {
-          
-        })
+        .catch(err => {})
     },
     beforeImageUpload(file) {
       const type = file.type
@@ -465,12 +500,12 @@ export default {
           console.error(err)
         })
     },
-    handleSearch(val) {
-      console.log(val)
-      const groupUuid = this.currentGroup.uuid
-      const fileName = val.fileName
-      this.initMediaList({ groupUuid, fileName })
-    },
+    // handleSearch(val) {
+    //   console.log(val)
+    //   const groupUuid = this.currentGroup.uuid
+    //   const fileName = val.fileName
+    //   this.initMediaList({ groupUuid, fileName })
+    // },
     handleRefresh(val) {
       const groupUuid = this.currentGroup.uuid
       this.initMediaList({ groupUuid })

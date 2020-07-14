@@ -115,6 +115,7 @@ export default {
   font-size: 14px;
   line-height: 50px;
   margin-left: 8px;
+  user-select: none;
 
   .no-redirect {
     color: #97a8be;

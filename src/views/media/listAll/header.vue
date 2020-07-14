@@ -1,30 +1,22 @@
 <template>
-  <el-form ref="searchForm" inline label-width="120px">
-    <el-form-item label="文件名">
-      <el-input v-model.trim="query.fileName"></el-input>
+  <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
+    <el-form-item label="创建人：">
+      <el-input v-model.trim="query.name" clearable placeholder="请输入创建人名称"></el-input>
     </el-form-item>
 
-    <!-- <el-form-item label="手机号码">
-      <el-input v-model.trim="query.name"></el-input>
+    <el-form-item label="素材类型：">
+      <el-select v-model="query.contractWayId" clearable @change="handleSelectedChange">
+        <el-option
+          v-for="(item,index) in contractWay"
+          :key="index"
+          :label="item.type"
+          :value="item.id"
+        ></el-option>
+      </el-select>
     </el-form-item>
 
-    <el-form-item label="批量添加次数">
-      <el-input v-model.trim="query.name"></el-input>
-    </el-form-item>
-
-    <el-form-item label="入库时间">
-      <el-date-picker
-        v-model="value"
-        type="daterange"
-        :value-format="'yyyy-MM-dd HH-mm-ss'"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-      ></el-date-picker>
-    </el-form-item> -->
-
-    <!-- <el-form-item label="所属客服">
-      <el-select v-model="query.userId" @change="handleChangeThird">
+    <el-form-item label="审批状态：">
+      <el-select v-model="query.userId" clearable @change="handleSelectedChange">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -32,20 +24,60 @@
           :value="item.userId"
         ></el-option>
       </el-select>
-    </el-form-item>-->
+    </el-form-item>
 
-    <!-- <el-form-item label="客户标签">
-      <el-select v-model="query.tagIds" clearable @change="handleChangeSecond">
-        <el-option
-          v-for="item in tagListAll"
-          :key="item.tagId"
-          :label="item.tagName"
-          :value="item.tagId"
-        ></el-option>
-      </el-select>
-    </el-form-item>-->
+    <el-form-item label="时间：">
+      <el-date-picker
+        v-model="value"
+        type="daterange"
+        :value-format="'yyyy-MM-dd HH:mm:ss'"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @change="handleSelectedTime"
+        :default-time="['00:00:00', '23:59:59']"
+      ></el-date-picker>
+    </el-form-item>
 
-    <div>
+    <el-form-item label="标签：">
+      <div class="tag-border">
+        <el-select
+          v-model="query.tagIds"
+          clearable
+          @change="handleChangeSecond"
+          size="mini"
+          multiple
+        >
+          <el-option-group v-for="item in tagListAll" :key="item.groupId" :label="item.groupName">
+            <el-option
+              v-for="child in item.tagList"
+              :key="child.uuid"
+              :label="child.tagName"
+              :value="child.uuid"
+            ></el-option>
+          </el-option-group>
+        </el-select>
+        <span class="tag-warp">
+          <el-radio-group v-model="query.flag">
+            <el-radio :label="true">包含任一</el-radio>
+            <el-radio :label="false">完全匹配</el-radio>
+          </el-radio-group>
+          <el-tooltip placement="right">
+            <div slot="content">
+              包含任一：有任意一个选择的标签的用户;
+              <br />完全匹配：必须拥有全部选择的标签的用户。
+            </div>
+            <i class="el-icon-question tip"></i>
+          </el-tooltip>
+        </span>
+      </div>
+    </el-form-item>
+
+    <el-form-item label="关键字：">
+      <el-input v-model.trim="query.name" clearable placeholder="请输入客户名称"></el-input>
+    </el-form-item>
+
+    <div class="handle-warp">
       <el-form-item label=" ">
         <el-t-button size="mini" type="primary" @click="handleSearch">搜索</el-t-button>
         <el-t-button size="mini" @click="handleRefresh">重置</el-t-button>
@@ -55,44 +87,93 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
+      value: [],
+      contractWay: [
+        {
+          type: "员工主动添加",
+          id: "1"
+        },
+        {
+          type: "员工被动添加",
+          id: "2"
+        },
+        {
+          type: "二维码扫码添加",
+          id: "3"
+        }
+      ],
       query: {
-          fileName: ''
-
-      }
-    }
+        name: "",
+        contractWayId: "",
+        userId: "",
+        tagIds: [],
+        flag: true,
+        startTime: "",
+        endTime: ""
+      },
+      timer: null
+    };
   },
   computed: {
     ...mapState({
-
+      tagListAll: state => state.tag.tagListSelect,
+      userListAll: state => state.user.listSelect
+      //   departments: state => state.department.departments
     })
   },
   methods: {
-    handleChangeFirst(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+    handleSelectedTime(val) {
+      console.log(val);
+      this.query.startTime = this.value[0];
+      this.query.endTime = this.value[1];
+      this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+      this.timer = setTimeout(() => {
+        this.$emit("handleSearch", this.query);
+      }, 1000);
     },
-    handleChangeThird(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+    handleSelectedChange(val) {
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleSearch() {
-      this.$emit('handleSearch', this.query)
+      this.$emit("handleSearch", this.query);
     },
     handleRefresh() {
-      this.$emit('handleRefresh')
-      this.query = this.$options.data().query
+      this.$emit("handleRefresh");
+      this.query = this.$options.data().query;
     }
   }
-}
+};
 </script>
 
-<style>
+<style lang="scss" scoped>
+.external-user-list-all-header {
+  .tag-border {
+    border: 1px solid #dcdfe6;
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  .tag-warp {
+    margin-left: 10px;
+    // border: 1px solid #dcdfe6;
+    i.tip {
+      margin-left: 5px;
+    }
+    .el-form-item {
+      margin-bottom: 0px;
+    }
+  }
+  .handle-warp .el-form-item {
+    margin-bottom: 0px;
+  }
+}
 </style>

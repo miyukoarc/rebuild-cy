@@ -93,9 +93,7 @@ router.beforeEach(async (to, from, next) => {
             ...to,
             replace: true
           })
-
         } catch (error) {
-          alert('!')
           Message.error(error || 'Error')
           next(`/login?redirect=${to.path}`)
           NProgress.done()
