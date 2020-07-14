@@ -1,14 +1,7 @@
 <template>
-  <el-form ref="searchForm" inline label-width="120px">
-      <div class="font-s">
-          当企业成员被客户从微信联系人中删除时，会在客户流失列表中产生一条记录，超盈SCRM会为您自动发出【被删除通知】，以便您第一时间得到通知信息，客户流失功能只会记录授权给超盈SCRM成员的客户流失信息
-      </div>
-    <!-- <el-form-item label="搜索客户">
-      <el-input v-model.trim="query.name"></el-input>
-    </el-form-item>
-
-        <el-form-item label="所属客服">
-      <el-select v-model="query.userId" @change="handleChangeThird">
+  <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
+    <el-form-item label="所属员工：">
+      <el-select v-model="query.userId" clearable @change="handleSelectedChange">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -18,83 +11,109 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item label="客户标签">
-      <el-select v-model="query.tagIds" clearable @change="handleChangeSecond">
+    <el-form-item label="客户状态：">
+      <el-select v-model="query.status" clearable @change="handleSelectedChange">
         <el-option
-          v-for="item in tagListAll"
-          :key="item.tagId"
-          :label="item.tagName"
-          :value="item.tagId"
+          v-for="(item,index) in contractWay"
+          :key="index"
+          :label="item.type"
+          :value="item.id"
         ></el-option>
       </el-select>
     </el-form-item>
 
-    <div>
+    <el-form-item label="离职时间：">
+      <el-date-picker
+        v-model="value"
+        type="daterange"
+        :value-format="'yyyy-MM-dd HH:mm:ss'"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @change="handleSelectedTime"
+        :default-time="['00:00:00', '23:59:59']"
+      ></el-date-picker>
+    </el-form-item>
+
+    <div class="handle-warp">
       <el-form-item label=" ">
         <el-t-button size="mini" type="primary" @click="handleSearch">搜索</el-t-button>
         <el-t-button size="mini" @click="handleRefresh">重置</el-t-button>
       </el-form-item>
-    </div> -->
+    </div>
   </el-form>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
-    //   options: [
-    //     {
-    //       label: '待审核',
-    //       value: 'TO_BE_REVIEWED'
-    //     },
-    //     {
-    //       label: '审核通过',
-    //       value: 'APPROVED'
-    //     },
-    //     {
-    //       label: '审核不通过',
-    //       value: 'AUDIT_FAILED'
-    //     }
-    //   ],
+      contractWay: [
+        {
+          type: "待分配",
+          id: "1"
+        },
+        {
+          type: "等待分配审核",
+          id: "2"
+        },
+        {
+          type: "已分配",
+          id: "3"
+        }
+      ],
+      value: [],
       query: {
-        name: '',
-        tagIds: '',
-        userId: ''
+        name: "",
+        status: "1",
+        tagIds: "",
+        userId: "",
+        startTime: "",
+        endTime: ""
         // roleUuid: ''
       }
-    }
+    };
   },
   computed: {
     ...mapState({
-        
       tagListAll: state => state.tag.tagListAll,
       userListAll: state => state.user.userListAll
-    //   departments: state => state.department.departments
+      //   departments: state => state.department.departments
     })
   },
   methods: {
+    handleSelectedTime(val) {
+      console.log(val);
+      this.query.startTime = this.value[0];
+      this.query.endTime = this.value[1];
+      this.$emit("handleSearch", this.query);
+    },
     handleChangeFirst(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.$emit("handleSearch", this.query);
+    },
+    handleSelectedChange(val) {
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleSearch() {
-      this.$emit('handleSearch',this.query)
+      this.$emit("handleSearch", this.query);
     },
     handleRefresh() {
-      this.$emit('handleRefresh')
-        this.query = this.$options.data().query
+      this.$emit("handleRefresh");
+      this.query = this.$options.data().query;
     }
   }
-}
+};
 </script>
 
 <style>

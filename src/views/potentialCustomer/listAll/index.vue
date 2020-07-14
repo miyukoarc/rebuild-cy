@@ -30,34 +30,61 @@
           row-key="uuid"
           stripe
           lazy
+          fit
           highlight-current-row
           @selection-change="handleSelectionChange"
+          header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="客户名" align="left" prop="name"></el-table-column>
-          <el-table-column label="手机号" align="left" prop="mobile"></el-table-column>
+          <el-table-column label="客户名" align="left" prop="name" width="150"></el-table-column>
+          <el-table-column label="手机号" align="left" prop="mobile" width="150"></el-table-column>
+          <el-table-column>
+            <template slot="header">
+              <span>
+                预设标签
+                <el-tooltip placement="right">
+                  <div slot="content">
+                    <span class="font-exs color-info">添加成为用户后，将自动打上预设标签。</span>
+                  </div>
+                  <i class="el-icon-question"></i>
+                </el-tooltip>
+              </span>
+            </template>
+            <template v-slot="{row}">
+              <tags-drawer :tags="row.potentialCustomerTags"></tags-drawer>
+            </template>
+          </el-table-column>
           <el-table-column label="批量添加次数" align="left" prop="tryCount"></el-table-column>
-          <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
+
           <el-table-column label="所属员工" align="left">
-            <template v-slot="scope">
-              <div>{{scope.row.belong.name}}</div>
+            <template v-slot="{row}">
+              <user-tag :user="row.belong"></user-tag>
             </template>
           </el-table-column>
           <el-table-column label="添加员工" align="left">
-            <template v-slot="scope">
-              <div>{{scope.row.creator.name}}</div>
+            <template v-slot="{row}">
+              <user-tag :user="row.creator"></user-tag>
             </template>
           </el-table-column>
+          <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-t-button
+                type="text"
                 size="mini"
                 :popAuth="true"
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
-                @click.stop="handleEdit(scope.$index)"
+                @click.stop="handleAllocation(scope.row)"
+              >分配</el-t-button>
+              <el-t-button
+                type="text"
+                size="mini"
+                :popAuth="true"
+                :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
+                @click.stop="handleEdit(scope.row)"
               >编辑</el-t-button>
               <el-t-button
-                type="danger"
+                type="text"
                 :popAuth="true"
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_delete']"
                 size="mini"
@@ -91,6 +118,10 @@
 // import mHeadedr from "./header";
 import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
+
+import TagsDrawer from "@/components/TagsDrawer";
+import UserTag from "@/components/UserTag";
+
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
@@ -101,7 +132,9 @@ export default {
     ListHeader,
     UserDetail,
     FormDialog,
-    ToolBar
+    ToolBar,
+    TagsDrawer,
+    UserTag
     // mHeadedr
   },
   data() {
@@ -158,15 +191,25 @@ export default {
      * 初始化筛选信息
      */
     initFilter() {
-      // this.$store
-      //   .dispatch('tag/getListSelect')
-      //   .then(() => {})
-      //   .catch(err => {
-      //     this.$message({
-      //       type: 'error',
-      //       message: '初始化失败'
-      //     })
-      //   })
+      this.$store
+        .dispatch("tag/getListSelect")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: "初始化失败"
+          });
+        });
+
+      this.$store
+        .dispatch("department/getDepartmentListAll")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: err || "初始化失败"
+          });
+        });
 
       this.$store
         .dispatch("user/getUserListSelect")
@@ -274,10 +317,26 @@ export default {
         });
       }
     },
-    handleEdit(index) {
-      const { name, remark, mobile, uuid } = this.listAll[index];
-      const payload = { name, remark, mobile, uuid };
-      // console.log(payload)
+    handleAllocation(row) {
+      console.log(row, "row");
+      row.uuid = [row.uuid];
+      this.$refs["formDialog"].event = "DistributeTemplate";
+      this.$refs["formDialog"].eventType = "distribute";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = row;
+    },
+    handleEdit(row) {
+      console.log(row, "row");
+      const { belong, uuid, mobile } = row;
+      let selectedTag = [];
+      row.potentialCustomerTags.map(item => {
+        item.tags.map(tag => {
+          selectedTag.push(tag.tagId);
+        });
+      });
+      console.log(selectedTag, "aaaa");
+      const payload = { belong, uuid, selectedTag, mobile };
+      console.log(payload, "88");
       this.$refs["formDialog"].event = "EditTemplate";
       this.$refs["formDialog"].eventType = "edit";
       this.$refs["formDialog"].dialogVisible = true;
@@ -314,7 +373,7 @@ export default {
       console.log(val);
       const arr = val;
       this.selects = arr.map(item => {
-        return item.uuid + "";
+        return item.uuid;
       });
     }
   }

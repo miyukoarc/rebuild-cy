@@ -7,7 +7,7 @@ import request from '@/utils/request'
 
 export const getDetail = (uuid) => {
     return request({
-        url: '/potentialCustomer/'+uuid,
+        url: '/potentialCustomer/' + uuid,
         method: 'get',
     })
 }
@@ -59,7 +59,7 @@ export const deletePotentialCustomer = (payload) => {
  * @param {object} payload 
  */
 
-export const update = (payload) => {
+export const potentialCustomerUpdate = (payload) => {
     return request({
         url: '/potentialCustomer/update',
         method: 'post',
@@ -100,7 +100,7 @@ export const getListMy = (payload) => {
  * 分配潜在客户
  * @param {object} payload 
  */
-export const additionFail = (payload)=>{
+export const additionFail = (payload) => {
     return request({
         url: '/potentialCustomer/additionFail',
         method: 'post',

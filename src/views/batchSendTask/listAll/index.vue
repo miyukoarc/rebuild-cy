@@ -17,6 +17,7 @@
           stripe
           lazy
           highlight-current-row
+           header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="id" align="left">

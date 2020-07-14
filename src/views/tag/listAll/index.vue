@@ -27,6 +27,7 @@
           ref="dragTable"
           lazy
           highlight-current-row
+           header-row-class-name="el-table-header"
           :default-sort = "{prop: 'sort', order: 'descending'}"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->

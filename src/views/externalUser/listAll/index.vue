@@ -17,6 +17,7 @@
           stripe
           lazy
           highlight-current-row
+          header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="客户名" align="left">
@@ -36,15 +37,15 @@
           </el-table-column>
           <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
-              <user-drawer :hasPop="true" :users="scope.row.user"></user-drawer>
+              <user-drawer :hasPop="false" :users="scope.row.user"></user-drawer>
             </template>
           </el-table-column>
           <el-table-column label="企业标签" align="left">
             <template v-slot="scope">
-              <tags-drawer
+              <tags-drawer-obj
                 v-if="scope.row.externalUserDetailCorpTagsList.corpTags !==null"
                 :tags="scope.row.externalUserDetailCorpTagsList.corpTags"
-              ></tags-drawer>
+              ></tags-drawer-obj>
             </template>
           </el-table-column>
           <el-table-column label="添加时间" align="left" prop="createdAt"></el-table-column>
@@ -93,7 +94,7 @@ import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 
 import UserDrawer from "@/components/UserDrawer";
-import TagsDrawer from "@/components/TagsDrawer";
+import TagsDrawerObj from "@/components/TagsDrawerObj";
 
 import { mapState, mapMutations, mapActions } from "vuex";
 
@@ -104,7 +105,7 @@ export default {
     FormDialog,
     ToolBar,
     UserDrawer,
-    TagsDrawer
+    TagsDrawerObj
   },
   data() {
     return {
@@ -141,9 +142,7 @@ export default {
     this.initDataList(this.query);
     this.initFilter();
   },
-  mounted() {
-    console.log(this.externalUserListAll, "externalUserListAll");
-  },
+  mounted() {},
   methods: {
     /**
      * 初始化表格信息

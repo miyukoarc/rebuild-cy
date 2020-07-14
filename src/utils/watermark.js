@@ -1,6 +1,14 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-30 16:44:06
+ * @LastEditTime: 2020-07-13 12:18:29
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\utils\watermark.js
+ */
 export default class Watermark {
     constructor(text) {
-        this.id = 'watermark'//填充容器id
+        this.id = 'watermark' //填充容器id
 
         this.text = text //填充文本
 
@@ -8,7 +16,7 @@ export default class Watermark {
 
         this.chip = this.paper.getContext('2d') //填充图形
 
-        this.container = document.createElement('div')//填充容器
+        this.container = document.createElement('div') //填充容器
 
         this.timer = null
 
@@ -48,7 +56,7 @@ export default class Watermark {
             if (document.getElementById(this.id) === null) {
                 this.draw()
             }
-            console.log('定时器运行中')
+            // console.log('定时器运行中')
         }, 500)
 
         window.onresize = () => {

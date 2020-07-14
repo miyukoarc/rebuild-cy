@@ -25,6 +25,7 @@
         default-expand-all
         @row-click="handleDetail"
         :tree-props="{ children: 'children' }"
+         header-row-class-name="el-table-header"
        >
         <el-table-column  label="名称" align="left">
             <template v-slot="{row}">

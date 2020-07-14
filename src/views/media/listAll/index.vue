@@ -32,6 +32,7 @@
             lazy
             highlight-current-row
             :show-header="false"
+             header-row-class-name="el-table-header"
           >
             <!-- <el-table-column type="selection"></el-table-column> -->
             <el-table-column prop="groupName"></el-table-column>
