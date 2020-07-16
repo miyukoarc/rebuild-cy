@@ -283,6 +283,10 @@ body::-webkit-scrollbar-track-piece {
     margin-right: 20px;
 }
 
+.user-select-none{
+    user-select: none;
+}
+
 .nickName {
   color: #e8971d;
 }

@@ -57,8 +57,8 @@ Vue.use(ElSelectTree)
  * @electron环境判断
  */
 
+Vue.prototype.$isElectron = isElectron
 if (isElectron()) {
-    Vue.prototype.$isElectron = isElectron
     /*
     const electron = window.require('electron')
     const {

@@ -7,10 +7,11 @@
       center
       append-to-body
       width="600px"
+      destroy-on-close
       :close-on-click-modal="false"
     >
       <div>
-        <component :is="event" :transfer="transfer" />
+        <component :is="event" :transfer="transfer" @handleRefresh="handleRefresh" />
       </div>
     </el-dialog>
   </div>
@@ -80,6 +81,9 @@ export default {
       if (this.eventType === 'editText') {
         return '编辑文本素材'
       }
+    },
+    handleRefresh(){
+        this.$emit('handleRefresh')
     }
   }
 }

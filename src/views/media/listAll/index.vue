@@ -32,7 +32,7 @@
             lazy
             highlight-current-row
             :show-header="false"
-             header-row-class-name="el-table-header"
+            header-row-class-name="el-table-header"
           >
             <!-- <el-table-column type="selection"></el-table-column> -->
             <el-table-column prop="groupName"></el-table-column>
@@ -61,113 +61,57 @@
       </el-col>
       <el-col :span="19">
         <el-card class="content-spacing" style="min-height:84vh;">
-          <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
+          <list-header @handleSearch="handleSearch"></list-header>
 
           <el-divider></el-divider>
           <el-tabs v-model="activeName">
             <el-tab-pane lazy label="全部" name="zero">
-              <!-- <div class="operater-container">
-                <el-t-button type="primary" size="mini">占位按钮</el-t-button>
-              </div> -->
-              <all-board></all-board>
+              <all-board
+                ref="allBoard"
+                @handleDelete="handleDelete"
+                @handleTransfer="(payload)=>handleTransfer('allBoard',payload)"
+              ></all-board>
             </el-tab-pane>
             <el-tab-pane lazy label="文本" name="first">
-              <!-- <div class="operater-container">
-                <el-t-button
-                  type="primary"
-                  size="mini"
-                  :popAuth="true"
-                  :auth="permissionMap['media']['media_add']"
-                  @click="handleCreateText"
-                >新建文本</el-t-button>
-              </div> -->
-              <text-board @handleCreateText="handleCreateText" @handleEditText="handleEditText" @handleDeleteText="handleDeleteText"></text-board>
+              <text-board
+                ref="textBoard"
+                @handleCreateText="handleCreateText"
+                @handleDelete="handleDelete"
+                @handleTransfer="(payload)=>handleTransfer('textBoard',payload)"
+              ></text-board>
             </el-tab-pane>
             <el-tab-pane lazy label="图片" name="second">
-              <div class="operater-container">
-                <el-upload
-                  action="/upload"
-                  :show-file-list="true"
-                  :before-upload="beforeImageUpload"
-                  :on-success="onSuccess"
-                  :headers="{
-                      ContentType: 'multipart/form-data'
-                  }"
-                  :on-error="onError"
-                  :data="uploadImage"
-                >
-                  <el-t-button
-                    type="primary"
-                    size="mini"
-                    :popAuth="true"
-                    :auth="permissionMap['media']['media_add']"
-                  >上传素材</el-t-button>
-                  <div slot="tip" class="el-upload__tip">图片支持png、jpg、jpeg，大小不超过2M。</div>
-                </el-upload>
-              </div>
-              <image-board @handleCreateImage="handleCreateImage"></image-board>
+              <image-board
+                ref="imageBoard"
+                @handleDelete="handleDelete"
+                @handleCreateImage="handleCreateImage"
+                @handleTransfer="(payload)=>handleTransfer('imageBoard',payload)"
+              ></image-board>
             </el-tab-pane>
             <el-tab-pane lazy label="视频" name="third">
-              <div class="operater-container">
-                <el-upload
-                  action="/media/add"
-                  :show-file-list="false"
-                  :before-upload="beforeVideoUpload"
-                  :on-success="onSuccess"
-                  :headers="{
-                      ContentType: 'multipart/form-data'
-                  }"
-                  :on-error="onError"
-                  :data="uploadVideo"
-                >
-                  <el-t-button
-                    type="primary"
-                    size="mini"
-                    :popAuth="true"
-                    :auth="permissionMap['media']['media_add']"
-                  >上传素材</el-t-button>
-                  <div slot="tip" class="el-upload__tip">视频支持MP4格式，大小不超过10M。</div>
-                </el-upload>
-              </div>
-              <video-board></video-board>
+              <video-board
+                ref="videoBoard"
+                @handleDelete="handleDelete"
+                @handleCreateVideo="handleCreateVideo"
+                @handleTransfer="(payload)=>handleTransfer('videoBoard',payload)"
+              ></video-board>
             </el-tab-pane>
             <el-tab-pane lazy label="文章" name="fourth">
-              <!-- <div class="operater-container">
-                <el-t-button
-                  type="primary"
-                  size="mini"
-                  :popAuth="true"
-                  :auth="permissionMap['media']['media_add']"
-                  @click="handleCreateArticle"
-                >新建文章</el-t-button>
-              </div> -->
               <article-board
+                ref="articleBoard"
                 @handleEditArticle="handleEditArticle"
-                @handleDeleteArticle="handleDeleteArticle"
+                @handleCreateArticle ="handleCreateArticle"
+                @handleDelete="handleDelete"
+                @handleTransfer="(payload)=>handleTransfer('articleBoard',payload)"
               ></article-board>
             </el-tab-pane>
             <el-tab-pane lazy label="文件" name="fifth">
-              <div class="operater-container">
-                <el-upload
-                  action="/media/add"
-                  :show-file-list="false"
-                  :before-upload="beforeFileUpload"
-                  :on-success="onSuccess"
-                  :headers="{
-                      ContentType: 'multipart/form-data'
-                  }"
-                  :on-error="onError"
-                  :data="uploadFile"
-                >
-                  <el-t-button
-                    type="primary"
-                    size="mini"
-                    :popAuth="true"
-                    :auth="permissionMap['media']['media_add']"
-                  >上传素材</el-t-button>
-                </el-upload>
-              </div>
-              <file-board></file-board>
+              <file-board
+                ref="fileBoard"
+                @handleDelete="handleDelete"
+                @handleCreateFile="handleCreateFile"
+                @handleTransfer="(payload)=>handleTransfer('videoBoard',payload)"
+              ></file-board>
             </el-tab-pane>
           </el-tabs>
         </el-card>
@@ -189,6 +133,7 @@ import FileBoard from './components/file-board'
 import AllBoard from './components/all-board'
 import { mapState } from 'vuex'
 export default {
+  name: 'MediaListAll',
   components: {
     ListHeader,
     FormDialog,
@@ -201,8 +146,14 @@ export default {
   },
   data() {
     return {
+      query: {
+        startTime: '',
+        endTime: '',
+        fileName: '',
+        groupUuid: ''
+      },
       search: '',
-      activeName: 'first',
+      activeName: 'zero',
       currentGroup: {},
       uploadImage: {
         groupUuid: '',
@@ -229,6 +180,7 @@ export default {
           const payload = { groupUuid }
           this.initMediaList(payload)
           this.currentGroup = this.groupListAll[0]
+          //   this.query.groupUuid = this.groupListAll[0].uuid//初始化
         })
       },
       immediate: true
@@ -245,18 +197,26 @@ export default {
   created() {
     this.initDataList()
   },
-  mounted() {},
+  mounted() {
+    this.$bus.$on('handleRefresh', () => {
+      this.handleRefresh(this.query)
+    })
+
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
+  },
   methods: {
-    handleSearch() {
-        console.log('sousuo')
+    handleSearch(val) {
+      console.log('sousuo', val)
       if (this.timer) {
         clearTimeout(this.timer)
       }
       this.timer = setTimeout(() => {
-          const groupName = this.search
-          const payload = {groupName}
-        this.initDataList(payload)
-        // this.$emit("handleSearch", this.query);
+        this.query.groupUuid = this.currentGroup?.uuid
+        const groupUuid = this.currentGroup?.uuid
+        this.initMediaList({ ...val, groupUuid })
+        this.activeName = 'zero'
       }, 1000)
     },
     initDataList(payload) {
@@ -293,6 +253,18 @@ export default {
       this.$refs['formDialog'].event = 'CreateGroupTemplate'
       this.$refs['formDialog'].eventType = 'createGroup'
     },
+    handleCreateVideo() {
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].event = 'CreateVideoTemplate'
+      this.$refs['formDialog'].eventType = 'createVideo'
+      this.$refs['formDialog'].transfer = this.currentGroup
+    },
+    handleCreateFile() {
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].event = 'CreateFileTemplate'
+      this.$refs['formDialog'].eventType = 'createFile'
+      this.$refs['formDialog'].transfer = this.currentGroup
+    },
     handleDeleteGroup(index) {
       const { uuid } = this.groupListAll[index]
       const payload = { uuid }
@@ -323,6 +295,7 @@ export default {
     handleRowClick(val) {
       console.log(val)
       this.currentGroup = val
+      this.query.groupUuid = val.uuid
       const payload = { groupUuid: val.uuid }
       this.initMediaList(payload)
     },
@@ -340,30 +313,48 @@ export default {
       this.$refs['formDialog'].event = 'EditTextTemplate'
       this.$refs['formDialog'].eventType = 'editText'
     },
-    handleCreateImage(){
-        this.$refs['formDialog'].dialogVisible = true
+    handleCreateImage() {
+      this.$refs['formDialog'].dialogVisible = true
       this.$refs['formDialog'].event = 'CreateImageTemplate'
       this.$refs['formDialog'].eventType = 'createImage'
       this.$refs['formDialog'].transfer = this.currentGroup
     },
-    handleDeleteText(val) {
-      console.log(val)
-      const { uuid } = val
-      const payload = { uuid }
-      this.$confirm('是否删除当前文本', 'Warning', {
+    handleTransfer(target, payload) {
+      this.$store
+        .dispatch('media/moveMedieToGroup', payload)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功'
+          })
+          this.initMediaList(this.query)
+          this.$refs[target].closeDialog()
+          //   Object.assign(this.$data, this.$options.data())
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err || '操作失败'
+          })
+        })
+    },
+    handleDelete(val) {
+      const payload = { mediaUuids: val }
+      this.$confirm('是否删除当前素材', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(async () => {
           await this.$store
-            .dispatch('media/deleteMedia', payload)
+            .dispatch('media/batchDeleteMedia', payload)
             .then(() => {
               this.$message({
                 type: 'success',
                 message: '操作成功'
               })
-              this.initDataList()
+              this.initMediaList(this.query)
+              Object.assign(this.$data, this.$options.data())
             })
             .catch(err => {
               this.$message({
@@ -374,142 +365,21 @@ export default {
         })
         .catch(err => {})
     },
-    beforeImageUpload(file) {
-      const type = file.type
-      const size = file.size
-      if (size > 1024 * 1024 * 2) {
-        this.$message({
-          type: 'error',
-          message: '文件大小超出限制'
-        })
-        return false
-      }
-      if (
-        !this.imageTypes.some(item => {
-          return item === type
-        })
-      ) {
-        this.$message({
-          type: 'error',
-          message: '文件类型不支持'
-        })
-        return false
-      }
-
-      this.uploadImage.groupUuid = this.currentGroup.uuid
-
-      return true
-    },
-    beforeFileUpload(file) {
-      const type = file.type
-      const size = file.size
-      if (size > 1024 * 1024 * 10) {
-        this.$message({
-          type: 'error',
-          message: '文件大小超出限制'
-        })
-        return false
-      }
-      //   if (
-      //     !this.imageTypes.some(item => {
-      //       return item === type
-      //     })
-      //   ) {
-      //     this.$message({
-      //       type: 'error',
-      //       message: '文件类型不支持'
-      //     })
-      //     return false
-      //   }
-
-      this.uploadFile.groupUuid = this.currentGroup.uuid
-
-      return true
-    },
-    beforeVideoUpload() {
-      const type = file.type
-      const size = file.size
-      if (size > 1024 * 1024 * 10) {
-        this.$message({
-          type: 'error',
-          message: '文件大小超出限制'
-        })
-        return false
-      }
-      if (type !== 'video/mp4') {
-        this.$message({
-          type: 'error',
-          message: '文件类型不支持'
-        })
-        return false
-      }
-
-      this.uploadVideo.groupUuid = this.currentGroup.uuid
-
-      return true
-    },
-    onSuccess(file) {
-      console.log(file)
-    },
-    onError() {
-      this.$message({
-        type: 'error',
-        message: '上传失败'
-      })
-    },
     handleCreateArticle(val) {
       this.$router.push({
         path: '/media/article/detail/0'
       })
     },
     handleEditArticle(val) {
-      const uuid = val.uuid
+      val
       this.$router.push({
-        path: '/media/article/detail/' + uuid
+        path: '/media/article/detail/' + val
       })
     },
-    handleDeleteArticle(val) {
-      //   console.log(val)
-      // alert('删除')
-      const payload = {
-        uuid: val.uuid
-      }
-
-      this.$confirm('是否删除当前动态', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(async () => {
-          await this.$store
-            .dispatch('media/deleteMedia', payload)
-            .then(() => {
-              this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.reload()
-            })
-            .catch(err => {
-              this.$message({
-                type: 'error',
-                message: err
-              })
-            })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    // handleSearch(val) {
-    //   console.log(val)
-    //   const groupUuid = this.currentGroup.uuid
-    //   const fileName = val.fileName
-    //   this.initMediaList({ groupUuid, fileName })
-    // },
-    handleRefresh(val) {
+    handleRefresh() {
       const groupUuid = this.currentGroup.uuid
-      this.initMediaList({ groupUuid })
+      this.query.groupUuid = groupUuid
+      this.initMediaList({ ...this.query, groupUuid })
     }
   }
 }

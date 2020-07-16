@@ -36,6 +36,23 @@ export default {
     //   maximumFlag: state => state.app.maximumFlag
     })
   },
+  created(){
+      if(this.$isElectron()){
+          const {ipcRenderer} = window.electron
+          ipcRenderer.on('maximizeWindow',(e,args)=>{
+              console.log(args)
+              this.maximumFlag = args
+          })
+          ipcRenderer.on('unmaximizeWindow',(e,args)=>{
+              console.log(args)
+              this.maximumFlag = args
+          })
+          this.$once('hook:beforeDestroy',()=>{
+              ipcRenderer.removeListener('maximizeWindow')
+              ipcRenderer.removeListener('unmaximizeWindow')
+          })
+      }
+  },
   methods: {
     handleMinimize() {
       const event = this.strategy['handleMinimize']

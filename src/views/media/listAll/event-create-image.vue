@@ -4,22 +4,32 @@
       <h3>添加素材</h3>
       <el-form-item label="内容">
         <el-upload
-          action="/upload"
+          ref="upload"
+          multiple
+          action="/media/addMediaIsAudit"
           :show-file-list="true"
           :file-list="fileList"
           :before-upload="beforeImageUpload"
           :on-success="onSuccess"
-          :headers="{
-                ContentType: 'multipart/form-data'
-            }"
+          :auto-upload="false"
           :on-error="onError"
+          list-type="picture"
+          :data="data"
         >
           <el-t-button
+            slot="trigger"
+            size="small"
             type="primary"
-            size="mini"
             :popAuth="true"
             :auth="permissionMap['media']['media_add']"
-          >上传素材</el-t-button>
+          >选取文件</el-t-button>
+          <!-- <el-t-button
+            size="small"
+            type="success"
+            :popAuth="true"
+            :auth="permissionMap['media']['media_add']"
+            @click="submitUpload"
+          >上传到服务器</el-t-button>-->
           <div slot="tip" class="el-upload__tip">图片支持png、jpg、jpeg，大小不超过2M。</div>
         </el-upload>
         <!-- <div class="input-item">
@@ -35,33 +45,25 @@
           </el-t-button>
         </div>-->
       </el-form-item>
-      <el-form-item label>
+      <!-- <el-form-item label>
         <el-t-button size="mini" @click="handleAddContent">
           <i class="el-icon-plus"></i>
           添加内容
         </el-t-button>
-      </el-form-item>
+      </el-form-item>-->
 
       <el-divider></el-divider>
       <h3>素材配置</h3>
 
       <el-form-item label="符合标签">
         <div>
-          <el-radio v-model="matchFormat" label="CONTAINS_ANY">包含其一</el-radio>
-          <el-radio v-model="matchFormat" label="PERFECT_MATCH ">完全匹配</el-radio>
+          <el-radio v-model="data.matchFormat" label="CONTAINS_ANY">包含其一</el-radio>
+          <el-radio v-model="data.matchFormat" label="PERFECT_MATCH ">完全匹配</el-radio>
         </div>
       </el-form-item>
       <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>
 
-      <el-form-item label="引用条例">
-        <!-- <div>
-          <el-radio v-model="matchFormat" label="CONTAINS_ANY">包含其一</el-radio>
-          <el-radio v-model="matchFormat" label="PERFECT_MATCH ">完全匹配</el-radio>
-        </div>-->
-        <!-- <el-select v-model="select"> -->
-
-        <!-- </el-select> -->
-      </el-form-item>
+      <el-form-item label="引用条例"></el-form-item>
 
       <div class="text-align-center">
         <el-button size="small" @click="handleCancel">取消</el-button>
@@ -86,13 +88,18 @@ export default {
   },
   data() {
     return {
+      imageTypes: ['image/jpeg', 'image/gif', 'image/png'],
       fileList: [],
       tagSelects: [],
       content: [''],
       form: {},
-      type: 'IMAGE',
-      groupUuid: '',
-      matchFormat: 'CONTAINS_ANY'
+      data: {
+        groupUuid: '',
+        tagUuids: '',
+        type: 'IMAGE',
+        matchFormat: 'CONTAINS_ANY'
+      },
+      uploadFilesLength: 0
     }
   },
   watch: {
@@ -100,14 +107,15 @@ export default {
       handler(newVal, oldVal) {
         //   console.log()
         const { uuid } = newVal
-        this.groupUuid = uuid
+        this.data.groupUuid = uuid
       },
       immediate: true
     }
   },
   computed: {
     ...mapState({
-      tagListSelect: state => state.tag.tagListSelect
+      tagListSelect: state => state.tag.tagListSelect,
+      permissionMap: state => state.permission.permissionMap
     })
   },
   created() {
@@ -133,36 +141,46 @@ export default {
       this.content.push('')
     },
     handleConfirm() {
+      this.data.tagUuids = this.tagSelects
+        .reduce((sum, curr) => {
+          return sum.concat(curr)
+        }, [])
+        .join(',')
+
+      console.log(this.data)
+
+      //   console.log(this.tagSelects)
       //   const payload = this.form
-      const content = this.content[0]
-      const groupUuid = this.groupUuid
-      const type = this.type
-      const tagUuids = this.tagSelects.reduce((sum, curr) => {
-        return sum.concat(curr)
-      }, [])
-      const matchFormat = this.matchFormat
-      const data = { tagUuids, matchFormat }
-      const params = { groupUuid, type, content }
+      //   const content = this.content[0]
+      //   const groupUuid = this.groupUuid
+      //   const type = this.type
+      //   const tagUuids = this.tagSelects.reduce((sum, curr) => {
+      //     return sum.concat(curr)
+      //   }, [])
+      //   const matchFormat = this.matchFormat
+      //   const data = { tagUuids, matchFormat }
+      //   const params = { groupUuid, type, content }
 
       this.$refs['form'].validate(valid => {
         if (valid) {
           //   console.log(payload)
-          this.$store
-            .dispatch('media/addMediaIsAudit', { data, params })
-            .then(() => {
-              this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.handleCancel()
-              this.refresh()
-            })
-            .catch(err => {
-              this.$message({
-                type: 'error',
-                message: '操作失败'
-              })
-            })
+          //   this.$store
+          //     .dispatch('media/addMediaIsAudit', { data, params })
+          //     .then(() => {
+          //       this.$message({
+          //         type: 'success',
+          //         message: '操作成功'
+          //       })
+          //       this.handleCancel()
+          //       this.refresh()
+          //     })
+          //     .catch(err => {
+          //       this.$message({
+          //         type: 'error',
+          //         message: '操作失败'
+          //       })
+          //     })
+          this.submitUpload()
         } else {
           this.$message({
             type: 'error',
@@ -187,40 +205,53 @@ export default {
           })
         })
     },
-    beforeFileUpload(file) {
+    beforeImageUpload(file) {
       const type = file.type
       const size = file.size
-      if (size > 1024 * 1024 * 10) {
+      if (size > 1024 * 1024 * 2) {
         this.$message({
           type: 'error',
           message: '文件大小超出限制'
         })
         return false
       }
-      //   if (
-      //     !this.imageTypes.some(item => {
-      //       return item === type
-      //     })
-      //   ) {
-      //     this.$message({
-      //       type: 'error',
-      //       message: '文件类型不支持'
-      //     })
-      //     return false
-      //   }
+      if (
+        !this.imageTypes.some(item => {
+          return item === type
+        })
+      ) {
+        this.$message({
+          type: 'error',
+          message: '文件类型不支持'
+        })
+        return false
+      }
 
-      this.uploadFile.groupUuid = this.currentGroup.uuid
+      //   this.uploadImage.groupUuid = this.groupUuid
 
       return true
     },
-    onSuccess(file) {
-      console.log(file)
+    onSuccess(res, file, list) {
+      console.log(res, list)
+      this.uploadFilesLength++
+      this.$message({
+        type: 'warning',
+        message: '操作完成'
+      })
+      if (this.uploadFilesLength === list.length) {
+        this.$bus.$emit('handleRefresh')
+        //   Object.assign(this.$data, this.$options.data())
+        this.$parent.$parent.dialogVisible = false
+      }
     },
     onError() {
       this.$message({
         type: 'error',
         message: '上传失败'
       })
+    },
+    submitUpload() {
+      this.$refs.upload.submit()
     }
   }
 }

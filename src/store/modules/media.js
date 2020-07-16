@@ -5,7 +5,11 @@ import {
   updataArticle,
   deleteMedia,
   getArticleDetail,
-  addMediaIsAudit
+  addMediaIsAudit,
+  addArticleIsAudit,
+  deleteMediaIsAudit,
+  batchDeleteMedia,
+  moveMedieToGroup
 } from '@/api/media'
 
 import {
@@ -307,6 +311,62 @@ const actions = {
      return new Promise((resolve,reject)=>{
          addMediaIsAudit(payload).then(res=>{
              resolve(res)
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  },
+  /**
+   * 删除素材是否需要审核
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  deleteMediaIsAudit({commit},payload){
+     return new Promise((resolve,reject)=>{
+         deleteMediaIsAudit(payload).then(res=>{
+             resolve()
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  },
+  /**
+   * 批量删除素材是否够需要审核
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  batchDeleteMedia({commit},payload){
+     return new Promise((resolve,reject)=>{
+         batchDeleteMedia(payload).then(res=>{
+             resolve()
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  },
+  /**
+   * 批量移动素材分组
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  moveMedieToGroup({commit},payload){
+     return new Promise((resolve,reject)=>{
+         moveMedieToGroup(payload).then(res=>{
+             resolve()
+         }).catch(err=>{
+             reject()
+         })
+     })
+  },
+  /**
+   * 
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  addArticleIsAudit({commit},payload){
+     return new Promise((resolve,reject)=>{
+         addArticleIsAudit(payload).then(res=>{
+             resolve()
          }).catch(err=>{
              reject(err)
          })
