@@ -17,16 +17,11 @@
             type="primary"
             :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
             :popAuth="true"
-          >添加客户</el-t-button>
-          <el-t-button
-            :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
-            :popAuth="true"
             @click.stop="handleCreate"
           >新增用户</el-t-button>
           <el-t-button
-            type="primary"
             :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']"
-            @click="handleDistribute"
+            @click.stop="handleDistribute"
           >分配</el-t-button>
         </div>
       </tool-bar>
@@ -35,46 +30,104 @@
     <el-card class="content-spacing">
       <div>
         <el-table
+          ref="multipleTable"
           v-loading="loading"
           :data="listAll"
           style="width: 100%"
           row-key="uuid"
           stripe
           lazy
+          fit
           highlight-current-row
           @selection-change="handleSelectionChange"
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="客户名" align="left" prop="name"></el-table-column>
-          <el-table-column label="手机号" align="left" prop="mobile"></el-table-column>
-          <el-table-column label="批量添加次数" align="left" prop="tryCount"></el-table-column>
-          <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
-          <el-table-column label="所属员工" align="left">
-            <template v-slot="scope">
-              <div>{{scope.row.belong.name}}</div>
+          <el-table-column label="客户名" align="left" prop="name" width="150"></el-table-column>
+          <el-table-column label="手机号" align="left" prop="mobile" width="150"></el-table-column>
+          <el-table-column align="left">
+            <template slot="header">
+              <span>
+                预设标签
+                <el-tooltip placement="right">
+                  <div slot="content">
+                    <span class="font-exs color-info">添加成为用户后，将自动打上预设标签。</span>
+                  </div>
+                  <i class="el-icon-question"></i>
+                </el-tooltip>
+              </span>
             </template>
+            <template v-slot="{row}">
+              <tags-drawer :tags="row.potentialCustomerTags"></tags-drawer>
+            </template>
+          </el-table-column>
+          <el-table-column label="批量添加次数" align="left" prop="tryCount"></el-table-column>
+
+          <el-table-column label="所属员工" align="left">
+            <template v-slot="{row}">
+              <div v-if="Object.keys(row.belong).length">
+                <async-user-tag :uuid="row.belong.uuid" size="small" type="info">
+                  <i class="el-icon-user-solid"></i>
+                  {{row.belong.name}}
+                </async-user-tag>
+              </div>
+              <div v-else>--</div>
+            </template>
+            <!-- <template v-slot="{row}">
+              <user-tag :user="row.belong"></user-tag>
+            </template>-->
           </el-table-column>
           <el-table-column label="添加员工" align="left">
-            <template v-slot="scope">
-              <div>{{scope.row.creator.name}}</div>
+            <template v-slot="{row}">
+              <div v-if="Object.keys(row.creator).length">
+                <async-user-tag :uuid="row.creator.uuid" size="small" type="info">
+                  <i class="el-icon-user-solid"></i>
+                  {{row.creator.name}}
+                </async-user-tag>
+              </div>
+              <div v-else>--</div>
             </template>
+
+            <!-- <template v-slot="{row}">
+              <div v-if="Object.keys(row.belong).length">
+                <async-user-drawer :hasPop="true" :users="[row.creator]"></async-user-drawer>
+              </div>
+              <div v-if="Object.keys(row.toRole).length">
+                <role-drawer :roles="row.toRole"></role-drawer>
+              </div>
+            </template>-->
+            <!-- <template v-slot="{row}">
+              <user-tag :user="row.creator"></user-tag>
+            </template>-->
           </el-table-column>
+          <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-t-button
+                type="text"
                 size="mini"
                 :popAuth="true"
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
-                @click.stop="handleEdit(scope.$index)"
+                @click.stop="handleAllocation(scope.row)"
+              >分配</el-t-button>
+              <el-t-button
+                type="text"
+                size="mini"
+                :popAuth="true"
+                :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
+                @click.stop="handleEdit(scope.row)"
               >编辑</el-t-button>
               <el-t-button
-                type="danger"
+                type="text"
                 :popAuth="true"
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_delete']"
                 size="mini"
-                @click.stop="handleDelete(scope.$index)"
+                @click.stop="handleDelete(scope.row)"
               >删除</el-t-button>
+              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
+              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
+              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
+              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -99,16 +152,23 @@
 // import mHeadedr from "./header";
 import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
+
+import AsyncUserTag from "@/components/AsyncUserTag";
+import TagsDrawer from "@/components/TagsDrawer";
+
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
+import { truncate } from "fs";
 
 export default {
   components: {
     ListHeader,
     UserDetail,
     FormDialog,
-    ToolBar
+    ToolBar,
+    TagsDrawer,
+    AsyncUserTag
     // mHeadedr
   },
   data() {
@@ -123,11 +183,15 @@ export default {
         page: 0,
         size: 10,
         name: "",
-        mobile: "",
-        endTime: "",
+        belongUuid: "",
+        creatorUuid: "",
         startTime: "",
-        tryCount: ""
+        endTime: "",
+        flag: "",
+        min: "",
+        max: ""
       },
+
       selects: []
     };
   },
@@ -135,11 +199,9 @@ export default {
   computed: {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
-
       loading: state => state.potentialCustomer.loading,
-      listAll: state => state.potentialCustomer.listMy,
-      page: state => state.potentialCustomer.listMyPage,
-
+      listAll: state => state.potentialCustomer.listAll,
+      page: state => state.potentialCustomer.listAllPage,
       permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
@@ -150,6 +212,14 @@ export default {
     this.initDataList(this.query);
     this.initFilter();
   },
+  mounted() {
+    this.$bus.$on("handleRefresh", () => {
+      this.initDataList(this.query);
+    });
+  },
+  beforeDestroy() {
+    this.$bus.$off("handleRefresh");
+  },
   methods: {
     doExport(val) {
       console.log(val);
@@ -158,15 +228,25 @@ export default {
      * 初始化筛选信息
      */
     initFilter() {
-      //   this.$store
-      //     .dispatch('tag/getListSelect')
-      //     .then(() => {})
-      //     .catch(err => {
-      //       this.$message({
-      //         type: 'error',
-      //         message: '初始化失败'
-      //       })
-      //     })
+      this.$store
+        .dispatch("tag/getListSelect")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: "初始化失败"
+          });
+        });
+
+      this.$store
+        .dispatch("department/getDepartmentListAll")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: err || "初始化失败"
+          });
+        });
 
       this.$store
         .dispatch("user/getUserListSelect")
@@ -196,23 +276,54 @@ export default {
           });
         });
     },
-    handleDetail(val) {
-      const payload = this.userList[val].uuid;
-      this.$router.push({
-        path: "/user/detail",
-        query: { uuid: payload }
-      });
-    },
+    // handleDetail(val) {
+    //   const payload = this.userList[val].uuid;
+    //   this.$router.push({
+    //     path: "/user/detail",
+    //     query: { uuid: payload }
+    //   });
+    // },
     handleSearch(val) {
-      const { name, mobile, endTime, startTime, tryCount } = val;
-      this.query.name = name ? name : this.query.name;
-      this.query.mobile = mobile ? mobile : this.query.mobile;
-      this.query.endTime = endTime ? endTime : this.query.endTime;
-      this.query.startTime = startTime ? startTime : this.query.startTime;
-      this.query.tryCount = tryCount ? tryCount : this.query.tryCount;
-      console.log(val, "handleSearch");
+      if (val.max < val.min) {
+        let tmp;
+        tmp = val.max;
+        val.max = val.min;
+        val.min = tmp;
+      }
+      const {
+        belongUuid,
+        creatorUuid,
+        endTime,
+        flag,
+        max,
+        min,
+        name,
+        startTime
+      } = val;
+      if (val.flag == 2) {
+        this.query.flag = true;
+        this.query.min = min;
+        this.query.max = max;
+      } else if (val.flag == 1) {
+        this.query.flag = "";
+        this.query.min = "";
+        this.query.max = "";
+      } else {
+        this.query.flag = false;
+        this.query.min = 0;
+        this.query.max = 0;
+      }
+      this.query.name = name ? name : "";
+      this.query.belongUuid = belongUuid ? belongUuid : "";
+      this.query.creatorUuid = creatorUuid ? creatorUuid : "";
+      this.query.endTime = endTime ? endTime : "";
+      this.query.startTime = startTime ? startTime : "";
+      console.log(this.query, "query");
       this.initDataList(this.query);
     },
+    // sortNumber(max, min) {
+    //   return max - min;
+    // },
     handleRefresh() {
       console.log("handleRefresh");
       this.query = this.$options.data().query;
@@ -227,15 +338,6 @@ export default {
       this.$refs["formDialog"].event = "CreateTemplate";
       this.$refs["formDialog"].eventType = "create";
       this.$refs["formDialog"].dialogVisible = true;
-    },
-    handleEdit(index) {
-      const { name, remark, mobile, uuid } = this.listAll[index];
-      const payload = { name, remark, mobile, uuid };
-      // console.log(payload)
-      this.$refs["formDialog"].event = "EditTemplate";
-      this.$refs["formDialog"].eventType = "edit";
-      this.$refs["formDialog"].dialogVisible = true;
-      this.$refs["formDialog"].transfer = payload;
     },
     handleDistribute() {
       const uuid = this.selects;
@@ -252,7 +354,6 @@ export default {
         });
       }
     },
-    handleDelete() {},
     handleSelectionChange(val) {
       console.log(val);
       const arr = val;
@@ -271,7 +372,68 @@ export default {
           type: "warning",
           message: "请至少选择一个客户"
         });
-      }
+      }},
+    handleAllocation(row) {
+      row.uuid = [row.uuid];
+      console.log(row, "777");
+      this.$refs.multipleTable.clearSelection();
+      this.handleSelectionChange([row]);
+      this.selects.forEach(row => {
+        this.$refs.multipleTable.toggleRowSelection(row);
+      });
+      this.$refs["formDialog"].event = "DistributeTemplate";
+      this.$refs["formDialog"].eventType = "distribute";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = row;
+    },
+    handleEdit(row) {
+      const { belong, uuid, mobile } = row;
+      let selectedTag = [];
+      row.potentialCustomerTags.map(item => {
+        item.tags.map(tag => {
+          selectedTag.push(tag.tagId);
+        });
+      });
+      const payload = { belong, uuid, selectedTag, mobile };
+      this.$refs["formDialog"].event = "EditTemplate";
+      this.$refs["formDialog"].eventType = "edit";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = payload;
+    },
+    handleDelete(row) {
+      const { uuid } = row;
+      const payload = { uuid: [uuid] };
+      this.$confirm("是否删除当前客户", "删除潜在客户", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          await this.$store
+            .dispatch("potentialCustomer/deletePotentialCustomer", payload)
+            .then(() => {
+              this.$message({
+                type: "success",
+                message: "操作成功"
+              });
+              this.initDataList();
+            })
+            .catch(err => {
+              this.$message({
+                type: "error",
+                message: err
+              });
+            });
+        })
+        .catch(err => {});
+    },
+    handleSelectionChange(val) {
+      console.log(val, "9999");
+      // const arr = val;
+      this.selects = val;
+      // this.selects = arr.map(item => {
+      //   return item.uuid;
+      // });
     }
   }
 };

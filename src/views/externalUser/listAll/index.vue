@@ -40,6 +40,10 @@
               <user-drawer :hasPop="true" :users="scope.row.user"></user-drawer>
             </template>
           </el-table-column>
+            <!-- <template v-slot="scope">
+              <user-drawer :hasPop="false" :users="scope.row.user"></user-drawer>
+            </template> -->
+          </el-table-column>
           <el-table-column label="企业标签" align="left">
             <template v-slot="scope">
               <tags-drawer-obj
@@ -93,13 +97,16 @@ import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 
+import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import UserDrawer from "@/components/UserDrawer";
 import TagsDrawerObj from "@/components/TagsDrawerObj";
+
 
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
+    AsyncUserDrawer,
     ListHeader,
     UserDetail,
     FormDialog,
@@ -158,7 +165,7 @@ export default {
         .catch(err => {
           this.$message({
             type: "error",
-            message: "err"
+            message:  err||"初始化失败"
           });
         });
     },

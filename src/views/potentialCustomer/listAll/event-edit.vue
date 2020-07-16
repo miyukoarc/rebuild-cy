@@ -20,6 +20,8 @@
         @change="handleCheckedTagsChange"
         :tagListSelect="tagListSelect"
         :checkboxGroup="form.tagId"
+        :packUp="true"
+        :isShow="true"
       ></tags-selected>
     </div>
 

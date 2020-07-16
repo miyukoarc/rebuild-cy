@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-06-28 14:23:37
+ * @LastEditTime: 2020-07-16 14:32:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
 -->
 <template>
   <section class="voice-component">
-    <div v-if="item.toUserId == toUserId" class="left-warp">
+    <div v-if="item.toUser == fromUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
@@ -16,7 +16,7 @@
           <div class="user-select">
             <div
               class="audio display-flex align-items-center"
-              @click="playAudio(item.medias[0].file)"
+              @click="playAudio(item.messageMedias[0].file)"
             >
               <i
                 class="play-audio"
@@ -33,7 +33,7 @@
         <div class="user-select right">
           <div
             class="audio display-flex align-items-center"
-            @click="playAudio(item.medias[0].file)"
+            @click="playAudio(item.messageMedias[0].file)"
           >
             <i
               class="play-audio"
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-// import BenzAMRRecorder from "benz-amr-recorder";
+import BenzAMRRecorder from "benz-amr-recorder";
 
 export default {
   name: "VoiceComponent",
@@ -64,19 +64,20 @@ export default {
   },
   methods: {
     playAudio(url) {
-      console.log(url, "90点击");
       const that = this;
       var amr = new BenzAMRRecorder();
       amr.initWithUrl(url).then(() => {
         // amr.isPlaying() 返回音频的播放状态 是否正在播放 返回boolean类型
-        console.log(amr.isPlaying());
         if (amr.isPlaying()) {
           that.isPlayAudio = false;
           amr.stop();
         } else {
-          that.isPlayAudio = true;
           amr.play();
+          that.isPlayAudio = true;
         }
+      });
+      amr.onEnded(() => {
+        this.isPlayAudio = false;
       });
     }
   }

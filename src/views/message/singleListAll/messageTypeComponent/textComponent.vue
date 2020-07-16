@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-06-22 20:42:02
+ * @LastEditTime: 2020-07-16 15:29:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -30,17 +30,17 @@
 </template>
 
 <script>
-export default{
-  name:'TextComponent',
-  props:{
-    item:Object,
-    toUserId:String,
-    fromUserId:String
+export default {
+  name: "TextComponent",
+  props: {
+    item: Object,
+    toUserId: String,
+    fromUserId: String
   },
   mounted() {
-    console.log('22',this.toUserId)
+    console.log("22", this.toUserId);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -53,7 +53,7 @@ export default{
   border-radius: 5px;
 }
 .left {
-  background-color: #fff;
+  background-color: #eee;
   max-width: 50%;
   left: 20px;
   margin-top: 5px;
@@ -86,7 +86,7 @@ export default{
 }
 /*分别给左右两边的小三角形定位*/
 .left:before {
-  border-right: 8px solid #f4f4f5;
+  border-right: 8px solid #eee;
   left: -16px;
 }
 .right:after {

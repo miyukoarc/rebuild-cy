@@ -145,6 +145,7 @@ export default {
     },
     handleRefresh() {
       this.$emit("handleRefresh");
+      this.value = this.$options.data().value;
       this.query = this.$options.data().query;
     }
   }

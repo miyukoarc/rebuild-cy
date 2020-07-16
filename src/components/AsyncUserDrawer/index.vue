@@ -1,6 +1,6 @@
 <template>
   <div class="container-user-tag">
-      <div class="text-align-center">
+      <div class="text-align-left">
           <!-- <div v-if="hasPop"> -->
               <!-- <el-tooltip v-for="item in alterUsers" :key="item.uuid" :enterable="true"  placement="right">
                 <div slot="content">
@@ -63,7 +63,7 @@
           <!-- <el-tag v-else style="margin:0 0 3px 0;" type="info" size="small" v-for="item in alterUsers" :key="item.uuid"><i class="el-icon-user-solid"></i>{{item.name}}</el-tag> -->
       </div>
       
-        <div class="text-align-center">
+        <div class="text-align-center" v-show="total>1">
             <span class="font-exs color-info">共{{total}}人</span>
         <el-button v-if="users.length>2" type="text" size="mini" @click="curly=!curly">展开 <i :class="[curly?'el-icon-caret-bottom':'el-icon-caret-top']"></i></el-button>
     </div>

@@ -2,7 +2,7 @@
   <div v-if="section==='department'" class="select-container">
     <el-row>
       <el-col :span="12">
-        <div class="">
+        <div class>
           <el-input class="filter-input" placeholder="输入关键字" v-model.trim="filterText"></el-input>
           <el-tree
             ref="tree"
@@ -22,8 +22,8 @@
         </div>
       </el-col>
       <el-col :span="12">
-        <div  style="margin-top:32px;">
-          <div class="line-tag color-info" v-for="item in selects" :key="item.uuid">
+        <div style="margin-top:32px;">
+          <div class="line-tag color-info" v-for="(item,index) in selects" :key="index">
             <div>
               <i class="el-icon-s-operation"></i>
               {{item.name}}
@@ -91,8 +91,8 @@
 </template>
 
 <script>
-import UserList from './user-list'
-import { intercept, myFilter } from '@/utils/common'
+import UserList from "./user-list";
+import { intercept, myFilter } from "@/utils/common";
 export default {
   components: {
     UserList
@@ -100,44 +100,44 @@ export default {
   props: {
     section: {
       type: String,
-      default: 'user'
+      default: "user"
     },
     selects: {
       type: Array,
       default: () => {
-        return []
+        return [];
       }
     },
     options: {
       type: Array,
       default: () => {
-        return []
+        return [];
       }
     }
   },
   model: {
-    prop: 'selects',
-    event: 'change'
+    prop: "selects",
+    event: "change"
   },
   data() {
     return {
-      filterText: '',
+      filterText: "",
       propsObj: {
-        label: 'name',
-        children: 'children'
+        label: "name",
+        children: "children"
       },
       currentDepart: null,
       userListTemp: []
-    }
+    };
   },
   watch: {
     filterText(val) {
-      this.$refs['tree'].filter(val)
+      this.$refs["tree"].filter(val);
     }
   },
   computed: {
     departmentList() {
-      return this.options
+      return this.options;
     }
   },
   mounted() {
@@ -145,48 +145,45 @@ export default {
   },
   methods: {
     filterNode(value, data) {
-
-      if (!value) return true
-      return data.name.indexOf(value) !== -1
+      if (!value) return true;
+      return data.name.indexOf(value) !== -1;
     },
     initData() {
       this.$store
-        .dispatch('department/getDepartmentListAll')
+        .dispatch("department/getDepartmentListAll")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败'
-          })
-        })
+            type: "error",
+            message: err || "初始化失败"
+          });
+        });
     },
     initNodeData() {
-      const payload = { departmentsUuid: 3 }
+      const payload = { departmentsUuid: 3 };
       this.$store
-        .dispatch('user/getAllUserList', payload)
-        .then(res => {
-          
-        })
+        .dispatch("user/getAllUserList", payload)
+        .then(res => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: err || '加载失败'
-          })
-        })
+            type: "error",
+            message: err || "加载失败"
+          });
+        });
     },
     /**
      * 删除标签
      */
     handleCloseTag(item) {
       //删除当前点击项目
-      const temp = this.selects
-      temp.splice(temp.indexOf(item), 1)
+      const temp = this.selects;
+      temp.splice(temp.indexOf(item), 1);
 
-      const tree = this.$refs['tree'].children
+      const tree = this.$refs["tree"].children;
 
-      const uuid = item.uuid
+      const uuid = item.uuid;
 
-      const filterTree = intercept('uuid', uuid, tree)
+      const filterTree = intercept("uuid", uuid, tree);
       /**
        * 左删除
        */
@@ -195,150 +192,143 @@ export default {
           (arr, { uuid, children = [] }) =>
             arr.concat([{ uuid }], flatten(children)),
           []
-        )
+        );
 
       const keys = flatten(filterTree).map(item => {
-        return item.uuid
-      })
+        return item.uuid;
+      });
 
       /**
        * 右删除
        */
-      const queue = []
+      const queue = [];
 
       flatten(filterTree).forEach(item => {
         temp.forEach((unit, index) => {
           if (item.uuid === unit.uuid) {
-            queue.push(unit)
+            queue.push(unit);
           }
-        })
-      })
+        });
+      });
       this.$nextTick(async () => {
-        await this.$refs['tree'].getHalfCheckedKeys().forEach(uuid => {
+        await this.$refs["tree"].getHalfCheckedKeys().forEach(uuid => {
           temp.forEach(unit => {
             if (unit.uuid == uuid) {
-              queue.push(unit)
+              queue.push(unit);
             }
-          })
-        })
-        
+          });
+        });
+
         /**
          * 右删除
          */
         queue.forEach(item => {
-          temp.splice(temp.indexOf(item), 1)
-        })
+          temp.splice(temp.indexOf(item), 1);
+        });
 
-        this.$emit('change', temp)
-      })
+        this.$emit("change", temp);
+      });
 
-      
       //   queue.push(item)
 
       /**
        * 左删除
        */
       keys.forEach(key => {
-        this.$refs['tree'].setChecked(key, false, true)
-      })
+        this.$refs["tree"].setChecked(key, false, true);
+      });
     },
     intercept(...args) {
-      return intercept(...args)
+      return intercept(...args);
     },
     /**
      * 改变选择
      */
     handleCheck(val, node) {
-      const temp = []
-      const arr = node.checkedNodes
-      const keys = node.checkedKeys
+      const temp = [];
+      const arr = node.checkedNodes;
+      const keys = node.checkedKeys;
       //   console.log(arr, keys)
       arr.forEach((item, index) => {
-        temp.push({ ...item })
-      })
+        temp.push({ ...item });
+      });
 
-      this.$emit('change', temp)
+      this.$emit("change", temp);
     },
     /**
      * 点击node节点
      */
     handleNodeClick(data, node) {
-      this.currentDepart = node.key
+      this.currentDepart = node.key;
     },
     handleOutput(arr) {
-      let temp = this.userListTemp.concat(arr)
+      let temp = this.userListTemp.concat(arr);
 
-      temp = myFilter(temp)
+      temp = myFilter(temp);
 
-      this.userListTemp = temp
+      this.userListTemp = temp;
 
-      this.$emit('change', temp)
+      this.$emit("change", temp);
     },
     handleCult(val) {
-      
-      let temp = []
+      let temp = [];
       if (val.length) {
-        
         val.forEach(item => {
           this.userListTemp.splice(
             this.userListTemp.findIndex(unit => {
-              return item.uuid == unit.uuid
+              return item.uuid == unit.uuid;
             }),
             1
-          )
-        })
+          );
+        });
         // this.userListTemp = []
       } else {
-        
         this.userListTemp.splice(
           this.userListTemp.findIndex(item => {
-            return item.uuid == val
+            return item.uuid == val;
           }),
           1
-        )
+        );
       }
-      
-      temp = this.userListTemp
-      this.$emit('change', temp)
+
+      temp = this.userListTemp;
+      this.$emit("change", temp);
     },
     /**
      * 删除标签
      */
     handleCloseUserTag(val) {
-      
-      const uuid = val.uuid
-      let temp = this.selects
+      const uuid = val.uuid;
+      let temp = this.selects;
       temp.splice(
         temp.findIndex(item => {
-          return item.uuid == val.uuid
+          return item.uuid == val.uuid;
         }),
         1
-      )
+      );
 
-    //   const trigger = this.selects.map(item=>{return item.uuid})
+      //   const trigger = this.selects.map(item=>{return item.uuid})
 
-    //   console.log(trigger)
+      //   console.log(trigger)
 
-    //   this.$refs['userList'].handleChange(trigger)
-
+      //   this.$refs['userList'].handleChange(trigger)
 
       this.$nextTick(() => {
-
-        let target = this.$refs['userList'].selects
+        let target = this.$refs["userList"].selects;
 
         target.splice(
           target.findIndex(item => {
-            return item == val.uuid
+            return item == val.uuid;
           }),
           1
-        )
-      })
+        );
+      });
 
       // console.log(target)
       // this.$emit('change',temp)
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .line-tag {
@@ -363,7 +353,7 @@ export default {
 
 <style lang="scss">
 .select-container {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
   .el-tree-node__content {
     height: auto;
   }

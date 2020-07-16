@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 17:35:09
- * @LastEditTime: 2020-06-28 13:45:36
+ * @LastEditTime: 2020-07-16 13:57:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\imageComponent.vue
@@ -15,10 +15,7 @@
         <div>
           <div class="img-warp revoke-warp" v-if="item.messageMedias">
             <el-popover placement="right" title trigger="hover">
-              <img
-                :src="item.messageMedias[0].file"
-                style="width:400px;height:400px"
-              />
+              <img :src="item.messageMedias[0].file" style="width:400px;height:400px" />
               <img
                 slot="reference"
                 :src="item.messageMedias[0].file"
@@ -36,10 +33,7 @@
         <div v-if="item.type == 'revoke'" class="user-select revoke">你撤回了一条消息内容是</div>
         <div class="img-warp revoke-warp" v-if="item.messageMedias">
           <el-popover placement="right" title trigger="hover">
-            <img
-              :src="item.messageMedias[0].file"
-              style="width:400px;height:400px"
-            />
+            <img :src="item.messageMedias[0].file" style="width:400px;height:400px" />
             <img
               slot="reference"
               :src="item.messageMedias[0].file"
@@ -62,9 +56,7 @@ export default {
     toUserId: String,
     fromUserId: String
   },
-  created() {
-    console.log(this.item);
-  }
+  created() {}
 };
 </script>
 
