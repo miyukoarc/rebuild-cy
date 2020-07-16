@@ -15,7 +15,7 @@ import {
   Loading
 } from 'element-ui'
 
-import {removeToken} from '@/utils/auth'
+import { removeToken } from '@/utils/auth'
 
 // var loadinginstace
 
@@ -24,7 +24,7 @@ import {removeToken} from '@/utils/auth'
 // axios.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8'
 
 const service = axios.create({
-  baseURL: process.env.VUE_APP_WORK==='offline'?'http://127.0.0.1:3000/api':process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: process.env.VUE_APP_WORK === 'offline' ? 'http://127.0.0.1:3000/api' : process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 15000, // request timeout
   validateStatus: (status) => {
@@ -47,6 +47,7 @@ service.interceptors.request.use(
     // loadinginstace = Loading.service({
     //   fullscreen: true
     // })
+
     return config
   },
   error => {
@@ -72,8 +73,8 @@ service.interceptors.response.use(
   response => {
     const res = response.data
 
-    if(response.status == 400) {
-        // alert('to/login')
+    if (response.status == 400) {
+      // alert('to/login')
 
 
       if (res.status === 4000) {
@@ -86,7 +87,7 @@ service.interceptors.response.use(
         removeToken()
 
         router.push({
-            path: '/login'
+          path: '/login'
         })
         return Promise.reject(new Error(res.message || 'Error'))
 
@@ -97,20 +98,20 @@ service.interceptors.response.use(
       return Promise.reject(new Error(res.message || 'Error'))
 
     } else {
-        // if(res.name==null){
-            // Message({
-            //     message:res.message || 'Error',
-            //     type:'error',
-            //     duration:5 * 1000
-            //   })
-      
-        //       removeToken()
-      
-        //       router.push({
-        //           path: '/login'
-        //       })
-        //   }
-    
+      // if(res.name==null){
+      // Message({
+      //     message:res.message || 'Error',
+      //     type:'error',
+      //     duration:5 * 1000
+      //   })
+
+      //       removeToken()
+
+      //       router.push({
+      //           path: '/login'
+      //       })
+      //   }
+
       return res
     }
 

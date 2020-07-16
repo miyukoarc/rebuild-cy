@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   props: {
     transfer: {
@@ -32,19 +32,19 @@ export default {
   data() {
     return {
       form: {
-        userId: '',
-        uuid: [],
+        userId: "",
+        uuid: []
       }
-    }
+    };
   },
-  watch:{
+  watch: {
     transfer: {
-      handler(newVal,oldVal){
-        console.log(newVal)  
-        const {uuid} = newVal
-        this.form.uuid = uuid
-      }
-      ,immediate:true
+      handler(newVal, oldVal) {
+        console.log(newVal);
+        const { uuid } = newVal;
+        this.form.uuid = uuid;
+      },
+      immediate: true
     }
   },
   computed: {
@@ -56,34 +56,35 @@ export default {
   },
   methods: {
     closeDialog() {
-      this.$parent.$parent.dialogVisible = false
+      this.$parent.$parent.dialogVisible = false;
     },
     handleCancel() {
-      this.closeDialog()
+      this.closeDialog();
     },
     handleConfrim() {
-      const payload = this.form
-      this.$store.dispatch('potentialCustomer/allocation',payload).then(()=>{
-        this.$message({
-          type: 'success',
-          message: '操作成功'
+      const payload = this.form;
+      this.$store
+        .dispatch("potentialCustomer/allocation", payload)
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "操作成功"
+          });
+          this.closeDialog();
+          this.handleRefresh();
         })
-        this.closeDialog()
-        this.handleRefresh()
-        
-      }).catch(err=>{
-        this.$message({
-          type: 'error',
-          message: err
-        })
-
-      })
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: err
+          });
+        });
     },
-    handleRefresh(){
-      this.$bus.$emit('handleRefresh')
+    handleRefresh() {
+      this.$bus.$emit("handleRefresh");
     }
   }
-}
+};
 </script>
 
 <style>

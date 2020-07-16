@@ -1,17 +1,26 @@
 <template>
   <div class="app-container">
     <el-card class="content-spacing">
-      <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
+      <list-header ref="listHeader" @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar
-        :usersNumber="userPage.total"
-        @handleExport="doExport"
-        @handleUpdate="handleUpdate"
-        @actionRole="actionRole"
-        @actionDepartment="actionDepartment"
-      ></tool-bar>
+      <tool-bar :usersNumber="userPage.total" @handleExport="doExport" @handleUpdate="handleUpdate">
+        <div slot="right">
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['user']['user_update']"
+            @click="actionRole"
+          >批量分配角色</el-t-button>
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['department']['department_allocation']"
+            @click="actionDepartment"
+          >批量分配部门</el-t-button>
+        </div>
+      </tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -45,23 +54,26 @@
             </template>
           </el-table-column>
           <el-table-column prop="isMessageUser" label="会话存档授权" align="left">
-            <template v-slot="scope">
-              <div v-if="scope.row.isMessageUser">已授权</div>
-              <div v-else>未授权</div>
+            <template v-slot="scoped">
+              <div
+                :class="scoped.row.isMessageUser?'color-success':'color-danger'"
+              >{{scoped.row.isMessageUser?'已授权':'未授权'}}</div>
             </template>
           </el-table-column>
 
           <el-table-column label="允许登陆" align="left">
             <template v-slot="scoped">
-              <div v-if="scoped.row.visible">允许</div>
-              <div v-else>禁止</div>
+              <div
+                :class="scoped.row.visible?'color-success':'color-danger'"
+              >{{scoped.row.visible?'已授权':'未授权'}}</div>
             </template>
           </el-table-column>
 
           <el-table-column label="通讯录授权" prop="isFollowUser">
-            <template v-slot="scope">
-              <div v-if="scope.row.isFollowUser">已授权</div>
-              <div v-else>未授权</div>
+            <template v-slot="scoped">
+              <div
+                :class="scoped.row.isFollowUser?'color-success':'color-danger'"
+              >{{scoped.row.isFollowUser?'已授权':'未授权'}}</div>
             </template>
           </el-table-column>
 
@@ -152,9 +164,6 @@ export default {
   watch: {},
   computed: {
     ...mapState({
-      roleList: state => state.role.roleList,
-      departmentList: state => state.department.departmentList,
-
       loading: state => state.user.loading,
       userList: state => state.user.userList,
       userPage: state => state.user.userPage,
@@ -163,16 +172,12 @@ export default {
     })
   },
   created() {
-    this.$store.dispatch("role/getRoleList");
+    this.$store.dispatch("role/getRoleListSelect");
+    this.$store.dispatch("department/getDepartmentListSelect");
+
     this.initDataList(this.query);
-    this.initFilter();
   },
   mounted() {
-    // this.$bus.$on('showFormDialog', target => {
-    //   this.$refs['formDialog'].event = 'CreateTemplate'
-    //   this.$refs['formDialog'].eventType = 'create'
-    //   this.$refs['formDialog'].dialogVisible = true
-    // })
     this.$bus.$on("handleRefresh", () => {
       this.initDataList(this.query);
     });
@@ -183,10 +188,6 @@ export default {
   methods: {
     handleSelectionChange(val) {
       this.checkedUserList = val;
-      // let payload = [];
-      // val.map(obj => {
-      //   payload.push(obj.uuid);
-      // });
     },
     doExport(val) {
       if (this.checkedUserList.length == 0) {
@@ -245,43 +246,46 @@ export default {
       this.$refs["formDialog"].eventType = "distribute";
       this.$refs["formDialog"].dialogVisible = true;
     },
-    actionDepartment() {
-      console.log("批量分配部门");
-    },
+
+    // 批量分配角色
     actionRole() {
-      console.log("批量分配角色");
-      this.$store.commit("user/SAVE_CURRENTROWS", this.checkedUserList);
-      this.$refs["formDialog"].event = "DistributeRoleTemplate";
-      this.$refs["formDialog"].eventType = "distributeRole";
-      this.$refs["formDialog"].dialogVisible = true;
+      if (this.checkedUserList.length) {
+        this.$store.commit("user/SAVE_CURRENTROWS", this.checkedUserList);
+        this.$refs["formDialog"].event = "DistributeRoleTemplate";
+        this.$refs["formDialog"].eventType = "distributeRole";
+        this.$refs["formDialog"].dialogVisible = true;
+      } else {
+        this.$message({
+          type: "error",
+          message: "请选择至少一项"
+        });
+      }
+    },
+
+    // 批量分配部门
+    actionDepartment() {
+      if (!this.$refs.listHeader.query.departmentsUuid) {
+        this.$message({
+          type: "error",
+          message: "请先选择部门"
+        });
+      } else if (this.checkedUserList.length) {
+        this.$store.commit("user/SAVE_CURRENTROWS", this.checkedUserList);
+        this.$refs["formDialog"].event = "DistributeTemplate";
+        this.$refs["formDialog"].eventType = "distribute";
+        this.$refs["formDialog"].dialogVisible = true;
+      } else {
+        this.$message({
+          type: "error",
+          message: "请选择至少一项"
+        });
+      }
     },
     sortChange(val) {
       this.initDataList();
     },
     pageChange() {
       this.initDataList();
-    },
-    initFilter() {
-      //   this.$store
-      //     .dispatch('user/getUserListSelect')
-      //     .then(() => {
-      //     })
-      //     .catch(err => {
-      //       this.$message({
-      //         type: 'error',
-      //         message: '初始化失败'
-      //       })
-      //     })
-
-      this.$store
-        .dispatch("department/getDepartmentListSelect")
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
     },
     initDataList(payload) {
       this.$store

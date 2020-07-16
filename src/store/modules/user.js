@@ -255,15 +255,15 @@ const actions = {
         })
     },
 
-    user_update({}, payload) {
-        return new Promise((resolve, reject) => {
-            postUserUpdate(payload).then((res) => {
-                resolve()
-            }).catch(err => {
-                reject(err)
-            })
-        })
-    }
+  user_update({ }, payload) {
+    return new Promise((resolve, reject) => {
+      postUserUpdate(payload).then(res => {
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  }
 
 }
 

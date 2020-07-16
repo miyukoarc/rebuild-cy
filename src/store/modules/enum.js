@@ -56,6 +56,13 @@ const state = {
     quitUserRelationExUserListUserStatus: {
         ALLOCATE: '离职待分配',
         ALLOCATED: '离职已分配'
+    },
+    batchAddTask: {
+        NOTSTARTED: "未开始",
+        INTERRUPT: "中断",
+        PROCESSING: "进行中",
+        CANCELED: "已取消",
+        FINISHED: "已完成",
     }
 }
 

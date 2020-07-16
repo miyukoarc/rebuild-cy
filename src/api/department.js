@@ -7,7 +7,7 @@ import request from '@/utils/request'
 
 export const getDepartmentDetail = (payload) => {
     return request({
-        url: '/department/'+payload,
+        url: '/department/' + payload,
         method: 'get',
 
     })
@@ -30,7 +30,7 @@ export const addDepartment = (payload) => {
  * 创建组织
  * @param {object} payload
  */
-export const addWxDepartment = (payload)=>{
+export const addWxDepartment = (payload) => {
     return request({
         url: '/department/addWx',
         method: 'post',
@@ -42,7 +42,7 @@ export const addWxDepartment = (payload)=>{
  * s删除部门
  * @param {string} payload 
  */
-export const deleteDepartment = (payload)=>{
+export const deleteDepartment = (payload) => {
     return request({
         url: '/department/delete',
         method: 'post',

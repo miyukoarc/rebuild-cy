@@ -2,7 +2,7 @@
   <div>
     <div class="tool-bar-container">
       <div class="left">
-        <span class="font-s">共{{usersNumber}}位员工</span>
+        <slot name="left"></slot>
         <el-button type="text" @click="actionUpdate" v-if="hasUpdate">更新数据</el-button>
         <el-button type="primary" @click="actionExport" v-if="hasExport">导出Excel</el-button>
         <el-button type="primary" @click="actionImport" v-if="hasImport">导入Excel</el-button>
@@ -11,8 +11,6 @@
 
       <div class="right">
         <slot name="right"></slot>
-        <!-- <el-button type="primary" @click="actionRole" v-if="hasRole">批量分配角色</el-button>
-        <el-button type="primary" @click="actionDepartment" v-if="hasDepartment">批量分配部门</el-button>-->
       </div>
     </div>
   </div>
@@ -38,15 +36,7 @@ export default {
     hasUpdate: {
       type: Boolean,
       default: true
-    },
-    // hasDepartment: {
-    //   type: Boolean,
-    //   default: true
-    // },
-    // hasRole: {
-    //   type: Boolean,
-    //   default: true
-    // }
+    }
   },
   methods: {
     actionExport() {
@@ -57,12 +47,6 @@ export default {
     },
     actionUpdate() {
       this.$emit("handleUpdate", "更新");
-    },
-    actionDepartment() {
-      this.$emit("actionDepartment", "分配部门");
-    },
-    actionRole() {
-      this.$emit("actionRole", "分配角色");
     }
   }
 };

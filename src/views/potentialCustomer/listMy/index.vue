@@ -9,6 +9,12 @@
         <div slot="right">
           <el-t-button
             type="primary"
+            :popAuth="true"
+            :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
+            @click="addBatchTask"
+          >批量添加好友</el-t-button>
+          <el-t-button
+            type="primary"
             :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
             :popAuth="true"
           >添加客户</el-t-button>
@@ -17,7 +23,11 @@
             :popAuth="true"
             @click.stop="handleCreate"
           >新增用户</el-t-button>
-          <el-t-button type="primary" :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']" @click="handleDistribute">分配</el-t-button>
+          <el-t-button
+            type="primary"
+            :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']"
+            @click="handleDistribute"
+          >分配</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -36,25 +46,35 @@
            header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="客户名" align="left" prop="name">
-          </el-table-column>
+          <el-table-column label="客户名" align="left" prop="name"></el-table-column>
           <el-table-column label="手机号" align="left" prop="mobile"></el-table-column>
           <el-table-column label="批量添加次数" align="left" prop="tryCount"></el-table-column>
           <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
-          <el-table-column label="所属员工" align="left" >
-              <template v-slot="scope">
-                  <div>{{scope.row.belong.name}}</div>
-              </template>
+          <el-table-column label="所属员工" align="left">
+            <template v-slot="scope">
+              <div>{{scope.row.belong.name}}</div>
+            </template>
           </el-table-column>
           <el-table-column label="添加员工" align="left">
-              <template v-slot="scope">
-                  <div>{{scope.row.creator.name}}</div>
-              </template>
+            <template v-slot="scope">
+              <div>{{scope.row.creator.name}}</div>
+            </template>
           </el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-t-button size="mini" :popAuth="true" :auth="permissionMap['potentialCustomer']['potentialCustomer_update']" @click.stop="handleEdit(scope.$index)">编辑</el-t-button>
-              <el-t-button type="danger" :popAuth="true" :auth="permissionMap['potentialCustomer']['potentialCustomer_delete']" size="mini" @click.stop="handleDelete(scope.$index)">删除</el-t-button>
+              <el-t-button
+                size="mini"
+                :popAuth="true"
+                :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
+                @click.stop="handleEdit(scope.$index)"
+              >编辑</el-t-button>
+              <el-t-button
+                type="danger"
+                :popAuth="true"
+                :auth="permissionMap['potentialCustomer']['potentialCustomer_delete']"
+                size="mini"
+                @click.stop="handleDelete(scope.$index)"
+              >删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -77,11 +97,11 @@
 
 <script>
 // import mHeadedr from "./header";
-import UserDetail from './detail.vue'
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import UserDetail from "./detail.vue";
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -102,143 +122,159 @@ export default {
       query: {
         page: 0,
         size: 10,
-        name: '',
-        mobile: '',
-        endTime: '',
-        startTime: '',
-        tryCount: ''
+        name: "",
+        mobile: "",
+        endTime: "",
+        startTime: "",
+        tryCount: ""
       },
       selects: []
-    }
+    };
   },
   watch: {},
   computed: {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
-      
+
       loading: state => state.potentialCustomer.loading,
       listAll: state => state.potentialCustomer.listMy,
       page: state => state.potentialCustomer.listMyPage,
 
       permissionMap: state => state.permission.permissionMap
-    })
+    }),
+    routesData() {
+      return this.routes;
+    }
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
-
+    this.initDataList(this.query);
+    this.initFilter();
   },
   methods: {
     doExport(val) {
-      console.log(val)
+      console.log(val);
     },
     /**
      * 初始化筛选信息
      */
     initFilter() {
-    //   this.$store
-    //     .dispatch('tag/getListSelect')
-    //     .then(() => {})
-    //     .catch(err => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '初始化失败'
-    //       })
-    //     })
+      //   this.$store
+      //     .dispatch('tag/getListSelect')
+      //     .then(() => {})
+      //     .catch(err => {
+      //       this.$message({
+      //         type: 'error',
+      //         message: '初始化失败'
+      //       })
+      //     })
 
       this.$store
-        .dispatch('user/getUserListSelect')
+        .dispatch("user/getUserListSelect")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('potentialCustomer/getListMy', payload)
+        .dispatch("potentialCustomer/getListMy", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
         })
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
     handleDetail(val) {
-      const payload = this.userList[val].uuid
+      const payload = this.userList[val].uuid;
       this.$router.push({
-        path: '/user/detail',
+        path: "/user/detail",
         query: { uuid: payload }
-      })
+      });
     },
     handleSearch(val) {
-      const { name, mobile, endTime, startTime, tryCount } = val
-      this.query.name = name ? name : this.query.name
-      this.query.mobile = mobile ? mobile : this.query.mobile
-      this.query.endTime = endTime ? endTime : this.query.endTime
-      this.query.startTime = startTime ? startTime : this.query.startTime
-      this.query.tryCount = tryCount ? tryCount : this.query.tryCount
-      console.log(val, 'handleSearch')
-      this.initDataList(this.query)
+      const { name, mobile, endTime, startTime, tryCount } = val;
+      this.query.name = name ? name : this.query.name;
+      this.query.mobile = mobile ? mobile : this.query.mobile;
+      this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.query.startTime = startTime ? startTime : this.query.startTime;
+      this.query.tryCount = tryCount ? tryCount : this.query.tryCount;
+      console.log(val, "handleSearch");
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      console.log('handleRefresh')
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      console.log("handleRefresh");
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
-    handleCreate(){
-      this.$refs['formDialog'].event = 'CreateTemplate'
-      this.$refs['formDialog'].eventType = 'create'
-      this.$refs['formDialog'].dialogVisible = true
+    handleCreate() {
+      this.$refs["formDialog"].event = "CreateTemplate";
+      this.$refs["formDialog"].eventType = "create";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     handleEdit(index) {
-      const {name,remark,mobile,uuid} = this.listAll[index]
-      const payload = {name,remark,mobile,uuid}
+      const { name, remark, mobile, uuid } = this.listAll[index];
+      const payload = { name, remark, mobile, uuid };
       // console.log(payload)
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
-      this.$refs['formDialog'].dialogVisible = true
-      this.$refs['formDialog'].transfer = payload
+      this.$refs["formDialog"].event = "EditTemplate";
+      this.$refs["formDialog"].eventType = "edit";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = payload;
     },
-    handleDistribute(){
-      const uuid = this.selects
-      const payload = {uuid}
-      if(this.selects.length){
-        
-        this.$refs['formDialog'].event = 'DistributeTemplate'
-        this.$refs['formDialog'].eventType = 'distribute'
-        this.$refs['formDialog'].dialogVisible = true
-        this.$refs['formDialog'].transfer = payload
-      }else {
+    handleDistribute() {
+      const uuid = this.selects;
+      const payload = { uuid };
+      if (this.selects.length) {
+        this.$refs["formDialog"].event = "DistributeTemplate";
+        this.$refs["formDialog"].eventType = "distribute";
+        this.$refs["formDialog"].dialogVisible = true;
+        this.$refs["formDialog"].transfer = payload;
+      } else {
         this.$message({
-          type:'warning',
-          message: '请至少选择一个客户'
-        })
+          type: "warning",
+          message: "请至少选择一个客户"
+        });
       }
     },
     handleDelete() {},
-    handleSelectionChange(val){
-      console.log(val)
-      const arr = val
-      this.selects = arr.map(item=>{return item.uuid+''})
+    handleSelectionChange(val) {
+      console.log(val);
+      const arr = val;
+      this.selects = arr.map(item => {
+        return item.uuid + "";
+      });
+    },
+    addBatchTask() {
+      if (this.selects.length) {
+        this.$refs["formDialog"].event = "addBatchTask";
+        this.$refs["formDialog"].eventType = "AddBatchTask";
+        this.$refs["formDialog"].dialogVisible = true;
+        this.$refs["formDialog"].transfer = this.selects;
+      } else {
+        this.$message({
+          type: "warning",
+          message: "请至少选择一个客户"
+        });
+      }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
