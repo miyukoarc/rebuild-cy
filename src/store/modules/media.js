@@ -9,7 +9,8 @@ import {
     addArticleIsAudit,
     deleteMediaIsAudit,
     batchDeleteMedia,
-    moveMedieToGroup
+    moveMedieToGroup,
+    getArticleListSelect
 } from '@/api/media'
 
 import {
@@ -88,6 +89,7 @@ const mutations = {
      */
     SAVE_ARTICLELISTSELECT(state, payload) {
         state.articleListSelect = payload
+        console.log(state.articleListSelect, '8888844')
     },
     /**
      * 切换loading状态
@@ -160,6 +162,30 @@ const actions = {
             })
         })
     },
+
+    /**
+     * 文章列表 无分页
+     * @param {*} param0 
+     * @param {object} payload 
+     */
+    getArticleListSelect({
+        commit
+    }) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            getArticleListSelect().then(res => {
+                console.log(res, 'resddddd')
+                commit('SAVE_ARTICLELISTSELECT', res.items)
+                commit('TOGGLE_LOADING', false)
+                resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+
+                reject(err)
+            })
+        })
+    },
+
     /**
      * 素材组列表
      */
@@ -275,7 +301,9 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    deleteMedia({ commit }, payload) {
+    deleteMedia({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             deleteMedia(payload).then(res => {
                 resolve()
@@ -289,7 +317,9 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    getArticleDetail({ commit }, payload) {
+    getArticleDetail({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             getArticleDetail(payload).then(res => {
                 commit('SAVE_ARTICLEDETAIL', res)
@@ -304,7 +334,9 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    updataArticle({ commit }, payload) {
+    updataArticle({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             updataArticle(payload).then(res => {
                 resolve()
@@ -318,7 +350,9 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    addMediaIsAudit({ commit }, payload) {
+    addMediaIsAudit({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             addMediaIsAudit(payload).then(res => {
                 resolve(res)
@@ -332,7 +366,9 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    deleteMediaIsAudit({ commit }, payload) {
+    deleteMediaIsAudit({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             deleteMediaIsAudit(payload).then(res => {
                 resolve()
@@ -346,7 +382,9 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    batchDeleteMedia({ commit }, payload) {
+    batchDeleteMedia({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             batchDeleteMedia(payload).then(res => {
                 resolve()
@@ -360,7 +398,9 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    moveMedieToGroup({ commit }, payload) {
+    moveMedieToGroup({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             moveMedieToGroup(payload).then(res => {
                 resolve()
@@ -374,7 +414,9 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    addArticleIsAudit({ commit }, payload) {
+    addArticleIsAudit({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             addArticleIsAudit(payload).then(res => {
                 resolve()

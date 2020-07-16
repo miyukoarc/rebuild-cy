@@ -18,7 +18,7 @@
           stripe
           lazy
           highlight-current-row
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="流失客户" align="left">
@@ -44,19 +44,25 @@
           <el-table-column label="所属员工" align="left">
             <template v-slot="{row}">
               <div v-if="Object.keys(row.user).length">
-                <async-user-drawer :hasPop="true" :users="row.user"></async-user-drawer>
+                <async-user-tag
+                  size="small"
+                  v-for="item in [row.user]"
+                  type="info"
+                  :key="item.uuid"
+                  :uuid="item.uuid"
+                >
+                  <i class="el-icon-user-solid"></i>
+                  {{item.name}}
+                </async-user-tag>
               </div>
-              <!-- <div v-if="Object.keys(row.toRole).length">
+              <!-- <!-- <div v-if="Object.keys(row.toRole).length">
                 <role-drawer :roles="row.toRole"></role-drawer>
-              </div> -->
+              </div>-->
             </template>
-            <!-- <template v-slot="scope">
-              <user-tag :user="scope.row.user" :hasPop="hasPop"></user-tag>
-            </template> -->
           </el-table-column>
           <el-table-column label="标签" align="left">
             <template v-slot="scope">
-              <tags-drawer v-if="scope.row.tags" :tags="scope.row.tags.corpTags"></tags-drawer>
+              <tags-drawer-obj v-if="scope.row.tags" :tags="scope.row.tags.corpTags"></tags-drawer-obj>
             </template>
           </el-table-column>
           <el-table-column label="流失时间" align="left" prop="updatedAt"></el-table-column>
@@ -105,10 +111,9 @@ import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
 
-// import UserDrawer from "@/components/UserDrawer";
-import AsyncUserDrawer from '@/components/AsyncUserDrawer'
-import TagsDrawer from "@/components/TagsDrawer";
-// import UserTag from "@/components/UserTag";
+import AsyncUserTag from "@/components/AsyncUserTag";
+import TagsDrawerObj from "@/components/TagsDrawerObj";
+import UserTag from "@/components/UserTag";
 
 export default {
   name: "runWayListAll",
@@ -117,10 +122,9 @@ export default {
     UserDetail,
     FormDialog,
     ToolBar,
-    AsyncUserDrawer,
-    // UserDrawer,
-    TagsDrawer,
-    // UserTag
+    AsyncUserTag,
+    TagsDrawerObj,
+    UserTag
     // mHeadedr
   },
   data() {
@@ -221,12 +225,12 @@ export default {
         endTime,
         delFollow
       } = val;
-      if(delFollow === ''){
-        this.query.delFollow = ''
-      }else if(delFollow === true){
-        this.query.delFollow = true
-      }else{
-        this.query.delFollow = false
+      if (delFollow === "") {
+        this.query.delFollow = "";
+      } else if (delFollow === true) {
+        this.query.delFollow = true;
+      } else {
+        this.query.delFollow = false;
       }
       this.query.flag = flag ? true : false;
       this.query.name = name ? name : this.query.name;

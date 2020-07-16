@@ -11,6 +11,7 @@ import {
     getQuitUserRelationExUserDetail,
     redistributionExUser,
     getGroupDetail,
+    externalUserUpdateTag,
     getCustomerStatistics,
     getListMy,
     getResultList
@@ -170,6 +171,7 @@ const mutations = {
         state.page.pageNumber = pageNumber
         state.page.pageSize = pageSize
     },
+
     /**
      * 切换loading
      * @param {*} state 
@@ -325,7 +327,13 @@ const mutations = {
      * @param {*} payload 
      */
     SAVE_EDITTAGSUUID(state, payload) {
-        state.editTagsUuid = tagsUuid(payload)
+        state.editTagsUuid = []
+        console.log(payload, 'payload')
+        if (payload != null) {
+            state.editTagsUuid = tagsUuid(payload)
+        } else {
+            state.editTagsUuid = []
+        }
     },
     /**
      * 保存群列表
@@ -632,6 +640,44 @@ const actions = {
             })
         })
     },
+
+    /**
+     * 客户详情标签编辑
+     */
+    externalUserUpdateTag({
+        commit
+    }, payload) {
+        console.log(payload, 'payload')
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            externalUserUpdateTag(payload).then(res => {
+                commit('TOGGLE_LOADING', false)
+                resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+                reject(err)
+            })
+        })
+    },
+
+    /**
+     * 客户详情修改客户属性配置
+     */
+    propertyUpdateExternalUserProperty({
+        commit
+    }, payload) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            propertyUpdateExternalUserProperty(payload).then(res => {
+                commit('TOGGLE_LOADING', false)
+                resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+                reject(err)
+            })
+        })
+    },
+
     /**
      * 添加动态
      */
