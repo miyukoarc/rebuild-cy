@@ -107,3 +107,49 @@ export const additionFail = (payload) => {
         data: payload
     })
 }
+
+/**
+ * 添加批量添加好友
+ * @param {object} payload 
+ */
+export const batchAddTask = (payload) => {
+    return request({
+        url: '/batchAddTask/add',
+        method: 'post',
+        data: payload
+    })
+}
+/**
+ * 取消批量添加好友任务
+ * @param {object} payload 
+ */
+export const cancelBatchAddTask = (payload) => {
+    return request({
+        url: '/batchAddTask/cancel',
+        method: 'post',
+        params: payload
+    })
+}
+
+/**
+ * 查看批量添加好友任务详情
+ * @param {object} payload 
+ */
+export const getBatchAddTaskDetail = (uuid) => {
+    return request({
+        url: `/batchAddTask/${uuid}`,
+        method: 'get',
+    })
+}
+
+/**
+ * 查看批量添加好友任务详情
+ * @param {object} payload 
+ */
+export const getBatchAddTaskResult = (payload) => {
+    return request({
+        url: `/batchAddTask/result/${payload.uuid}`,
+        method: 'get',
+        params: payload
+    })
+}

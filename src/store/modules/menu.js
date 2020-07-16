@@ -3,7 +3,7 @@ import {
   getAllMenuList,
   getMyMenuList
 } from '@/api/menu'
-import {constantRoutes} from '@/router'
+import { constantRoutes } from '@/router'
 import Layout from '@/layout'
 
 /**
@@ -11,46 +11,46 @@ import Layout from '@/layout'
  * @param {Array} routes 
  */
 function generateRoutes(routes) {
-    let temp = []
-    routes.map(item => {
-      let firstObj = {
-        path: '#',
-        component: Layout,
-        name: item.code,
-        meta: {
-          title: item.menuTitle,
-          icon: item.icon
-        },
-        children: []
-      }
-      item.children.map(second => {
-        const part = second.component.slice(2).split('/').slice(1).join("/")
-
-        // const url = second.component.split('@/views')[1]
-        // console.log(`@/views${url}/index.vue`,part,second.route)
-        firstObj.children.push({
-          path: second.route,
-          name: second.code,
-        //   component: resolve => require([`@/views${url}/index.vue`], resolve),
-          component: view(part),          // component:()=> import('@/views'+url+'/index.vue'),//why?
-          meta: {
-            title: second.menuTitle,
-            auth: second
-          }
-        })
-      })
-      temp.push(firstObj)
-    })
-    console
-    return temp
-  
-  }
-
-  function view (path) {
-    return  (resolve) => {
-      require([`@/views/${path}/index.vue`], resolve)
+  let temp = []
+  routes.map(item => {
+    let firstObj = {
+      path: '#',
+      component: Layout,
+      name: item.code,
+      meta: {
+        title: item.menuTitle,
+        icon: item.icon
+      },
+      children: []
     }
+    item.children.map(second => {
+      const part = second.component.slice(2).split('/').slice(1).join("/")
+
+      // const url = second.component.split('@/views')[1]
+      // console.log(`@/views${url}/index.vue`,part,second.route)
+      firstObj.children.push({
+        path: second.route,
+        name: second.code,
+        //   component: resolve => require([`@/views${url}/index.vue`], resolve),
+        component: view(part),          // component:()=> import('@/views'+url+'/index.vue'),//why?
+        meta: {
+          title: second.menuTitle,
+          auth: second
+        }
+      })
+    })
+    temp.push(firstObj)
+  })
+  console
+  return temp
+
+}
+
+function view(path) {
+  return (resolve) => {
+    require([`@/views/${path}/index.vue`], resolve)
   }
+}
 
 
 
@@ -69,11 +69,11 @@ const mutations = {
     state.currentMenuDetail = payload
   },
   SET_MENU(state, payload) {
-      
+
     state.rebuildMenu = payload
-    
+
   },
-  SAVE_REBUILDMENULIST(state,payload){
+  SAVE_REBUILDMENULIST(state, payload) {
     state.rebuildMenuList = constantRoutes.concat(payload)
   }
 }
@@ -92,7 +92,7 @@ const actions = {
         commit('SAVE_DETAIL', res.items)
         resolve()
       }).catch(err => {
-        
+
         reject()
       })
     })
@@ -110,7 +110,7 @@ const actions = {
         commit('SAVE_LIST', res.items)
         resolve()
       }).catch(err => {
-        
+
         reject()
       })
     })
@@ -125,12 +125,12 @@ const actions = {
     return new Promise((resolve, reject) => {
       getMyMenuList().then(res => {
         const filted = generateRoutes(res.items)
-        commit('SAVE_REBUILDMENULIST',filted)
+        commit('SAVE_REBUILDMENULIST', filted)
         commit('SET_MENU', filted)
         commit('SAVE_LIST', res.items)
         resolve()
       }).catch(err => {
-        
+
         reject()
       })
     })

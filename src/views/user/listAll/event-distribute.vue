@@ -1,17 +1,17 @@
 <template>
   <div>
-    <el-form :model="form" ref="form" label-width="120px">
+    <el-form ref="form" label-width="120px">
       <el-form-item label="名称" prop="name">
-        <el-select v-model="form.departmentUuids[0]">
-          <el-option
-            v-for="item in departments"
-            :key="item.uuid"
-            :label="item.name"
-            :value="item.uuid"
-          ></el-option>
-        </el-select>
+        <el-select-tree
+          v-model="depUuid"
+          placeholder="请选择部门"
+          :defaultExpandAll="true"
+          :checkStrictly="true"
+          :data="departmentList"
+          :props="departmentProps"
+        ></el-select-tree>
       </el-form-item>
-      {{user.uuid}}
+
       <div class="text-align-center">
         <el-button size="small" @click="handleCancel">取消</el-button>
         <el-button size="small" type="primary" @click="handleConfrim">确定</el-button>
@@ -25,32 +25,50 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+      depUuid: "",
+      departmentProps: {
+        value: "uuid",
+        label: "name",
+        children: "children"
+      },
       form: {
-        alias: "",
-        departmentUuids: [],
-        name: "",
-        position: "",
-        roleUuid: "",
-        uuid: ""
-      }
+        userId: ""
+      },
+      forms: [],
+      isBatchUpdate: false
     };
   },
   computed: {
     ...mapState({
       user: state => state.user.currentRowUserList,
-      departments: state => state.department.listSelect
+      users: state => state.user.currentRowUsers,
+      departmentList: state => state.department.listSelect
     })
   },
   watch: {
     user: {
       handler(newVal, oldVal) {
-        this.form.alias = newVal.alias;
-        // this.form.departmentUuids[0] =
-        //   newVal.departments[newVal.departments.length - 1].uuid;
-        this.form.name = newVal.name;
-        this.form.position = newVal.position;
-        this.form.roleUuid = newVal.roleUuid;
-        this.form.uuid = newVal.uuid;
+        if (Object.keys(newVal) != 0) {
+          this.depUuid = newVal.departments[0].uuid;
+          this.isBatchUpdate = false;
+
+          this.form.userId = newVal.userId;
+        }
+      },
+      immediate: true
+    },
+    users: {
+      handler(newVal, oldVal) {
+        if (newVal.length > 0) {
+          this.depUuid = newVal[0].departments[0].uuid;
+          this.isBatchUpdate = true;
+
+          newVal.map((obj, index) => {
+            this.forms[index] = {
+              userId: obj.userId
+            };
+          });
+        }
       },
       immediate: true
     }
@@ -63,24 +81,52 @@ export default {
       this.closeDialog();
     },
     handleConfrim() {
-      const payload = this.form;
-      this.$store
-        .dispatch("user/user_update", payload)
-        .then(res => {
-          this.$message({
-            type: "success",
-            message: "操作成功"
+      if (!this.isBatchUpdate) {
+        const payload = { ...this.form, depUuid: this.depUuid };
+        this.$store
+          .dispatch("department/allocation", payload)
+          .then(res => {
+            this.$message({
+              type: "success",
+              message: "操作成功"
+            });
+            this.$bus.$emit("handleRefresh");
+            this.closeDialog();
+          })
+          .catch(err => {
+            this.$message({
+              type: "error",
+              message: err
+            });
           });
-          this.$bus.$emit("handleRefresh");
-          this.closeDialog();
-        })
-        .catch(err => {
-          this.$message({
-            type: "error",
-            message: err
+      } else {
+        let promiseList = [];
+        this.forms.map((payload, index) => {
+          promiseList[index] = this.$store.dispatch("department/allocation", {
+            ...payload,
+            depUuid: this.depUuid
           });
-          // this.closeDialog()
         });
+
+        Promise.all(promiseList)
+          .then(res => {
+            console.log(res);
+            this.$message({
+              type: "success",
+              message: "操作成功"
+            });
+            this.$bus.$emit("handleRefresh");
+            this.closeDialog();
+          })
+          .catch(err => {
+            this.$message({
+              type: "error",
+              message: err
+            });
+            this.$bus.$emit("handleRefresh");
+            this.closeDialog();
+          });
+      }
     }
   }
 };

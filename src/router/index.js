@@ -35,76 +35,66 @@ import offline from '@/views/login'
 import MiniLogin from '@/views/login-back-up'
 import welcome from '@/views/welcome'
 const loginPage = process.env.VUE_APP_WORK === 'offline' ? offline : online
-export const constantRoutes = [
-  {
-    path: '/zeness',
-    component: () => import('@/views/zeness.vue'),
-    hidden: true,
-  },{
-    path: '/login',
-    component: loginPage,
-    hidden: true
-  },
+export const constantRoutes = [{
+  path: '/login',
+  component: loginPage,
+  hidden: true
+},
 
-  {
-    path: '/miniLogin',
-    component: MiniLogin,
-    hidden: true
+{
+  path: '/miniLogin',
+  component: MiniLogin,
+  hidden: true
+}, {
+  path: '/welcome',
+  component: welcome,
+  hidden: true,
+},
+{
+  path: '#',
+  component: Layout,
+  // redirect: '/dashboard',
+  children: [{
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('@/views/dashboard/index'),
+    meta: {
+      title: '首页',
+      icon: 'dashboard'
+    }
   }, {
-    path: '/welcome',
-    component: welcome,
+    path: '/board',
+    component: () => import('@/views/board.vue'),
     hidden: true,
-  },
-  {
-    path: '#',
-    component: Layout,
-    // redirect: '/dashboard',
-    children: [{
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: {
-        title: '首页',
-        icon: 'dashboard'
-      }
-    }, {
-      path: '/board',
-      component: () => import('@/views/board.vue'),
-      hidden: true,
-    }, {
-      path: '/zeness',
-      component: () => import('@/views/zeness.vue'),
-      hidden: true,
-    }, ]
-  },
-  {
-    path: '/',
-    redirect: '/welcome'
-  },
-  /**
-   * local test
-   */
-  //   {
-  //     path: '/department',
-  //     component: Layout,
-  //     children: [{
-  //       path: 'list',
-  //       component: () => import('@/views/department/list'),
-  //     }]
-  //   },
-  //   {
-  //     path: '/role',
-  //     component: Layout,
-  //     children: [{
-  //       path: 'list',
-  //       component: () => import('@/views/role/list'),
-  //     }]
-  //   },
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
+  },]
+},
+{
+  path: '/', redirect: '/welcome'
+},
+/**
+ * local test
+ */
+//   {
+//     path: '/department',
+//     component: Layout,
+//     children: [{
+//       path: 'list',
+//       component: () => import('@/views/department/list'),
+//     }]
+//   },
+//   {
+//     path: '/role',
+//     component: Layout,
+//     children: [{
+//       path: 'list',
+//       component: () => import('@/views/role/list'),
+//     }]
+//   },
+{
+  path: '/404',
+  component: () => import('@/views/404'),
+  hidden: true
+},
   // 404 page must be placed at the end !!!
   // { path: '*', redirect: '/404', hidden: true }
 ]

@@ -249,3 +249,26 @@ export const externalUserUpdateTag = (payload) => {
     data: payload
   })
 }
+/**
+ * 批量添加好友listMy
+ * @param {object} payload 
+ */
+export const getListMy = (payload) => {
+  return request({
+    url: '/batchAddTask/listMy',
+    method: 'get',
+    params: payload
+  })
+}
+
+/**
+ * 查看批量添加好友任务详情
+ * @param {object} payload 
+ */
+export const getResultList = (payload) => {
+  return request({
+    url: `/batchAddTask/result/${payload.uuid}`,
+    method: 'get',
+    params: payload
+  })
+}

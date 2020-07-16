@@ -79,7 +79,7 @@ export default {
       user: state => state.user.currentRowUserList,
       // 批量修改多个角色
       users: state => state.user.currentRowUsers,
-      roleList: state => state.role.roleList
+      roleList: state => state.role.roleListSelect
     })
   },
   methods: {
@@ -110,25 +110,32 @@ export default {
             });
           });
       } else {
-        try {
-          this.forms.map(async payload => {
-            await this.$store.dispatch("user/user_update", {
-              ...payload,
-              roleUuid: this.roleUuid
+        let promiseList = [];
+        this.forms.map((payload, index) => {
+          promiseList[index] = this.$store.dispatch("user/user_update", {
+            ...payload,
+            roleUuid: this.roleUuid
+          });
+        });
+
+        Promise.all(promiseList)
+          .then(res => {
+            console.log(res);
+            this.$message({
+              type: "success",
+              message: "操作成功"
             });
+            this.$bus.$emit("handleRefresh");
+            this.closeDialog();
+          })
+          .catch(err => {
+            this.$message({
+              type: "error",
+              message: err
+            });
+            this.$bus.$emit("handleRefresh");
+            this.closeDialog();
           });
-          this.$message({
-            type: "success",
-            message: "操作成功"
-          });
-          this.$bus.$emit("handleRefresh");
-          this.closeDialog();
-        } catch (error) {
-          this.$message({
-            type: "error",
-            message: err
-          });
-        }
       }
     }
   }

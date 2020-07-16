@@ -10,12 +10,12 @@ import {
   getDepartmentListSelect,
   allocation
 } from '@/api/department'
-import {flatten} from '@/utils/common'
+import { flatten } from '@/utils/common'
 
 const state = {
-    /**
-     * 部门列表
-     */
+  /**
+   * 部门列表
+   */
   departmentList: [],//tree
   departments: [],//list
   currentDepartment: {}, //当前行
@@ -25,19 +25,19 @@ const state = {
 }
 
 const mutations = {
-    /**
-     * 保存部门列表 树
-     * @param {*} state 
-     * @param {*} payload 
-     */
+  /**
+   * 保存部门列表 树
+   * @param {*} state 
+   * @param {*} payload 
+   */
   SAVE_LIST(state, payload) {
     state.departmentList = payload
   },
   TOGGLE_LOADING(state, current) {
     state.loading = current
   },
-  SAVE_DETAIL(state, payload){
-      state.currentDepartment = payload
+  SAVE_DETAIL(state, payload) {
+    state.currentDepartment = payload
   },
 
   /**
@@ -45,25 +45,25 @@ const mutations = {
    * @param {*} state 
    * @param {*} payload 
    */
-  SAVE_FLATTENLIST(state,payload){
-      state.departments = payload
+  SAVE_FLATTENLIST(state, payload) {
+    state.departments = payload
   },
 
   /**
    * 保存部门列表 筛选
    */
-  SAVE_LISTSELECT(state,payload){
+  SAVE_LISTSELECT(state, payload) {
     state.listSelect = payload
   }
 
 }
 
 const actions = {
-    /**
-     * 部门详细页
-     * @param {*} param0 
-     * @param {string} uuid 
-     */
+  /**
+   * 部门详细页
+   * @param {*} param0 
+   * @param {string} uuid 
+   */
   getDepartmentDetail({
     commit
   }, uuid) {
@@ -75,7 +75,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -96,7 +96,7 @@ const actions = {
         resolve()
       }).catch(err => {
         // commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -117,7 +117,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -129,7 +129,7 @@ const actions = {
    */
   getDepartmentListAll({
     commit
-  },payload) {
+  }, payload) {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getDepartmentListAll(payload).then(res => {
@@ -140,7 +140,7 @@ const actions = {
         resolve(res)
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -161,7 +161,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -182,7 +182,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        
+
         reject(err)
       })
     })
@@ -193,55 +193,55 @@ const actions = {
    * @param {*} param0 
    * @param {*} payload 
    */
-  getDepartments({commit},payload){
-     return new Promise((resolve,reject)=>{
-         getDepartments(payload).then(res=>{
-             commit('SAVE_FLATTENLIST',res.items)
-             resolve()
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  getDepartments({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      getDepartments(payload).then(res => {
+        commit('SAVE_FLATTENLIST', res.items)
+        resolve()
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
   /**
    * 部门列表 筛选
    */
-  getDepartmentListSelect({commit},payload){
-    return new Promise((resolve,reject)=>{
-        getDepartmentListSelect(payload).then(res=>{
-            commit('SAVE_LISTSELECT',res.items)
-            resolve()
-        }).catch(err=>{
-            reject(err)
-        })
+  getDepartmentListSelect({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      getDepartmentListSelect(payload).then(res => {
+        commit('SAVE_LISTSELECT', res.items)
+        resolve()
+      }).catch(err => {
+        reject(err)
+      })
     })
- },
- /**
-  * 分配部门
-  */
- allocation({commit},payload){
-    return new Promise((resolve,reject)=>{
-        allocation(payload).then(res=>{
-            resolve(res)
-        }).catch(err=>{
-            reject(err)
-        })
+  },
+  /**
+   * 分配部门
+   */
+  allocation({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      allocation(payload).then(res => {
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
     })
- },
- /**
-  * 创建组织
-  * @param {*} param0 
-  * @param {*} payload 
-  */
- addWxDepartment({commit},payload){
-    return new Promise((resolve,reject)=>{
-        addWxDepartment(payload).then(res=>{
-            resolve()
-        }).catch(err=>{
-            reject(err)
-        })
+  },
+  /**
+   * 创建组织
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  addWxDepartment({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      addWxDepartment(payload).then(res => {
+        resolve()
+      }).catch(err => {
+        reject(err)
+      })
     })
- }
+  }
 
 }
 

@@ -12,15 +12,21 @@
       <el-input v-model.trim="query.userName" clearable placeholder="员工姓名"></el-input>
     </el-form-item>
     <el-form-item label="所在部门：">
-      <el-select v-model="query.departmentsUuid" clearable @change="handleChangeSecond">
-        <el-option
-          v-for="item in departmentListSelect"
-          :key="item.uuid"
-          :label="item.name"
-          :value="item.uuid"
-        ></el-option>
-      </el-select>
+      <el-select-tree
+        v-model="query.departmentsUuid"
+        clearable
+        :defaultExpandAll="true"
+        :checkStrictly="true"
+        :data="departmentList"
+        :props="{
+          value:'uuid',
+          label:'name',
+          children:'children'
+        }"
+        @change="handleChangeSecond"
+      ></el-select-tree>
     </el-form-item>
+
     <el-form-item label="员工角色：">
       <el-select v-model="query.roleUuid" clearable @change="handleChangeThird">
         <el-option v-for="item in roleList" :key="item.uuid" :label="item.name" :value="item.uuid"></el-option>
@@ -108,8 +114,8 @@ export default {
   },
   computed: {
     ...mapState({
-      roleList: state => state.role.roleList,
-      departmentListSelect: state => state.department.listSelect
+      roleList: state => state.role.roleListSelect,
+      departmentList: state => state.department.listSelect
     })
   },
   methods: {

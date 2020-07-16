@@ -37,7 +37,7 @@
           </el-table-column>
           <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
-              <user-drawer :hasPop="false" :users="scope.row.user"></user-drawer>
+              <user-drawer :hasPop="true" :users="scope.row.user"></user-drawer>
             </template>
           </el-table-column>
           <el-table-column label="企业标签" align="left">

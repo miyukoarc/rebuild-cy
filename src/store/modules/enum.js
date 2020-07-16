@@ -56,6 +56,22 @@ const state = {
     quitUserRelationExUserListUserStatus: {
         ALLOCATE: '离职待分配',
         ALLOCATED: '离职已分配'
+}，
+    mediaType: {
+        IMAGE:'图片',
+        FILE: '文件',
+        VIDEO: '视频',
+        ARTICLE: '文章',
+        TEXT:'文本'
+    }，
+    batchAddTask: {
+        NOTSTARTED: "未开始",
+        INTERRUPT: "中断",
+        PROCESSING: "进行中",
+        CANCELED: "已取消",
+        FINISHED: "已完成",
+    }
+<<<<<<< .mine
     },
     mediaType: {
         IMAGE:'图片',
@@ -63,6 +79,15 @@ const state = {
         VIDEO: '视频',
         ARTICLE: '文章',
         TEXT:'文本'
+=======
+    },
+    batchAddTask: {
+        NOTSTARTED: "未开始",
+        INTERRUPT: "中断",
+        PROCESSING: "进行中",
+        CANCELED: "已取消",
+        FINISHED: "已完成",
+>>>>>>> .theirs
     }
 }
 
