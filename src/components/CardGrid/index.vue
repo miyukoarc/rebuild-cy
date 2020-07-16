@@ -9,11 +9,7 @@
                 <span>{{item.content}}</span>
               </div>
               <div v-if="item.type==='IMAGE'" @click="handleViewImage(item.localId)">
-                <el-image
-                  fit="cover"
-                  :src="`/public/file/${item.localId}`"
-                  
-                ></el-image>
+                <el-image fit="cover" :src="`/public/file/${item.localId}`"></el-image>
                 <div class="cover">
                   <i class="el-icon-picture-outline icon"></i>
                 </div>
@@ -36,7 +32,7 @@
 
               <div v-if="item.type==='VIDEO'" @click="handleViewVideo(item.localId)">
                 <div>
-                  <video-cover :url="item.localId" ></video-cover>
+                  <video-cover :url="item.localId"></video-cover>
                 </div>
                 <div class="cover">
                   <i class="el-icon-video-play icon"></i>
@@ -50,7 +46,7 @@
               </div>
               <div class="operator">
                 <el-checkbox :key="item.uuid" :label="item.uuid">{{item.uuid?'':''}}</el-checkbox>
-                <el-t-button type="text">适用标签</el-t-button>
+                <el-t-button type="text" @click="handleViewTags(item.toTags)">适用标签</el-t-button>
                 <div class="operator-icon">
                   <el-t-button type="text" @click="handleDelete(item.uuid)">
                     <i class="el-icon-delete"></i>
@@ -64,13 +60,13 @@
     </el-checkbox-group>
 
     <div v-else class="text-align-center">
-        <span class="tips font-exs color-info">暂无数据</span>
+      <span class="tips font-exs color-info">暂无数据</span>
     </div>
 
     <el-dialog :visible.sync="dialogVisible" :width="width">
       <el-image v-if="view==='image'" :src="`/public/file/${imageUrl}`" @load="onLoad"></el-image>
       <video
-        v-else
+        v-if="view==='video'"
         ref="videoPlay"
         width="600"
         height="400"
@@ -78,6 +74,12 @@
         :src="`/public/file/${videoUrl}`"
         @canplay="onCanplay"
       ></video>
+      <div v-if="view==='tags'">
+          <el-row>
+              <el-col :span="8"></el-col>
+              <el-col :span="16"></el-col>
+          </el-row>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -114,7 +116,8 @@ export default {
       checked: this.value,
       view: 'video', //video//image
       videoUrl: '',
-      imageUrl: ''
+      imageUrl: '',
+      shownTags: []
     }
   },
   watch: {
@@ -157,6 +160,34 @@ export default {
       this.view = 'video'
       this.dialogVisible = true
     },
+    handleViewTags(list){
+        this.view = 'tags'
+        this.shownTags = this.grouping(list)
+        // console.log(this.grouping(list))
+
+    },
+    grouping(list){
+        if(Object.keys(list).length){
+            return list.reduce((groups,item)=>{
+                let groupFound = groups.find(foundItem => item.groupId === foundItem.groupId)
+                if(groupFound){
+                    groupFound.tags.push(item)
+                }else{
+                    let newGroup = {
+                        groupId: item.groupId,
+                        groupName: item.groupName,
+                        tags: [item]
+                    }
+
+                    groups.push(newGroup)
+                }
+
+                return groups
+            },[])
+        }else{
+            return  []
+        }
+    },
     handleViewImage(val) {
       console.log(val)
 
@@ -178,9 +209,9 @@ export default {
         })
       } else {
       }
-      // this.value.for
       this.$emit('change', arr)
     },
+    
     onLoad(e) {
       const img = e.target
       let width = 0
@@ -190,14 +221,6 @@ export default {
       this.width = width + 'px'
     },
     onCanplay(e) {
-      //   const img = e.target
-      //   //   console.log(img.width)
-      //   //   console.log(this.$refs['videoPlay'].videoWidth)
-      //   let width = 0
-      //   if (img.fileSize > 0 || (img.width > 1 && img.height > 1)) {
-      //     // width = img.width + 40
-      //     width = this.$refs['videoPlay'].videoWidth + 40
-      //   }
       this.width = 640 + 'px'
     }
   }
@@ -284,8 +307,8 @@ export default {
     flex-flow: row wrap;
     align-content: flex-start;
   }
-  .tips{
-      line-height: 30px;
+  .tips {
+    line-height: 30px;
   }
 }
 </style>

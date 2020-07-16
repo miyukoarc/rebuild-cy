@@ -73,6 +73,7 @@ function createWindow() {
     // win.loadURL('./dist/index.html')
 
   }
+// win.loadFile('./dist/index.html')
 
 
   win.on('ready-to-show', () => {
