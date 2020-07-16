@@ -27,6 +27,7 @@
 import { mapState } from "vuex";
 import ComplexSelect from "@/components/ComplexSelect";
 export default {
+  inject: ['reload'],
   props: {
     selectData: {
       type: Array,

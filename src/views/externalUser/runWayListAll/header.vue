@@ -16,7 +16,7 @@
     </el-form-item>-->
 
     <el-form-item label="流失类型：">
-      <el-select v-model="query.delFollow" clearable @change="handleSelectedChange">
+      <el-select v-model="query.delFollow" @change="handleSelectedChange">
         <el-option
           v-for="(item,index) in typeOptions"
           :key="index"
@@ -27,7 +27,7 @@
     </el-form-item>
 
     <el-form-item label="所属员工：">
-      <el-select v-model="query.userUuid" clearable @change="handleSelectedChange">
+      <el-select v-model="query.userUuid" @change="handleSelectedChange">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -55,7 +55,6 @@
       <div class="tag-border">
         <el-select
           v-model="query.tagIds"
-          clearable
           @change="handleChangeSecond"
           size="mini"
           multiple
@@ -168,8 +167,9 @@ export default {
       this.$emit("handleSearch", this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query;
       this.$emit("handleRefresh");
+      this.value = this.$options.data().value;
+      this.query = this.$options.data().query;
       
     }
   }

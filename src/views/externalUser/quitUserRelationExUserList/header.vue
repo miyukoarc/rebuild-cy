@@ -1,18 +1,11 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
-    <el-form-item label="所属员工：">
-      <el-select v-model="query.userId" clearable @change="handleSelectedChange">
-        <el-option
-          v-for="item in userListAll"
-          :key="item.userId"
-          :label="item.name"
-          :value="item.userId"
-        ></el-option>
-      </el-select>
+    <el-form-item label="已离职成员：">
+      <el-input v-model.trim="query.name" clearable placeholder="请输入已离职成员名称"></el-input>
     </el-form-item>
 
     <el-form-item label="客户状态：">
-      <el-select v-model="query.status" clearable @change="handleSelectedChange">
+      <el-select v-model="query.status" @change="handleSelectedChange">
         <el-option
           v-for="(item,index) in contractWay"
           :key="index"
@@ -52,7 +45,7 @@ export default {
       contractWay: [
         {
           type: "待分配",
-          id: "1"
+          id: "ALLOCATE"
         },
         {
           type: "等待分配审核",
@@ -60,15 +53,13 @@ export default {
         },
         {
           type: "已分配",
-          id: "3"
+          id: "ALLOCATED"
         }
       ],
       value: [],
       query: {
         name: "",
-        status: "1",
-        tagIds: "",
-        userId: "",
+        status: "",
         startTime: "",
         endTime: ""
         // roleUuid: ''
@@ -77,8 +68,8 @@ export default {
   },
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      userListAll: state => state.user.userListAll
+      // tagListAll: state => state.tag.tagListAll,
+      // userListAll: state => state.user.userListAll
       //   departments: state => state.department.departments
     })
   },
@@ -94,7 +85,6 @@ export default {
       this.$emit("handleSearch", this.query);
     },
     handleSelectedChange(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {

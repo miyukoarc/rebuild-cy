@@ -153,6 +153,7 @@ export default {
     },
     handleRefresh() {
       this.query = this.$options.data().query;
+      this.value = this.$options.data().value;
       this.$emit("handleRefresh");
     },
     inputMin(e) {

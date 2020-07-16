@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 18:01:25
- * @LastEditTime: 2020-06-28 13:46:10
+ * @LastEditTime: 2020-07-15 21:54:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\videoComponent.vue
@@ -15,13 +15,16 @@
         <div>
           <div class="img-warp revoke-warp mb-5" v-if="item.messageMedias">
             <el-popover placement="right" title trigger="hover">
-              <img :src="item.messageMedias[0].file" style="width:400px;height:400px">
+              <img
+                :src="item.messageMedias[0].file"
+                style="width:400px;height:400px;margin-left:20px"
+              />
               <img
                 slot="reference"
                 :src="item.messageMedias[0].file"
                 alt
                 style="max-height: 100px;max-width: 150px"
-              >
+              />
             </el-popover>
           </div>
         </div>
@@ -33,13 +36,13 @@
         <div v-if="item.type == 'revoke'" class="user-select revoke">你撤回了一条消息内容是</div>
         <div class="img-warp revoke-warp" v-if="item.messageMedias">
           <el-popover placement="right" title trigger="hover">
-            <img :src="item.messageMedias[0].file" style="width:400px;height:400px">
+            <img :src="item.messageMedias[0].file" style="width:400px;height:400px" />
             <img
               slot="reference"
               :src="item.messageMedias[0].file"
               alt
               style="max-height: 100px;max-width: 150px"
-            >
+            />
           </el-popover>
         </div>
         <el-avatar icon="el-icon-user-solid" />
@@ -49,14 +52,14 @@
 </template>
 
 <script>
-export default{
-  name:'EmotionComponent',
-  props:{
-    item:Object,
-    toUserId:String,
-    fromUserId:String
+export default {
+  name: "EmotionComponent",
+  props: {
+    item: Object,
+    toUserId: String,
+    fromUserId: String
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

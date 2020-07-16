@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-11 11:14:09
- * @LastEditTime: 2020-07-13 17:32:26
+ * @LastEditTime: 2020-07-15 20:23:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\tagsSelected\index.vue
 --> 
 <template>
   <div class="tag-warp">
-    <div v-for="(tagGroup,index) in newTagsList" :key="index" class="tag-list-warp">
+    <div v-for="(tagGroup,index) in newTagsListPack" :key="index" class="tag-list-warp">
       <el-row :gutter="20" type="flex" justify="center">
         <el-col :span="8">
           <span class="lg-42">{{ tagGroup.groupName }}</span>
@@ -32,6 +32,13 @@
         </el-col>
       </el-row>
     </div>
+    
+    <div class="text-align-center" v-if="isShowMore && (newTagsList.length>2)">
+      <el-button type="text" size="mini" @click="curly=!curly">
+        展开 
+        <i :class="[curly?'el-icon-caret-bottom':'el-icon-caret-top']"></i>
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -50,22 +57,58 @@ export default {
       default: () => {
         return [];
       }
+    },
+    packUp: {
+      type: Boolean,
+      default: () => {
+        return false;
+      }
+    },
+    isShow: {
+      type: Boolean,
+      default: () => {
+        return false;
+      }
+    }
+  },
+  watch: {
+    packUp: {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.curly = newVal;
+        }
+      },
+      immediate: true
+    },
+    isShow: {
+      handler(newVal, oldVal) {
+        console.log(newVal, "nd444ddd");
+        if (newVal) {
+          this.isShowMore = newVal;
+        }
+      },
+      immediate: true
     }
   },
   computed: {
     ...mapState({
       // tagListSelect: state => state.tag.tagListSelect,
       // editTagsUuid: state => state.externalUser.editTagsUuid
-    })
+    }),
+    newTagsListPack() {
+      console.log(this.curly, "curly");
+      return this.curly ? this.newTagsList.slice(0, 2) : this.newTagsList;
+    }
   },
   data() {
     return {
       checkedGroup: [],
-      newTagsList: []
+      newTagsList: [],
+      curly: false,
+      isShowMore: false
     };
   },
-  created() {},
-  mounted() {
+  created() {
     this.checkedGroup = this.checkboxGroup;
     if (this.checkedGroup.length > 0) {
       this.newTagsList = JSON.parse(JSON.stringify(this.tagListSelect));
@@ -81,7 +124,9 @@ export default {
     } else {
       this.newTagsList = JSON.parse(JSON.stringify(this.tagListSelect));
     }
+    console.log(this.curly, "88888888888");
   },
+  mounted() {},
   methods: {
     handleCheckedTagsChange(val) {
       this.$emit("change", val);

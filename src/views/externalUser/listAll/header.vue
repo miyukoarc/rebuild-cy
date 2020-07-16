@@ -5,7 +5,7 @@
     </el-form-item>
 
     <el-form-item label="添加渠道：">
-      <el-select v-model="query.contractWayId" clearable @change="handleSelectedChange">
+      <el-select v-model="query.contractWayId"  @change="handleSelectedChange">
         <el-option
           v-for="(item,index) in contractWay"
           :key="index"
@@ -16,7 +16,7 @@
     </el-form-item>
 
     <el-form-item label="所属员工：">
-      <el-select v-model="query.userId" clearable @change="handleSelectedChange">
+      <el-select v-model="query.userId"  @change="handleSelectedChange">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -43,7 +43,6 @@
       <div class="tag-border">
         <el-select
           v-model="query.tagIds"
-          clearable
           @change="handleChangeSecond"
           size="mini"
           multiple
@@ -145,6 +144,7 @@ export default {
     },
     handleRefresh() {
       this.$emit("handleRefresh");
+      this.value = this.$options.data().value;
       this.query = this.$options.data().query;
     }
   }
