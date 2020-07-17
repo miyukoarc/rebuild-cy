@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
@@ -83,7 +82,6 @@ import { mapState, mapMutations, mapActions } from "vuex";
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar
   },

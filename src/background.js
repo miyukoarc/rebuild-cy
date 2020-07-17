@@ -73,7 +73,7 @@ function createWindow() {
     // win.loadURL('./dist/index.html')
 
   }
-// win.loadFile('./dist/index.html')
+  // win.loadFile('./dist/index.html')
 
 
   win.on('ready-to-show', () => {
@@ -86,13 +86,13 @@ function createWindow() {
     event.preventDefault();
   })
 
-  win.on('maximize',(event,args)=>{
+  win.on('maximize', (event, args) => {
 
-      win.webContents.send('maximizeWindow',true)
+    win.webContents.send('maximizeWindow', true)
   })
 
-  win.on('unmaximize',(event,args)=>{
-      win.webContents.send('unmaximizeWindow',false)
+  win.on('unmaximize', (event, args) => {
+    win.webContents.send('unmaximizeWindow', false)
   })
 
 
@@ -187,4 +187,102 @@ ipcMain.on('restoreWindow', e => {
 
 ipcMain.on('closeWindow', e => {
   win.close()
+})
+
+
+// 2020-06-24，main.js中，汪轩昂新增
+ipcMain.on('asynchronous-message', (event, arg) => {
+  var edge = require('electron-edge-js');
+  const path = require('path');
+  process.env.EDGE_USE_CORECLR = 1;
+  var basePath = process.cwd();
+  var baseDll = basePath + '/resources/app/lib/ClassLibraryChaoying.dll';
+
+  const batchSendTask = edge.func({
+    assemblyFile: baseDll,
+    typeName: 'ClassLibraryChaoying.WorkWx',
+    methodName: 'SendMessage'
+  });
+
+  batchSendTask(arg, (err, val) => {
+    event.reply("asynchronous-message-reply", { err, val, data: arg })
+  })
+})
+
+
+
+// 2020-07-17，汪轩昂新增1
+ipcMain.on('openChat', (event, arg) => {
+  var edge = require('electron-edge-js');
+  const path = require('path');
+  process.env.EDGE_USE_CORECLR = 1;
+  var basePath = process.cwd();
+  var baseDll = basePath + '/resources/app/lib/ClassLibraryChaoying.dll';
+
+  const openChat = edge.func({
+    assemblyFile: baseDll,
+    typeName: 'ClassLibraryChaoying.WorkWx',
+    methodName: 'OpenChat'
+  });
+
+  openChat(arg, (err, res) => {
+    event.reply("reply-openChat", { err, res, val: arg })
+  })
+})
+
+// 2020-07-17，汪轩昂新增2
+ipcMain.on('inputEnter', (event, arg) => {
+  var edge = require('electron-edge-js');
+  const path = require('path');
+  process.env.EDGE_USE_CORECLR = 1;
+  var basePath = process.cwd();
+  var baseDll = basePath + '/resources/app/lib/ClassLibraryChaoying.dll';
+
+  const inputEnter = edge.func({
+    assemblyFile: baseDll,
+    typeName: 'ClassLibraryChaoying.WorkWx',
+    methodName: 'InputEnter'
+  });
+
+  inputEnter(arg, (err, res) => {
+    event.reply("reply-inputEnter", { err, res, val: arg })
+  })
+})
+
+// 2020-07-17，汪轩昂新增3
+ipcMain.on('AddCustomerByMobiles', (event, arg) => {
+  var edge = require('electron-edge-js');
+  const path = require('path');
+  process.env.EDGE_USE_CORECLR = 1;
+  var basePath = process.cwd();
+  var baseDll = basePath + '/resources/app/lib/ClassLibraryChaoying.dll';
+
+  const AddCustomerByMobiles = edge.func({
+    assemblyFile: baseDll,
+    typeName: 'ClassLibraryChaoying.WorkWx',
+    methodName: 'AddCustomerByMobiles'
+  });
+
+  AddCustomerByMobiles(arg, (err, res) => {
+    event.reply("reply-AddCustomerByMobiles", { err, res, val: arg })
+  })
+})
+
+// 2020-07-17，汪轩昂新增4
+ipcMain.on('SendMessage', (event, arg) => {
+  var edge = require('electron-edge-js');
+  const path = require('path');
+  process.env.EDGE_USE_CORECLR = 1;
+  var basePath = process.cwd();
+  var baseDll = basePath + '/resources/app/lib/ClassLibraryChaoying.dll';
+
+  const SendMessage = edge.func({
+    assemblyFile: baseDll,
+    typeName: 'ClassLibraryChaoying.WorkWx',
+    methodName: 'SendMessage'
+  });
+
+  SendMessage(arg, (err, res) => {
+    event.reply("reply-SendMessage", { err, res, val: arg })
+  })
 })

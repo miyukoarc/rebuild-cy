@@ -93,9 +93,10 @@ export const getListMy = (payload) => {
  * 把一个具体的发送任务设为已发送
  * @param {string} uuid 
  */
-export const sendResultHasSend = (uuid) => {
+export const sendResultHasSend = (payload) => {
     return request({
-        url: '/batchSendTask/sendResultHasSend/' + uuid,
+        url: '/batchSendTask/sendResultHasSend',
         method: 'post',
+        data: payload
     })
 }

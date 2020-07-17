@@ -6,7 +6,7 @@
     style="cursor:pointer;"
     :src="coverImage"
   ></el-image>
-  <video v-else width="0" height="0" ref="videoZoom" :src="`/public/file/${alterUrl}`"></video>
+  <video v-else width="0" height="0" ref="videoZoom" :src="`/api/public/file/${alterUrl}`"></video>
 </template>
 
 <script>

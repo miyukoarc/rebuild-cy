@@ -129,7 +129,7 @@
                     <div class="img-warp">
                       <el-upload
                         class="avatar-uploader"
-                        action="/upload"
+                        action="/api/upload"
                         :show-file-list="false"
                         :on-success="handleSetMessageImage"
                         :before-upload="beforeAvatarUpload"
@@ -245,7 +245,7 @@
 
                 <el-upload
                   class="avatar-uploader"
-                  action="/upload"
+                  action="/api/upload"
                   :show-file-list="false"
                   :on-success="handleAvatarSuccess"
                   :before-upload="beforeAvatarUpload"
