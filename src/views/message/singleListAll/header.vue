@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-28 13:56:22
- * @LastEditTime: 2020-07-16 19:29:46
+ * @LastEditTime: 2020-07-17 11:34:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\header.vue

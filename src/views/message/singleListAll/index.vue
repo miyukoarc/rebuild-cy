@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-15 10:50:46
- * @LastEditTime: 2020-07-16 18:04:47
+ * @LastEditTime: 2020-07-17 11:38:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\index-back.vue
@@ -208,22 +208,23 @@ export default {
       this.initDataList(this.query);
     },
     handleRefresh() {
-      console.log("handleRefresh");
-      this.query = this.$options.data().query;
+      this.query.content = "";
+      this.query.startTime = "";
+      this.query.endTime = "";
       this.initDataList(this.query);
     },
-    resetForm() {
-      this.query = this.$options.data().query;
-      this.initDataList(this.query);
-    },
+    // resetForm() {
+    //   this.query.content = "";
+    //   this.query.startTime = "";
+    //   this.query.endTime = "";
+    //   this.initDataList(this.query);
+    // },
     // 聊天
     handleClick(tab, event) {
       console.log(tab, event);
       this.query.page = 0;
-      // let msgType = tab.name;
-      // if (tab.name == "all") {
-      //   msgType = "";
-      // }
+      let msgType = tab.name;
+      this.query.msgType = msgType;
       this.initDataList(this.query);
     },
     changePage(page) {
@@ -235,7 +236,7 @@ export default {
       if (msgType == "all") {
         msgType = "";
       }
-      this.initDataList(this.fromUserId, this.toUserId, msgType);
+      this.initDataList(this.query);
     }
   }
 };

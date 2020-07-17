@@ -4,7 +4,7 @@
       <el-input v-model.trim="query.name" clearable placeholder="请输入客户名称"></el-input>
     </el-form-item>
 
-    <el-form-item label="添加渠道：">
+    <!-- <el-form-item label="添加渠道：">
       <el-select v-model="query.contractWayId"  @change="handleSelectedChange">
         <el-option
           v-for="(item,index) in contractWay"
@@ -13,7 +13,7 @@
           :value="item.id"
         ></el-option>
       </el-select>
-    </el-form-item>
+    </el-form-item> -->
 
     <el-form-item label="所属员工：">
       <el-select v-model="query.userId"  @change="handleSelectedChange">

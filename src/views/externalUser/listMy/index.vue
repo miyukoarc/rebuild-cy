@@ -23,11 +23,11 @@
           <el-table-column label="客户名" align="left">
             <template v-slot="scope">
               <div class="user-card">
-                <!-- <el-image
-                  :src="scope.row.externalUser.avatar"
+                <el-image
+                  :src="scope.row.avatar"
                   lazy
                   style="width:30px;height:30px;margin-right:10px"
-                ></el-image>-->
+                ></el-image>
                 <div class="client-info">
                   <span class="remark">{{scope.row.remarkName}}</span>
                   <div>{{scope.row.wxNickName}}</div>
@@ -47,9 +47,10 @@
           <el-table-column label="企业标签" align="left">
             <template v-slot="scope">
               <tags-drawer-obj
-                v-if="scope.row.externalUserDetailCorpTagsList.corpTags !==null"
+                v-if="scope.row.externalUserDetailCorpTagsList.corpTags !=null"
                 :tags="scope.row.externalUserDetailCorpTagsList.corpTags"
               ></tags-drawer-obj>
+              <span v-else>--</span>
             </template>
           </el-table-column>
           <el-table-column label="添加时间" align="left" prop="createdAt"></el-table-column>

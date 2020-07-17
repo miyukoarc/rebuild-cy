@@ -116,7 +116,7 @@ import TagsDrawerObj from "@/components/TagsDrawerObj";
 import UserTag from "@/components/UserTag";
 
 export default {
-  name: "runWayListAll",
+  name: "runWayList",
   components: {
     ListHeader,
     UserDetail,
