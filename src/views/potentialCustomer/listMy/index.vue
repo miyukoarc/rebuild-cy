@@ -32,7 +32,7 @@
         <el-table
           ref="multipleTable"
           v-loading="loading"
-          :data="listAll"
+          :data="listMy"
           style="width: 100%"
           row-key="uuid"
           stripe
@@ -200,8 +200,8 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
       loading: state => state.potentialCustomer.loading,
-      listAll: state => state.potentialCustomer.listAll,
-      page: state => state.potentialCustomer.listAllPage,
+      listMy: state => state.potentialCustomer.listMy,
+      listMyPage: state => state.potentialCustomer.listMyPage,
       permissionMap: state => state.permission.permissionMap
     }),
     routesData() {
@@ -266,8 +266,8 @@ export default {
         .dispatch("potentialCustomer/getListMy", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1;
-          this.pageConfig.total = this.page.total;
+          this.pageConfig.pageNumber = this.listMyPage.pageNumber + 1;
+          this.pageConfig.total = this.listMyPage.total;
         })
         .catch(err => {
           this.$message({
@@ -340,7 +340,9 @@ export default {
       this.$refs["formDialog"].dialogVisible = true;
     },
     handleDistribute() {
-      const uuid = this.selects;
+      const uuid = this.selects.map(item => {
+        return item.uuid;
+      });
       const payload = { uuid };
       if (this.selects.length) {
         this.$refs["formDialog"].event = "DistributeTemplate";
@@ -372,7 +374,8 @@ export default {
           type: "warning",
           message: "请至少选择一个客户"
         });
-      }},
+      }
+    },
     handleAllocation(row) {
       row.uuid = [row.uuid];
       console.log(row, "777");

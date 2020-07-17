@@ -6,7 +6,7 @@ import request from '@/utils/request'
  */
 export const isOnline = (uuid) => {
     return request({
-        url: '/LongRangeControl/isOnline/'+uuid,
+        url: '/longRangeControl/isOnline/'+uuid,
         method: 'get'
     })
 }
@@ -18,7 +18,7 @@ export const isOnline = (uuid) => {
  */
 export const sendBatchTask = (payload) => {
     return request({
-        url: '/LongRangeControl/sendBatchTask',
+        url: '/longRangeControl/sendBatchTask',
         method: 'post',
         data: payload
     })
@@ -30,7 +30,7 @@ export const sendBatchTask = (payload) => {
  */
 export const sendChaoyingMessage = (payload) => {
     return request({
-        url: '/LongRangeControl/sendChaoyingMessage',
+        url: '/longRangeControl/sendChaoyingMessage',
         method: 'post',
         data: payload
     })

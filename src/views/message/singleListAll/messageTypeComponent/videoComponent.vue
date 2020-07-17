@@ -1,17 +1,17 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:44:55
- * @LastEditTime: 2020-07-16 11:44:48
+ * @LastEditTime: 2020-07-17 14:23:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\videoComponent.vue
 -->
 <template>
   <div class="video-component">
-    <div v-if="item.toUser == fromUserId" class="left-warp">
+    <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <el-avatar :src="item.avatar" />
         <div class="left">
           <div class="demo">
             <video-player
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == fromUserId" class="right-warp">
+    <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="demo user-select right">
@@ -39,7 +39,7 @@
             :options="playerOptions(item,2)"
           />
         </div>
-        <el-avatar icon="el-icon-user-solid" />
+        <el-avatar :src="item.avatar" />
       </div>
     </div>
   </div>

@@ -1,29 +1,29 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-16 15:29:09
+ * @LastEditTime: 2020-07-17 14:22:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
 -->
 <template>
   <section class="text-component clearfix">
-    <div v-if="item.toUser == fromUserId" class="text-left">
+    <div v-if="item.toUser == toUserId" class="text-left">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <el-avatar :src="item.avatar" />
         <div class="left">
           <span>{{ item.msgContent }}</span>
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == fromUserId" class="text-right">
+    <div v-if="item.fromUser == toUserId" class="text-right">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
           <span>{{ item.msgContent }}</span>
         </div>
-        <el-avatar icon="el-icon-user-solid" />
+        <el-avatar :src="item.avatar" />
       </div>
     </div>
   </section>

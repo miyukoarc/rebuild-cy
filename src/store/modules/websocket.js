@@ -1,7 +1,10 @@
 import SockJS from 'sockjs-client'
 import isElectron from 'is-electron'
 import { getDetail, getListBatchSendTaskResult, sendResultHasSend } from '@/api/batchSendTask'
+import { listSelectMobil, batchAddTaskHandleTask } from '@/api/batchAddTask'
 import { sendChaoyingMessage } from '@/api/longRange'
+import { Message } from 'element-ui';
+
 let $ipcRenderer;
 if (isElectron()) {
     $ipcRenderer = window.require('electron').ipcRenderer
@@ -18,10 +21,16 @@ const state = {
         article: ''
     },
 
+    taskList: null,
     sendMsgContent: null,
     sendMsgUuids: null,
     mouseX: null,
     mouseY: null,
+
+
+    selectMobiles: [],
+    selectMobile: null,
+
 }
 
 const mutations = {
@@ -39,14 +48,34 @@ const actions = {
                 console.log('websocket开启')
                 if (isElectron()) {
                     $ipcRenderer.on('reply-openChat', (event, arg) => {
-
-                        console.log(arg)
+                        console.log('reply-openChat', arg)
+                        if (arg.err) {
+                            dispatch('clearTask')
+                            Message({
+                                message: arg.err.message,
+                                type: 'error'
+                            })
+                            return;
+                        } else {
+                            state.mouseX = arg.res.x
+                            state.mouseY = arg.res.y
+                        }
                         //显不处理，以后再说！！！！！！！！！！！！！！！
                     })
                     $ipcRenderer.on('reply-inputEnter', (event, arg) => {
-                        console.log(arg)
+                        console.log('reply-inputEnter', arg)
+                        if (arg.err) {
+                            dispatch('clearTask')
+                            Message({
+                                message: arg.err.message,
+                                type: 'error'
+                            })
+                            return;
+                        } else {
+                            state.mouseX = arg.res.x
+                            state.mouseY = arg.res.y
+                        }
                         sendResultHasSend({ uuids: [state.sendMsgUuids] }).then(() => {
-
                             let taskResult = state.taskList.pop();
                             if (taskResult) {
                                 if (taskResult.userExternalUserRelationship.remarkMobiles != '') {
@@ -57,6 +86,35 @@ const actions = {
                             dispatch('clearTask')
                         })
                     })
+
+                    $ipcRenderer.on('reply-AddCustomerByMobiles', (event, arg) => {
+                        console.log('reply-AddCustomerByMobiles', arg)
+                        if (arg.err) {
+                            dispatch('clearTask')
+                            Message({
+                                message: arg.err.message,
+                                type: 'error'
+                            })
+                            return;
+                        }
+                        console.log(state.selectMobiles)
+
+                        let payload = [];
+                        state.selectMobiles.map(obj => {
+                            payload.push({
+                                addResult: "SUCCESS",
+                                uuid: obj.uuid
+                            })
+                        })
+
+                        batchAddTaskHandleTask(payload).then().catch(() => {
+                            dispatch('clearTask')
+                        })
+                    })
+
+                    $ipcRenderer.on('reply-SendMessage', (event, arg) => {
+                        console.log('reply-SendMessage', arg)
+                    })
                 }
             }
             state.sock.onmessage = function (e) {
@@ -64,12 +122,24 @@ const actions = {
                 if (data.type == 'CONTROL_MANAGER') {
                     dispatch('getDetail', data)
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
-                    if (state.sendMsgContent != null) {
+                    if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
                         dispatch('sendChaoyingMessage', data)
                     }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
                     $ipcRenderer.send('inputEnter', {
+                        x: state.mouseX,
+                        y: state.mouseY
                     })
+                } else if (data.type == 'ADDTASK') {
+                    dispatch('listSelectMobil', data)
+                } else if (data.type == 'AUTOREP') {
+                    if (data.properties.mobile) {
+                        $ipcRenderer.send('SendMessage', {
+                            type: 0,
+                            mobile: data.properties.mobile,
+                            textContent: data.properties.content
+                        })
+                    }
                 }
             }
             state.sock.onclose = function () {
@@ -126,29 +196,22 @@ const actions = {
                 },
             }
         }
-
         state.taskList = list;
-
         let taskResult = state.taskList.pop();
         if (taskResult) {
             if (taskResult.userExternalUserRelationship.remarkMobiles != '') {
                 dispatch('openChat', taskResult)
             }
         }
-        // list.map(obj => {
-        //     if (obj.userExternalUserRelationship.remarkMobiles != '') {
-        //         dispatch('openChat', obj)
-        //     }
-        // })
-
-
     },
 
-    openChat({ }, obj) {
+    openChat({ state }, obj) {
         if (isElectron()) {
             state.sendMsgUuids = obj.uuid
             $ipcRenderer.send('openChat', {
                 mobile: obj.userExternalUserRelationship.remarkMobiles.split(',')[0],
+                x: state.mouseX,
+                y: state.mouseY,
             })
         }
     },
@@ -167,7 +230,52 @@ const actions = {
         state.sendMsgContent = null
         state.mouseX = null
         state.mouseY = null
-    }
+        state.selectMobiles = []
+        state.selectMobile = null
+    },
+
+    listSelectMobil({ state, dispatch }, data) {
+        listSelectMobil({ uuid: data.properties.uuid }).then(res => {
+            dispatch("AddCustomerByMobiles", res.items)
+        })
+    },
+
+    // AddCustomerByMobiles({ state }, obj) {
+    //     console.log(222)
+    //     if (isElectron()) {
+    //         state.selectMobile = obj.uuid
+    //         $ipcRenderer.send('AddCustomerByMobiles', {
+    //             mobiles: obj.potentialCustomer.mobile,
+    //             x: state.mouseX,
+    //             y: state.mouseY,
+    //         })
+    //     }
+    // },
+
+    AddCustomerByMobiles({ state }, list) {
+        console.log(222)
+        if (isElectron()) {
+            state.selectMobiles = list
+            console.log(list)
+
+            let mobiles = [];
+            list.map(obj => {
+                mobiles.push(obj.potentialCustomer.mobile)
+            })
+
+            console.log({
+                mobiles: mobiles,
+                x: state.mouseX,
+                y: state.mouseY,
+            })
+
+            $ipcRenderer.send('AddCustomerByMobiles', {
+                mobiles: mobiles,
+                x: state.mouseX,
+                y: state.mouseY,
+            })
+        }
+    },
 }
 
 export default {

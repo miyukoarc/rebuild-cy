@@ -1,17 +1,17 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-06-24 09:52:40
+ * @LastEditTime: 2020-07-17 14:27:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
 -->
 <template>
   <section class="weaapp-component clearfix">
-    <div v-if="item.toUser == fromUserId" class="left-warp">
+    <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <el-avatar :src="item.avatar" />
         <div class="left">
           <div class="card-warp">
             <div class="card-top">
@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == fromUserId" class="right-warp">
+    <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
@@ -50,21 +50,21 @@
             </div>
           </div>
         </div>
-        <el-avatar icon="el-icon-user-solid" />
+        <el-avatar :src="item.avatar" />
       </div>
     </div>
   </section>
 </template>
 
 <script>
-export default{
-  name:'CardComponent',
-  props:{
-    item:Object,
-    toUserId:String,
-    fromUserId:String
+export default {
+  name: "CardComponent",
+  props: {
+    item: Object,
+    toUserId: String,
+    fromUserId: String
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -84,11 +84,11 @@ export default{
   .card-warp {
     min-width: 400px;
     .card-top {
-      .title{
+      .title {
         font-size: 18px;
         line-height: 22px;
       }
-      .des{
+      .des {
         padding: 10px 20px;
         background-color: #eee;
       }
