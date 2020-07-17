@@ -50,7 +50,7 @@
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="规则名称" align="left" prop="ruleWord"></el-table-column>
           <el-table-column label="关键词" align="left" prop="keyWord"></el-table-column>
-          <el-table-column label="回复内容" align="left" prop="replyWord">--</el-table-column>
+          <el-table-column label="回复内容" align="left" prop="replyWord"></el-table-column>
           <!-- <el-table-column label="适用标签" align="left">--</el-table-column>
           <el-table-column label="创建人" align="left">--</el-table-column> -->
           <el-table-column label="操作" align="left">
