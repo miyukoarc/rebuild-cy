@@ -119,11 +119,11 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
                 '^/file': '',
             },
         },
-        '/ws': {
-            target: `http://47.111.161.128:80`,
-            changeOrigin: true,
-            ws: true,
-        }
+        // '/ws': {
+        //     target: `http://47.111.161.128:80`,
+        //     changeOrigin: true,
+        //     ws: true,
+        // }
     }
 
 
