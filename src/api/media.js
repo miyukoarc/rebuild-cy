@@ -145,11 +145,12 @@ export const updataArticle = (payload) => {
  * 文章的浏览记录
  * @param {string} uuid
  */
-export const browsingRecords = (uuid,data) => {
+export const browsingRecords = (payload) => {
+    console.log(payload.data)
     return request({
-        url: '/media/browsingRecords/' + uuid,
+        url: '/media/browsingRecords/' + payload.uuid,
         method: 'get',
-        data: data
+        params: {...payload.data}
     })
 }
 

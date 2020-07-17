@@ -36,7 +36,7 @@
                 width="0"
                 height="0"
                 ref="videoZoom"
-                :src="`/public/file/${row.localId}`"
+                :src="`/api/public/file/${row.localId}`"
               ></video>
             </template>
           </el-table-column>
@@ -71,7 +71,7 @@
         width="600"
         height="400"
         controls
-        :src="`/public/file/${originUrl}`"
+        :src="`/api/public/file/${originUrl}`"
         @canplay="onLoad"
       ></video>
     </el-dialog>

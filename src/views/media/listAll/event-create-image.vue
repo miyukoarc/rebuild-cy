@@ -147,39 +147,9 @@ export default {
         }, [])
         .join(',')
 
-      console.log(this.data)
-
-      //   console.log(this.tagSelects)
-      //   const payload = this.form
-      //   const content = this.content[0]
-      //   const groupUuid = this.groupUuid
-      //   const type = this.type
-      //   const tagUuids = this.tagSelects.reduce((sum, curr) => {
-      //     return sum.concat(curr)
-      //   }, [])
-      //   const matchFormat = this.matchFormat
-      //   const data = { tagUuids, matchFormat }
-      //   const params = { groupUuid, type, content }
-
       this.$refs['form'].validate(valid => {
         if (valid) {
-          //   console.log(payload)
-          //   this.$store
-          //     .dispatch('media/addMediaIsAudit', { data, params })
-          //     .then(() => {
-          //       this.$message({
-          //         type: 'success',
-          //         message: '操作成功'
-          //       })
-          //       this.handleCancel()
-          //       this.refresh()
-          //     })
-          //     .catch(err => {
-          //       this.$message({
-          //         type: 'error',
-          //         message: '操作失败'
-          //       })
-          //     })
+
           this.submitUpload()
         } else {
           this.$message({
@@ -232,7 +202,7 @@ export default {
       return true
     },
     onSuccess(res, file, list) {
-      console.log(res, list)
+
       this.uploadFilesLength++
       this.$message({
         type: 'warning',

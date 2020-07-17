@@ -1,81 +1,102 @@
 <template>
   <div class="app-container">
-    <el-card class="content-spacing">
-      <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
-    </el-card>
+    <el-row>
+      <el-col :span="16">
+        <div>
+          <el-card class="content-spacing">
+            <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
+          </el-card>
 
-    <el-card class="content-spacing">
-      <tool-bar :hasExport="false">
-        <div slot="right">
-          <!-- <el-t-button type="primary">新建文章</el-t-button> -->
-          <el-t-button
+          <el-card class="content-spacing">
+            <tool-bar
+              @handleRefresh="handleRefresh"
+              :hasRefresh="true"
+              :hasExport="false"
+              :msg="`共${pageConfig.total}条记录`"
+            >
+              <div slot="right">
+                <!-- <el-t-button type="primary">新建文章</el-t-button> -->
+                <!-- <el-t-button
             type="primary"
             :popAuth="true"
             :auth="permissionMap['media']['media_addMediaIsAudit']"
             @click="handleCreate"
-          >新建文章</el-t-button>
+                >新建文章</el-t-button>-->
+              </div>
+            </tool-bar>
+          </el-card>
+
+          <el-card class="content-spacing">
+            <div>
+              <el-table
+                v-loading="loading"
+                :data="listAll"
+                style="width: 100%"
+                row-key="uuid"
+                stripe
+                lazy
+                highlight-current-row
+                header-row-class-name="el-table-header"
+                @row-click="handleRowClick"
+              >
+                <el-table-column label="阅读客户" align="left">
+                    <template v-slot="{row}">
+                        <div style="display:flex;align-items:center;">
+                            <el-image :src="row.externalUser.avatar" style="width:36px;height:36px;"></el-image>
+                            <div style="margin-left:10px;">
+                                <span>{{row.externalUser.name}}</span>
+                                <!-- <span></span> -->
+                            </div>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="最近一次阅读" align="left" prop="updatedAt"></el-table-column>
+                <el-table-column label="阅读时长" align="left">
+                    <template v-slot="{row}">
+                        {{row.readTime}} 秒
+                    </template>
+                </el-table-column>
+                <!-- <el-table-column label="阅读时长" align="left" >
+                    <span>{{Math.floor(Math.random()*10) +'min'}}</span>
+                </el-table-column> -->
+              </el-table>
+
+              <customer-pagination :pageConfig="pageConfig" @currentChange="changePage"></customer-pagination>
+            </div>
+          </el-card>
         </div>
-      </tool-bar>
-    </el-card>
-
-    <el-card class="content-spacing">
-      <div>
-        <el-table
-          v-loading="loading"
-          :data="listAll"
-          style="width: 100%"
-          row-key="uuid"
-          stripe
-          lazy
-          highlight-current-row
-           header-row-class-name="el-table-header"
-        >
-          <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="文章标题" align="left" prop="title"></el-table-column>
-          <el-table-column label="上传时间" align="left" prop="createdAt"></el-table-column>
-          <el-table-column label="文章描述" align="left" prop="description"></el-table-column>
-          <el-table-column label="操作" align="left">
-            <template v-slot="scope">
-              <!-- <el-t-button
-                size="mini"
-                type="text"
-                @click.stop="handleEdit(scope.$index)"
-                :popAuth="true"
-                :auth="permissionMap['media']['media_article_update']"
-              >编辑</el-t-button>
-              <el-t-button
-                size="mini"
-                type="text"
-                @click.stop="handleRecords(scope.$index)"
-                :popAuth="true"
-                :auth="permissionMap['media']['media_browsing_Records']"
-              >记录</el-t-button>
-              <el-t-button
-                size="mini"
-                type="text"
-                @click.stop="handleDelete(scope.$index)"
-                :popAuth="true"
-                :auth="permissionMap['media']['media_delete']"
-              >删除</el-t-button> -->
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <!-- <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        /> -->
-
-        <customer-pagination :pageConfig="pageConfig" @currentChange="changePage"></customer-pagination>
-      </div>
-    </el-card>
-
-    <form-dialog ref="formDialog"></form-dialog>
+      </el-col>
+      <el-col :span="8">
+        <div style="margin-left: 10px;">
+          <el-card class="content-spacing">
+            <div>
+              <div style="margin-bottom:20px;">
+                <h3 style="display:inline-block;">文章详情</h3>
+                <el-t-button
+                  style="margin-left:50px"
+                  size="mini"
+                  type="primary"
+                  @click="handleEdit"
+                >编辑</el-t-button>
+              </div>
+              <h4 style="margin-bottom:20px;">
+                <span>标题：</span>
+                <span>{{articleDetail.title}}</span>
+              </h4>
+              <h5 style="margin-bottom:10px;">描述</h5>
+              <div style="margin-bottom:20px;">
+                <span class="font-exs color-info">{{articleDetail.description}}</span>
+              </div>
+              <h5 style="margin-bottom:20px;">正文</h5>
+                <div class="cover-image" v-if="articleDetail.imgId">
+                    <el-image fit="contain" :src="`/api/public/file/${articleDetail.imgId}`"></el-image>
+                </div>
+              <div v-html="articleDetail.articleContent"></div>
+            </div>
+          </el-card>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -93,6 +114,7 @@ export default {
   },
   data() {
     return {
+      showDrawer: false,
       pageConfig: {
         total: 0,
         pageNumber: 0,
@@ -102,24 +124,28 @@ export default {
       query: {
         page: 0,
         size: 10,
-        title: ''
-      }
+        name: ''
+      },
+      articleUuid: ''
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      //   tagListAll: state => state.tag.tagListAll,
-
       loading: state => state.media.loading,
-      listAll: state => state.media.articleList,
-      page: state => state.media.page,
-
-      permissionMap: state => state.permission.permissionMap
+      listAll: state => state.media.browsingRecords,
+      page: state => state.media.recordsPage,
+      permissionMap: state => state.permission.permissionMap,
+      articleDetail: state => state.media.articleDetail
     })
   },
   created() {
-    this.initDataList(this.query)
+    // console.log(this.$route.params)
+    const uuid = this.$route?.params?.articleUuid
+    this.articleUuid = this.$route?.params?.articleUuid
+    const data = this.query
+    this.initDataList({ uuid, data })
+    this.initArticle(uuid)
     // this.initFilter()
   },
   methods: {
@@ -150,12 +176,23 @@ export default {
           })
         })
     },
+    initArticle(uuid) {
+      this.$store
+        .dispatch('media/getArticleDetail', uuid)
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
+    },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('media/getArticleList', payload)
+        .dispatch('media/browsingRecords', payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1
@@ -176,21 +213,25 @@ export default {
       })
     },
     handleSearch(val) {
-      const { title } = val
-      this.query.title = title ? title : this.query.title
-      //   this.query.name = name ? name : this.query.name
-      console.log(val, 'handleSearch')
-      this.initDataList(this.query)
+      const { name } = val
+      this.query.name = name
+      const uuid = this.articleUuid
+      const data = this.query
+      console.log('sousuo' ,data)
+      this.initDataList({ uuid, data })
     },
     handleRefresh() {
-      console.log('handleRefresh')
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      //   this.query = this.$options.data().query
+      const uuid = this.articleUuid
+      const data = this.query
+      this.initDataList({ uuid, data })
     },
     changePage(key) {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      const uuid = this.articleUuid
+      const data = this.query
+      this.initDataList({ uuid, data })
     },
     handleCreate() {
       this.$router.push({
@@ -198,7 +239,7 @@ export default {
       })
     },
     handleEdit(index) {
-      const uuid = this.listAll[index].uuid
+      const uuid = this.$route.params.articleUuid
       this.$router.push({
         path: '/media/article/detail/' + uuid
       })
@@ -231,12 +272,8 @@ export default {
           console.error(err)
         })
     },
-    handleRecords(index){
-        const uuid = this.listAll[index].uuid
-        this.$router.push({
-            path: '/media/browsingRecords/'+uuid
-        })
-
+    handleRowClick(val) {
+      console.log(val)
     }
   }
 }
@@ -254,5 +291,8 @@ export default {
   padding: 20px 0;
   text-align: center;
 }
-
+.cover-image{
+    height: 150px;
+    width: 100px;
+}
 </style>
