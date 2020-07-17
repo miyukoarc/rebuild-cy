@@ -1,8 +1,22 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
-    <!-- <el-form-item label="敏感词行为">
-      <el-input v-model.trim="query.name"></el-input>
-    </el-form-item> -->
+    <el-form-item label="敏感词">
+      <el-input v-model.trim="query.word"></el-input>
+    </el-form-item>
+
+    <el-form-item label="触发员工">
+      <!-- <el-input v-model.trim="query.userUuid"></el-input> -->
+      <el-select v-model="query.userUuid">
+        <el-option
+          v-for="item in userListAll"
+          :key="item.uuid"
+          :label="item.name"
+          :value="item.uuid"
+        ></el-option>
+      </el-select>
+    </el-form-item>
+
+    
 
     <!-- <el-form-item label="手机号码">
       <el-input v-model.trim="query.name"></el-input>
@@ -10,9 +24,9 @@
 
     <el-form-item label="批量添加次数">
       <el-input v-model.trim="query.name"></el-input>
-    </el-form-item> -->
+    </el-form-item>-->
 
-    <el-form-item label="发生时间">
+    <el-form-item label="触发时间">
       <el-date-picker
         v-model="value"
         type="daterange"
@@ -63,7 +77,7 @@ export default {
       value: [],
       query: {
         startTime: '',
-        endTime: '',
+        endTime: ''
         // userId: ''
         // roleUuid: ''
       }
@@ -71,8 +85,8 @@ export default {
   },
   computed: {
     ...mapState({
-    //   tagListAll: state => state.tag.tagListAll,
-    //   userListAll: state => state.user.userListAll
+      //   tagListAll: state => state.tag.tagListAll,
+      userListAll: state => state.user.listSelect
       //   departments: state => state.department.departments
     })
   },

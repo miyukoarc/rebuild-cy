@@ -38,7 +38,7 @@
               </async-user-tag>
             </template>
           </el-table-column>
-          <el-table-column label="触发事件" align="left" prop="createdAt"></el-table-column>
+          <el-table-column label="触发时间" align="left" prop="createdAt"></el-table-column>
         </el-table>
 
         <el-pagination
@@ -84,7 +84,8 @@ export default {
       query: {
         page: 0,
         size: 10,
-        param: '',
+        word: '',
+        userUuid: '',
         startTime: '',
         endTime: ''
       }
@@ -102,7 +103,7 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    // this.initFilter()
+    this.initFilter()
   },
   methods: {
     doExport(val) {
@@ -111,7 +112,7 @@ export default {
     /**
      * 初始化筛选信息
      */
-    // initFilter() {
+    initFilter() {
     //   this.$store
     //     .dispatch('tag/getListSelect')
     //     .then(() => {})
@@ -122,16 +123,16 @@ export default {
     //       })
     //     })
 
-    //   this.$store
-    //     .dispatch('user/getAllUserList')
-    //     .then(() => {})
-    //     .catch(err => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '初始化失败'
-    //       })
-    //     })
-    // },
+      this.$store
+        .dispatch('user/getUserListSelect')
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
+    },
     /**
      * 初始化表格信息
      */
@@ -158,9 +159,11 @@ export default {
       })
     },
     handleSearch(val) {
-      const { startTime, endTime } = val
+      const { startTime, endTime,userUuid,word } = val
       this.query.startTime = startTime ? startTime : this.query.startTime
       this.query.endTime = endTime ? endTime : this.query.endTime
+      this.query.userUuid = userUuid ? userUuid : this.query.userUuid
+      this.query.word = word ? word : this.query.word
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },
