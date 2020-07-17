@@ -5,11 +5,11 @@ import request from '@/utils/request'
  * 任务详情
  * @param {string} payload 
  */
-export const getDetail = (payload) => {
-  return request({
-    url: '/batchSendTask/' + payload,
-    method: 'get',
-  })
+export const getBatchSendTaskDetail = (payload) => {
+    return request({
+        url: '/batchSendTask/' + payload,
+        method: 'get',
+    })
 }
 
 
@@ -18,11 +18,11 @@ export const getDetail = (payload) => {
  * @param {object} payload 
  */
 export const add = (payload) => {
-  return request({
-    url: '/batchSendTask/add',
-    method: 'get',
-    data: payload
-  })
+    return request({
+        url: '/batchSendTask/add',
+        method: 'get',
+        data: payload
+    })
 }
 
 
@@ -31,11 +31,11 @@ export const add = (payload) => {
  * @param {object} payload 
  */
 export const addBatchSendTask = (payload) => {
-  return request({
-    url: '/batchSendTask/addBatchSendTask',
-    method: 'get',
-    data: payload
-  })
+    return request({
+        url: '/batchSendTask/addBatchSendTask',
+        method: 'get',
+        data: payload
+    })
 
 }
 
@@ -44,10 +44,10 @@ export const addBatchSendTask = (payload) => {
  * @param {object} uuid 
  */
 export const batchSendTaskSuspend = (uuid) => {
-  return request({
-    url: '/batchSendTask/batchSendTaskSuspend/' + uuid,
-    method: 'get',
-  })
+    return request({
+        url: '/batchSendTask/batchSendTaskSuspend/' + uuid,
+        method: 'get',
+    })
 }
 
 
@@ -55,12 +55,12 @@ export const batchSendTaskSuspend = (uuid) => {
  * 全部任务
  * @param {object} payload 
  */
-export const getList = (payload) => {
-  return request({
-    url: '/batchSendTask/listAll',
-    method: 'get',
-    params: payload
-  })
+export const getBatchSendTaskListAll = (payload) => {
+    return request({
+        url: '/batchSendTask/listAll',
+        method: 'get',
+        params: payload
+    })
 }
 
 
@@ -69,11 +69,11 @@ export const getList = (payload) => {
  * @param {object} payload 
  */
 export const getListBatchSendTaskResult = (payload) => {
-  return request({
-    url: '/batchSendTask/listBatchSendTaskResult',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/batchSendTask/listBatchSendTaskResult',
+        method: 'get',
+        params: payload
+    })
 }
 
 
@@ -82,25 +82,20 @@ export const getListBatchSendTaskResult = (payload) => {
  * @param {object} payload 
  */
 export const getListMy = (payload) => {
-  return request({
-    url: '/batchSendTask/listMy',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/batchSendTask/listMy',
+        method: 'get',
+        params: payload
+    })
 }
 
 /**
  * 把一个具体的发送任务设为已发送
  * @param {string} uuid 
  */
-export const sendResultHasSend = (uuid)=>{
+export const sendResultHasSend = (uuid) => {
     return request({
-        url: '/batchSendTask/sendResultHasSend/'+uuid,
+        url: '/batchSendTask/sendResultHasSend/' + uuid,
         method: 'post',
     })
 }
-
-
-
-
-

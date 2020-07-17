@@ -1,8 +1,16 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-27 14:05:27
+ * @LastEditTime: 2020-07-17 22:34:00
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\potentialCustomer\listAll\event-distribute.vue
+--> 
 <template>
   <div>
     <el-form :model="form" ref="form" label-width="120px">
-      <el-form-item label="名称" prop="name">
-        <el-select v-model="form.userId">
+      <!-- <el-form-item label="名称" prop="name">
+        <el-select v-model="form.userUuid">
           <el-option
             v-for="item in userListSelect"
             :key="item.uuid"
@@ -10,8 +18,18 @@
             :value="item.uuid"
           ></el-option>
         </el-select>
-      </el-form-item>
-      <!-- {{user.uuid}} -->
+      </el-form-item>-->
+      <!-- <div> -->
+      <!-- <complex-select v-model="selects" :options="departmentList"></complex-select> -->
+      <!-- </div> -->
+      <el-select v-model="form.userUuid" style="width:100%;margin-bottom:20px">
+        <el-option
+          v-for="item in userListSelect"
+          :key="item.userId"
+          :label="item.name"
+          :value="item.uuid"
+        ></el-option>
+      </el-select>
       <div class="text-align-center">
         <el-button size="small" @click="handleCancel">取消</el-button>
         <el-button size="small" type="primary" @click="handleConfrim">确定</el-button>
@@ -22,6 +40,7 @@
 
 <script>
 import { mapState } from "vuex";
+import ComplexSelect from "@/components/ComplexSelect";
 export default {
   props: {
     transfer: {
@@ -29,10 +48,14 @@ export default {
       default: () => {}
     }
   },
+  components: {
+    ComplexSelect
+  },
   data() {
     return {
+      selects: [],
       form: {
-        userId: "",
+        userUuid: "",
         uuid: []
       }
     };
@@ -40,7 +63,7 @@ export default {
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        console.log(newVal);
+        console.log(newVal, "8888");
         const { uuid } = newVal;
         this.form.uuid = uuid;
       },
@@ -50,7 +73,7 @@ export default {
   computed: {
     ...mapState({
       // user: state => state.user.currentRowUserList,
-      // departments: state => state.department.departments
+      departmentList: state => state.department.departmentList,
       userListSelect: state => state.user.listSelect
     })
   },
@@ -62,16 +85,26 @@ export default {
       this.closeDialog();
     },
     handleConfrim() {
-      const payload = this.form;
       this.$store
-        .dispatch("potentialCustomer/allocation", payload)
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "操作成功"
-          });
-          this.closeDialog();
-          this.handleRefresh();
+        .dispatch("potentialCustomer/allocation", this.form)
+        .then(res => {
+          switch (res.code) {
+            case 1:
+              this.$message({
+                type: "error",
+                message: "分配失败"
+              });
+              this.closeDialog();
+              break;
+            default:
+              this.$message({
+                type: "success",
+                message: "操作成功"
+              });
+              this.closeDialog();
+              this.handleRefresh();
+              break;
+          }
         })
         .catch(err => {
           this.$message({

@@ -353,10 +353,16 @@ export default {
     },
     limitedListGroup() {
       if (this.limited) {
-        return this.externalUserDetail.externalUserDetailGroupChatsList.slice(
-          0,
-          1
-        );
+        if (
+          this.externalUserDetail.externalUserDetailGroupChatsList.length > 0
+        ) {
+          return this.externalUserDetail.externalUserDetailGroupChatsList.slice(
+            0,
+            1
+          );
+        } else {
+          return [];
+        }
       } else {
         return this.externalUserDetail.externalUserDetailGroupChatsList;
       }
@@ -375,6 +381,7 @@ export default {
       this.currentInput = "";
       this.currentIndex = "";
     });
+
     // window.addEventListener('scroll',this.handleScroll);
   },
   methods: {

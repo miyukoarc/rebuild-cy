@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-15 10:50:46
- * @LastEditTime: 2020-07-17 11:38:17
+ * @LastEditTime: 2020-07-17 15:42:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\index-back.vue
@@ -28,9 +28,8 @@
           <keep-alive>
             <div v-if="listData.length>0">
               <div v-for="(list,listIndex) in listData" :key="listIndex" class="allChat clearfix">
-                <!-- :is="list.msgType+'Component'" -->
+                <!-- :is="list.msgType? list.msgType+'Component' :''" -->
                 <!-- :is="currentView" -->
-
                 <component
                   :is="list.msgType? list.msgType+'Component' :''"
                   :key="listIndex"
@@ -75,6 +74,7 @@ import cardComponent from "./messageTypeComponent/cardComponent.vue";
 import linkComponent from "./messageTypeComponent/linkComponent.vue";
 import weappComponent from "./messageTypeComponent/weappComponent.vue";
 import fileComponent from "./messageTypeComponent/fileComponent.vue";
+import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_callComponent.vue";
 
 // import imgPage from "../../static/2.jpg"
 
@@ -90,11 +90,12 @@ export default {
     agreeComponent,
     cardComponent,
     weappComponent,
-    fileComponent
+    fileComponent,
+    meeting_voice_callComponent
   },
   data() {
     return {
-      currentView: "weappComponent",
+      currentView: "meeting_voice_callComponent",
       baseUrl: "",
       // 搜索
       fromUserId: "",

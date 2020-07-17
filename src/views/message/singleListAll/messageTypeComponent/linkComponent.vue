@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-22 13:50:04
- * @LastEditTime: 2020-06-28 14:41:14
+ * @LastEditTime: 2020-07-17 14:23:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\linkComponent.vue
@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == fromUserId" class="right-warp">
+    <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">

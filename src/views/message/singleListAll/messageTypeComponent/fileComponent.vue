@@ -1,20 +1,20 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:48:28
- * @LastEditTime: 2020-07-16 14:00:12
+ * @LastEditTime: 2020-07-17 14:23:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\fileComponent.vue
 -->
 <template>
   <section class="file-component">
-    <div v-if="item.toUser == fromUserId" class="left-warp">
+    <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <el-avatar :src="item.avatar" />
         <div class="left">
           <div class="user-select">
-            <div class="ict file-bg flex-column-center-alinecenter">
+            <div class="ict file-bg flex-column-center-alinecenter ml-20 ">
               <div
                 class="down-load"
                 @click=" handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
@@ -32,12 +32,12 @@
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == fromUserId" class="right-warp">
+    <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
-      <div class="me-chat-warp display-flex justify-content-flex-end">
-        <div class="me-chat">
+      <div class="right-warp display-flex justify-content-flex-end">
+        <div class="right">
           <div class="user-select">
-            <div class="ict file-bg flex-column-center-alinecenter">
+            <div class="ict file-bg flex-column-center-alinecenter mr-20">
               <a :href="item.messageMedias[0].file" download>
                 <el-icon class="ic el-icon-download" />
               </a>
@@ -49,7 +49,7 @@
             </div>
           </div>
         </div>
-        <el-avatar icon="el-icon-user-solid" />
+        <el-avatar :src="item.avatar" />
       </div>
     </div>
   </section>

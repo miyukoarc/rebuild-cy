@@ -331,7 +331,10 @@ export default {
       this.$refs["formDialog"].dialogVisible = true;
     },
     handleDistribute() {
-      const uuid = this.selects;
+      const uuid = this.selects.map(item => {
+        return item.uuid;
+      });
+
       const payload = { uuid };
       if (this.selects.length) {
         this.$refs["formDialog"].event = "DistributeTemplate";
@@ -347,7 +350,6 @@ export default {
     },
     handleAllocation(row) {
       row.uuid = [row.uuid];
-      console.log(row, "777");
       this.$refs.multipleTable.clearSelection();
       this.handleSelectionChange([row]);
       this.selects.forEach(row => {

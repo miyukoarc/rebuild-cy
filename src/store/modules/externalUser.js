@@ -633,7 +633,7 @@ const actions = {
             getExternalUserDetail(payload).then(res => {
                 commit('SAVE_EXTERNALUSERDETAIL', res)
                 commit('TOGGLE_LOADING', false)
-                resolve()
+                resolve(res)
             }).catch(err => {
                 commit('TOGGLE_LOADING', false)
                 reject(err)

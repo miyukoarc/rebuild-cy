@@ -1,16 +1,19 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-09 18:50:40
+ * @LastEditTime: 2020-07-17 16:25:41
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\batchSendTask\listAll\tool-bar.vue
+--> 
 <template>
   <div>
     <div class="tool-bar-container">
       <div class="left">
         <el-button type="primary" @click="actionExport" v-if="hasExport">导出Excel</el-button>
         <el-button type="primary" @click="actionImport" v-if="hasImport">导入Excel</el-button>
-        <el-t-button
-          type="primary"
-          :popAuth="true"
-          :auth="permissionMap['batchSendTask']['batchSendTask_add']"
-          @click="actionDepartment"
-        >新建群发</el-t-button>
-        <span class="font-s color-info">{{msg}}</span>
+       
+        <!-- <span class="font-s color-info">{{msg}}</span> -->
       </div>
 
       <div class="right">
@@ -48,9 +51,9 @@ export default {
     actionImport() {
       this.$emit("handleImport", "导入");
     },
-    actionDepartment() {
-      this.$emit("actionDepartment", "新建群发");
-    }
+    // actionDepartment() {
+    //   this.$emit("actionDepartment", "新建群发");
+    // }
   }
 };
 </script>

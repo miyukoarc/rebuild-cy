@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-07-17 14:24:00
+ * @LastEditTime: 2020-07-17 15:52:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -13,16 +13,17 @@
       <div class="display-flex">
         <el-avatar :src="item.avatar" />
         <div class="left">
-          <div class="user-select">
-            <div
+          <!-- <audio controls src="http://10.10.10.198/public/file/5f115351fd03f674878f613e" class="audio-warp">
+           您的浏览器不支持 audio 元素。
+          </audio> -->
+          <div
               class="audio-left display-flex align-items-center"
-              @click="playAudio(item.messageMedias[0].file)"
+              @click="playAudio('http://10.10.10.198/public/file/5f115351fd03f674878f613e')"
             >
               <i
                 class="play-audio"
                 :class="isPlayAudio? 'el-icon-microphone' :'el-icon-turn-off-microphone'"
               />
-            </div>
           </div>
         </div>
       </div>
@@ -30,10 +31,13 @@
     <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
-        <div class="user-select right">
+        <div class="right">
+          <!-- <audio controls src="http://10.10.10.198/public/file/5f115351fd03f674878f613e" class="audio-warp">
+            您的浏览器不支持 audio 元素。
+          </audio> -->
           <div
             class="audio-right display-flex align-items-center"
-            @click="playAudio(item.messageMedias[0].file)"
+            @click="playAudio('http://10.10.10.198/public/file/5f115351fd03f674878f613e')"
           >
             <i
               class="play-audio"
@@ -93,13 +97,17 @@ export default {
   .left {
     max-width: 50%;
     left: 20px;
-    margin-top: 5px;
+    margin-left: 10px;
   }
   .right {
     /*使左右的对话框分开*/
     max-width: 50%;
-    top: 5px;
     left: -20px;
+    margin-right: 10px;
+  }
+  .audio-warp {
+    width: 200px;
+    height: 40px;
   }
   .audio-left {
     // margin-top: 5px;

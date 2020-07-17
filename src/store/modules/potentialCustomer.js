@@ -140,7 +140,9 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    batchAdd({ commit }, payload) {
+    batchAdd({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             batchAdd(payload).then(res => {
                 resolve()
@@ -155,7 +157,9 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    deletePotentialCustomer({ commit }, payload) {
+    deletePotentialCustomer({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             deletePotentialCustomer(payload).then(res => {
                 resolve()
@@ -170,10 +174,12 @@ const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    allocation({ commit }, payload) {
+    allocation({
+        commit
+    }, payload) {
         return new Promise((resolve, reject) => {
             allocation(payload).then(res => {
-                resolve()
+                resolve(res)
             }).catch(err => {
                 console.error(err)
                 reject(err)

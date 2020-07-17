@@ -4,20 +4,29 @@
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" @actionDepartment="actionDepartment"></tool-bar>
+      <tool-bar @handleExport="doExport" @actionDepartment="actionDepartment">
+        <div slot="right">
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['batchSendTask']['batchSendTask_add']"
+            @click="actionDepartment"
+          >新建群发</el-t-button>
+        </div>
+      </tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
       <div>
         <el-table
           v-loading="loading"
-          :data="listAll"
+          :data="batchSendTaskListAll"
           style="width: 100%"
           row-key="uuid"
           stripe
           lazy
           highlight-current-row
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="id" align="left">
@@ -43,7 +52,7 @@
           <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -97,7 +106,7 @@ export default {
       tagListAll: state => state.tag.tagListAll,
 
       loading: state => state.batchSendTask.loading,
-      listAll: state => state.batchSendTask.list,
+      batchSendTaskListAll: state => state.batchSendTask.batchSendTaskListAll,
       page: state => state.batchSendTask.listAllPage,
 
       permissionMap: state => state.permission.permissionMap
@@ -105,7 +114,7 @@ export default {
   },
   created() {
     this.initDataList(this.query);
-    // this.initFilter()
+    this.initFilter()
   },
   methods: {
     doExport(val) {
@@ -140,7 +149,7 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch("batchSendTask/getList", payload)
+        .dispatch("batchSendTask/getBatchSendTaskListAll", payload)
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1;
@@ -154,11 +163,7 @@ export default {
         });
     },
     handleDetail(val) {
-      const payload = this.userList[val].uuid;
-      this.$router.push({
-        path: "/user/detail",
-        query: { uuid: payload }
-      });
+      this.$router.push(`/batchSendTask/detail/${val.uuid}`);
     },
     handleSearch(val) {
       const { tagIds, name } = val;
