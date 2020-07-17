@@ -48,7 +48,7 @@
           :auth="permissionMap['media']['media_add']"
           type="primary"
           @click="handleConfirm"
-          :throttle="5000"
+          :throat="5000"
         >保存文章</el-t-button>
       </div>
       <div>

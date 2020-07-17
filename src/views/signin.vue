@@ -81,6 +81,7 @@ export default {
           //     this.wxQrCode,
           //     style
           //   )
+        //   document.body.innerHTML = this.addStr(this.wxQrCode, style)
           document.write(this.addStr(this.wxQrCode, style))
         }
       })

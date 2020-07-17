@@ -212,9 +212,9 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
+      const { groupName, tagName } = val
+      this.query.groupName = groupName ? groupName : this.query.groupName
+      this.query.tagName = tagName ? tagName : this.query.tagName
 
       this.initDataList(this.query)
     },

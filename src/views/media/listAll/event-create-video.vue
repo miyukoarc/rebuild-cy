@@ -98,13 +98,13 @@ export default {
         tagUuids: '',
         type: 'VIDEO',
         matchFormat: 'CONTAINS_ANY'
-      }
+      },
+      uploadFilesLength: 0
     }
   },
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        //   console.log()
         const { uuid } = newVal
         this.data.groupUuid = uuid
       },
@@ -144,40 +144,8 @@ export default {
           return sum.concat(curr)
         }, []).join(',')
       
-
-      console.log(this.data)
-
-      //   console.log(this.tagSelects)
-      //   const payload = this.form
-      //   const content = this.content[0]
-      //   const groupUuid = this.groupUuid
-      //   const type = this.type
-      //   const tagUuids = this.tagSelects.reduce((sum, curr) => {
-      //     return sum.concat(curr)
-      //   }, [])
-      //   const matchFormat = this.matchFormat
-      //   const data = { tagUuids, matchFormat }
-      //   const params = { groupUuid, type, content }
-
       this.$refs['form'].validate(valid => {
         if (valid) {
-          //   console.log(payload)
-          //   this.$store
-          //     .dispatch('media/addMediaIsAudit', { data, params })
-          //     .then(() => {
-          //       this.$message({
-          //         type: 'success',
-          //         message: '操作成功'
-          //       })
-          //       this.handleCancel()
-          //       this.refresh()
-          //     })
-          //     .catch(err => {
-          //       this.$message({
-          //         type: 'error',
-          //         message: '操作失败'
-          //       })
-          //     })
           this.submitUpload()
         } else {
           this.$message({
@@ -203,12 +171,18 @@ export default {
           })
         })
     },
-    onSuccess(file) {
-      console.log(file)
+    onSuccess(res, file, list) {
+
+      this.uploadFilesLength++
       this.$message({
-          type: 'warning',
-          message: '操作完成'
+        type: 'warning',
+        message: '操作完成'
       })
+      if (this.uploadFilesLength === list.length) {
+        this.$bus.$emit('handleRefresh')
+        //   Object.assign(this.$data, this.$options.data())
+        this.$parent.$parent.dialogVisible = false
+      }
     },
     onError() {
       this.$message({

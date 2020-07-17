@@ -71,7 +71,7 @@
       <span class="tips font-exs color-info">暂无数据</span>
     </div>
 
-    <el-dialog :visible.sync="dialogVisible" :width="width" center title="适用标签">
+    <el-dialog :visible.sync="dialogVisible" :width="width" center title="适用标签" destroy-on-close>
       <el-image v-if="view==='image'" :src="`/api/public/file/${imageUrl}`" @load="onLoad"></el-image>
       <video
         v-if="view==='video'"
@@ -96,7 +96,7 @@
           </div>
         </div>
         <div v-else class="text-align-center" style="line-height:30px;">
-            <span class="font-exs color-info">未设置</span>
+          <span class="font-exs color-info">未设置</span>
         </div>
       </div>
     </el-dialog>
@@ -180,14 +180,14 @@ export default {
 
       this.videoUrl = val
       this.view = 'video'
+      //   this.width = this.videoWidth
       this.dialogVisible = true
-      this.width = this.videoWidth
     },
     handleViewTags(list) {
       this.view = 'tags'
+      //   this.width = this.tagsWidth
       this.shownTags = this.grouping(list)
       this.dialogVisible = true
-      this.width = this.tagsWidth
       // console.log(this.grouping(list))
     },
     grouping(list) {
@@ -215,12 +215,11 @@ export default {
       }
     },
     handleViewImage(val) {
-      console.log(val)
-
       this.imageUrl = val
       this.view = 'image'
+      //   this.width = await this.imageWidth
+      console.log(this.imageWidth)
       this.dialogVisible = true
-      this.width = this.imageWidth
     },
     handleCheckAll() {
       let arr = []
@@ -245,10 +244,10 @@ export default {
       if (img.fileSize > 0 || (img.width > 1 && img.height > 1)) {
         width = img.width + 40
       }
-      this.imageWidth = width + 'px'
+      this.width = width + 'px'
     },
     onCanplay(e) {
-      this.videoWidth = 640 + 'px'
+      this.width = 640 + 'px'
     }
   }
 }
@@ -258,7 +257,7 @@ export default {
 .card-container {
   .grid-item {
     flex: 0 0 20%;
-    height: 400px;
+    height: 360px;
     .card-inner {
       height: 100%;
       display: flex;
@@ -268,8 +267,8 @@ export default {
         position: relative;
         left: 0;
         top: 0;
-        height: 260px;
-        width: 257.8px;
+        height: 220px;
+        width: 177.8px;
         overflow: hidden;
 
         &:hover .cover {
