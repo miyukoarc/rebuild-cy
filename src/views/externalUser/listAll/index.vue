@@ -37,7 +37,7 @@
           </el-table-column>
           <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
-              <user-drawer :hasPop="true" :users="scope.row.user"></user-drawer>
+              <async-user-drawer :hasPop="true" :users="scope.row.user"></async-user-drawer>
             </template>
           </el-table-column>
             <!-- <template v-slot="scope">
