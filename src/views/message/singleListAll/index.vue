@@ -1,5 +1,13 @@
 <!--
  * @Author: your name
+ * @Date: 2020-07-15 10:50:46
+ * @LastEditTime: 2020-07-17 11:38:17
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\message\singleListAll\index-back.vue
+--> 
+<!--
+ * @Author: your name
  * @Date: 2020-05-12 15:34:16
  * @LastEditTime: 2020-06-28 14:25:40
  * @LastEditors: Please set LastEditors
@@ -17,21 +25,22 @@
     <el-card class="box-card content-spacing">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane v-for="(tab,index) in tabs" :key="index" :label="tab.label" :name="tab.name">
-          <div v-if="listData.length>0">
-            <div v-for="(list,listIndex) in listData" :key="listIndex" class="allChat clearfix">
-              <!-- :is="list.msgType+'Component'" -->
-              <!-- :is="currentView" -->
-              <keep-alive>
+          <keep-alive>
+            <div v-if="listData.length>0">
+              <div v-for="(list,listIndex) in listData" :key="listIndex" class="allChat clearfix">
+                <!-- :is="list.msgType+'Component'" -->
+                <!-- :is="currentView" -->
+
                 <component
-                  :is="list.msgType+'Component'"
+                  :is="list.msgType? list.msgType+'Component' :''"
                   :key="listIndex"
                   :item="list"
                   :to-user-id="toUserId"
                   :from-user-id="fromUserId"
                 />
-              </keep-alive>
+              </div>
             </div>
-          </div>
+          </keep-alive>
           <div v-if="listData.length<=0" class="no-data">暂无数据</div>
         </el-tab-pane>
       </el-tabs>
@@ -50,13 +59,11 @@
 </template>
 
 <script>
-
-
-import { getMessageSingleListAll, downloadFile } from "@/api/message.js";
+// import { getMessageSingleListAll, downloadFile } from "@/api/message.js";
 
 import { mapState, mapMutations, mapActions } from "vuex";
 
-import searchHeader from "./header.vue";
+import searchHeader from "./header";
 
 import textComponent from "./messageTypeComponent/textComponent.vue";
 import imageComponent from "./messageTypeComponent/imageComponent.vue";
@@ -67,6 +74,7 @@ import agreeComponent from "./messageTypeComponent/agreeComponent.vue";
 import cardComponent from "./messageTypeComponent/cardComponent.vue";
 import linkComponent from "./messageTypeComponent/linkComponent.vue";
 import weappComponent from "./messageTypeComponent/weappComponent.vue";
+import fileComponent from "./messageTypeComponent/fileComponent.vue";
 
 // import imgPage from "../../static/2.jpg"
 
@@ -81,7 +89,8 @@ export default {
     videoComponent,
     agreeComponent,
     cardComponent,
-    weappComponent
+    weappComponent,
+    fileComponent
   },
   data() {
     return {
@@ -99,6 +108,16 @@ export default {
         total: 0,
         pageNumber: 0,
         pageSize: 10
+      },
+      query: {
+        page: 0,
+        size: 10,
+        fromUserId: "",
+        msgType: "all",
+        toUserId: "",
+        content: "",
+        startTime: "",
+        endTime: ""
       },
       listData: [],
       searchFormLabel: [
@@ -143,8 +162,7 @@ export default {
       // 图片
       currentDate: new Date(),
       srcList: [],
-      showicon: false,
-      isPlayAudio: false
+      showicon: false
     };
   },
   computed: {
@@ -163,132 +181,62 @@ export default {
       const userId = this.$route.query.userId;
       this.toUserId = userId;
       this.fromUserId = externalUserId;
-      this.initDataList(externalUserId, userId);
+      this.query.fromUserId = externalUserId;
+      this.query.toUserId = userId;
+      this.initDataList(this.query);
     }
   },
   methods: {
-    async initDataList(externalUserId, userId, msgType = "") {
+    async initDataList(payload) {
       this.listData = [];
-      const paramsData = {
-        fromUserId: externalUserId,
-        msgType: msgType,
-        page: this.pageConfig.page,
-        size: this.pageConfig.size,
-        toUserId: userId,
-        content: ""
-      };
-      this.fromUserId = externalUserId;
-      this.toUserId = userId;
       this.$store
-        .dispatch("message/getMessageSingleListAll", paramsData)
+        .dispatch("message/getMessageSingleListAll", payload)
         .then(() => {
           this.pageConfig.pageNumber = this.singleListPage.pageNumber + 1;
           this.pageConfig.total = this.singleListPage.total;
           this.listData = this.singleListAll;
           console.log(this.singleListAll, "singleListAll");
         })
-        .catch(err => {
-          ;
-        });
+        .catch(err => {});
     },
     handleSearch(val) {
-      const { userName, departmentsUuid, roleUuid } = val;
-      this.query.userName = userName ? userName : userName;
-      this.query.departmentsUuid = departmentsUuid
-        ? departmentsUuid
-        : departmentsUuid;
-      this.query.roleUuid = roleUuid ? roleUuid : roleUuid;
+      const { content, startTime, endTime } = val;
+      this.query.content = content ? content : this.query.content;
+      this.query.startTime = startTime ? startTime : this.query.startTime;
+      this.query.endTime = endTime ? endTime : this.query.endTime;
       console.log(val, "handleSearch");
       this.initDataList(this.query);
     },
     handleRefresh() {
-      console.log("handleRefresh");
-      this.query = this.$options.data().query;
+      this.query.content = "";
+      this.query.startTime = "";
+      this.query.endTime = "";
       this.initDataList(this.query);
     },
-    resetForm() {
-      console.log("重置");
-      this.searchFrom = {
-        keyword: "",
-        planStatu: null
-      };
-    },
+    // resetForm() {
+    //   this.query.content = "";
+    //   this.query.startTime = "";
+    //   this.query.endTime = "";
+    //   this.initDataList(this.query);
+    // },
     // 聊天
     handleClick(tab, event) {
       console.log(tab, event);
-      this.pageConfig.page = 0;
+      this.query.page = 0;
       let msgType = tab.name;
-      if (tab.name == "all") {
-        msgType = "";
-      }
-      this.initDataList(this.fromUserId, this.toUserId, msgType);
+      this.query.msgType = msgType;
+      this.initDataList(this.query);
     },
     changePage(page) {
-      this.pageConfig.page = page - 1;
+      console.log(page, "page");
+      this.query.page = page - 1;
       this.pageConfig.pageNumber = page - 1;
       let msgType = this.activeName;
-      console.log(this.activeName, "999");
+      console.log(this.activeName, "999", this.pageConfig);
       if (msgType == "all") {
         msgType = "";
       }
-      this.initDataList(this.fromUserId, this.toUserId, msgType);
-    },
-    playAudio(url) {
-      console.log(url, "90点击");
-      const that = this;
-      var amr = new BenzAMRRecorder();
-      amr.initWithUrl(url).then(() => {
-        // amr.isPlaying() 返回音频的播放状态 是否正在播放 返回boolean类型
-        console.log(amr.isPlaying());
-        if (amr.isPlaying()) {
-          that.isPlayAudio = false;
-          amr.stop();
-        } else {
-          that.isPlayAudio = true;
-          amr.play();
-        }
-      });
-    },
-    async handleDownload(url, fileName, mime) {
-      // 下载附件
-      await downloadFile(url)
-        .then(res => {
-          const blob = new Blob([res.data], { type: mime });
-          // 注: mime类型必须整正确, 否则下载的文件会损坏
-          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            // 兼容IE
-            window.navigator.msSaveOrOpenBlob(blob, element.original_name);
-          } else {
-            const downloadElement = document.createElement("a");
-            downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
-            downloadElement.download = fileName;
-            downloadElement.click();
-            window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
-          }
-        })
-        .catch(error => {
-          console.error(error);
-        });
-
-      // axios
-      //   .get(url, { responseType: "blob" })
-      //   .then(res => {
-      //     let blob = new Blob([res.data], { type: mime });
-      //     // 注: mime类型必须整正确, 否则下载的文件会损坏
-      //     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      //       // 兼容IE
-      //       window.navigator.msSaveOrOpenBlob(blob, element.original_name);
-      //     } else {
-      //       let downloadElement = document.createElement("a");
-      //       downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
-      //       downloadElement.download = fileName;
-      //       downloadElement.click();
-      //       window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.error(error);
-      //   });
+      this.initDataList(this.query);
     }
   }
 };
@@ -543,7 +491,7 @@ export default {
 <style lang="scss">
 .list-single {
   .el-tabs__content {
-    background-color: #eeea;
+    background-color: #fff;
   }
 }
 </style>

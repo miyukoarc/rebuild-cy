@@ -1,67 +1,54 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-28 13:56:22
- * @LastEditTime: 2020-07-17 11:34:34
+ * @LastEditTime: 2020-07-15 16:00:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\header.vue
 --> 
 <template>
   <el-form ref="searchForm" inline label-width="120px">
-    <el-form-item label="搜索聊天内容：">
-      <el-input v-model.trim="query.content" placeholder="请输入搜索聊天内容"></el-input>
+    <el-form-item>
+      <el-input v-model.trim="query.keyword" size="mini" placeholder="请输入搜索聊天内容"></el-input>
     </el-form-item>
-
-    <el-form-item label="聊天时间：">
+    <el-form-item>
       <el-date-picker
+        size="mini"
         v-model="value"
         type="daterange"
-        :value-format="'yyyy-MM-dd HH:mm:ss'"
+        :value-format="'yyyy-MM-dd HH-mm-ss'"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         @change="handleSelectedTime"
-        :default-time="['00:00:00', '23:59:59']"
       ></el-date-picker>
     </el-form-item>
-
-    <div>
-      <el-form-item label=" ">
-        <el-t-button size="mini" type="primary" @click="handleSearch">搜索</el-t-button>
-        <el-t-button size="mini" @click="handleRefresh">重置</el-t-button>
-      </el-form-item>
-    </div>
+    <el-form-item>
+      <el-t-button type="primary" size="mini" @click="handleReport">导出</el-t-button>
+    </el-form-item>
   </el-form>
 </template>
 
 <script>
 import { mapState } from "vuex";
 export default {
+  name: "chatSearch",
   data() {
     return {
       query: {
-        content: "",
-        startTime: "",
-        endTime: ""
+        userName: ""
       },
       value: ""
     };
   },
   computed: {
-    ...mapState({
-      roleList: state => state.role.roleList,
-      departmentListSelect: state => state.department.listSelect
-    })
+    ...mapState({})
   },
   methods: {
     handleSelectedTime(val) {
       console.log(val);
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
-      this.$emit("handleSearch", this.query);
-    },
-    handleChangeFirst(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
@@ -75,11 +62,7 @@ export default {
     handleSearch() {
       this.$emit("handleSearch", this.query);
     },
-    handleRefresh() {
-      this.$emit("handleRefresh");
-      this.value = this.$options.data().value;
-      this.query = this.$options.data().query;
-    }
+    handleReport() {}
   }
 };
 </script>

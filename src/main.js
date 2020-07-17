@@ -1,11 +1,11 @@
 /*
  * @Author: your name
  * @Date: 2020-06-27 14:05:27
- * @LastEditTime: 2020-06-27 14:07:29
+ * @LastEditTime: 2020-07-16 20:51:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\main.js
- */ 
+ */
 import Vue from 'vue'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
@@ -14,7 +14,13 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
-import {MessageBox} from 'element-ui'
+import {
+    MessageBox
+} from 'element-ui'
+
+import animated from 'animate.css' // npm install animate.css --save安装，在引入
+
+Vue.use(animated)
 
 import '@/styles/index.scss' // global css
 import 'default-passive-events'
@@ -22,6 +28,12 @@ import 'default-passive-events'
 import App from './App'
 import store from './store'
 import router from './router'
+
+import * as filters from './filters' // global filters
+// register global utility filters
+Object.keys(filters).forEach(key => {
+    Vue.filter(key, filters[key])
+})
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -35,7 +47,12 @@ import ElSelectTree from 'el-select-tree'
 
 Vue.use(ElSelectTree)
 
+// 视频插件
+import VideoPlayer from 'vue-video-player'
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
 
+Vue.use(VideoPlayer)
 
 
 /**
@@ -57,8 +74,8 @@ Vue.use(ElSelectTree)
  * @electron环境判断
  */
 
+Vue.prototype.$isElectron = isElectron
 if (isElectron()) {
-    Vue.prototype.$isElectron = isElectron
     /*
     const electron = window.require('electron')
     const {
@@ -70,22 +87,24 @@ if (isElectron()) {
     const {BrowserWindow} = remote
     Vue.prototype.$BrowserWindow = BrowserWindow
     */
-  
+
     // console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
-  
+
     // ipcRenderer.on('asynchronous-reply', (event, arg) => {
     //   console.log(arg) // prints "pong"
     // })
     // ipcRenderer.send('asynchronous-message', 'ping')
     // console.log(remote)
-  }
+}
 
-Vue.component(TButton.name,TButton)
+Vue.component(TButton.name, TButton)
 
 // set ElementUI lang to EN
-Vue.use(ElementUI,{size: 'small'})
-// 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+Vue.use(ElementUI, {
+        size: 'small'
+    })
+    // 如果想要中文版 element-ui，按如下方式声明
+    // Vue.use(ElementUI)
 
 Vue.prototype.$bus = new Vue(); // event Bus 用于无关系组件间的通信。
 Vue.prototype.$confirm = MessageBox.confirm;
@@ -95,8 +114,8 @@ Vue.prototype.$confirm = MessageBox.confirm;
 Vue.config.productionTip = false
 
 new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App)
+    el: '#app',
+    router,
+    store,
+    render: h => h(App)
 })

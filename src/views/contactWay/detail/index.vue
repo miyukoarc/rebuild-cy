@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-11 11:15:45
- * @LastEditTime: 2020-07-09 11:17:59
+ * @LastEditTime: 2020-07-17 02:08:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\contactWay\detail.vue
@@ -166,25 +166,25 @@
                         slot="prefix"
                         v-if="ruleForm.link"
                       >
-                        <img style="width:20px;height:20px" :src="welcomecontentT.img" alt />
-                        <div style="margin-left:5px;line-height:14px ;text-align:left">
-                          <span>{{welcomecontentT.value}}</span>
-                          <div>{{welcomecontentT.label}}</div>
+                        <img style="width:20px;height:20px" :src="welcomecontentT.imgUrl" alt />
+                        <div class="input-title">
+                          <span>{{welcomecontentT.title}}</span>
+                          <div class="input-content text-over">{{welcomecontentT.description}}</div>
                         </div>
                       </div>
                       <el-option
-                        v-for="(item,index) in cities"
+                        v-for="(item,index) in articleListSelect"
                         :key="index"
-                        :label="item.label"
-                        :value="item.value"
+                        :label="item.title"
+                        :value="item.uuid"
                       >
                         <div class="option-warp flex-between-alinecenter">
                           <div class="link-img">
-                            <img class="option-img" :src="item.img" />
+                            <img class="option-img" :src="item.imgUrl" />
                           </div>
                           <div class="option-content flex-1">
-                            <p>{{ item.value }}</p>
-                            <p>{{item.label}}</p>
+                            <p>{{ item.title }}</p>
+                            <p>{{item.description}}</p>
                           </div>
                         </div>
                       </el-option>
@@ -217,13 +217,13 @@
                 <i class="el-icon-question" />
               </el-tooltip>
             </el-form-item>
-            <el-form-item label="开启时间:" prop="openTime">
+            <!-- <el-form-item label="开启时间:" prop="openTime">
               <el-radio-group v-model="ruleForm.openTime">
                 <el-radio label="1">全天开启</el-radio>
                 <el-radio label="2">选择时间段</el-radio>
               </el-radio-group>
-            </el-form-item>
-            <el-form-item label=" " v-show="ruleForm.openTime == '2'">
+            </el-form-item>-->
+            <!-- <el-form-item label=" " v-show="ruleForm.openTime == '2'">
               <el-time-select
                 placeholder="起始时间"
                 v-model="startTime"
@@ -235,7 +235,7 @@
                 :picker-options="{start: '07:30',step: '00:15',end: '23:59',minTime: startTime}"
               ></el-time-select>
               <div>在非开启「自动通过好友」时间段添加的好友，需要客服手动通过好友验证后才可添加</div>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label="二维码预览：" prop="qrCode">
               <div class="qr-code display-flex">
                 <div class="qr-code-warp">
@@ -270,13 +270,6 @@
 </template>
 
 <script>
-// import{ listTagAll }from'@/api/tag/list'
-// import{
-//   contactWayAdd,
-//   contactWayDetail,
-//   contactWayUpdate
-// }from'@/api/contactWay/index'
-// import{ userlistAll }from'@/api/user/index'
 import qrCode from "@/assets/0.png";
 import { mapState, mapMutations, mapActions } from "vuex";
 
@@ -318,6 +311,7 @@ export default {
       // 设置欢迎语
       messageImage: "",
       mediaId: "",
+      mediaUuid: "",
       insertName: true,
       cities: [
         {
@@ -350,6 +344,11 @@ export default {
   watch: {
     "ruleForm.welcomeContent": {
       handler(newVal, oldVal) {
+        console.log(
+          newVal,
+          "newVal",
+          newVal.indexOf('<span class="nickName">客户昵称</span>')
+        );
         if (newVal.indexOf('<span class="nickName">客户昵称</span>') > -1) {
           this.insertName = false;
         } else {
@@ -362,7 +361,8 @@ export default {
   computed: {
     ...mapState({
       tagListSelect: state => state.tag.tagListSelect,
-      userListAll: state => state.user.listSelect
+      userListAll: state => state.user.listSelect,
+      articleListSelect: state => state.media.articleListSelect
     }),
     tagData() {
       if (!this.isShow) {
@@ -376,7 +376,6 @@ export default {
   },
   created() {
     this.initFilter();
-    console.log(new Date(2016, 9, 10, 18, 40), "777");
     if (this.$route.query.uuid) {
       if (!this.$route.query.uuid) {
       } else {
@@ -397,7 +396,15 @@ export default {
           this.ruleForm.welComeType = res.welComeType;
           this.ruleForm.welcomeContent = res.welcomeContent;
           this.ruleForm.welComeMediaType = res.welComeMediaType;
-          this.messageImage = res.welcomeMediaContent;
+          if (res.welComeMediaType == "IMG") {
+            this.messageImage = res.welcomeMediaContent;
+          }
+          if (res.welComeMediaType == "LINK") {
+            this.ruleForm.link = Number(res.welcomeMediaContent);
+            this.welcomecontentT = this.articleListSelect.find(item => {
+              return item.uuid === this.ruleForm.link;
+            });
+          }
           res.serviceUsers.map(item => {
             this.ruleForm.member.push(item.userId);
           });
@@ -411,15 +418,15 @@ export default {
      * 初始化筛选信息
      */
     initFilter() {
-      // this.$store
-      //   .dispatch('tag/getListAllTag')
-      //   .then(() => {})
-      //   .catch(err => {
-      //     this.$message({
-      //       type: 'error',
-      //       message: '初始化失败'
-      //     })
-      //   })
+      this.$store
+        .dispatch("media/getArticleListSelect")
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: "初始化失败"
+          });
+        });
 
       this.$store
         .dispatch("tag/getListSelect")
@@ -466,6 +473,7 @@ export default {
           };
           if (this.ruleForm.welComeType != "MYWEL") {
             params.welcomeContent = "";
+            params.welComeMediaType = "IMG";
           } else {
             // if (!this.insertName) {
             //   // let welcomeContent = this.ruleForm.welcomeContent.replace(
@@ -478,6 +486,12 @@ export default {
             // }
             if (this.ruleForm.welComeMediaType == "IMG" && this.mediaId != "") {
               params.welcomeMediaContent = this.mediaId;
+            }
+            if (
+              this.ruleForm.welComeMediaType == "LINK" &&
+              this.mediaUuid != ""
+            ) {
+              params.welcomeMediaContent = this.mediaUuid;
             }
           }
           if (!this.$route.query.uuid) {
@@ -552,9 +566,6 @@ export default {
       this.ruleForm.welcomeContent =
         this.ruleForm.welcomeContent +
         `<span class="nickName">${memberNick}</span>&#8203;`;
-      // });
-      console.log(this.ruleForm.welcomeContent, "99");
-
       // this.ruleForm.welcomeContent = this.ruleForm.welcomeContent + val;
       // this.welcomecontentT = "#" + val + "#";
       // let start = this.ruleForm.welcomeContent.indexOf("ddd");
@@ -567,14 +578,10 @@ export default {
       // );
     },
     handleChoseLink(val) {
-      console.log(val, "val===");
-
-      this.welcomecontentT = this.cities.find(function(item) {
-        return item.value === val;
+      this.welcomecontentT = this.articleListSelect.find(item => {
+        return item.uuid === val;
       });
-      //obj 就是被选中的那个对象，也就能拿到label值了。
-      // console.log(obj.fruitName)//label值
-      console.log(this.welcomecontentT, "77777"); //value值
+      this.mediaUuid = this.welcomecontentT.uuid;
     }
   }
 };
@@ -766,11 +773,24 @@ img.option-img {
     background-color: #fff;
     color: #606266;
     font-size: 13px;
-    height: 38px;
+    height: 30px;
     outline: 0;
     padding: 0px 15px;
     margin-top: 1px;
     width: 100%;
+    .input-title {
+      margin-left: 5px;
+      font-size: 13px;
+      line-height: 14px;
+      text-align: left;
+    }
+    .input-content {
+      width: 450px;
+      height: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 }
 .contact-way-detail {

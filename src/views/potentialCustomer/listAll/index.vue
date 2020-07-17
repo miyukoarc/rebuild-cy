@@ -24,6 +24,7 @@
     <el-card class="content-spacing">
       <div>
         <el-table
+          ref="multipleTable"
           v-loading="loading"
           :data="listAll"
           style="width: 100%"
@@ -36,9 +37,9 @@
           header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="客户名" align="left" prop="name" width="150"></el-table-column>
-          <el-table-column label="手机号" align="left" prop="mobile" width="150"></el-table-column>
-          <el-table-column>
+          <el-table-column label="客户名" align="left" prop="name"></el-table-column>
+          <el-table-column label="手机号" align="left" prop="mobile"></el-table-column>
+          <el-table-column align="left" width="250">
             <template slot="header">
               <span>
                 预设标签
@@ -58,13 +59,40 @@
 
           <el-table-column label="所属员工" align="left">
             <template v-slot="{row}">
-              <user-tag :user="row.belong"></user-tag>
+              <div v-if="Object.keys(row.belong).length">
+                <async-user-tag :uuid="row.belong.uuid" size="small" type="info">
+                  <i class="el-icon-user-solid"></i>
+                  {{row.belong.name}}
+                </async-user-tag>
+              </div>
+              <div v-else>--</div>
             </template>
+            <!-- <template v-slot="{row}">
+              <user-tag :user="row.belong"></user-tag>
+            </template>-->
           </el-table-column>
           <el-table-column label="添加员工" align="left">
             <template v-slot="{row}">
-              <user-tag :user="row.creator"></user-tag>
+              <div v-if="Object.keys(row.creator).length">
+                <async-user-tag :uuid="row.creator.uuid" size="small" type="info">
+                  <i class="el-icon-user-solid"></i>
+                  {{row.creator.name}}
+                </async-user-tag>
+              </div>
+              <div v-else>--</div>
             </template>
+
+            <!-- <template v-slot="{row}">
+              <div v-if="Object.keys(row.belong).length">
+                <async-user-drawer :hasPop="true" :users="[row.creator]"></async-user-drawer>
+              </div>
+              <div v-if="Object.keys(row.toRole).length">
+                <role-drawer :roles="row.toRole"></role-drawer>
+              </div>
+            </template>-->
+            <!-- <template v-slot="{row}">
+              <user-tag :user="row.creator"></user-tag>
+            </template>-->
           </el-table-column>
           <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
           <el-table-column label="操作" align="left">
@@ -88,7 +116,7 @@
                 :popAuth="true"
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_delete']"
                 size="mini"
-                @click.stop="handleDelete(scope.$index)"
+                @click.stop="handleDelete(scope.row)"
               >删除</el-t-button>
               <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
@@ -119,8 +147,8 @@
 import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
 
+import AsyncUserTag from "@/components/AsyncUserTag";
 import TagsDrawer from "@/components/TagsDrawer";
-import UserTag from "@/components/UserTag";
 
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
@@ -134,7 +162,7 @@ export default {
     FormDialog,
     ToolBar,
     TagsDrawer,
-    UserTag
+    AsyncUserTag
     // mHeadedr
   },
   data() {
@@ -318,15 +346,19 @@ export default {
       }
     },
     handleAllocation(row) {
-      console.log(row, "row");
       row.uuid = [row.uuid];
+      console.log(row, "777");
+      this.$refs.multipleTable.clearSelection();
+      this.handleSelectionChange([row]);
+      this.selects.forEach(row => {
+        this.$refs.multipleTable.toggleRowSelection(row);
+      });
       this.$refs["formDialog"].event = "DistributeTemplate";
       this.$refs["formDialog"].eventType = "distribute";
       this.$refs["formDialog"].dialogVisible = true;
       this.$refs["formDialog"].transfer = row;
     },
     handleEdit(row) {
-      console.log(row, "row");
       const { belong, uuid, mobile } = row;
       let selectedTag = [];
       row.potentialCustomerTags.map(item => {
@@ -334,18 +366,16 @@ export default {
           selectedTag.push(tag.tagId);
         });
       });
-      console.log(selectedTag, "aaaa");
       const payload = { belong, uuid, selectedTag, mobile };
-      console.log(payload, "88");
       this.$refs["formDialog"].event = "EditTemplate";
       this.$refs["formDialog"].eventType = "edit";
       this.$refs["formDialog"].dialogVisible = true;
       this.$refs["formDialog"].transfer = payload;
     },
-    handleDelete(index) {
-      const { uuid } = this.listAll[index];
-      const payload = { uuid };
-      this.$confirm("是否删除当前客户", "Warning", {
+    handleDelete(row) {
+      const { uuid } = row;
+      const payload = { uuid: [uuid] };
+      this.$confirm("是否删除当前客户", "删除潜在客户", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -370,11 +400,12 @@ export default {
         .catch(err => {});
     },
     handleSelectionChange(val) {
-      console.log(val);
-      const arr = val;
-      this.selects = arr.map(item => {
-        return item.uuid;
-      });
+      console.log(val, "9999");
+      // const arr = val;
+      this.selects = val;
+      // this.selects = arr.map(item => {
+      //   return item.uuid;
+      // });
     }
   }
 };

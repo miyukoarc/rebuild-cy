@@ -16,12 +16,12 @@
           </el-t-button>
         </div>
       </el-form-item>
-      <el-form-item label>
+      <!-- <el-form-item label>
         <el-t-button size="mini" @click="handleAddContent">
           <i class="el-icon-plus"></i>
           添加内容
         </el-t-button>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-divider></el-divider>
       <h3>素材配置</h3>

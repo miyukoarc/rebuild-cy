@@ -6,12 +6,12 @@
           <el-form-item label="封面图">
             <el-upload
               class="avatar-uploader"
-              action="/upload"
+              action="/api/upload"
               :show-file-list="false"
               :on-success="onSuccess"
               :before-upload="beforeUpload"
             >
-              <el-image fit="contain" v-if="form.imgId" :src="coverUrl" class="avatar" />
+              <el-image fit="contain" v-if="form.imgId" :src="`/api/public/file/${form.imgId}`" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon" />
             </el-upload>
           </el-form-item>
@@ -208,7 +208,7 @@ export default {
     },
     handleCreate(payload) {
       this.$store
-        .dispatch('media/addMediaIsAudit', payload)
+        .dispatch('media/addArticleIsAudit', payload)
         .then(() => {
           this.$message({
             type: 'success',

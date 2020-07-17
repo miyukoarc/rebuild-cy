@@ -11,7 +11,7 @@
       <div>
         <el-table
           v-loading="loading"
-          :data="externalUserListAll"
+          :data="list"
           style="width: 100%"
           row-key="uuid"
           stripe
@@ -23,11 +23,11 @@
           <el-table-column label="客户名" align="left">
             <template v-slot="scope">
               <div class="user-card">
-                <!-- <el-image
-                  :src="scope.row.externalUser.avatar"
+                <el-image
+                  :src="scope.row.avatar"
                   lazy
                   style="width:30px;height:30px;margin-right:10px"
-                ></el-image>-->
+                ></el-image>
                 <div class="client-info">
                   <span class="remark">{{scope.row.remarkName}}</span>
                   <div>{{scope.row.wxNickName}}</div>
@@ -37,15 +37,20 @@
           </el-table-column>
           <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
-              <user-drawer :hasPop="true" :users="scope.row.user"></user-drawer>
+              <async-user-drawer :hasPop="true" :users="scope.row.user"></async-user-drawer>
             </template>
+          </el-table-column>
+            <!-- <template v-slot="scope">
+              <user-drawer :hasPop="false" :users="scope.row.user"></user-drawer>
+            </template> -->
           </el-table-column>
           <el-table-column label="企业标签" align="left">
             <template v-slot="scope">
               <tags-drawer-obj
-                v-if="scope.row.externalUserDetailCorpTagsList.corpTags !==null"
+                v-if="scope.row.externalUserDetailCorpTagsList.corpTags !=null"
                 :tags="scope.row.externalUserDetailCorpTagsList.corpTags"
               ></tags-drawer-obj>
+              <span v-else>--</span>
             </template>
           </el-table-column>
           <el-table-column label="添加时间" align="left" prop="createdAt"></el-table-column>
@@ -93,13 +98,16 @@ import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 
+import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import UserDrawer from "@/components/UserDrawer";
 import TagsDrawerObj from "@/components/TagsDrawerObj";
+
 
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
+    AsyncUserDrawer,
     ListHeader,
     UserDetail,
     FormDialog,
@@ -133,8 +141,8 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
       loading: state => state.externalUser.loading,
-      externalUserListAll: state => state.externalUser.list,
-      listAllPage: state => state.externalUser.listAllPage,
+      list: state => state.externalUser.list,
+      page: state => state.externalUser.page,
       permissionMap: state => state.permission.permissionMap
     })
   },
@@ -152,13 +160,13 @@ export default {
         .dispatch("externalUser/getExternalUserListMy", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.listAllPage.pageNumber + 1;
-          this.pageConfig.total = this.listAllPage.total;
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
         })
         .catch(err => {
           this.$message({
             type: "error",
-            message: "err"
+            message:  err||"初始化失败"
           });
         });
     },

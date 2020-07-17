@@ -1,11 +1,11 @@
 <template>
-  <el-form ref="searchForm" inline label-width="120px" class="run-way-list-all-header">
+  <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
     <el-form-item label="客户名称：">
-      <el-input v-model.trim="query.name" clearable></el-input>
+      <el-input v-model.trim="query.name" clearable placeholder="请输入客户名称"></el-input>
     </el-form-item>
 
-    <!-- <el-form-item label="添加渠道：">
-      <el-select v-model="query.contractWayId" clearable @change="handleSelectedChange">
+    <el-form-item label="添加渠道：">
+      <el-select v-model="query.contractWayId"  @change="handleSelectedChange">
         <el-option
           v-for="(item,index) in contractWay"
           :key="index"
@@ -13,26 +13,15 @@
           :value="item.id"
         ></el-option>
       </el-select>
-    </el-form-item>-->
-
-    <el-form-item label="流失类型：">
-      <el-select v-model="query.delFollow" @change="handleSelectedChange">
-        <el-option
-          v-for="(item,index) in typeOptions"
-          :key="index"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
     </el-form-item>
 
     <el-form-item label="所属员工：">
-      <el-select v-model="query.userUuid" @change="handleSelectedChange">
+      <el-select v-model="query.userId"  @change="handleSelectedChange">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
           :label="item.name"
-          :value="item.uuid"
+          :value="item.userId"
         ></el-option>
       </el-select>
     </el-form-item>
@@ -50,7 +39,6 @@
       ></el-date-picker>
     </el-form-item>
 
-    <!-- <div class="tag-warp"> -->
     <el-form-item label="客户标签：">
       <div class="tag-border">
         <el-select
@@ -59,10 +47,10 @@
           size="mini"
           multiple
         >
-          <el-option-group v-for="item in tagListAll" :key="item.groupId" :label="item.groupName">
+          <el-option-group v-for="(item,key) in tagListAll" :key="key" :label="item.groupName">
             <el-option
-              v-for="child in item.tagList"
-              :key="child.uuid"
+              v-for="(child,index) in item.tagList"
+              :key="index"
               :label="child.tagName"
               :value="child.uuid"
             ></el-option>
@@ -84,8 +72,6 @@
       </div>
     </el-form-item>
 
-    <!-- </div> -->
-
     <div class="handle-warp">
       <el-form-item label=" ">
         <el-t-button size="mini" type="primary" @click="handleSearch">搜索</el-t-button>
@@ -101,25 +87,6 @@ export default {
   data() {
     return {
       value: [],
-      query: {
-        name: "",
-        userUuid: "",
-        tagIds: [],
-        flag: true,
-        startTime: "",
-        endTime: "",
-        delFollow: ''
-      },
-      typeOptions: [
-        {
-          label: "主动删除客户",
-          value: false
-        },
-        {
-          label: "被客户删除",
-          value: true
-        }
-      ],
       contractWay: [
         {
           type: "员工主动添加",
@@ -134,6 +101,15 @@ export default {
           id: "3"
         }
       ],
+      query: {
+        name: "",
+        contractWayId: "",
+        userId: "",
+        tagIds: [],
+        flag: true,
+        startTime: "",
+        endTime: ""
+      },
       timer: null
     };
   },
@@ -170,14 +146,13 @@ export default {
       this.$emit("handleRefresh");
       this.value = this.$options.data().value;
       this.query = this.$options.data().query;
-      
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.run-way-list-all-header {
+.external-user-list-all-header {
   .tag-border {
     border: 1px solid #dcdfe6;
     padding: 1px 5px;

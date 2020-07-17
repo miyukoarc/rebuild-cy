@@ -12,13 +12,13 @@
       <div>
         <el-table
           v-loading="loading"
-          :data="runWayListAll"
+          :data="runWayList"
           style="width: 100%"
           row-key="uuid"
           stripe
           lazy
           highlight-current-row
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="流失客户" align="left">
@@ -42,13 +42,27 @@
             </template>
           </el-table-column>
           <el-table-column label="所属员工" align="left">
-            <template v-slot="scope">
-              <user-tag :user="scope.row.user" :hasPop="hasPop"></user-tag>
+            <template v-slot="{row}">
+              <div v-if="Object.keys(row.user).length">
+                <async-user-tag
+                  size="small"
+                  v-for="item in [row.user]"
+                  type="info"
+                  :key="item.uuid"
+                  :uuid="item.uuid"
+                >
+                  <i class="el-icon-user-solid"></i>
+                  {{item.name}}
+                </async-user-tag>
+              </div>
+              <!-- <!-- <div v-if="Object.keys(row.toRole).length">
+                <role-drawer :roles="row.toRole"></role-drawer>
+              </div>-->
             </template>
           </el-table-column>
           <el-table-column label="标签" align="left">
             <template v-slot="scope">
-              <tags-drawer v-if="scope.row.tags" :tags="scope.row.tags.corpTags"></tags-drawer>
+              <tags-drawer-obj v-if="scope.row.tags" :tags="scope.row.tags.corpTags"></tags-drawer-obj>
             </template>
           </el-table-column>
           <el-table-column label="流失时间" align="left" prop="updatedAt"></el-table-column>
@@ -97,19 +111,19 @@ import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
 
-// import UserDrawer from "@/components/UserDrawer";
-import TagsDrawer from "@/components/TagsDrawer";
+import AsyncUserTag from "@/components/AsyncUserTag";
+import TagsDrawerObj from "@/components/TagsDrawerObj";
 import UserTag from "@/components/UserTag";
 
 export default {
-  name: "runWayListAll",
+  name: "runWayList",
   components: {
     ListHeader,
     UserDetail,
     FormDialog,
     ToolBar,
-    // UserDrawer,
-    TagsDrawer,
+    AsyncUserTag,
+    TagsDrawerObj,
     UserTag
     // mHeadedr
   },
@@ -140,8 +154,8 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListAll,
       loading: state => state.externalUser.loading,
-      runWayListAll: state => state.externalUser.runWayListAll,
-      runWayListAllPage: state => state.externalUser.runWayListAllPage
+      runWayList: state => state.externalUser.runWayList,
+      runWayPage: state => state.externalUser.runWayPage
     })
   },
   created() {
@@ -157,8 +171,8 @@ export default {
         .dispatch("externalUser/getRunWayList", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1;
-          this.pageConfig.total = this.runWayListAllPage.total;
+          this.pageConfig.pageNumber = this.runWayPage.pageNumber + 1;
+          this.pageConfig.total = this.runWayPage.total;
         })
         .catch(err => {
           console.error(err);
@@ -211,12 +225,12 @@ export default {
         endTime,
         delFollow
       } = val;
-      if(delFollow === ''){
-        this.query.delFollow = ''
-      }else if(delFollow === true){
-        this.query.delFollow = true
-      }else{
-        this.query.delFollow = false
+      if (delFollow === "") {
+        this.query.delFollow = "";
+      } else if (delFollow === true) {
+        this.query.delFollow = true;
+      } else {
+        this.query.delFollow = false;
       }
       this.query.flag = flag ? true : false;
       this.query.name = name ? name : this.query.name;

@@ -1,13 +1,13 @@
 <template>
   <div class="header-container">
     <div class="left-region">
-      <el-checkbox v-model="checked" @change="handleSelectAll">全选</el-checkbox>
-      <el-button type="text">
-          <i class="el-icon-s-unfold"></i>
+      <el-button style="margin-left:10px;" type="text" @click="handleToggleLayout(mode='list')">
+          <i :class="[mode==='grid'?'color-info':'color-primary','el-icon-s-unfold']"></i>
       </el-button>
-      <el-button type="text">
-          <i class="el-icon-menu"></i>
+      <el-button type="text" @click="handleToggleLayout(mode='grid')">
+          <i :class="[mode==='list'?'color-info':'color-primary',,'el-icon-menu']"></i>
       </el-button>
+      <el-checkbox style="margin-left:20px;" v-if="mode==='grid'" v-model="checked" @change="handleSelectAll">全选</el-checkbox>
     </div>
     <div class="right-region">
       <el-t-button v-if="hasBatch" size="mini" type="primary" @click="handleBatchTransfer">移至分组</el-t-button>
@@ -31,12 +31,13 @@ export default {
   },
   data(){
       return {
-          checked: false
+          checked: false,
+          mode: 'list'//list//grid
       }
   },
   methods: {
     handleSelectAll(){
-        this.$emit('selectAll')
+        this.$emit('selectAll',this.checked)
     },
     handleBatchTransfer() {
         this.$emit('batchTransfer')
@@ -46,6 +47,11 @@ export default {
     },
     handleAddMedia() {
         this.$emit('addMedia')
+    },
+    handleToggleLayout(mode){
+        this.mode = mode
+        // console.log(mode)
+        this.$emit('toggleLayout',mode)
     }
   }
 }
@@ -55,9 +61,6 @@ export default {
 .header-container {
   display: flex;
   justify-content: space-between;
-  .left-region {
-  }
-  .right-region {
-  }
+
 }
 </style>

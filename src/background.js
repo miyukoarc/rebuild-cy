@@ -73,6 +73,7 @@ function createWindow() {
     // win.loadURL('./dist/index.html')
 
   }
+// win.loadFile('./dist/index.html')
 
 
   win.on('ready-to-show', () => {
@@ -85,9 +86,14 @@ function createWindow() {
     event.preventDefault();
   })
 
-//   win.on('maximize',(event,args)=>{
-    //   console.log('最大化')
-//   })
+  win.on('maximize',(event,args)=>{
+
+      win.webContents.send('maximizeWindow',true)
+  })
+
+  win.on('unmaximize',(event,args)=>{
+      win.webContents.send('unmaximizeWindow',false)
+  })
 
 
 }

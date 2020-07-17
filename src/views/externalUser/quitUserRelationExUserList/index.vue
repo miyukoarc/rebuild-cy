@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-card class="content-spacing">
-      <list-header></list-header>
+      <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 
     <el-card class="content-spacing">
@@ -20,6 +20,7 @@
     <el-card class="content-spacing">
       <div>
         <el-table
+          ref="multipleTable"
           v-loading="loading"
           :data="quitUserRelationExUserList"
           style="width: 100%"
@@ -72,7 +73,7 @@
                 size="mini"
                 :popAuth="true"
                 :auth="permissionMap['externalUser']['externalUser_redistributionExUser']"
-                @click.stop="handleDistributeSingle(scope.$index)"
+                @click.stop="handleDistributeSingle(scope.row)"
               >分配</el-t-button>
               <el-t-button
                 :popAuth="true"
@@ -131,13 +132,12 @@ export default {
       },
 
       query: {
-        // page: 0,
-        // size: 10,
-        // flag: true,
-        // name: '',
-        // tagIds: '',
-        // userId: '',
-        // roleUuid: ''
+        page: 0,
+        size: 10,
+        status: "",
+        name: "",
+        startTime: "",
+        endTime: ""
       },
       // 选择勾选
       selectedAllData: []
@@ -152,6 +152,7 @@ export default {
         state.enum.quitUserRelationExUserListUserStatus,
       quitUserRelationExUserList: state =>
         state.externalUser.quitUserRelationExUserList,
+      quitListPage: state => state.externalUser.quitListPage,
       permissionMap: state => state.permission.permissionMap
     })
   },
@@ -172,15 +173,15 @@ export default {
      * 初始化筛选信息
      */
     initFilter() {
-      this.$store
-        .dispatch("tag/getListSelect")
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+      // this.$store
+      //   .dispatch("tag/getListSelect")
+      //   .then(() => {})
+      //   .catch(err => {
+      //     this.$message({
+      //       type: "error",
+      //       message: err || "初始化失败"
+      //     });
+      //   });
       this.$store
         .dispatch("department/getDepartmentListAll")
         .then(() => {})
@@ -191,15 +192,15 @@ export default {
           });
         });
 
-      this.$store
-        .dispatch("user/getUserListSelect")
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+      // this.$store
+      //   .dispatch("user/getUserListSelect")
+      //   .then(() => {})
+      //   .catch(err => {
+      //     this.$message({
+      //       type: "error",
+      //       message: "初始化失败"
+      //     });
+      //   });
     },
     /**
      * 初始化表格信息
@@ -209,16 +210,29 @@ export default {
         .dispatch("externalUser/getQuitUserRelationExUserList", payload)
         .then(() => {
           //初始化分页
-          // this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1
-          // this.pageConfig.total = this.runWayListAllPage.total
+          this.pageConfig.pageNumber = this.quitListPage.pageNumber + 1;
+          this.pageConfig.total = this.quitListPage.total;
         })
         .catch(err => {
           console.error(err);
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: err || "初始化失败"
           });
         });
+    },
+    handleSearch(val) {
+      const { name, status, startTime, endTime } = val;
+      this.query.name = name ? name : this.query.name;
+      this.query.status = status ? status : this.query.status;
+      this.query.startTime = startTime ? startTime : this.query.startTime;
+      this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.initDataList(this.query);
+    },
+    handleRefresh() {
+      console.log("handleRefresh");
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     handleDetail(row) {
       console.log(row, "row");
@@ -227,10 +241,6 @@ export default {
         path: "/user/detail/" + uuid
         // query: { uuid: payload }
       });
-      // this.$router.push({
-      //   path: "/externalUser/quitUserRelationExUserDetail",
-      //   query: { userId: userId }
-      // });
     },
     handleDistribute() {
       if (this.selectedAllData.length) {
@@ -245,17 +255,18 @@ export default {
         });
       }
     },
-    handleDistributeSingle(index) {
-      console.log("index", this.quitUserRelationExUserList[index]);
+    handleDistributeSingle(row) {
+      this.$refs.multipleTable.clearSelection();
+      this.handleSelectionChange([row]);
+      this.selectedAllData.forEach(row => {
+        this.$refs.multipleTable.toggleRowSelection(row);
+      });
       const payload = {};
       this.$refs["formDialog"].event = "DistributeTemplate";
       this.$refs["formDialog"].eventType = "distribute";
       this.$refs["formDialog"].dialogVisible = true;
       this.$refs["formDialog"].transfer = payload;
-      this.$store.commit(
-        "externalUser/SAVE_QUITUSERCURRENTROW",
-        this.quitUserRelationExUserList[index]
-      );
+      this.$store.commit("externalUser/SAVE_QUITUSERCURRENTROW", row);
     },
     changePage(key) {
       this.query.page = key - 1;

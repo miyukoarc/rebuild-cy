@@ -43,7 +43,7 @@
               </h4>
               <div
                 class="tag-line"
-                v-if="externalUserDetail.externalUserDetailCorpTagsList.corpTags != '{}'"
+                v-if="externalUserDetail.externalUserDetailCorpTagsList.corpTags != null"
               >
                 <span
                   v-for="(companyTags,key,index) in externalUserDetail.externalUserDetailCorpTagsList.corpTags"
@@ -433,14 +433,15 @@ export default {
       this.$refs["formDialog"].eventType = "editTags";
       this.$refs["formDialog"].dialogVisible = true;
       this.$refs["formDialog"].uuid = payload + "";
-      this.$store.commit(
-        "externalUser/SAVE_EDITTAGSUUID",
-        this.externalUserDetail.externalUserDetailCorpTagsList.corpTags
-      );
+      if (this.externalUserDetail?.externalUserDetailCorpTagsList?.corpTags) {
+        this.$store.commit(
+          "externalUser/SAVE_EDITTAGSUUID",
+          this.externalUserDetail.externalUserDetailCorpTagsList.corpTags
+        );
+      }
     },
     // 聊天
     handleDetail(row) {
-      console.log(row, "row");
       // const userId = row.userId;
       // const externalUserId = this.user[index].externalUser.externalUserId;
       // const query = {
@@ -451,10 +452,22 @@ export default {
       //   path: "/message/singleListAll",
       //   query
       // });
+      console.log(row, "row");
+      const userId = row.userId;
+      const externalUserId = this.externalUserDetail.externalUserDetail
+        .externalUserId;
+      const query = {
+        userId,
+        externalUserId
+      };
+      this.$router.push({
+        path: "/message/singleListAll",
+        query
+      });
     },
     // 群
     handleGroupRouter(item) {
-      console.log(item)
+      console.log(item);
       this.$router.push({
         path: "/externalUser/groupDetail",
         query: {

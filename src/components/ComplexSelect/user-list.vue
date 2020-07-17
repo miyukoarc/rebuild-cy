@@ -11,7 +11,7 @@
           @change="handleCheckAllChange"
         >全选</el-checkbox> -->
         <el-checkbox-group v-model="selects" @change="handleChange">
-          <div v-for="item in list" :key="item.uuid" style="margin-bottom:3px;">
+          <div v-for="(item,index) in list" :key="index" style="margin-bottom:3px;">
             <el-checkbox :label="item.uuid">
               <el-tag size="mini" type="info">
                 <i class="el-icon-user-solid"></i>
