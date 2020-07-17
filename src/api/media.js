@@ -145,10 +145,11 @@ export const updataArticle = (payload) => {
  * 文章的浏览记录
  * @param {string} uuid
  */
-export const articleLog = (uuid) => {
+export const browsingRecords = (uuid,data) => {
     return request({
         url: '/media/browsingRecords/' + uuid,
         method: 'get',
+        data: data
     })
 }
 
@@ -245,3 +246,5 @@ export const moveMedieToGroup = (payload) => {
         data: payload
     })
 }
+
+

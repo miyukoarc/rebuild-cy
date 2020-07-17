@@ -38,12 +38,21 @@
             <template v-slot="scope">
               <el-t-button
                 size="mini"
+                type="text"
                 @click.stop="handleEdit(scope.$index)"
                 :popAuth="true"
-                :auth="permissionMap['media']['media_article/update']"
+                :auth="permissionMap['media']['media_article_update']"
               >编辑</el-t-button>
               <el-t-button
                 size="mini"
+                type="text"
+                @click.stop="handleRecords(scope.$index)"
+                :popAuth="true"
+                :auth="permissionMap['media']['media_browsing_Records']"
+              >记录</el-t-button>
+              <el-t-button
+                size="mini"
+                type="text"
                 @click.stop="handleDelete(scope.$index)"
                 :popAuth="true"
                 :auth="permissionMap['media']['media_delete']"
@@ -231,6 +240,13 @@ export default {
         .catch(err => {
           console.error(err)
         })
+    },
+    handleRecords(index){
+        const uuid = this.listAll[index].uuid
+        this.$router.push({
+            path: '/media/browsingRecords/'+uuid
+        })
+
     }
   }
 }

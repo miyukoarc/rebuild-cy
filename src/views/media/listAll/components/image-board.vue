@@ -27,7 +27,7 @@
               <el-image
                 fit="cover"
                 style="width:36px;height:36px;cursor:pointer;"
-                :src="`/public/file/${row.localId}`"
+                :src="`/api/public/file/${row.localId}`"
                 @click="handleView(row.localId)"
               ></el-image>
             </template>
@@ -52,7 +52,7 @@
       </keep-alive>
 
       <el-dialog :visible.sync="dialogVisible" :width="width">
-        <el-image :src="`/public/file/${originImage}`" @load="onLoad"></el-image>
+        <el-image :src="`/api/public/file/${originImage}`" @load="onLoad"></el-image>
       </el-dialog>
     </div>
     <dialog-transfer

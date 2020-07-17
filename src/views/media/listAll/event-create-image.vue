@@ -6,7 +6,7 @@
         <el-upload
           ref="upload"
           multiple
-          action="/media/addMediaIsAudit"
+          action="/api/media/addMediaIsAudit"
           :show-file-list="true"
           :file-list="fileList"
           :before-upload="beforeImageUpload"
