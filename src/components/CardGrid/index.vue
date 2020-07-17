@@ -9,7 +9,7 @@
                 <span>{{item.content}}</span>
               </div>
               <div v-if="item.type==='IMAGE'" @click="handleViewImage(item.localId)">
-                <el-image fit="cover" :src="`/public/file/${item.localId}`"></el-image>
+                <el-image fit="cover" :src="`/api/public/file/${item.localId}`"></el-image>
                 <div class="cover">
                   <i class="el-icon-picture-outline icon"></i>
                 </div>

@@ -9,7 +9,8 @@ import {
     addArticleIsAudit,
     deleteMediaIsAudit,
     batchDeleteMedia,
-    moveMedieToGroup
+    moveMedieToGroup,
+    browsingRecords
 } from '@/api/media'
 
 import {
@@ -54,7 +55,12 @@ const state = {
     /**
      * 当前文章详细
      */
-    articleDetail: {}
+    articleDetail: {},
+
+    /**
+     * 文章阅读记录
+     */
+    browsingRecords: []
 }
 
 const mutations = {
@@ -134,6 +140,12 @@ const mutations = {
     SAVE_ARTICLEDETAIL(state, payload) {
         state.articleDetail = payload
     },
+    /**
+     * 保存阅读记录
+     */
+    SAVE_RECORDS(state,payload){
+        state.browsingRecords = payload
+    }
 
 }
 
@@ -370,7 +382,7 @@ const actions = {
         })
     },
     /**
-     * 
+     * 新建素材包含是否审核
      * @param {*} param0 
      * @param {*} payload 
      */
@@ -382,6 +394,21 @@ const actions = {
                 reject(err)
             })
         })
+    },
+    /**
+     * 文章的浏览记录
+     * @param {*} param0 
+     * @param {*} payload 
+     */
+    browsingRecords({commit},payload){
+       return new Promise((resolve,reject)=>{
+           browsingRecords(payload).then(res=>{
+            //    commit('SAVE_')
+               resolve()
+           }).catch(err=>{
+               reject(err)
+           })
+       })
     }
 
 }
