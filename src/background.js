@@ -211,7 +211,7 @@ ipcMain.on('asynchronous-message', (event, arg) => {
 
 
 
-// 2020-07-17，汪轩昂新增
+// 2020-07-17，汪轩昂新增1
 ipcMain.on('openChat', (event, arg) => {
   var edge = require('electron-edge-js');
   const path = require('path');
@@ -230,7 +230,7 @@ ipcMain.on('openChat', (event, arg) => {
   })
 })
 
-// 2020-07-17，汪轩昂新增
+// 2020-07-17，汪轩昂新增2
 ipcMain.on('inputEnter', (event, arg) => {
   var edge = require('electron-edge-js');
   const path = require('path');
@@ -246,5 +246,43 @@ ipcMain.on('inputEnter', (event, arg) => {
 
   inputEnter(arg, (err, res) => {
     event.reply("reply-inputEnter", { err, res, val: arg })
+  })
+})
+
+// 2020-07-17，汪轩昂新增3
+ipcMain.on('AddCustomerByMobiles', (event, arg) => {
+  var edge = require('electron-edge-js');
+  const path = require('path');
+  process.env.EDGE_USE_CORECLR = 1;
+  var basePath = process.cwd();
+  var baseDll = basePath + '/resources/app/lib/ClassLibraryChaoying.dll';
+
+  const AddCustomerByMobiles = edge.func({
+    assemblyFile: baseDll,
+    typeName: 'ClassLibraryChaoying.WorkWx',
+    methodName: 'AddCustomerByMobiles'
+  });
+
+  AddCustomerByMobiles(arg, (err, res) => {
+    event.reply("reply-AddCustomerByMobiles", { err, res, val: arg })
+  })
+})
+
+// 2020-07-17，汪轩昂新增4
+ipcMain.on('SendMessage', (event, arg) => {
+  var edge = require('electron-edge-js');
+  const path = require('path');
+  process.env.EDGE_USE_CORECLR = 1;
+  var basePath = process.cwd();
+  var baseDll = basePath + '/resources/app/lib/ClassLibraryChaoying.dll';
+
+  const SendMessage = edge.func({
+    assemblyFile: baseDll,
+    typeName: 'ClassLibraryChaoying.WorkWx',
+    methodName: 'SendMessage'
+  });
+
+  SendMessage(arg, (err, res) => {
+    event.reply("reply-SendMessage", { err, res, val: arg })
   })
 })

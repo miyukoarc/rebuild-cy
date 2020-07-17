@@ -53,7 +53,11 @@ export default {
       this.$parent.$parent.dialogVisible = false;
     },
     handleConfirm() {
-      const payload = { ...this.form, customerUuids: this.transfer };
+      let customerUuids = [];
+      this.transfer.map((obj, index) => {
+        customerUuids[index] = obj.uuid;
+      });
+      const payload = { ...this.form, customerUuids };
       this.$refs["form"].validate(valid => {
         if (valid) {
           console.log(payload);

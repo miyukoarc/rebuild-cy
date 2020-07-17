@@ -95,7 +95,7 @@ export const getListMy = (payload) => {
  */
 export const sendResultHasSend = (payload) => {
   return request({
-    url: '/batchSendTask/sendResultHasSend/',
+    url: '/batchSendTask/sendResultHasSend',
     method: 'post',
     data: payload
   })

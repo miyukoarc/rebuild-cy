@@ -54,6 +54,7 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
     // host: 'www.sdk.com',
     disableHostCheck: true,
     proxy: {
+<<<<<<< Updated upstream
         [process.env.VUE_APP_BASE_API]: {
             // target: 'http://47.111.161.128:9000/',
             //   target: 'http://10.10.10.4:9000', // 光
@@ -131,6 +132,99 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
 }
 
 
+=======
+      [process.env.VUE_APP_BASE_API]: {
+        // target: 'http://47.111.161.128:9000/',
+        //   target: 'http://10.10.10.4:9000', // 光
+        // target: 'http://10.10.10.33', // 杜亮
+        target: 'http://10.10.10.198', // 骋昊
+        // ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      },
+      '/public': {
+        // target: 'http://10.10.10.33', // 杜亮
+
+        //   target: 'http://47.111.161.128:9000/',
+        target: 'http://10.10.10.198',
+        changeOrigin: true,
+      },
+      // "/api": {
+      //   target: "http://localhost:80",
+      //   secure: false,
+      //   autoRewrite: true,
+      //   pathRewrite: {
+      //     "^/api": ""
+      //   }
+      // },
+      [process.env.VUE_APP_BASE_API]: {
+        headers: {
+          Host: 'sidebar.cyscrm.com'
+        },
+        // target: 'http://47.111.161.128:9000/',
+        target: "http://10.10.10.198", //陈浩
+        // target: "http://sidebar.cyscrm.com:9000"//线上
+        // target: "http://10.10.10.33", //杜亮
+        //   target: 'http://10.10.10.4:9000', //光
+        // target: "http://47.111.161.128:80",
+        secure: false,
+        // ws: true,
+        pathRewrite: {
+          "^/api": ""
+        }
+      },
+      "/api": {
+        headers: {
+          Host: 'sidebar.cyscrm.com'
+        },
+        // target: 'http://47.111.161.128:9000/',
+        target: "http://10.10.10.198", //陈浩
+        // target: "http://sidebar.cyscrm.com:9000"//线上
+        // target: "http://10.10.10.33", //杜亮
+        // target: 'http://10.10.10.4:9000', //光
+        // target: "http://47.111.161.128:80",
+        secure: false,
+        // ws: true,
+        pathRewrite: {
+          "^/api": ""
+        }
+      },
+      '/file': {
+        target: `http://192.168.1.198:9000/file`,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/file': '',
+        },
+      },
+      target: 'http://47.111.161.128:9000/',
+      // target: "http://10.10.10.33", //陈浩
+      // target: "http://sidebar.cyscrm.com:9000"//线上
+      // target: "http://10.10.10.156", //杜亮
+      //   target: 'http://10.10.10.4:9000', //光
+      // target: "http://47.111.161.128:80",
+      secure: false,
+      changeOrigin: true,
+      ws: true,
+      pathRewrite: {
+        "^/api": ""
+      }
+    },
+    // '/file': {
+    //   target: `http://192.168.1.198:9000/file`,
+    //   changeOrigin: true,
+    //   pathRewrite: {
+    //     '^/file': '',
+    //   },
+    // },
+    // '/ws': {
+    //   target: 'http://47.111.161.128:9000', // 
+    //   changeOrigin: true,
+    //   ws: true,
+    // }
+  }
+>>>>>>> Stashed changes
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
     /**
