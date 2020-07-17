@@ -6,7 +6,7 @@
 
     <el-form-item label="触发员工">
       <!-- <el-input v-model.trim="query.userUuid"></el-input> -->
-      <el-select v-model="query.userUuid">
+      <el-select v-model="query.userUuid" @change="handleChangeThird">
         <el-option
           v-for="item in userListAll"
           :key="item.uuid"
