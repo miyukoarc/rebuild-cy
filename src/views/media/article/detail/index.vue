@@ -11,7 +11,12 @@
               :on-success="onSuccess"
               :before-upload="beforeUpload"
             >
-              <el-image fit="contain" v-if="form.imgId" :src="`/api/public/file/${form.imgId}`" class="avatar" />
+              <el-image
+                fit="contain"
+                v-if="form.imgId"
+                :src="`/api/public/file/${form.imgId}`"
+                class="avatar"
+              />
               <i v-else class="el-icon-plus avatar-uploader-icon" />
             </el-upload>
           </el-form-item>
@@ -43,6 +48,7 @@
           :auth="permissionMap['media']['media_add']"
           type="primary"
           @click="handleConfirm"
+          :throttle="5000"
         >保存文章</el-t-button>
       </div>
       <div>
@@ -73,6 +79,7 @@ export default {
         imgId: ''
       },
       groupUuid: '',
+      flag: false,
       type: 'ARTICLE'
     }
   },
@@ -179,7 +186,7 @@ export default {
         const payload = this.form
         const groupUuid = this.groupUuid
         const uuid = this.$route.params.uuid
-        this.handleUpdate({data:{...payload,uuid},params:{groupUuid}})
+        this.handleUpdate({ data: { ...payload, uuid }, params: { groupUuid } })
       }
       if (this.mode === 'CREATE') {
         const payload = this.form
@@ -188,6 +195,7 @@ export default {
         // console.log({data:payload,params:{type,groupUuid}})
         this.handleCreate({ data: payload, params: { type, groupUuid } })
       }
+      this.flag = true
     },
     handleUpdate(payload) {
       this.$store
@@ -195,7 +203,12 @@ export default {
         .then(() => {
           this.$message({
             type: 'success',
-            message: '操作成功'
+            message: '操作成功',
+            duration: 1000,
+            onClose: () => {
+              this.$router.go(-1)
+              this.flag = false
+            }
           })
         })
         .catch(err => {
@@ -212,7 +225,12 @@ export default {
         .then(() => {
           this.$message({
             type: 'success',
-            message: '操作成功'
+            message: '操作成功',
+            duration: 1000,
+            onClose: () => {
+              this.$router.go(-1)
+              this.flag = false
+            }
           })
         })
         .catch(err => {

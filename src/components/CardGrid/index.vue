@@ -8,7 +8,11 @@
               <div v-if="item.type==='TEXT'">
                 <span>{{item.content}}</span>
               </div>
-              <div v-if="item.type==='IMAGE'" @click="handleViewImage(item.localId)">
+              <div
+                v-if="item.type==='IMAGE'"
+                @click="handleViewImage(item.localId)"
+                style="cursor: pointer;"
+              >
                 <el-image fit="cover" :src="`/api/public/file/${item.localId}`"></el-image>
                 <div class="cover">
                   <i class="el-icon-picture-outline icon"></i>
@@ -30,7 +34,11 @@
                 </div>
               </div>
 
-              <div v-if="item.type==='VIDEO'" @click="handleViewVideo(item.localId)">
+              <div
+                v-if="item.type==='VIDEO'"
+                @click="handleViewVideo(item.localId)"
+                style="cursor: pointer;"
+              >
                 <div>
                   <video-cover :url="item.localId"></video-cover>
                 </div>
@@ -63,22 +71,33 @@
       <span class="tips font-exs color-info">暂无数据</span>
     </div>
 
-    <el-dialog :visible.sync="dialogVisible" :width="width">
-      <el-image v-if="view==='image'" :src="`/public/file/${imageUrl}`" @load="onLoad"></el-image>
+    <el-dialog :visible.sync="dialogVisible" :width="width" center title="适用标签">
+      <el-image v-if="view==='image'" :src="`/api/public/file/${imageUrl}`" @load="onLoad"></el-image>
       <video
         v-if="view==='video'"
         ref="videoPlay"
         width="600"
         height="400"
         controls
-        :src="`/public/file/${videoUrl}`"
+        :src="`/api/public/file/${videoUrl}`"
         @canplay="onCanplay"
       ></video>
       <div v-if="view==='tags'">
-          <el-row>
-              <el-col :span="8"></el-col>
-              <el-col :span="16"></el-col>
-          </el-row>
+        <div v-if="shownTags.length">
+          <div class="tagGroup" v-for="group in shownTags" :key="group.groupId">
+            <div class="group-container">
+              <div class="group-name">
+                <span class="font-exs color-info">{{group.groupName}}</span>
+              </div>
+              <div class="tags">
+                <el-tag v-for="tag in group.tags" :key="tag.uuid" size="mini">{{tag.tagName}}</el-tag>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else class="text-align-center" style="line-height:30px;">
+            <span class="font-exs color-info">未设置</span>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -112,6 +131,9 @@ export default {
   data() {
     return {
       width: '',
+      tagsWidth: '640px',
+      imageWidth: '',
+      videoWidth: '640px',
       dialogVisible: false,
       checked: this.value,
       view: 'video', //video//image
@@ -159,34 +181,38 @@ export default {
       this.videoUrl = val
       this.view = 'video'
       this.dialogVisible = true
+      this.width = this.videoWidth
     },
-    handleViewTags(list){
-        this.view = 'tags'
-        this.shownTags = this.grouping(list)
-        // console.log(this.grouping(list))
-
+    handleViewTags(list) {
+      this.view = 'tags'
+      this.shownTags = this.grouping(list)
+      this.dialogVisible = true
+      this.width = this.tagsWidth
+      // console.log(this.grouping(list))
     },
-    grouping(list){
-        if(Object.keys(list).length){
-            return list.reduce((groups,item)=>{
-                let groupFound = groups.find(foundItem => item.groupId === foundItem.groupId)
-                if(groupFound){
-                    groupFound.tags.push(item)
-                }else{
-                    let newGroup = {
-                        groupId: item.groupId,
-                        groupName: item.groupName,
-                        tags: [item]
-                    }
+    grouping(list) {
+      if (Object.keys(list).length) {
+        return list.reduce((groups, item) => {
+          let groupFound = groups.find(
+            foundItem => item.groupId === foundItem.groupId
+          )
+          if (groupFound) {
+            groupFound.tags.push(item)
+          } else {
+            let newGroup = {
+              groupId: item.groupId,
+              groupName: item.groupName,
+              tags: [item]
+            }
 
-                    groups.push(newGroup)
-                }
+            groups.push(newGroup)
+          }
 
-                return groups
-            },[])
-        }else{
-            return  []
-        }
+          return groups
+        }, [])
+      } else {
+        return []
+      }
     },
     handleViewImage(val) {
       console.log(val)
@@ -194,6 +220,7 @@ export default {
       this.imageUrl = val
       this.view = 'image'
       this.dialogVisible = true
+      this.width = this.imageWidth
     },
     handleCheckAll() {
       let arr = []
@@ -211,17 +238,17 @@ export default {
       }
       this.$emit('change', arr)
     },
-    
+
     onLoad(e) {
       const img = e.target
       let width = 0
       if (img.fileSize > 0 || (img.width > 1 && img.height > 1)) {
         width = img.width + 40
       }
-      this.width = width + 'px'
+      this.imageWidth = width + 'px'
     },
     onCanplay(e) {
-      this.width = 640 + 'px'
+      this.videoWidth = 640 + 'px'
     }
   }
 }
@@ -244,7 +271,7 @@ export default {
         height: 260px;
         width: 257.8px;
         overflow: hidden;
-        cursor: pointer;
+
         &:hover .cover {
           background-color: rgba($color: #fff, $alpha: 0.2);
           .icon {
@@ -290,6 +317,17 @@ export default {
         }
       }
     }
+  }
+}
+.group-container {
+  display: flex;
+  justify-content: space-between;
+  line-height: 28px;
+  .group-name {
+    min-width: 180px;
+  }
+  .tags {
+    flex: 1;
   }
 }
 </style>
