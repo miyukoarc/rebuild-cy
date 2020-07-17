@@ -1,6 +1,7 @@
 import {
   getListAll,
-  add
+  add,
+  doDelete
 } from '@/api/automatic'
 
 const state = {
@@ -54,6 +55,11 @@ const actions = {
       })
     })
   },
+  /**
+   * 
+   * @param {*} param0 
+   * @param {*} payload 
+   */
   add({
     commit
   }, payload) {
@@ -64,6 +70,20 @@ const actions = {
         reject(err)
       })
     })
+  },
+  /**
+   * 
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  doDelete({commit},payload){
+     return new Promise((resolve,reject)=>{
+         doDelete(payload).then(res=>{
+             resolve()
+         }).catch(err=>{
+             reject(err)
+         })
+     })
   }
 
 }

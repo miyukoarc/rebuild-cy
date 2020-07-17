@@ -24,3 +24,19 @@ export const add = (payload)=>{
         data: payload
     })
 }
+
+
+/**
+ * 删除自动回复
+ * @param {object} payload 
+ */
+export const doDelete = (payload)=>{
+    return requset({
+        url: '/automatic/delete',
+        method: 'post',
+        data: payload
+    })
+}
+
+
+

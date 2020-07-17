@@ -64,7 +64,7 @@
                 @click.stop="handleEdit(scope.$index)"
               >编辑</el-t-button> -->
 
-              <el-divider direction="vertical"></el-divider>
+              <!-- <el-divider direction="vertical"></el-divider> -->
               <el-t-button
                 type="text"
                 :popAuth="true"
@@ -236,14 +236,14 @@ export default {
     },
     handleDelete(index) {
       const payload = { uuid: this.listAll[index].uuid }
-      this.$confirm('是否删除当前敏感词', 'Warning', {
+      this.$confirm('是否删除当前自动回复', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(async () => {
           await this.$store
-            .dispatch('sensitive/deleteSensitive', payload)
+            .dispatch('automatic/doDelete', payload)
             .then(() => {
               this.$message({
                 type: 'success',
