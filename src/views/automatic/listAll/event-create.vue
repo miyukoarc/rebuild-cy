@@ -1,10 +1,10 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" label-width="100px" label-position="left">
-    <el-form-item label="规则名称" prop="value">
+    <el-form-item label="规则名称" prop="rule">
       <el-input v-model.trim="form.rule"></el-input>
     </el-form-item>
 
-    <el-form-item label="关键词" prop="key">
+    <el-form-item label="关键词" prop="keyword">
       <el-input v-model.trim="form.keyword">
         <el-select v-model="type" slot="prepend" placeholder="请选择">
           <el-option label="包含" value="1"></el-option>
@@ -106,11 +106,11 @@ export default {
       toUserTags: [],
       toRoles: [],
       rules: {
-        value: [
+        rule: [
           { required: true, message: '请输入规则名称', trigger: 'blur' },
           { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
         ],
-        key: [
+        keyword: [
           { required: true, message: '请输入关键词', trigger: 'blur' },
           { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ]
