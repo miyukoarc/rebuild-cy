@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-09 17:59:52
- * @LastEditTime: 2020-07-14 17:09:43
+ * @LastEditTime: 2020-07-17 11:38:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\TagDrawerObj\index.vue
 --> 
 <template>
   <div>
-    <div class="drawer-container" v-if="(JSON.stringify(alterGroups) != '{}')">
+    <div class="drawer-container" v-if="JSON.stringify(alterGroups) != '{}'">
       <transition-group name="fade">
         <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
           <el-row type="flex" class="row-bg" justify="center">
