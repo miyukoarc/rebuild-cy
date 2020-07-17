@@ -119,20 +119,29 @@ const actions = {
             }
             state.sock.onmessage = function (e) {
                 const data = JSON.parse(e.data)
+
+                console.log('aaa')
+                console.log(data.properties)
+
                 if (data.type == 'CONTROL_MANAGER') {
+                    console.log(1)
                     dispatch('getDetail', data)
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
+                    console.log(2)
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
                         dispatch('sendChaoyingMessage', data)
                     }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
+                    console.log(3)
                     $ipcRenderer.send('inputEnter', {
                         x: state.mouseX,
                         y: state.mouseY
                     })
                 } else if (data.type == 'ADDTASK') {
+                    console.log(4)
                     dispatch('listSelectMobil', data)
                 } else if (data.type == 'AUTOREP') {
+                    console.log(5)
                     if (data.properties.mobile) {
                         $ipcRenderer.send('SendMessage', {
                             type: 0,
@@ -157,6 +166,8 @@ const actions = {
     getDetail({ state, dispatch }, data) {
         getDetail(data.properties.batchSendTaskUuid).then(res => {
             state.batchSendTaskDetail = res
+            console.log('a', state.batchSendTaskDetail)
+            console.log('a', data)
             dispatch('getListBatchSendTaskResult', data)
         })
     },
@@ -165,6 +176,8 @@ const actions = {
             batchSendTaskUuid: data.properties.batchSendTaskUuid,
             sendResult: 'NOT_SEND'
         }).then(res => {
+            console.log('b', data)
+            console.log('b', res.items)
             dispatch('sendMessage', res.items)
         })
     },
@@ -196,8 +209,11 @@ const actions = {
                 },
             }
         }
+        console.log('c', state.batchSendTaskDetail)
         state.taskList = list;
         let taskResult = state.taskList.pop();
+        console.log('c', state.taskList)
+        console.log('c', state.taskList)
         if (taskResult) {
             if (taskResult.userExternalUserRelationship.remarkMobiles != '') {
                 dispatch('openChat', taskResult)
@@ -206,8 +222,10 @@ const actions = {
     },
 
     openChat({ state }, obj) {
+        console.log('d', obj)
         if (isElectron()) {
             state.sendMsgUuids = obj.uuid
+            console.log('d')
             $ipcRenderer.send('openChat', {
                 mobile: obj.userExternalUserRelationship.remarkMobiles.split(',')[0],
                 x: state.mouseX,
