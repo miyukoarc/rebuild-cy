@@ -1,0 +1,236 @@
+<template>
+  <div class="app-container">
+    <el-card class="content-spacing">
+      <tool-bar :hasExport="true" :hasImport="false" @handleExport="doExport">
+        <div slot="left">
+          <span class="font-l">{{corpInfo.name}}</span>
+          <el-t-button
+            :popAuth="true"
+            :auth="permissionMap['role']['role_add']"
+            size="small"
+            type="text"
+          >切换企业</el-t-button>
+        </div>
+      </tool-bar>
+    </el-card>
+    <el-card class="content-spacing">
+      <!-- <div class="switch-container" v-for="item in listAll" :key="item.uuid">
+        <span class="color-info font-es">{{item.moduleName}}</span>
+        <el-switch
+          @change="handleChange(item)"
+          v-model="form[item.moduleName]"
+          active-text="开"
+          inactive-text="关"
+        ></el-switch>
+      </div>-->
+      <el-table
+        v-loading="loading"
+        :data="listAll"
+        style="width: 100%"
+        row-key="uuid"
+        stripe
+        lazy
+        highlight-current-row
+        header-row-class-name="el-table-header"
+      >
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column prop="moduleName" label="审核类型" align="left"></el-table-column>
+        <el-table-column label="审批角色" align="left">
+          <template v-slot="{row}">
+            <div>
+              <span v-if="row.auditUsers.length===0">--</span>
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="开启状态" align="left">
+          <template v-slot="{row}">
+            <div>
+              <span class="font-exs color-success" v-if="row.openState">开启</span>
+              <span class="font-exs color-danger" v-else>关闭</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="left">
+          <template v-slot="{row}">
+            <el-t-button
+              type="text"
+              size="mini"
+              :popAuth="true"
+              :auth="permissionMap['role']['role_update']"
+            >详情</el-t-button>
+            <el-divider direction="vertical"></el-divider>
+
+            <el-t-button
+              type="text"
+              size="mini"
+              :popAuth="true"
+              :auth="permissionMap['role']['role_update']"
+              @click="handleSetting(row)"
+            >设置流程</el-t-button>
+            <el-divider direction="vertical"></el-divider>
+
+            <el-t-button
+              type="text"
+              size="mini"
+              :popAuth="true"
+              :auth="permissionMap['role']['role_delete']"
+              @click="handleChange(row)"
+            >
+              <span v-if="row.openState" class="color-danger">关闭</span>
+              <span v-else class="color-success">开启</span>
+            </el-t-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+
+    <form-dialog ref="formDialog"></form-dialog>
+  </div>
+</template>
+
+<script>
+import FormDialog from './dialog'
+import ToolBar from './tool-bar'
+import AsyncUserTag from '@/components/AsyncUserTag'
+import AsyncUserDrawer from '@/components/AsyncUserDrawer'
+import TagsDrawer from '@/components/TagsDrawer'
+import RoleDrawer from '@/components/RoleDrawer'
+import { mapState, mapMutations, mapActions } from 'vuex'
+
+export default {
+  name: 'AuditPropertyListAll',
+  components: {
+    FormDialog,
+    ToolBar,
+    AsyncUserTag,
+    AsyncUserDrawer,
+    RoleDrawer,
+    TagsDrawer
+    // mHeadedr
+  },
+  data() {
+    return {
+      pageConfig: {
+        total: 0,
+        pageNumber: 0,
+        pageSize: 10
+      },
+
+      query: {
+        page: 0,
+        size: 10
+        // startTime: '',
+        // endTime: '',
+        // word: ''
+      },
+
+      form: {},
+
+      rowSelects: []
+    }
+  },
+  watch: {},
+  computed: {
+    ...mapState({
+      //   tagListAll: state => state.tag.tagListAll,
+
+      loading: state => state.sensitive.loading,
+      listAll: state => state.sensitive.propertyListAll,
+      page: state => state.sensitive.propertyPage,
+      corpInfo: state => state.auth.corpInfo,
+      permissionMap: state => state.permission.permissionMap
+    })
+  },
+  created() {
+    this.initDataList(this.query)
+  },
+  mounted() {
+      this.$bus.$on('handleRefresh',()=>{
+          this.initDataList(this.query)
+      })
+      this.$once('hook:beforeDestroy',()=>{
+          this.$bus.$off('handleRefresh')
+      })
+  },
+  methods: {
+    doExport() {},
+    /**
+     * 初始化表格信息
+     */
+    initDataList(payload) {
+      this.$store
+        .dispatch('sensitive/auditPropertylistAll', payload)
+        .then(() => {
+          //初始化分页
+          this.listAll.forEach(item => {
+            this.$set(this.form, item.moduleName, item.openState)
+          })
+          this.pageConfig.pageNumber = this.page.pageNumber + 1
+          this.pageConfig.total = this.page.total
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
+    },
+    handleChange(val) {
+      let { openState, moduleName, uuid } = val
+      this.$confirm(
+        `是否${openState ? '关闭' : '开启'}${moduleName}审核？`,
+        'Warning',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(async () => {
+          const payload = {
+            openState: !openState,
+            uuid
+          }
+          this.$store
+            .dispatch('sensitive/setAuditCloseOrOpen', payload)
+            .then(() => {
+              this.initDataList()
+            })
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: err
+              })
+            })
+        })
+        .catch(err => {
+          console.error(err)
+          this.$message({
+            type: 'error',
+            message: err
+          })
+          //   console.log(this.form[moduleName], err, openState)
+          //   this.form[moduleName] = openState
+        })
+    },
+    handleSetting(val) {
+        const uuid = val.uuid
+      this.$refs['formDialog'].event = 'SettingTemplate'
+      this.$refs['formDialog'].eventType = 'setting'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = {uuid}
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.switch-container {
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+</style>

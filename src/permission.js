@@ -75,6 +75,7 @@ router.beforeEach(async (to, from, next) => {
               message: err || err.message
             })
           })
+          
           await store.dispatch('menu/getMyMenuList')
           accessed = await store.dispatch('permission/getPermissionListMy')
 

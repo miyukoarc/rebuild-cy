@@ -8,7 +8,10 @@ import {
   add,
   deleteSensitive,
   updateNoticeUser,
-  update
+  update,
+  setAuditCloseOrOpen,
+  auditPropertylistAll,
+  setAuditUser
 } from '@/api/sensitive'
 const state = {
   /**
@@ -75,6 +78,13 @@ const state = {
     total: 0,
     pageSize: 0,
     pageNumber: 0
+  },
+
+  propertyListAll: [],
+  propertyPage: {
+      total: 0,
+      pageSize: 0,
+      pageNumber: 0 
   }
 
 
@@ -199,7 +209,20 @@ const mutations = {
     state.auditBatchSendTaskPage.total = total
     state.auditBatchSendTaskPage.pageNumber = pageNumber
     state.auditBatchSendTaskPage.pageSize = pageSize
+  },
+  SAVE_PROPERLIST(state,payload){
+      state.propertyListAll = payload
+  },SET_PROPERPAGE(state,payload){
+      const {
+          total,
+          pageNumber,
+          pageSize
+      } = payload
+      state.propertyPage.total = total
+      state.propertyPage.pageNumber = pageNumber
+      state.propertyPage.pageSize = pageSize
   }
+
 
 
 }
@@ -393,6 +416,54 @@ const actions = {
          updateNoticeUser(payload).then(res=>{
              
              resolve(res)
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  },
+  /**
+   * 设置审核开启关闭
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  setAuditCloseOrOpen({commit},payload){
+     return new Promise((resolve,reject)=>{
+         setAuditCloseOrOpen(payload).then(res=>{
+             resolve()
+         }).catch(err=>{
+             reject(err)
+         })
+     })
+  },
+  /**
+   * 审核配置列表
+   * @param {*} param0 
+   * @param {*} payload 
+   */ 
+  auditPropertylistAll({commit},payload){
+      commit('TOGGLE_LOADING',true)
+     return new Promise((resolve,reject)=>{
+         auditPropertylistAll(payload).then(res=>{
+             commit('TOGGLE_LOADING',false)
+             commit('SAVE_PROPERLIST',res.items)
+             commit('SET_PROPERPAGE',res)
+             resolve()
+         }).catch(err=>{
+             reject(err)
+         }).finally(()=>{
+             commit('TOGGLE_LOADING',false)
+         })
+     })
+  },
+  /**
+   * 设置审核人
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  setAuditUser({commit},payload){
+     return new Promise((resolve,reject)=>{
+         setAuditUser(payload).then(res=>{
+             resolve()
          }).catch(err=>{
              reject(err)
          })

@@ -144,5 +144,43 @@ export const updateNoticeUser = (payload) => {
 }
 
 
+/**
+ * 设置审核开启关闭
+ * @param {object} payload 
+ */
+export const setAuditCloseOrOpen = (payload) => {
+    return request({
+        url: '/riskManagement/setAuditCloseOrOpen',
+        method: 'post',
+        data: payload
+    })
+}
+
+/**
+ * 审核配置列表
+ * @param {object} payload 
+ */
+export const auditPropertylistAll = (payload) => {
+    return request({
+        url: '/riskManagement/auditPropertylistAll',
+        method: 'get',
+        params: payload
+    })
+}
+
+
+/**
+ * 设置审核人
+ * @param {object} payload 
+ */
+export const setAuditUser = (payload) => {
+    return request({
+        url: '/riskManagement/setAuditUser',
+        method: 'post',
+        data: payload
+    })
+}
+
+
 
 
