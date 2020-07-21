@@ -1,5 +1,6 @@
 <template>
   <div class="group-sent-message-warp app-container">
+    <!-- 群发详情 -->
     <el-card class="content-spacing">
       <div class="group-sent-message-detail">
         <h4>群发详情</h4>
@@ -43,6 +44,8 @@
         </el-form>
       </div>
     </el-card>
+    
+    <!-- 数据统计 -->
     <el-card class="content-spacing">
       <div class="data-statistics">
         <h4>数据统计</h4>
@@ -100,6 +103,8 @@
         </el-row>
       </div>
     </el-card>
+
+    <!-- 成员详情/客户详情 -->
     <div class="info-detail-warp display-flex justify-content-space-between">
       <el-card class="content-spacing flex-1" style="margin-right:10px">
         <div class="member-warp">
@@ -432,6 +437,4 @@ export default {
     }
   }
 }
-</style>
-<style>
 </style>

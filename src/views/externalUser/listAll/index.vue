@@ -204,6 +204,7 @@ export default {
       });
     },
     handleSearch(val) {
+      console.log(val,'val---')
       const {
         tagIds,
         name,
@@ -214,11 +215,11 @@ export default {
         flag
       } = val;
       this.query.tagIds = tagIds ? tagIds + "" : this.query.tagIds;
-      this.query.name = name ? name : this.query.name;
-      this.query.userId = userId ? userId : this.query.userId;
-      this.query.startTime = startTime ? startTime : this.query.startTime;
+      this.query.name = name ? name : "";
+      this.query.userId = userId ? userId : "";
+      this.query.startTime = startTime ? startTime : "";
       this.query.flag = flag ? true : false;
-      this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.query.endTime = endTime ? endTime : "";
       // this.query.contractWayId = contractWayId
       //   ? contractWayId
       //   : this.query.contractWayId;

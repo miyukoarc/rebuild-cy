@@ -122,5 +122,6 @@ export default {
 .container {
   display: inline-block;
   margin-right: 3px;
+  margin-bottom: 3px;
 }
 </style>
