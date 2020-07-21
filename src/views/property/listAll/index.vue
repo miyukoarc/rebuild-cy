@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-21 10:48:49
- * @LastEditTime: 2020-07-21 14:22:13
+ * @LastEditTime: 2020-07-21 19:49:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\property\listAll\index.vue
@@ -51,28 +51,39 @@
           <ul>
             <li
               class="custon-field-item display-flex align-items-center"
-              v-for="(field,index) in fieldData"
+              v-for="(field,index) in propertyListAll"
               :key="index"
             >
               <div class="field">
                 <span class="icon-warp">
                   <i class="el-icon-success color-primary"></i>
-                  <span>{{field.name}}</span>
+                  <span>{{field.label}}</span>
                 </span>
               </div>
               <div class="tool-menu">
-                <span @click="editField(field)">
+                <el-button type="text" @click="editField(field)" class="button-text">
                   <i class="el-icon-edit"></i>修改
-                </span>
-                <span @click="deleteField(field)">
+                </el-button>
+                <el-button type="text" @click="deleteField(field)" class="button-text">
                   <i class="el-icon-delete"></i>删除
-                </span>
-                <span @click="moveUp(field)" :class="{'disabled': index == 0}">
+                </el-button>
+                <el-button
+                  type="text"
+                  @click="moveUp(field)"
+                  :disabled="index == 0"
+                  :class="{'disabled': index == 0}"
+                  class="button-text"
+                >
                   <i class="el-icon-sort-up"></i>上移
-                </span>
-                <span @click="moveDown(field)" :class="{'disabled': index == fieldData.length-1}">
+                </el-button>
+                <el-button
+                  type="text"
+                  @click="moveDown(field)"
+                  :class="{'disabled': index == propertyListAll.length-1}"
+                  class="button-text"
+                >
                   <i class="el-icon-sort-down"></i>下移
-                </span>
+                </el-button>
               </div>
             </li>
           </ul>
@@ -85,7 +96,7 @@
 
 <script>
 import FormDialog from "./dialog";
-
+import { mapState } from "vuex";
 export default {
   name: "propertyListAll",
   components: {
@@ -93,6 +104,11 @@ export default {
   },
   data() {
     return {
+      pageConfig: {
+        total: 0,
+        pageNumber: 0,
+        pageSize: 10
+      },
       showInformationData: [
         {
           name: "电话",
@@ -114,63 +130,142 @@ export default {
         }
       ],
       // 自定义字段
-      isShow: false,
-      fieldData: [
-        {
-          name: "自定义字段1",
-          id: "1"
-        },
-        {
-          name: "字段2",
-          id: "2"
-        },
-        {
-          name: "自定义字段3",
-          id: "1"
-        },
-        {
-          name: "字段4",
-          id: "2"
-        }
-      ]
+      isShow: false
     };
   },
+  computed: {
+    ...mapState({
+      propertyListAll: state => state.externalUser.propertyListAll,
+      propertyListAllPage: state => state.externalUser.propertyListAllPage
+    })
+  },
+  created() {
+    this.initDataList();
+  },
   methods: {
+    /**
+     * 初始化表格信息
+     */
+    initDataList(payload) {
+      this.$store
+        .dispatch("externalUser/getPropertyListAll")
+        .then(() => {
+          //初始化分页
+          // this.pageConfig.pageNumber = this.propertyListAllPage.pageNumber + 1;
+          // this.pageConfig.total = this.propertyListAllPage.total;
+        })
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: "初始化失败"
+          });
+        });
+    },
     handleAddField() {
       this.$refs["formDialog"].eventType = "create";
       this.$refs["formDialog"].event = "CreateTemplate";
       this.$refs["formDialog"].dialogVisible = true;
       // let _this = this;
-      // _this.fieldData.push({}); // 置空
+      // _this.propertyListAll.push({}); // 置空
     },
-    editField(item) {},
+    editField(item) {
+      console.log(item, "item");
+      this.$refs["formDialog"].eventType = "edit";
+      this.$refs["formDialog"].event = "EditTemplate";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = item;
+    },
     moveUp(item) {
-      console.log(item);
-      console.log(this.fieldData);
-      let index = this.fieldData.indexOf(item); // 获取的index。或者通过v-for 遍历传过的index，可以简化此步骤。
-      if (this.fieldData.length > 1 && index !== 0) {
-        var temp = this.fieldData[index - 1].name; // 这三行的含义可见上面示意图
-        this.fieldData[index - 1].name = this.fieldData[index].name;
-        this.fieldData[index].name = temp;
+      let index = this.propertyListAll.indexOf(item);
+      console.log(index, "333", item);
+      if (
+        this.propertyListAll.length > 1 &&
+        index != this.propertyListAll.length - 1
+      ) {
+        // 以c为基点
+        var next = this.propertyListAll[index - 1];
+        console.log(item, "temp", next);
+        // this.propertyListAll[index].name = temp;
+        let payload = {
+          sortList: [
+            {
+              propertyUuid: next.uuid,
+              sort: item.sort
+            },
+            {
+              propertyUuid: item.uuid,
+              sort: next.sort
+            }
+          ]
+        };
+        this.$store
+          .dispatch("externalUser/propertyUpdatePropertySort", payload)
+          .then(() => {
+            this.initDataList();
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
     },
     // 下移
     moveDown(item) {
-      let index = this.fieldData.indexOf(item);
+      let index = this.propertyListAll.indexOf(item);
       console.log(index, "333", item);
-      if (this.fieldData.length > 1 && index != this.fieldData.length - 1) {
-        var temp = this.fieldData[index + 1].name; // 以c为基点
-        this.fieldData[index + 1].name = this.fieldData[index].name;
-        this.fieldData[index].name = temp;
+      if (
+        this.propertyListAll.length > 1 &&
+        index != this.propertyListAll.length - 1
+      ) {
+        // 以c为基点
+        var next = this.propertyListAll[index + 1];
+        console.log(item, "temp", next);
+        // this.propertyListAll[index].name = temp;
+        let payload = {
+          sortList: [
+            {
+              propertyUuid: next.uuid,
+              sort: item.sort
+            },
+            {
+              propertyUuid: item.uuid,
+              sort: next.sort
+            }
+          ]
+        };
+        this.$store
+          .dispatch("externalUser/propertyUpdatePropertySort", payload)
+          .then(() => {
+            this.initDataList();
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
     },
     // 删除
     deleteField(item) {
-      this.isShow = false;
-      let index = this.fieldData.indexOf(item);
-      if (index > -1) {
-        this.fieldData.splice(index, 1);
-      }
+      console.log(item, "item");
+      this.$refs["formDialog"].eventType = "confirm";
+      this.$refs["formDialog"].event = "ConfirmTemplate";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = item;
+      // let payload = {
+      //   uuid: item.uuid
+      // };
+
+      // this.$store
+      //   .dispatch("externalUser/propertyDelete", payload)
+      //   .then(() => {
+      //     this.initDataList();
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
+      // this.isShow = false;
+      // let index = this.propertyListAll.indexOf(item);
+      // if (index > -1) {
+      //   this.propertyListAll.splice(index, 1);
+      // }
     }
   }
 };
@@ -249,11 +344,11 @@ export default {
       .tool-menu {
         height: 30px;
         line-height: 30px;
-        span {
+        .button-text {
           font-size: 14px;
           color: rgba(0, 0, 0, 0.85);
           line-height: 20px;
-          margin-right: 25px;
+          margin-right: 10px;
           position: relative;
           display: inline-block;
           cursor: pointer;
@@ -261,15 +356,15 @@ export default {
             margin-right: 5px;
           }
         }
-        span:hover {
+        .button-text:hover {
           color: $main-color;
         }
-        span.disabled {
+        .button-text.disabled {
           color: rgba(0, 0, 0, 0.25);
           background: transparent;
           cursor: default;
         }
-        span:not(:last-child)::after {
+        .button-text:not(:last-child)::after {
           content: "";
           position: absolute;
           right: -12.5px;

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-27 14:05:27
- * @LastEditTime: 2020-07-16 20:51:09
+ * @LastEditTime: 2020-07-21 15:58:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\main.js
@@ -34,6 +34,8 @@ import * as filters from './filters' // global filters
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key])
 })
+
+import './directive/directives'
 
 import '@/icons' // icon
 import '@/permission' // permission control
