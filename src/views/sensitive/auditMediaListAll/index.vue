@@ -1,0 +1,393 @@
+<template>
+  <div class="app-container">
+    <el-card class="content-spacing">
+      <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
+    </el-card>
+
+    <el-card class="content-spacing">
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+        <div slot="right">
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']"
+            @click="handleBatchConfrim"
+          >批量通过</el-t-button>
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']"
+            @click="handleBatchReject"
+          >批量拒绝</el-t-button>
+        </div>
+      </tool-bar>
+    </el-card>
+
+    <el-card class="content-spacing">
+      <div>
+        <el-table
+          v-loading="loading"
+          :data="listAll"
+          style="width: 100%"
+          row-key="uuid"
+          stripe
+          lazy
+          highlight-current-row
+          :default-sort="{order:'ascending',prop:'auditState'}"
+          @selection-change="handleSelectionChange"
+          header-row-class-name="el-table-header"
+        >
+          <el-table-column type="selection"></el-table-column>
+          <el-table-column width="85" align="left" label="提交人">
+            <template v-slot="{row}">
+              <div>{{row.submitOperator.name}}</div>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            align="left"
+            label="提交时间"
+            prop="createdAt"
+            sortable
+            :sort-orders="['descending', 'ascending']"
+          ></el-table-column>
+
+          <el-table-column align="left" label="素材类型">
+            <template v-slot="{row}">
+              <span v-if="row.auditAddMedia">{{mediaType[parse(row.auditAddMedia)[0].type]}}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column align="left" label="缩略图">
+            <template v-slot="{row}">
+              <div class="thumb-container" v-if="row.auditAddMedia">
+                <div
+                  class="thumb"
+                  v-if="parse(row.auditAddMedia)[0].type==='IMAGE'"
+                  @click="handleView(type='IMAGE',row.auditAddMedia)"
+                >
+                  <el-image
+                    fit="contain"
+                    :src="`/api/public/file/${parse(row.auditAddMedia)[0].localId}`"
+                  ></el-image>
+                </div>
+                <div class="thumb" v-else @click="handleView(type='VIDEO',row.auditAddMedia)">
+                  <video-cover :url="parse(row.auditAddMedia)[0].localId"></video-cover>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+
+          <el-table-column align="left" label="新增/删除">
+            <template v-slot="{row}">
+              <div>
+                <span class="color-success" v-if="!row.deleted">新增</span>
+                <span class="color-danger" v-else>删除</span>
+              </div>
+            </template>
+          </el-table-column>
+
+          <el-table-column align="leeft" label="状态">
+            <template v-slot="{row}">
+              <div>
+                <span v-if="row.auditState==='TO_BE_REVIEWED'" class="color-primary">审核中</span>
+                <span v-else-if="row.auditState==='AUDIT_FAILED'" class="color-danger">已拒绝</span>
+                <span v-else class="color-success">已通过</span>
+              </div>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="操作" align="left">
+            <template v-slot="{row}">
+              <div>
+                <el-t-button type="text" @click="handleAudit(row.uuid)">审核</el-t-button>
+                <!-- <el-t-button size="mini" type="primary" @click="handleAccess(scoped.row)">通过</el-t-button> -->
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <el-pagination
+          background
+          class="pager"
+          layout="total,prev, pager, next,jumper"
+          :total="pageConfig.total"
+          :current-page.sync="pageConfig.pageNumber"
+          :page-size="pageConfig.pageSize"
+          @current-change="changePage"
+        />
+      </div>
+    </el-card>
+
+    <el-dialog :visible.sync="dialogVisible" :width="width" center destroy-on-close>
+      <el-image v-if="viewMode==='IMAGE'" :src="`/api/public/file/${imageUrl}`" @load="onLoad"></el-image>
+      <video
+        v-if="viewMode==='VIDEO'"
+        ref="videoPlay"
+        width="600"
+        height="400"
+        controls
+        :src="`/api/public/file/${videoUrl}`"
+        @canplay="onCanplay"
+      ></video>
+    </el-dialog>
+
+    <form-dialog ref="formDialog"></form-dialog>
+  </div>
+</template>
+
+<script>
+import ListHeader from './header.vue'
+import FormDialog from './dialog'
+import ToolBar from './tool-bar'
+import VideoCover from '@/components/VideoCover'
+import { mapState, mapMutations, mapActions } from 'vuex'
+import media from '../../../store/modules/media'
+
+export default {
+  components: {
+    ListHeader,
+    FormDialog,
+    ToolBar,
+    VideoCover
+  },
+  data() {
+    return {
+      width: '',
+      viewMode: '', //IMAGE//VIDEO
+      imageUrl: '',
+      videoUrl: '',
+      dialogVisible: false,
+      pageConfig: {
+        total: 0,
+        pageNumber: 0,
+        pageSize: 10
+      },
+
+      query: {
+        page: 0,
+        size: 10,
+        auditConfirmation: '',
+        auditType: '',
+        handlerId: '',
+        submitterId: ''
+      },
+
+      selects: []
+    }
+  },
+  watch: {},
+  computed: {
+    ...mapState({
+      auditStateEnum: state => state.enum.auditState,
+      //   tagListAll: state => state.tag.tagListAll,
+      permissionMap: state => state.permission.permissionMap,
+      auditState: state => state.emnu.auditState,
+      mediaType: state => state.enum.mediaType,
+
+      loading: state => state.sensitive.loading,
+      listAll: state => state.sensitive.auditMediaList,
+      page: state => state.sensitive.auditMediaPage
+    })
+  },
+  created() {
+    this.initDataList(this.query)
+    this.initFilter()
+  },
+  mounted() {
+      //刷新eventBUs
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
+    
+  },
+  methods: {
+    doExport(val) {
+      console.log(val)
+    },
+    /**
+     * 初始化筛选信息
+     */
+    initFilter() {
+      this.$store
+        .dispatch('user/getUserListSelect')
+        .then(() => {})
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
+    },
+    /**
+     * 初始化表格信息
+     */
+    initDataList(payload) {
+      this.$store
+        .dispatch('sensitive/auditMediaListAll', payload)
+        .then(() => {
+          //初始化分页
+          this.pageConfig.pageNumber = this.page.pageNumber + 1
+          this.pageConfig.total = this.page.total
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败'
+          })
+        })
+    },
+    handleDetail(val) {
+      const payload = this.userList[val].uuid
+      this.$router.push({
+        path: '/user/detail',
+        query: { uuid: payload }
+      })
+    },
+    handleSearch(val) {
+      const { auditConfirmation, handlerId, submitterId } = val
+      this.query.auditConfirmation = auditConfirmation
+        ? auditConfirmation
+        : this.query.auditConfirmation
+      this.query.handlerId = handlerId ? handlerId : this.query.handlerId
+      this.query.submitterId = submitterId
+        ? submitterId
+        : this.query.submitterId
+      this.initDataList(this.query)
+    },
+    handleRefresh() {
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
+    },
+    changePage(key) {
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key - 1
+      this.initDataList(this.query)
+    },
+    handleSelectionChange(val) {
+      this.selects = val.map(item => {
+        return item.uuid
+      })
+    },
+    /**
+     * 批量审批
+     */
+    handleBatchConfrim() {
+      const uuids = this.selects
+      const payload = {
+        auditConfirmation: 'APPROVED',
+        uuids
+      }
+      if (this.selects.length) {
+        this.$store
+          .dispatch('audit/batchAuditTagConfirmation', payload)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '操作成功',
+              onClose: () => {
+                this.initData()
+              }
+            })
+          })
+          .catch(err => {
+            this.$message({
+              type: 'error',
+              message: '操作失败'
+            })
+          })
+      } else {
+        this.$message({
+          type: 'error',
+          message: '请选择至少一项'
+        })
+      }
+    },
+    handleBatchReject() {
+      const uuids = this.selects
+      const payload = {
+        auditConfirmation: 'AUDIT_FAILED',
+        uuids
+      }
+      if (this.selects.length) {
+        this.$store
+          .dispatch('audit/batchAuditTagConfirmation', payload)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '操作成功',
+              onClose: () => {
+                this.initData()
+              }
+            })
+          })
+          .catch(err => {
+            this.$message({
+              type: 'error',
+              message: '操作失败'
+            })
+          })
+      } else {
+        this.$message({
+          type: 'error',
+          message: '请选择至少一项'
+        })
+      }
+    },
+    handleView(type, str) {
+      const mediaId = this.parse(str)[0].localId
+
+      if (type === 'IMAGE') {
+        this.imageUrl = mediaId
+      } else {
+        this.videoUrl = mediaId
+      }
+      this.viewMode = type
+
+      this.dialogVisible = true
+    },
+    parse(str) {
+      return JSON.parse(str)
+    },
+    handleAudit(uuid) {
+      this.$refs['formDialog'].event = 'AuditTemplate'
+      this.$refs['formDialog'].eventType = 'audit'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = { uuid }
+    },
+    onLoad(e) {
+      const img = e.target
+      let width = 0
+      if (img.fileSize > 0 || (img.width > 1 && img.height > 1)) {
+        width = img.width + 40
+      }
+      this.width = width + 'px'
+    },
+    onCanplay(e) {
+      this.width = 640 + 'px'
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.user-card {
+  display: flex;
+  align-items: center;
+}
+.thumb {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+</style>
+
+<style lang="scss">
+.pager {
+  padding: 20px 0;
+  text-align: center;
+}
+</style>

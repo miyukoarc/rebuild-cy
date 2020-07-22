@@ -86,6 +86,10 @@ const state = {
         HAS_RECEIVED_FAIL: '',
         HAS_RECEIVED: '',
         HAS_READ_ARTICLE: ''
+    },
+    matchFormat: {
+        "CONTAINS_ANY": '包含任意',
+        "PERFECT_MATCH": '完全匹配'
     }
 
 }

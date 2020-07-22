@@ -1,4 +1,16 @@
-
+<template>
+  <div class="tooltip-container" @mouseleave="handleHide" @mouseenter="handleShow">
+    <el-tooltip placement="right" manual :value="isShow">
+      <!-- <slot name="tips" slot="content"></slot> -->
+      <div slot="content">
+          <slot></slot>
+      </div>
+      <span>
+        <i :class="`el-icon-warning${alterIcon}`"></i>
+      </span>
+    </el-tooltip>
+  </div>
+</template>
 <script>
 export default {
   props: {
@@ -7,10 +19,10 @@ export default {
       default: 'dark'
     }
   },
-  data(){
-      return {
-          isShow: false
-      }
+  data() {
+    return {
+      isShow: false
+    }
   },
   computed: {
     alterIcon() {
@@ -24,31 +36,28 @@ export default {
   },
   methods: {
     handleShow() {
-        console.log(this.isShow)
-        this.isShow = true
+      this.isShow = true
     },
     handleHide() {
-                console.log(this.isShow)
-
-        this.isShow = false
-
+      this.isShow = false
     }
-  },
-  render(){
-      const {handleHide,handleShow,alterIcon,isShow} = this
-      return (
-          <div class="tooltip-container" onMouseleave={handleHide} onMouseenter={handleShow}>
-            <el-tooltip placement="right" manual value={isShow}>
-                <div slot="content">
-                    <slot name="tips"></slot>
-                </div>
-                <span>
-                    <i class={`el-icon-warning${alterIcon}`}></i>
-                </span>
-            </el-tooltip>
-          </div>
-      )
   }
+  //   render(){
+  //       const {handleHide,handleShow,alterIcon,isShow} = this
+  //       const {content} = this.$slots
+  //       return (
+  //           <div class="tooltip-container" onMouseleave={handleHide} onMouseenter={handleShow}>
+  //             <el-tooltip placement="right" manual value={isShow}>
+  //                 <div>
+  //                     <slot name="tips" slot={content}></slot>
+  //                 </div>
+  //                 <span>
+  //                     <i class={`el-icon-warning${alterIcon}`}></i>
+  //                 </span>
+  //             </el-tooltip>
+  //           </div>
+  //       )
+  //   }
 }
 </script>
 

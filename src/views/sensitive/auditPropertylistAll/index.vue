@@ -38,7 +38,9 @@
         <el-table-column label="审批角色" align="left">
           <template v-slot="{row}">
             <div>
-              <span v-if="row.auditUsers.length===0">--</span>
+              <!-- <span>{{parse(row.auditUsers)}}</span> -->
+              <span v-if="parse(row.auditUsers).length===0">--</span>
+              <async-user-drawer v-else :hasPop="true" :users="parse(row.auditUsers)"></async-user-drawer>
             </div>
           </template>
         </el-table-column>
@@ -58,6 +60,7 @@
               size="mini"
               :popAuth="true"
               :auth="permissionMap['role']['role_update']"
+              @click="handleDetail(row)"
             >详情</el-t-button>
             <el-divider direction="vertical"></el-divider>
 
@@ -146,12 +149,12 @@ export default {
     this.initDataList(this.query)
   },
   mounted() {
-      this.$bus.$on('handleRefresh',()=>{
-          this.initDataList(this.query)
-      })
-      this.$once('hook:beforeDestroy',()=>{
-          this.$bus.$off('handleRefresh')
-      })
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
   },
   methods: {
     doExport() {},
@@ -215,11 +218,23 @@ export default {
         })
     },
     handleSetting(val) {
-        const uuid = val.uuid
+      const uuid = val.uuid
       this.$refs['formDialog'].event = 'SettingTemplate'
       this.$refs['formDialog'].eventType = 'setting'
       this.$refs['formDialog'].dialogVisible = true
-      this.$refs['formDialog'].transfer = {uuid}
+      this.$refs['formDialog'].transfer = { uuid }
+    },
+    handleDetail(val) {
+      const uuid = val.uuid
+      console.log(val)
+      this.$refs['formDialog'].event = 'DetailTemplate'
+      this.$refs['formDialog'].eventType = 'detail'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = { uuid }
+    },
+    //parseJSON
+    parse(str) {
+      return JSON.parse(str)[0]?.userList || []
     }
   }
 }

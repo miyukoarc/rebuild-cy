@@ -7,7 +7,12 @@
 
     <div>
       <icon-tooltip>
-        <div slot="tips">message</div>
+          <div>
+              <div>123132</div>
+              <div>123132</div>
+          </div>
+          
+        <!-- <div slot="tips">123123</div> -->
       </icon-tooltip>
     </div>
     <div>

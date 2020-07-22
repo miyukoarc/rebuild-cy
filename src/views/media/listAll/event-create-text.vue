@@ -29,7 +29,7 @@
       <el-form-item label="符合标签">
         <div>
           <el-radio v-model="matchFormat" label="CONTAINS_ANY">包含其一</el-radio>
-          <el-radio v-model="matchFormat" label="PERFECT_MATCH ">完全匹配</el-radio>
+          <el-radio v-model="matchFormat" label="PERFECT_MATCH">完全匹配</el-radio>
         </div>
       </el-form-item>
       <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>

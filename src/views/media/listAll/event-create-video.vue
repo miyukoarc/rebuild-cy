@@ -6,7 +6,7 @@
         <el-upload
           ref="upload"
           multiple
-          action="/media/addMediaIsAudit"
+          action="/api/media/addMediaIsAudit"
           :show-file-list="true"
           :file-list="fileList"
           :before-upload="beforeVideoUpload"
@@ -58,7 +58,7 @@
       <el-form-item label="符合标签">
         <div>
           <el-radio v-model="data.matchFormat" label="CONTAINS_ANY">包含其一</el-radio>
-          <el-radio v-model="data.matchFormat" label="PERFECT_MATCH ">完全匹配</el-radio>
+          <el-radio v-model="data.matchFormat" label="PERFECT_MATCH">完全匹配</el-radio>
         </div>
       </el-form-item>
       <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>

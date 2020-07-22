@@ -353,8 +353,8 @@ export default {
                 type: 'success',
                 message: '操作成功'
               })
-              this.initMediaList(this.query)
-              Object.assign(this.$data, this.$options.data())
+              this.handleRefresh()
+            //   Object.assign(this.$data, this.$options.data())
             })
             .catch(err => {
               this.$message({
