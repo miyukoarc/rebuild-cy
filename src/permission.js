@@ -79,6 +79,8 @@ router.beforeEach(async (to, from, next) => {
           await store.dispatch('menu/getMyMenuList')
           accessed = await store.dispatch('permission/getPermissionListMy')
 
+          await store.dispatch('sensitive/auditPropertylistAll')
+
           await store.dispatch('websocket/createWebsocket')
 
           router.addRoutes(

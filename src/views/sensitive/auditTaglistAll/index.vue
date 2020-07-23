@@ -7,8 +7,18 @@
     <el-card class="content-spacing">
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
         <div slot="right">
-          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']" @click="handleBatchConfrim">批量通过</el-t-button>
-          <el-t-button type="primary" :popAuth="true" :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']" @click="handleBatchReject">批量拒绝</el-t-button>
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']"
+            @click="handleBatchConfrim"
+          >批量通过</el-t-button>
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']"
+            @click="handleBatchReject"
+          >批量拒绝</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -25,7 +35,7 @@
           highlight-current-row
           :default-sort="{order:'ascending',prop:'auditState'}"
           @selection-change="handleSelectionChange"
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column width="85" align="center" label="提交人">
@@ -48,8 +58,8 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" align="center" sortable :sort-method="sortBy">
-            <template v-slot="scoped">
+          <el-table-column label="操作" align="center">
+            <!-- <template v-slot="scoped">
               <div>
                 <span
                   v-if="scoped.row.auditState!=='TO_BE_REVIEWED'"
@@ -59,6 +69,11 @@
                   <el-t-button size="mini" type="primary" @click="handleAccess(scoped.row)">通过</el-t-button>
                   <el-t-button size="mini" type="danger" @click="handleReject(scoped.row)">拒绝</el-t-button>
                 </div>
+              </div>
+            </template>-->
+            <template v-slot="{row}">
+              <div>
+                <el-t-button type="text" @click="handleAudit(row.uuid)">审核</el-t-button>
               </div>
             </template>
           </el-table-column>
@@ -81,8 +96,6 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
@@ -91,10 +104,9 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar
-    // mHeadedr
+
   },
   data() {
     return {
@@ -120,7 +132,7 @@ export default {
   computed: {
     ...mapState({
       auditStateEnum: state => state.enum.auditState,
-    //   tagListAll: state => state.tag.tagListAll,
+      //   tagListAll: state => state.tag.tagListAll,
       permissionMap: state => state.permission.permissionMap,
 
       loading: state => state.sensitive.loading,
@@ -202,6 +214,49 @@ export default {
         return item.uuid
       })
     },
+    /**
+     * 批量审批
+     */
+    handleBatch(action) {
+      let uuids = this.selects
+      let payload = null
+      if (action === 'reject') {
+        uuids = this.selects
+        payload = {
+          auditConfirmation: 'AUDIT_FAILED',
+          uuids
+        }
+      } else {
+        uuids = this.selects
+        payload = {
+          auditConfirmation: 'APPROVED',
+          uuids
+        }
+      }
+
+      console.log(payload)
+      this.batchAudit(payload)
+    },
+    batchAudit(payload) {
+      this.$store
+        .dispatch('audit/batchAuditTagConfirmation', payload)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功',
+            duration: 1000,
+            onClose: () => {
+              this.initDataList(this.query)
+            }
+          })
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err
+          })
+        })
+    },
 
     /**
      * 单挑审批
@@ -261,16 +316,13 @@ export default {
               this.initDataList(this.query)
             })
             .catch(err => {
-              
               this.$message({
                 type: 'danger',
                 message: '操作失败'
               })
             })
         })
-        .catch(err => {
-          
-        })
+        .catch(err => {})
     },
     /**
      * 批量审批
@@ -295,7 +347,6 @@ export default {
             })
           })
           .catch(err => {
-            
             this.$message({
               type: 'error',
               message: '操作失败'
@@ -327,7 +378,6 @@ export default {
             })
           })
           .catch(err => {
-            
             this.$message({
               type: 'error',
               message: '操作失败'
@@ -340,17 +390,12 @@ export default {
         })
       }
     },
-    /**
-     * 排序
-     */
-    sortBy(a, b) {
-    //   console.log(a, b)
-      if (a.auditState === 'TO_BE_REVIEWED') {
-        return -1
-      }
-      if (b.auditState === 'TO_BE_REVIEWED') {
-        return 1
-      }
+    handleAudit(uuid) {
+      console.log(uuid)
+      this.$refs['formDialog'].event = 'AuditTemplate'
+      this.$refs['formDialog'].eventType = 'audit'
+      this.$refs['formDialog'].transfer = { uuid }
+      this.$refs['formDialog'].dialogVisible = true
     }
   }
 }

@@ -206,4 +206,17 @@ export const auditDetail = (uuid)=>{
 }
 
 
+/**
+ * 审核配置详情
+ * @param {string} uuid 
+ */
+export const batchAuditPermissionConfirmation = (payload)=>{
+    return request({
+        url: '/riskManagement/batchAuditPermissionConfirmation',
+        method: 'post',
+        data: payload
+    })
+}
+
+
 

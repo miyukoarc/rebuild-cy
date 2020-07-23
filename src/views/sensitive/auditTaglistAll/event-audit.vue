@@ -31,28 +31,11 @@
       </div>
     </el-form-item>
 
-    <el-form-item label="素材：">
-      <div class="media-container" v-if="detail.auditAddMedia">
-        <el-image
-          v-if="detail.auditAddMedia[0].type==='IMAGE'"
-          fit="contain"
-          :src="`/api/public/file/${detail.auditAddMedia[0].localId}`"
-        ></el-image>
-        <video-cover :url="detail.auditAddMedia[0].localId"></video-cover>
+    <el-form-item label="权限：">
+      <div class v-for="item in permissionList" :key="item.module">
+        <span class="font-es font-weight-700">{{permissionEnum[item.module]}}：</span>
+        <span v-text="format(item.permissions)"></span>
       </div>
-    </el-form-item>
-
-    <el-form-item label="标签配置：">
-      <div v-if="detail.auditAddMedia">
-        <span class="color-primary font-exs">{{matchFormat[detail.auditAddMedia[0].matchFormat]}}</span>
-        <icon-tooltip>
-          <div>
-            <div class="font-exs color-info">包含任意：至少包含一个标签。</div>
-            <div class="font-exs color-info">完全匹配：包含全部标签。</div>
-          </div>
-        </icon-tooltip>
-      </div>
-      <tags-drawer v-if="tags.length" :tags="tags"></tags-drawer>
     </el-form-item>
 
     <el-form-item label="审批流程：">
@@ -126,6 +109,7 @@ export default {
       },
       //range==1,会签 range==0，或签
       detail: {},
+      permissionList: [],
       tags: [],
       rules: {
         name: [
@@ -139,21 +123,27 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState({
+      auditState: state => state.enum.auditState,
+      matchFormat: state => state.enum.matchFormat,
+      permissionEnum: state => state.enum.roleDetail,
+
+      auditSetting: state => state.sensitive.auditSetting,
+      currentUserUuid: state => state.user.uuid
+    })
+  },
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        this.initData(newVal.uuid)
+          this.initData(newVal.uuid)
       },
       immediate: true,
       deep: true
     }
   },
-  computed: {
-    ...mapState({
-      auditState: state => state.enum.auditState,
-      matchFormat: state => state.enum.matchFormat,
-      currentUserUuid: state => state.user.uuid
-    })
+  created() {
+    // this.initData(this.transfer?.uuid)
   },
   mounted() {},
   methods: {
@@ -163,13 +153,10 @@ export default {
         .then(res => {
           this.detail = {
             ...res,
-            auditAddMedia: this.parse(res.auditAddMedia),
             auditUsers: this.parse(res.auditUsers)
           }
 
-          this.tags = this.detail?.auditAddMedia[0].tagsDto
-            ? this.grouping(this.detail?.auditAddMedia[0].tagsDto)
-            : []
+          this.permissionList = this.grouping(res.toPermissions)
         })
         .catch(err => {
           this.$message({
@@ -181,45 +168,8 @@ export default {
     parse(str) {
       return JSON.parse(str)
     },
-    handleConfirm() {
-      const payload = this.form
-
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-        } else {
-          this.$message({
-            type: 'error',
-            message: '请检查输入'
-          })
-        }
-      })
-    },
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
-    },
-    grouping(list) {
-      if (Object.keys(list).length) {
-        return list.reduce((groups, item) => {
-          let groupFound = groups.find(
-            foundItem => item.groupId === foundItem.groupId
-          )
-          if (groupFound) {
-            groupFound.tags.push(item)
-          } else {
-            let newGroup = {
-              groupId: item.tagGroupId,
-              groupName: item.tagGroupName,
-              tags: [item]
-            }
-
-            groups.push(newGroup)
-          }
-
-          return groups
-        }, [])
-      } else {
-        return []
-      }
     },
     handleAudit(action) {
       const uuid = this.transfer.uuid
@@ -235,10 +185,8 @@ export default {
           uuids: [uuid]
         }
       }
-
-      console.log(payload)
       this.$store
-        .dispatch('audit/batchAuditMediaConfirmation', payload)
+        .dispatch('audit/batchAuditTagConfirmation', payload)
         .then(() => {
           this.$message({
             type: 'success',
@@ -286,6 +234,36 @@ export default {
         }
       }
     },
+    grouping(list) {
+      if (Object.keys(list).length) {
+        return list.reduce((groups, item) => {
+          let groupFound = groups.find(
+            foundItem => item.module === foundItem.module
+          )
+          if (groupFound) {
+            groupFound.permissions.push(item)
+          } else {
+            let newGroup = {
+              module: item.module,
+              permissions: [item]
+            }
+
+            groups.push(newGroup)
+          }
+
+          return groups
+        }, [])
+      } else {
+        return []
+      }
+    },
+    format(arr) {
+      let temp = []
+      temp = arr.map(item => {
+        return item.title
+      })
+      return temp.join('、')
+    },
     currentUserState(arr) {
       //detail.auditUsers
       let flag = false
@@ -301,6 +279,9 @@ export default {
           }
         })
       })
+
+      console.log(flag)
+
       return flag
     }
   }

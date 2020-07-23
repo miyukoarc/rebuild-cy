@@ -11,13 +11,13 @@
             type="primary"
             :popAuth="true"
             :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']"
-            @click="handleBatchConfrim"
+            @click="handleBatch(action='access')"
           >批量通过</el-t-button>
           <el-t-button
             type="primary"
             :popAuth="true"
             :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']"
-            @click="handleBatchReject"
+            @click="handleBatch(action='reject')"
           >批量拒绝</el-t-button>
         </div>
       </tool-bar>
@@ -37,7 +37,7 @@
           @selection-change="handleSelectionChange"
           header-row-class-name="el-table-header"
         >
-          <el-table-column type="selection"></el-table-column>
+          <el-table-column type="selection" :selectable="selectable"></el-table-column>
           <el-table-column width="85" align="left" label="提交人">
             <template v-slot="{row}">
               <div>{{row.submitOperator.name}}</div>
@@ -54,7 +54,7 @@
 
           <el-table-column align="left" label="素材类型">
             <template v-slot="{row}">
-              <span v-if="row.auditAddMedia">{{mediaType[parse(row.auditAddMedia)[0].type]}}</span>
+              <span v-if="row.auditAddMedia">{{mediaType[row.auditAddMedia[0].type]}}</span>
             </template>
           </el-table-column>
 
@@ -63,16 +63,13 @@
               <div class="thumb-container" v-if="row.auditAddMedia">
                 <div
                   class="thumb"
-                  v-if="parse(row.auditAddMedia)[0].type==='IMAGE'"
+                  v-if="row.auditAddMedia[0].type==='IMAGE'"
                   @click="handleView(type='IMAGE',row.auditAddMedia)"
                 >
-                  <el-image
-                    fit="contain"
-                    :src="`/api/public/file/${parse(row.auditAddMedia)[0].localId}`"
-                  ></el-image>
+                  <el-image fit="contain" :src="`/api/public/file/${row.auditAddMedia[0].localId}`"></el-image>
                 </div>
                 <div class="thumb" v-else @click="handleView(type='VIDEO',row.auditAddMedia)">
-                  <video-cover :url="parse(row.auditAddMedia)[0].localId"></video-cover>
+                  <video-cover :url="row.auditAddMedia[0].localId"></video-cover>
                 </div>
               </div>
             </template>
@@ -101,7 +98,6 @@
             <template v-slot="{row}">
               <div>
                 <el-t-button type="text" @click="handleAudit(row.uuid)">审核</el-t-button>
-                <!-- <el-t-button size="mini" type="primary" @click="handleAccess(scoped.row)">通过</el-t-button> -->
               </div>
             </template>
           </el-table-column>
@@ -168,7 +164,7 @@ export default {
         page: 0,
         size: 10,
         auditConfirmation: '',
-        auditType: '',
+        auditType: 'MEDIA',
         handlerId: '',
         submitterId: ''
       },
@@ -187,7 +183,8 @@ export default {
 
       loading: state => state.sensitive.loading,
       listAll: state => state.sensitive.auditMediaList,
-      page: state => state.sensitive.auditMediaPage
+      page: state => state.sensitive.auditMediaPage,
+      currentUserUuid: state => state.user.uuid
     })
   },
   created() {
@@ -195,14 +192,13 @@ export default {
     this.initFilter()
   },
   mounted() {
-      //刷新eventBUs
+    //刷新eventBUs
     this.$bus.$on('handleRefresh', () => {
       this.initDataList(this.query)
     })
     this.$once('hook:beforeDestroy', () => {
       this.$bus.$off('handleRefresh')
     })
-    
   },
   methods: {
     doExport(val) {
@@ -338,7 +334,7 @@ export default {
       }
     },
     handleView(type, str) {
-      const mediaId = this.parse(str)[0].localId
+      const mediaId = str[0].localId
 
       if (type === 'IMAGE') {
         this.imageUrl = mediaId
@@ -355,8 +351,8 @@ export default {
     handleAudit(uuid) {
       this.$refs['formDialog'].event = 'AuditTemplate'
       this.$refs['formDialog'].eventType = 'audit'
-      this.$refs['formDialog'].dialogVisible = true
       this.$refs['formDialog'].transfer = { uuid }
+      this.$refs['formDialog'].dialogVisible = true
     },
     onLoad(e) {
       const img = e.target
@@ -368,6 +364,62 @@ export default {
     },
     onCanplay(e) {
       this.width = 640 + 'px'
+    },
+    selectable(row, index) {
+      let flag = false
+      //   row.auditUsers.forEach(item => {
+      //     item.userList.forEach(user => {
+      //       if (user.uuid === this.currentUserUuid) {
+      //         //   console.log(user.auditState)
+      //         if (
+      //           user.auditState === 'APPROVED' ||
+      //           user.auditState === 'AUDIT_FAILED'
+      //         ) {
+      //           flag = true
+      //         }
+      //       }
+      //     })
+      //   })
+      return row.auditState === 'TO_BE_REVIEWED' && !flag
+    },
+    handleBatch(action) {
+      let uuids = this.selects
+      let payload = null
+      if (action === 'reject') {
+        uuids = this.selects
+        payload = {
+          auditConfirmation: 'AUDIT_FAILED',
+          uuids
+        }
+      } else {
+        uuids = this.selects
+        payload = {
+          auditConfirmation: 'APPROVED',
+          uuids
+        }
+      }
+
+      this.batchAudit(payload)
+    },
+    batchAudit(payload) {
+      this.$store
+        .dispatch('audit/batchAuditMediaConfirmation', payload)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功',
+            duration: 1000,
+            onClose: () => {
+              this.initDataList(this.query)
+            }
+          })
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err
+          })
+        })
     }
   }
 }

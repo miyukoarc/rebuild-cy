@@ -67,7 +67,9 @@ export default {
   computed: {
     ...mapState({
       permissionMap: state => state.permission.permissionMap,
-      tagListAll: state => state.tag.tagListAll
+      tagListAll: state => state.tag.tagListAll,
+
+      auditSetting: state => state.sensitive.auditSetting
     })
   },
   watch: {
@@ -129,10 +131,17 @@ export default {
           this.$store
             .dispatch('tag/addTagIsAudit', payload)
             .then(() => {
+              const message = this.auditSetting['permission']
+                ? '已提交审核'
+                : '已完成'
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: message
               })
+            //   this.$message({
+            //     type: 'success',
+            //     message: '操作成功'
+            //   })
               this.form = this.$options.data().form
               this.handleRefresh()
               this.closeDialog()

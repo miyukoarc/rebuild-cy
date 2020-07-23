@@ -13,8 +13,22 @@ import {
   auditPropertylistAll,
   setAuditUser,
   auditMediaListAll,
-  auditDetail
+  auditDetail,
 } from '@/api/sensitive'
+
+function buildAuditSetting(arr) {
+  let temp = {}
+  arr.forEach(item => {
+    Object.defineProperty(temp, item.moduleCode, {
+      value: item.openState,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    })
+  })
+
+  return temp
+}
 const state = {
   /**
    * public state
@@ -96,7 +110,12 @@ const state = {
     total: 0,
     pageSize: 0,
     pageNumber: 0
-  }
+  },
+
+  /**
+   * 审核开启状态
+   */
+  auditSetting: {}
 
 
 
@@ -234,6 +253,9 @@ const mutations = {
     state.propertyPage.pageNumber = pageNumber
     state.propertyPage.pageSize = pageSize
   },
+  SET_AUDITSETTING(state, payload) {
+    state.auditSetting = payload
+  },
   /**
    * 素材审核
    */
@@ -242,13 +264,13 @@ const mutations = {
   },
   SET_MEDIAPAGE(state, payload) {
     const {
-        total,
-        pageNumber,
-        pageSize
-      } = payload
-      state.auditMediaPage.total = total
-      state.auditMediaPage.pageNumber = pageNumber
-      state.auditMediaPage.pageSize = pageSize
+      total,
+      pageNumber,
+      pageSize
+    } = payload
+    state.auditMediaPage.total = total
+    state.auditMediaPage.pageNumber = pageNumber
+    state.auditMediaPage.pageSize = pageSize
   },
 
 
@@ -268,11 +290,19 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getAuditPermissionlistAll(payload).then(res => {
-        commit('SAVE_PERMISSIONLIST', res.items)
+
+        const accessed = res.items.map(item => {
+          return {
+            ...item,
+            auditUsers: JSON.parse(item.auditUsers)
+          }
+        })
+        commit('SAVE_PERMISSIONLIST', accessed)
         commit('SET_PERMISSIONPAGE', res)
         commit('TOGGLE_LOADING', false)
         resolve(res)
       }).catch(err => {
+        console.error(err)
 
         commit('TOGGLE_LOADING', false)
         reject(err)
@@ -484,8 +514,10 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       auditPropertylistAll(payload).then(res => {
+        const accessed = buildAuditSetting(res.items)
         commit('TOGGLE_LOADING', false)
         commit('SAVE_PROPERLIST', res.items)
+        commit('SET_AUDITSETTING', accessed)
         commit('SET_PROPERPAGE', res)
         resolve()
       }).catch(err => {
@@ -522,7 +554,14 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       auditMediaListAll(payload).then(res => {
-        commit('SAVE_MEDIAAUDIT', res.items)
+        const accessed = res.items.map(item => {
+          return {
+            ...item,
+            auditAddMedia: JSON.parse(item.auditAddMedia),
+            auditUsers: JSON.parse(item.auditUsers)
+          }
+        })
+        commit('SAVE_MEDIAAUDIT', accessed)
         commit('SET_MEDIAPAGE', res)
         resolve()
       }).catch(err => {
@@ -537,14 +576,16 @@ const actions = {
    * @param {*} param0 
    * @param {string} payload 
    */
-  auditDetail({commit},payload){
-     return new Promise((resolve,reject)=>{
-         auditDetail(payload).then(res=>{
-             resolve(res)
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  auditDetail({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      auditDetail(payload).then(res => {
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   }
 
 
