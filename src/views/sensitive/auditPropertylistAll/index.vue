@@ -14,15 +14,6 @@
       </tool-bar>
     </el-card>
     <el-card class="content-spacing">
-      <!-- <div class="switch-container" v-for="item in listAll" :key="item.uuid">
-        <span class="color-info font-es">{{item.moduleName}}</span>
-        <el-switch
-          @change="handleChange(item)"
-          v-model="form[item.moduleName]"
-          active-text="开"
-          inactive-text="关"
-        ></el-switch>
-      </div>-->
       <el-table
         v-loading="loading"
         :data="listAll"
@@ -38,9 +29,8 @@
         <el-table-column label="审批角色" align="left">
           <template v-slot="{row}">
             <div>
-              <!-- <span>{{parse(row.auditUsers)}}</span> -->
-              <span v-if="parse(row.auditUsers).length===0">--</span>
-              <async-user-drawer v-else :hasPop="true" :users="parse(row.auditUsers)"></async-user-drawer>
+              <span v-if="row.auditUsers.length===0">--</span>
+              <async-user-drawer v-else :hasPop="true" :users="row.auditUsers[0].userList"></async-user-drawer>
             </div>
           </template>
         </el-table-column>
@@ -95,6 +85,7 @@
 <script>
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
+import AuditUser from './components/audit-user'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import TagsDrawer from '@/components/TagsDrawer'
@@ -109,7 +100,8 @@ export default {
     AsyncUserTag,
     AsyncUserDrawer,
     RoleDrawer,
-    TagsDrawer
+    TagsDrawer,
+    AuditUser
     // mHeadedr
   },
   data() {
@@ -213,8 +205,6 @@ export default {
             type: 'error',
             message: err
           })
-          //   console.log(this.form[moduleName], err, openState)
-          //   this.form[moduleName] = openState
         })
     },
     handleSetting(val) {

@@ -111,12 +111,9 @@ export default {
     },
     handleConfirm() {
       const form = JSON.parse(JSON.stringify(this.form))
-      Reflect.deleteProperty(form, 'sort')
+    //   Reflect.deleteProperty(form, 'sort')
       const payload = form
-      // console.log(payload)
-      // if(this.deleteFlagTag){
-      //     const payload =
-      // }
+
       this.$store
         .dispatch('tag/updateTagIsAudit',payload)
         .then(() => {
@@ -182,7 +179,7 @@ export default {
           this.$store
             .dispatch('tag/deleteTagIsAudit', payload)
             .then(() => {
-              const message = this.auditSetting['permission']
+              const message = this.auditSetting['tag']
                 ? '已提交审核'
                 : '已完成'
               this.$message({

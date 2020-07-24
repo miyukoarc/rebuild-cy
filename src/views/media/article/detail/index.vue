@@ -35,6 +35,13 @@
               />
             </el-select>
           </el-form-item>
+          <el-form-item label="符合标签">
+            <div>
+              <el-radio v-model="form.matchFormat" label="CONTAINS_ANY">包含其一</el-radio>
+              <el-radio v-model="form.matchFormat" label="PERFECT_MATCH">完全匹配</el-radio>
+            </div>
+          </el-form-item>
+          <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>
           <el-form-item style="margin-bottom:24px;">
             <MDinput v-model="form.title" :maxlength="20" name="name">文章标题</MDinput>
             <MDinput v-model="form.description" :maxlength="100" name="name">文章描述</MDinput>
@@ -61,12 +68,14 @@
 <script>
 import Tinymce from '@/components/Tinymce'
 import MDinput from '@/components/MDinput'
+import TagSelect from '@/components/TagSelect'
 import defaultCover from '@/assets/2.jpg'
 import { mapState } from 'vuex'
 export default {
   components: {
     Tinymce,
-    MDinput
+    MDinput,
+    TagSelect
   },
   data() {
     return {
@@ -76,8 +85,10 @@ export default {
         title: '',
         description: '',
         content: '',
-        imgId: ''
+        imgId: '',
+        matchFormat: 'CONTAINS_ANY'
       },
+      tagSelects: [],
       groupUuid: '',
       flag: false,
       type: 'ARTICLE'
@@ -103,7 +114,8 @@ export default {
     ...mapState({
       articleDetail: state => state.media.articleDetail,
       mediaGroupListAll: state => state.media.mediaGroupListAll,
-      permissionMap: state => state.permission.permissionMap
+      permissionMap: state => state.permission.permissionMap,
+      tagListSelect: state => state.tag.tagListSelect
     }),
     defaultCover() {
       return defaultCover()
@@ -151,6 +163,17 @@ export default {
             message: '初始化失败'
           })
         })
+
+      this.$store
+        .dispatch('tag/getListSelect')
+        .then(() => {})
+        .catch(err => {
+          console.error(err)
+          this.$message({
+            type: 'error',
+            message: err || '初始化失败'
+          })
+        })
     },
     beforeUpload() {},
     onSuccess(res, file) {
@@ -159,7 +182,6 @@ export default {
     },
     beforeup(file) {
       // 图片上传
-      console.log('图片')
       const types = ['image/jpeg', 'image/gif', 'image/png']
       const isimg = types.includes(file.type)
       const isLtSize = file.size / 1024 / 1024 < 5
@@ -180,8 +202,6 @@ export default {
       return true
     },
     handleConfirm() {
-      // alert(this.mode)
-      console.log(this.mode)
       if (this.mode === 'UPDATE') {
         const payload = this.form
         const groupUuid = this.groupUuid
@@ -245,7 +265,7 @@ export default {
 }
 </script>
 
-<style  scoped>
+<style scoped>
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;

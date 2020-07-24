@@ -33,7 +33,7 @@
           stripe
           lazy
           highlight-current-row
-          :default-sort="{order:'ascending',prop:'auditState'}"
+          :default-sort="sortConfig"
           @selection-change="handleSelectionChange"
           header-row-class-name="el-table-header"
         >
@@ -58,7 +58,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column align="left" label="缩略图">
+          <el-table-column align="left" label="缩略图/内容">
             <template v-slot="{row}">
               <div class="thumb-container" v-if="row.auditAddMedia">
                 <div
@@ -68,8 +68,21 @@
                 >
                   <el-image fit="contain" :src="`/api/public/file/${row.auditAddMedia[0].localId}`"></el-image>
                 </div>
-                <div class="thumb" v-else @click="handleView(type='VIDEO',row.auditAddMedia)">
+                <div
+                  class="thumb"
+                  v-if="row.auditAddMedia[0].type==='VIDEO'"
+                  @click="handleView(type='VIDEO',row.auditAddMedia)"
+                >
                   <video-cover :url="row.auditAddMedia[0].localId"></video-cover>
+                </div>
+                <div class="font-no-wrap" v-if="row.auditAddMedia[0].type==='TEXT'">
+                    {{row.auditAddMedia[0].textContents}}
+                </div>
+                <div v-if="row.auditAddMedia[0].type==='ARTICLE'">
+                    《{{row.auditAddMedia[0].title}}》
+                </div>
+                <div v-if="row.auditAddMedia[0].type==='FILE'">
+                    {{row.auditAddMedia[0].fileName}}
                 </div>
               </div>
             </template>
@@ -84,7 +97,14 @@
             </template>
           </el-table-column>
 
-          <el-table-column align="leeft" label="状态">
+          <el-table-column
+            align="leeft"
+            label="状态"
+            sortable
+            prop="auditState"
+            :sort-method="sortMethod"
+            :sort-orders="['ascending','descending',null]"
+          >
             <template v-slot="{row}">
               <div>
                 <span v-if="row.auditState==='TO_BE_REVIEWED'" class="color-primary">审核中</span>
@@ -159,6 +179,7 @@ export default {
         pageNumber: 0,
         pageSize: 10
       },
+      sortConfig: { prop: 'auditState', order: 'ascending' },
 
       query: {
         page: 0,
@@ -420,6 +441,17 @@ export default {
             message: err
           })
         })
+    },
+    sortMethod(a, b) {
+      if (a.auditState === 'TO_BE_REVIEWED') {
+        return -1
+      }
+      if (b.auditState === 'TO_BE_REVIEWED') {
+        return 1
+      }
+      if (a.auditState === b.auditState) {
+        return 0
+      }
     }
   }
 }

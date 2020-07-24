@@ -136,7 +136,7 @@ export default {
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-          this.initData(newVal.uuid)
+        this.initData(newVal.uuid)
       },
       immediate: true,
       deep: true
@@ -153,7 +153,13 @@ export default {
         .then(res => {
           this.detail = {
             ...res,
-            auditUsers: this.parse(res.auditUsers)
+            auditUsers: this.parse(res.auditUsers),
+            tagBeforeChangeContent: res.tagBeforeChangeContent
+              ? this.parse(res.tagBeforeChangeContent)
+              : [],
+            tagChangeContent: res.tagChangeContent
+              ? this.parse(res.tagChangeContent)
+              : []
           }
 
           this.permissionList = this.grouping(res.toPermissions)
@@ -279,8 +285,6 @@ export default {
           }
         })
       })
-
-      console.log(flag)
 
       return flag
     }

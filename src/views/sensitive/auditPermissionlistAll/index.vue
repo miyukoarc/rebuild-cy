@@ -33,7 +33,7 @@
           stripe
           lazy
           highlight-current-row
-          :default-sort="{order:'ascending',prop:'auditState'}"
+          :default-sort="sortConfig"
           @selection-change="handleSelectionChange"
           header-row-class-name="el-table-header"
         >
@@ -61,7 +61,10 @@
             </template>
           </el-table-column>
 
-          <el-table-column align="left" label="状态">
+          <el-table-column align="left" label="状态" sortable
+            prop="auditState"
+            :sort-method="sortMethod"
+            :sort-orders="['ascending','descending',null]">
             <template v-slot="{row}">
               <div>
                 <span v-if="row.auditState==='TO_BE_REVIEWED'" class="color-primary">审核中</span>
@@ -124,6 +127,9 @@ export default {
         handlerId: '',
         submitterId: ''
       },
+
+            sortConfig: { prop: 'auditState', order: 'ascending' },
+
 
       selects: []
     }
@@ -323,6 +329,17 @@ export default {
         })
       })
       return row.auditState === 'TO_BE_REVIEWED'&&!flag
+    },
+        sortMethod(a, b) {
+      if (a.auditState === 'TO_BE_REVIEWED') {
+        return -1
+      }
+      if (b.auditState === 'TO_BE_REVIEWED') {
+        return 1
+      }
+      if (a.auditState === b.auditState) {
+        return 0
+      }
     }
   }
 }

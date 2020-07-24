@@ -115,7 +115,8 @@ export default {
   computed: {
     ...mapState({
       tagListSelect: state => state.tag.tagListSelect,
-      permissionMap: state => state.permission.permissionMap
+      permissionMap: state => state.permission.permissionMap,
+      auditSetting: state => state.sensitive.auditSetting
     })
   },
   created() {
@@ -149,7 +150,6 @@ export default {
 
       this.$refs['form'].validate(valid => {
         if (valid) {
-
           this.submitUpload()
         } else {
           this.$message({
@@ -176,7 +176,7 @@ export default {
         })
     },
     beforeImageUpload(file) {
-        console.log(file)
+      console.log(file)
       const type = file.type
       const size = file.size
       if (size > 1024 * 1024 * 2) {
@@ -203,13 +203,17 @@ export default {
       return true
     },
     onSuccess(res, file, list) {
-
       this.uploadFilesLength++
       this.$message({
         type: 'warning',
         message: '操作完成'
       })
       if (this.uploadFilesLength === list.length) {
+        const message = this.auditSetting['media'] ? '已提交审核' : '已完成'
+        this.$message({
+          type: 'success',
+          message: message
+        })
         this.$bus.$emit('handleRefresh')
         //   Object.assign(this.$data, this.$options.data())
         this.$parent.$parent.dialogVisible = false

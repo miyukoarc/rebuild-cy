@@ -321,7 +321,13 @@ const actions = {
 
     return new Promise((resolve, reject) => {
       getAuditTaglistAll(payload).then(res => {
-        commit('SAVE_TAGLIST', res.items)
+        const accessed = res.items.map(item => {
+            return {
+              ...item,
+              auditUsers: JSON.parse(item.auditUsers)
+            }
+          })
+        commit('SAVE_TAGLIST', accessed)
         commit('SET_TAGPAGE', res)
         commit('TOGGLE_LOADING', false)
 
@@ -515,8 +521,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       auditPropertylistAll(payload).then(res => {
         const accessed = buildAuditSetting(res.items)
+        const alter = res.items.map(item=>{
+            return {...item,auditUsers:JSON.parse(item.auditUsers)}
+        })
         commit('TOGGLE_LOADING', false)
-        commit('SAVE_PROPERLIST', res.items)
+        commit('SAVE_PROPERLIST', alter)
         commit('SET_AUDITSETTING', accessed)
         commit('SET_PROPERPAGE', res)
         resolve()

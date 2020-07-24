@@ -33,12 +33,34 @@
 
     <el-form-item label="素材：">
       <div class="media-container" v-if="detail.auditAddMedia">
+        <!-- <keep-alive> -->
         <el-image
           v-if="detail.auditAddMedia[0].type==='IMAGE'"
           fit="contain"
           :src="`/api/public/file/${detail.auditAddMedia[0].localId}`"
         ></el-image>
-        <video-cover :url="detail.auditAddMedia[0].localId"></video-cover>
+        <video
+          controls
+          style="width:400px;height:300px"
+          v-if="detail.auditAddMedia[0].type==='VIDEO'"
+          :src="`/api/public/file/${detail.auditAddMedia[0].localId}`"
+        ></video>
+        <div
+          class="text-container"
+          v-if="detail.auditAddMedia[0].type==='TEXT'"
+        >{{detail.auditAddMedia[0].textContents}}</div>
+        <div class="article-container" v-if="detail.auditAddMedia[0].type==='ARTICLE'">
+          <h3>{{detail.auditAddMedia[0].title}}</h3>
+          <div class="font-es" v-html="detail.articleContent"></div>
+        </div>
+        <div class="file-container" v-if="detail.auditAddMedia[0].type==='FILE'">
+          <el-button size="small" @click="handleDownload">
+            <i class="el-icon-document"></i>
+            {{detail.auditAddMedia[0].fileName}}&emsp;
+            <i class="el-icon-download"></i>
+          </el-button>
+        </div>
+        <!-- </keep-alive> -->
       </div>
     </el-form-item>
 
@@ -302,6 +324,10 @@ export default {
         })
       })
       return flag
+    },
+    handleDownload() {
+      const url = this.detail.auditAddMedia[0].localId
+      window.location.href = `/api/public/file/${url}`
     }
   }
 }
@@ -312,7 +338,9 @@ export default {
   margin-bottom: 10px;
 }
 .media-container {
-  width: 180px;
-  height: 320;
+  .article-container {
+    height: 320px;
+    overflow-y: scroll;
+  }
 }
 </style>

@@ -144,7 +144,7 @@ export function throttle(func, wait = 1000) {
   let timeout;
   let context
   return function (event) {
-      console.log(context)
+    console.log(context)
     context = this
     clearTimeout(timeout)
     timeout = setTimeout(() => {
@@ -158,36 +158,56 @@ export function throttle(func, wait = 1000) {
  * @param {any} value 
  * @param {array} arr 
  */
-export function intercept(key,value,arr){
-    let temp = []
-    const deep = (key,value,arr)=>{
-        arr.forEach(item=>{
-            if(item[key]===value){
-                temp.push(item)
-            }else{
-                if(item.children){
-                    deep(key,value,item.children)
-                }
-            }
-        })
-    }
-    deep(key,value,arr)
-    return temp
+export function intercept(key, value, arr) {
+  let temp = []
+  const deep = (key, value, arr) => {
+    arr.forEach(item => {
+      if (item[key] === value) {
+        temp.push(item)
+      } else {
+        if (item.children) {
+          deep(key, value, item.children)
+        }
+      }
+    })
+  }
+  deep(key, value, arr)
+  return temp
 }
 
 /**
  * 去重
  */
-export function myFilter(arr){
+export function myFilter(arr) {
 
-    let temp = []
-    return arr.reduce((sum,curr)=>{
-        if(!temp.includes(curr.uuid)){
-            sum.push(curr)
-            temp.push(curr.uuid)
-        }
-        return sum
-    },[])
+  let temp = []
+  return arr.reduce((sum, curr) => {
+    if (!temp.includes(curr.uuid)) {
+      sum.push(curr)
+      temp.push(curr.uuid)
+    }
+    return sum
+  }, [])
+}
+
+export function toChinesNum(num) {
+  let changeNum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+  let unit = ["", "十", "百", "千", "万"];
+  num = parseInt(num);
+  let getWan = (temp) => {
+    let strArr = temp.toString().split("").reverse();
+    let newNum = "";
+    for (var i = 0; i < strArr.length; i++) {
+      newNum = (i == 0 && strArr[i] == 0 ? "" : (i > 0 && strArr[i] == 0 && strArr[i - 1] == 0 ? "" : changeNum[strArr[i]] + (strArr[i] == 0 ? unit[0] : unit[i]))) + newNum;
+    }
+    return newNum;
+  }
+  let overWan = Math.floor(num / 10000);
+  let noWan = num % 10000;
+  if (noWan.toString().length < 4) {
+    noWan = "0" + noWan;
+  }
+  return overWan ? getWan(overWan) + "万" + getWan(noWan) : getWan(num);
 }
 
 /**

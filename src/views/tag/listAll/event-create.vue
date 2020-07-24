@@ -54,8 +54,8 @@ export default {
       },
       rules: {
         groupName: [
-          { required: false, message: '请输入标签组名称', trigger: 'blur' },
-          { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
+          { required: true, message: '请输入标签组名称', trigger: 'blur' }
+        //   { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
         ],
         tagName: [
           { required: true, message: '请输入标签名称', trigger: 'blur' },
@@ -99,7 +99,7 @@ export default {
       let payload
       let tagList = []
 
-      if (this.permissionMap['tag']['tag_addTagIsAudit'].needAudit) {
+      if (this.auditSetting['tag']) {
         groupName = this.form.groupName
 
         addTagName = this.form.tagList.map(item => item.tagName).join(',')
@@ -131,17 +131,13 @@ export default {
           this.$store
             .dispatch('tag/addTagIsAudit', payload)
             .then(() => {
-              const message = this.auditSetting['permission']
+              const message = this.auditSetting['tag']
                 ? '已提交审核'
                 : '已完成'
               this.$message({
                 type: 'success',
                 message: message
               })
-            //   this.$message({
-            //     type: 'success',
-            //     message: '操作成功'
-            //   })
               this.form = this.$options.data().form
               this.handleRefresh()
               this.closeDialog()
