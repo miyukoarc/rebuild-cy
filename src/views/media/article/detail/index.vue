@@ -41,7 +41,9 @@
               <el-radio v-model="form.matchFormat" label="PERFECT_MATCH">完全匹配</el-radio>
             </div>
           </el-form-item>
-          <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>
+
+          <!-- <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select> -->
+          <tag-multi-select v-model="form.tagUuids"></tag-multi-select>
           <el-form-item style="margin-bottom:24px;">
             <MDinput v-model="form.title" :maxlength="20" name="name">文章标题</MDinput>
             <MDinput v-model="form.description" :maxlength="100" name="name">文章描述</MDinput>
@@ -69,13 +71,15 @@
 import Tinymce from '@/components/Tinymce'
 import MDinput from '@/components/MDinput'
 import TagSelect from '@/components/TagSelect'
+import TagMultiSelect from '@/components/TagMultiSelect'
 import defaultCover from '@/assets/2.jpg'
 import { mapState } from 'vuex'
 export default {
   components: {
     Tinymce,
     MDinput,
-    TagSelect
+    TagSelect,
+    TagMultiSelect
   },
   data() {
     return {
@@ -86,12 +90,14 @@ export default {
         description: '',
         content: '',
         imgId: '',
-        matchFormat: 'CONTAINS_ANY'
+        matchFormat: 'CONTAINS_ANY',
+        tagUuids: []
       },
       tagSelects: [],
       groupUuid: '',
       flag: false,
-      type: 'ARTICLE'
+      type: 'ARTICLE',
+      
     }
   },
   watch: {
@@ -115,7 +121,7 @@ export default {
       articleDetail: state => state.media.articleDetail,
       mediaGroupListAll: state => state.media.mediaGroupListAll,
       permissionMap: state => state.permission.permissionMap,
-      tagListSelect: state => state.tag.tagListSelect
+    //   tagListSelect: state => state.tag.tagListSelect
     }),
     defaultCover() {
       return defaultCover()
@@ -164,16 +170,16 @@ export default {
           })
         })
 
-      this.$store
-        .dispatch('tag/getListSelect')
-        .then(() => {})
-        .catch(err => {
-          console.error(err)
-          this.$message({
-            type: 'error',
-            message: err || '初始化失败'
-          })
-        })
+    //   this.$store
+    //     .dispatch('tag/getListSelect')
+    //     .then(() => {})
+    //     .catch(err => {
+    //       console.error(err)
+    //       this.$message({
+    //         type: 'error',
+    //         message: err || '初始化失败'
+    //       })
+    //     })
     },
     beforeUpload() {},
     onSuccess(res, file) {
@@ -212,7 +218,10 @@ export default {
         const payload = this.form
         const type = this.type
         const groupUuid = this.groupUuid
-        // console.log({data:payload,params:{type,groupUuid}})
+        // const tagUuids = this.tagSelects.reduce((sum, curr) => {
+        //   return sum.concat(curr)
+        // }, []).join(',')
+
         this.handleCreate({ data: payload, params: { type, groupUuid } })
       }
       this.flag = true

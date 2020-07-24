@@ -32,8 +32,7 @@
     </el-form-item>
 
     <el-form-item label="素材：">
-      <div class="media-container" v-if="detail.auditAddMedia">
-        <!-- <keep-alive> -->
+      <div class="media-container" v-if="detail.mediaOperationType==='ADD_MEDIA'">
         <el-image
           v-if="detail.auditAddMedia[0].type==='IMAGE'"
           fit="contain"
@@ -60,7 +59,35 @@
             <i class="el-icon-download"></i>
           </el-button>
         </div>
-        <!-- </keep-alive> -->
+      </div>
+
+      <div class="media-container" v-if="detail.mediaOperationType==='DELETE_MEDIA'">
+        <el-image
+          v-if="detail.toMedis[0].type==='IMAGE'"
+          fit="contain"
+          :src="`/api/public/file/${detail.toMedis[0].localId}`"
+        ></el-image>
+        <video
+          controls
+          style="width:400px;height:300px"
+          v-if="detail.toMedis[0].type==='VIDEO'"
+          :src="`/api/public/file/${detail.toMedis[0].localId}`"
+        ></video>
+        <div
+          class="text-container"
+          v-if="detail.toMedis[0].type==='TEXT'"
+        >{{detail.toMedis[0].textContents}}</div>
+        <div class="article-container" v-if="detail.toMedis[0].type==='ARTICLE'">
+          <h3>{{detail.toMedis[0].title}}</h3>
+          <div class="font-es" v-html="detail.articleContent"></div>
+        </div>
+        <div class="file-container" v-if="detail.toMedis[0].type==='FILE'">
+          <el-button size="small" @click="handleDownload">
+            <i class="el-icon-document"></i>
+            {{detail.toMedis[0].fileName}}&emsp;
+            <i class="el-icon-download"></i>
+          </el-button>
+        </div>
       </div>
     </el-form-item>
 
@@ -183,17 +210,46 @@ export default {
       this.$store
         .dispatch('audit/getDetail', payload)
         .then(res => {
-          this.detail = {
-            ...res,
-            auditAddMedia: this.parse(res.auditAddMedia),
-            auditUsers: this.parse(res.auditUsers)
-          }
+          if (res.mediaOperationType === 'ADD_MEDIA') {
+            this.detail = {
+              ...res,
+              auditAddMedia: this.parse(res.auditAddMedia),
+              auditUsers: this.parse(res.auditUsers)
+            }
 
-          this.tags = this.detail?.auditAddMedia[0].tagsDto
-            ? this.grouping(this.detail?.auditAddMedia[0].tagsDto)
-            : []
+            // if (res.auditAddMedia) {
+            const arr = this.parse(res.auditAddMedia)[0].tagsDto
+
+            console.log(arr)
+
+            this.tags = this.grouping(arr)
+            // } else {
+            //   this.tags = []
+            // }
+          }
+          if (res.mediaOperationType === 'DELETE_MEDIA') {
+            this.detail = {
+              ...res,
+              auditUsers: this.parse(res.auditUsers)
+            }
+
+            console.log(res.toMedis)
+
+            // if (Object.keys(res.toMedis).length) {
+            const arr = res.toMedis[0].toTags
+            console.log(arr)
+            this.tags = this.groupingDelete(arr)
+            // } else {
+            //   this.tags = []
+            // }
+
+            // this.tags = Object.keys(this.detail.toMedis).length
+            //   ? this.groupingDelete(this.detail.toMedis[0].toTags)
+            //   : []
+          }
         })
         .catch(err => {
+          console.error(err)
           this.$message({
             type: 'error',
             message: err
@@ -220,8 +276,15 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     grouping(list) {
-      if (Object.keys(list).length) {
-        return list.reduce((groups, item) => {
+      if (list.length) {
+        let temp = list.map(item => {
+          return {
+            ...item,
+            groupName: item.tagGroupName,
+            groupId: item.tagGroupId
+          }
+        })
+        return temp.reduce((groups, item) => {
           let groupFound = groups.find(
             foundItem => item.groupId === foundItem.groupId
           )
@@ -243,6 +306,32 @@ export default {
         return []
       }
     },
+    groupingDelete(list) {
+      console.log(list, 'grouping')
+      if (Object.keys(list).length) {
+        return list.reduce((groups, item) => {
+          let groupFound = groups.find(
+            foundItem => item.groupId === foundItem.groupId
+          )
+          if (groupFound) {
+            groupFound.tags.push(item)
+          } else {
+            let newGroup = {
+              groupId: item.groupId,
+              groupName: item.groupName,
+              tags: [item]
+            }
+
+            groups.push(newGroup)
+          }
+
+          return groups
+        }, [])
+      } else {
+        return []
+      }
+    },
+
     handleAudit(action) {
       const uuid = this.transfer.uuid
       let payload = null

@@ -28,7 +28,7 @@
           stripe
           lazy
           highlight-current-row
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="文章标题" align="left" prop="title"></el-table-column>
@@ -73,9 +73,9 @@
           :current-page.sync="pageConfig.pageNumber"
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
-        /> -->
+        />-->
 
-        <customer-pagination :pageConfig="pageConfig" @currentChange="changePage"></customer-pagination>
+        <customer-pagination :pageConfig="pageConfig" @current-change="changePage"></customer-pagination>
       </div>
     </el-card>
 
@@ -93,6 +93,7 @@ import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+  inject: ['reload'],
   components: {
     CustomerPagination,
     ListHeader,
@@ -228,7 +229,7 @@ export default {
                 type: 'success',
                 message: '操作成功'
               })
-              this.reload()
+              this.initDataList()
             })
             .catch(err => {
               this.$message({
@@ -241,12 +242,11 @@ export default {
           console.error(err)
         })
     },
-    handleRecords(index){
-        const uuid = this.listAll[index].uuid
-        this.$router.push({
-            path: '/media/browsingRecords/'+uuid
-        })
-
+    handleRecords(index) {
+      const uuid = this.listAll[index].uuid
+      this.$router.push({
+        path: '/media/browsingRecords/' + uuid
+      })
     }
   }
 }
@@ -264,5 +264,4 @@ export default {
   padding: 20px 0;
   text-align: center;
 }
-
 </style>

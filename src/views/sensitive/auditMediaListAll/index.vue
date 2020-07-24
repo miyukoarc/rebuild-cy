@@ -55,6 +55,7 @@
           <el-table-column align="left" label="素材类型">
             <template v-slot="{row}">
               <span v-if="row.auditAddMedia">{{mediaType[row.auditAddMedia[0].type]}}</span>
+              <span v-else>{{mediaType[row.toMedis[0].type]}}</span>
             </template>
           </el-table-column>
 
@@ -75,15 +76,35 @@
                 >
                   <video-cover :url="row.auditAddMedia[0].localId"></video-cover>
                 </div>
-                <div class="font-no-wrap" v-if="row.auditAddMedia[0].type==='TEXT'">
-                    {{row.auditAddMedia[0].textContents}}
+                <div
+                  class="font-no-wrap"
+                  v-if="row.auditAddMedia[0].type==='TEXT'"
+                >{{row.auditAddMedia[0].textContents}}</div>
+                <div v-if="row.auditAddMedia[0].type==='ARTICLE'">《{{row.auditAddMedia[0].title}}》</div>
+                <div v-if="row.auditAddMedia[0].type==='FILE'">{{row.auditAddMedia[0].fileName}}</div>
+              </div>
+
+              <div class="thumb-container" v-else>
+                <div
+                  class="thumb"
+                  v-if="row.toMedis[0].type==='IMAGE'"
+                  @click="handleView(type='IMAGE',row.toMedis)"
+                >
+                  <el-image fit="contain" :src="`/api/public/file/${row.toMedis[0].localId}`"></el-image>
                 </div>
-                <div v-if="row.auditAddMedia[0].type==='ARTICLE'">
-                    《{{row.auditAddMedia[0].title}}》
+                <div
+                  class="thumb"
+                  v-if="row.toMedis[0].type==='VIDEO'"
+                  @click="handleView(type='VIDEO',row.toMedis)"
+                >
+                  <video-cover :url="row.toMedis[0].localId"></video-cover>
                 </div>
-                <div v-if="row.auditAddMedia[0].type==='FILE'">
-                    {{row.auditAddMedia[0].fileName}}
-                </div>
+                <div
+                  class="font-no-wrap"
+                  v-if="row.toMedis[0].type==='TEXT'"
+                >{{row.toMedis[0].textContents}}</div>
+                <div v-if="row.toMedis[0].type==='ARTICLE'">《{{row.toMedis[0].title}}》</div>
+                <div v-if="row.toMedis[0].type==='FILE'">{{row.toMedis[0].fileName}}</div>
               </div>
             </template>
           </el-table-column>
@@ -91,8 +112,8 @@
           <el-table-column align="left" label="新增/删除">
             <template v-slot="{row}">
               <div>
-                <span class="color-success" v-if="!row.deleted">新增</span>
-                <span class="color-danger" v-else>删除</span>
+                <span class="color-success" v-if="row.mediaOperationType==='ADD_MEDIA'">新增</span>
+                <span class="color-danger" v-if="row.mediaOperationType==='DELETE_MEDIA'">删除</span>
               </div>
             </template>
           </el-table-column>
@@ -123,7 +144,7 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
+        <!-- <el-pagination
           background
           class="pager"
           layout="total,prev, pager, next,jumper"
@@ -131,7 +152,8 @@
           :current-page.sync="pageConfig.pageNumber"
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
-        />
+        /> -->
+        <customer-pagination :pageConfig="pageConfig" @current-change="changePage"></customer-pagination>
       </div>
     </el-card>
 
@@ -157,6 +179,7 @@ import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
 import VideoCover from '@/components/VideoCover'
+import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import media from '../../../store/modules/media'
 
@@ -165,7 +188,8 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar,
-    VideoCover
+    VideoCover,
+    CustomerPagination
   },
   data() {
     return {
@@ -280,6 +304,7 @@ export default {
       this.initDataList(this.query)
     },
     changePage(key) {
+        console.log(key)
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
@@ -388,19 +413,19 @@ export default {
     },
     selectable(row, index) {
       let flag = false
-      //   row.auditUsers.forEach(item => {
-      //     item.userList.forEach(user => {
-      //       if (user.uuid === this.currentUserUuid) {
-      //         //   console.log(user.auditState)
-      //         if (
-      //           user.auditState === 'APPROVED' ||
-      //           user.auditState === 'AUDIT_FAILED'
-      //         ) {
-      //           flag = true
-      //         }
-      //       }
-      //     })
-      //   })
+      row.auditUsers.forEach(item => {
+        item.userList.forEach(user => {
+          if (user.uuid === this.currentUserUuid) {
+            //   console.log(user.auditState)
+            if (
+              user.auditState === 'APPROVED' ||
+              user.auditState === 'AUDIT_FAILED'
+            ) {
+              flag = true
+            }
+          }
+        })
+      })
       return row.auditState === 'TO_BE_REVIEWED' && !flag
     },
     handleBatch(action) {
