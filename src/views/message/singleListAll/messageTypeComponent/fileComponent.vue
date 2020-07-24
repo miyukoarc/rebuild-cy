@@ -1,20 +1,20 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:48:28
- * @LastEditTime: 2020-07-17 14:23:30
+ * @LastEditTime: 2020-07-24 16:09:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\fileComponent.vue
 -->
 <template>
   <section class="file-component">
-    <div v-if="item.toUser == toUserId" class="left-warp">
+    <div v-if="item.toUser == fromUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
         <div class="left">
           <div class="user-select">
-            <div class="ict file-bg flex-column-center-alinecenter ml-20 ">
+            <div class="ict file-bg flex-column-center-alinecenter ml-20">
               <div
                 class="down-load"
                 @click=" handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == toUserId" class="right-warp">
+    <div v-if="item.fromUser == fromUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="right-warp display-flex justify-content-flex-end">
         <div class="right">
@@ -49,7 +49,7 @@
             </div>
           </div>
         </div>
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
   </section>
@@ -112,19 +112,32 @@ export default {
 
 <style lang="scss" scoped>
 .file-component {
-  p {
-    text-align: center;
+  margin-bottom: 10px;
+  .left-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
+  .right-warp {
+    margin-right: 5px;
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
+    }
   }
   .left {
     max-width: 50%;
-    left: 20px;
+    left: 10px;
     margin-top: 5px;
   }
   .right {
     /*使左右的对话框分开*/
     max-width: 50%;
     top: 5px;
-    left: -20px;
+    left: -10px;
   }
 }
 .file-bg {

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-15 11:38:19
- * @LastEditTime: 2020-07-15 19:14:54
+ * @LastEditTime: 2020-07-23 11:53:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\components\ChatTabBar.vue
@@ -10,6 +10,7 @@
   <section class="chat-tab-bar">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane v-for="(tab,index) in tabs" :key="index" :label="tab.label" :name="tab.name">
+        <div>33222</div>
         <!-- <div v-if="listData.length>0">
           <div v-for="(list,listIndex) in listData" :key="listIndex" class="allChat clearfix">
             <keep-alive>
@@ -23,7 +24,7 @@
             </keep-alive>
           </div>
         </div>
-        <div v-if="listData.length<=0" class="no-data">暂无数据</div> -->
+        <div v-if="listData.length<=0" class="no-data">暂无数据</div>-->
       </el-tab-pane>
     </el-tabs>
     <div class="search-form" style="margin-top:5px">
@@ -76,7 +77,10 @@ export default {
     };
   },
   methods: {
-    handleClick() {},
+    handleClick(e) {
+      console.log(e, "eeeeee");
+      this.$emit("handleClickChatType", e);
+    },
     handleSearch(val) {
       const { userName, departmentsUuid, roleUuid } = val;
       this.query.userName = userName ? userName : userName;
@@ -111,5 +115,11 @@ export default {
     right: 0;
     top: 0;
   }
+}
+</style>
+<style lang="scss">
+.chat-tab-bar /deep/.el-tabs__nav-wrap::after {
+  // position: static !important;
+  height: 1px;
 }
 </style>

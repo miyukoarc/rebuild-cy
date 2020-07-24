@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-21 10:48:49
- * @LastEditTime: 2020-07-21 19:49:56
+ * @LastEditTime: 2020-07-23 11:03:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\property\listAll\index.vue
@@ -12,7 +12,7 @@
       <div class="basic-information">
         <h5>
           基本信息
-          <span>
+          <span @click="handleEditBasicInformation">
             <i class="el-icon-edit-outline"></i> 修改
           </span>
         </h5>
@@ -160,6 +160,11 @@ export default {
             message: "初始化失败"
           });
         });
+    },
+    handleEditBasicInformation(){
+      this.$refs["formDialog"].eventType = "editBasic";
+      this.$refs["formDialog"].event = "EditBasicTemplate";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     handleAddField() {
       this.$refs["formDialog"].eventType = "create";
@@ -323,13 +328,13 @@ export default {
       margin-bottom: 20px;
     }
     .custon-field-item {
-      margin-top: 15px;
+      margin-top: 10px;
       font-size: 14px;
       .field {
         width: 115px;
-        font-size: 13px;
-        margin-right: 15px;
         height: 30px;
+        margin-right: 15px;
+        font-size: 13px;
         .icon-warp {
           display: inline-block;
           height: 30px;
@@ -342,8 +347,8 @@ export default {
       }
 
       .tool-menu {
-        height: 30px;
-        line-height: 30px;
+        // height: 30px;
+        // line-height: 30px;
         .button-text {
           font-size: 14px;
           color: rgba(0, 0, 0, 0.85);

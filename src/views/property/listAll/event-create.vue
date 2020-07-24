@@ -4,16 +4,16 @@
       <el-input v-model="form.label" placeholder="请输入字段名称，不超过5个字" maxlength="5" show-word-limit></el-input>
     </el-form-item>
     <el-form-item label="字段类型：">
-      <el-radio-group v-model="form.type">
+      <el-radio-group v-model="form.type" @change="handleChangeFiledType">
         <el-radio label="TEXT">文本</el-radio>
         <el-radio label="SELECT">选择</el-radio>
       </el-radio-group>
     </el-form-item>
-    <div v-show="form.type == 'SELECT'">
+    <div v-if="form.type == 'SELECT'">
       <el-form-item
         v-for="(option,index) in form.optionList"
         :key="index"
-        :prop="'optionList.' + index + '.value'"
+        :prop="'optionList.' + index + '.name'"
         :rules="inputRules"
       >
         <div class="option-list">
@@ -41,7 +41,7 @@
     </div>
 
     <div style="text-align:center;">
-      <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
+      <el-button type="primary" size="small" @click="handleConfirm('form')">确定</el-button>
       <el-button type="danger" size="small" @click="handleCancel('form')">取消</el-button>
     </div>
   </el-form>
@@ -54,11 +54,10 @@ export default {
   inject: ["reload"],
   data() {
     const validateTrim = (rule, value, callback) => {
-      console.log(value, "88888");
       if (value.trim()) {
         callback();
       } else {
-        callback(new Error("标签不能为空格"));
+        callback(new Error("选项不能为空格"));
       }
     };
     return {
@@ -74,6 +73,9 @@ export default {
           }
         ]
       },
+      // rules: {
+      //   label: [{ required: true, message: "请输入字段名称", trigger: "blur" }]
+      // },
       labelRules: [
         { required: true, message: "请输入字段名称", trigger: "blur" }
       ],
@@ -93,18 +95,6 @@ export default {
       },
       immediate: true
     }
-    // "form.optionList": {
-    //   handler(newVal, oldVal) {
-    //     console.log(newVal, "newar");
-    //     this.$nextTick(() => {
-    //       //DOM 更新了
-    //       console.log(this.$refs.inputFocus,'000')
-    //       // document.getElementById("minInput").focus();
-    //       // this.$refs.inputFocus.focus();
-    //     });
-    //   },
-    //   immediate: true
-    // }
   },
   computed: {
     ...mapState({
@@ -113,22 +103,20 @@ export default {
   },
   mounted() {},
   methods: {
-    handleConfirm() {
-      let sort = 0;
-      if (this.propertyListAll.length > 0) {
-        sort = this.propertyListAll[0].sort;
-      }
-      let payload = {};
-      payload.label = this.form.label;
-      payload.sort = sort + 1;
-      payload.type = this.form.type;
-      if (this.form.type == "SELECT") {
-        payload.optionList = this.form.optionList;
-      }
-      console.log(payload, "payload");
-      this.$refs["form"].validate(valid => {
+    handleConfirm(formName) {
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(payload, "77ddd");
+          let sort = 0;
+          if (this.propertyListAll.length > 0) {
+            sort = this.propertyListAll[0].sort;
+          }
+          let payload = {};
+          payload.label = this.form.label;
+          payload.sort = sort + 1;
+          payload.type = this.form.type;
+          if (this.form.type == "SELECT") {
+            payload.optionList = this.form.optionList;
+          }
           this.$store
             .dispatch("externalUser/propertyAdd", payload)
             .then(() => {
@@ -154,15 +142,17 @@ export default {
       });
     },
     addSelect() {
-      console.log(this.form.optionList);
       this.form.optionList.push({
         name: "",
         value: this.form.optionList.length + 1 + ""
       });
+      this.focusInput();
     },
-    // focusInput() {
-    //   this.$refs.inputFocus[0].focus();
-    // },
+    focusInput() {
+      this.$nextTick(() => {
+        this.$refs.inputFocus[this.$refs.inputFocus.length - 1].focus();
+      });
+    },
     delInput(item) {
       let index = this.form.optionList.indexOf(item);
       if (index > -1) {
@@ -184,12 +174,15 @@ export default {
             message: err
           });
         });
+    },
+    handleChangeFiledType(val) {
+      if (val === "SELECT") this.$refs.inputFocus[0].focus();
     }
   }
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .option-list {
   margin-bottom: 10px;
 }

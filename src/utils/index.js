@@ -153,3 +153,16 @@ export function debounce(func, wait, immediate) {
 export function reduceDimension(arr) {
     return Array.prototype.concat.apply([], arr);
 }
+
+
+export function del(arr1, arr2) {
+    return arr1.filter(v => {
+        return arr2.indexOf(v) == -1; //第一个数组在第二个数组中不同的项
+    });
+}
+
+export function add(arr2, arr1) {
+    return arr2.filter(v => {
+        return arr1.indexOf(v) == -1; //第二个数组在第一个数组中不同的项
+    });
+}

@@ -452,11 +452,11 @@ export default {
     // 聊天
     handleDetail(row) {
       const userId = row.userId;
-      const externalUserId = this.externalUserDetail.externalUserDetail
-        .externalUserId;
+      // const externalUserId = this.externalUserDetail.externalUserDetail
+      //   .externalUserId;
       const query = {
+        uuid:this.query.uuid,
         userId,
-        externalUserId
       };
       this.$router.push({
         path: "/message/singleListAll",

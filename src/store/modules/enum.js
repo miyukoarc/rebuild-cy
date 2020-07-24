@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-09 18:50:40
- * @LastEditTime: 2020-07-17 20:40:17
+ * @LastEditTime: 2020-07-24 11:04:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\enum.js
@@ -86,6 +86,9 @@ const state = {
         HAS_RECEIVED_FAIL: '',
         HAS_RECEIVED: '',
         HAS_READ_ARTICLE: ''
+    },
+    chatContentType: {
+        link: '[链接]'
     }
 
 }

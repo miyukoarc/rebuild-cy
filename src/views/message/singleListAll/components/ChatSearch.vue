@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-28 13:56:22
- * @LastEditTime: 2020-07-15 16:00:22
+ * @LastEditTime: 2020-07-23 11:08:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\header.vue
@@ -9,7 +9,9 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item>
-      <el-input v-model.trim="query.keyword" size="mini" placeholder="请输入搜索聊天内容"></el-input>
+      <el-input v-model.trim="query.keyword" size="mini" placeholder="请输入搜索聊天内容">
+        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+      </el-input>
     </el-form-item>
     <el-form-item>
       <el-date-picker
@@ -62,7 +64,9 @@ export default {
     handleSearch() {
       this.$emit("handleSearch", this.query);
     },
-    handleReport() {}
+    handleReport() {
+      this.$emit("handleReport", this.query);
+    }
   }
 };
 </script>

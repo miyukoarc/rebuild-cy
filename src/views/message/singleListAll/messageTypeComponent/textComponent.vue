@@ -1,29 +1,29 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-17 14:22:53
+ * @LastEditTime: 2020-07-24 14:06:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
 -->
 <template>
   <section class="text-component clearfix">
-    <div v-if="item.toUser == toUserId" class="text-left">
+    <div v-if="item.toUser == fromUserId" class="text-left">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
         <div class="left">
           <span>{{ item.msgContent }}</span>
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == toUserId" class="text-right">
+    <div v-if="item.fromUser == fromUserId" class="text-right">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
           <span>{{ item.msgContent }}</span>
         </div>
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
   </section>
@@ -46,7 +46,7 @@ export default {
 <style lang="scss" scoped>
 .left,
 .right {
-  min-height: 40px;
+  min-height: 30px;
   position: relative;
   display: table;
   text-align: center;
@@ -56,13 +56,13 @@ export default {
   background-color: #eee;
   max-width: 50%;
   left: 20px;
-  margin-top: 5px;
+  top: 5px;
 }
 .right {
   /*使左右的对话框分开*/
   max-width: 50%;
-  top: 5px;
   left: -20px;
+  top: 5px;
   background-color: #9eea6a;
 }
 .left > span,
@@ -72,6 +72,8 @@ export default {
   vertical-align: middle;
   padding: 5px 10px;
   text-align: left;
+  font-size: 13px;
+  line-height: 14px;
 }
 .left:before,
 .right:after {
@@ -82,7 +84,7 @@ export default {
   height: 0;
   border: 8px solid transparent;
   position: absolute;
-  top: 11px;
+  top: 5px;
 }
 /*分别给左右两边的小三角形定位*/
 .left:before {
@@ -95,10 +97,20 @@ export default {
 }
 
 .text-component {
-  .text-left,
-  .text-right {
+  margin-bottom: 10px;
+  .text-left {
     > p {
-      text-align: center;
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
+  .text-right {
+    margin-right: 5px;
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
     }
   }
 }

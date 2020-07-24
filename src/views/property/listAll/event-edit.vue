@@ -7,12 +7,12 @@
       <el-radio-group v-model="form.type">
         <el-radio
           label="TEXT"
-          :class="{'disabled': form.type == 'TEXT'}"
+          :class="{'disabled': form.type != 'TEXT'}"
           :disabled="form.type != 'TEXT'"
         >文本</el-radio>
         <el-radio
           label="SELECT"
-          :class="{'disabled': form.type == 'SELECT'}"
+          :class="{'disabled': form.type != 'SELECT'}"
           :disabled="form.type != 'SELECT'"
         >选择</el-radio>
       </el-radio-group>
@@ -21,7 +21,7 @@
       <el-form-item
         v-for="(option,index) in form.optionList"
         :key="index"
-        :prop="'optionList.' + index + '.value'"
+        :prop="'optionList.' + index + '.name'"
         :rules="inputRules"
       >
         <div class="option-list">
@@ -67,11 +67,10 @@ export default {
   },
   data() {
     const validateTrim = (rule, value, callback) => {
-      console.log(value, "88888");
       if (value.trim()) {
         callback();
       } else {
-        callback(new Error("标签不能为空格"));
+        callback(new Error("选项不能为空格"));
       }
     };
     return {
@@ -131,16 +130,14 @@ export default {
   mounted() {},
   methods: {
     handleConfirm() {
-      let payload = {};
-      payload.label = this.form.label;
-      if (this.form.type == "SELECT") {
-        payload.optionList = this.form.optionList;
-      }
-      payload.uuid = this.uuid;
-      console.log(payload, "payload");
       this.$refs["form"].validate(valid => {
         if (valid) {
-          console.log(payload, "77ddd");
+          let payload = {};
+          payload.label = this.form.label;
+          if (this.form.type == "SELECT") {
+            payload.optionList = this.form.optionList;
+          }
+          payload.uuid = this.uuid;
           this.$store
             .dispatch("externalUser/propertyUpdate", payload)
             .then(() => {
@@ -166,15 +163,17 @@ export default {
       });
     },
     addSelect() {
-      console.log(this.form.optionList);
       this.form.optionList.push({
         name: "",
         value: this.form.optionList.length + 1 + ""
       });
+      this.focusInput();
     },
-    // focusInput() {
-    //   this.$refs.inputFocus[0].focus();
-    // },
+    focusInput() {
+      this.$nextTick(() => {
+        this.$refs.inputFocus[this.$refs.inputFocus.length - 1].focus();
+      });
+    },
     delInput(item) {
       let index = this.form.optionList.indexOf(item);
       if (index > -1) {
@@ -201,11 +200,11 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .option-list {
   margin-bottom: 10px;
 }
-.disabled:hover {
-  cursor: default;
+.el-radio.disabled {
+  cursor: default; 
 }
 </style>

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-21 14:21:29
- * @LastEditTime: 2020-07-21 18:47:21
+ * @LastEditTime: 2020-07-22 15:29:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\property\listAll\dialog.vue
@@ -28,6 +28,7 @@
 <script>
 import ConfirmTemplate from "./event-confirm.vue";
 import CreateTemplate from "./event-create.vue";
+import EditBasicTemplate from "./event-editBasic.vue";
 import EditTemplate from "./event-edit.vue";
 import DistributeTemplate from "./event-distribute";
 import { mapState } from "vuex";
@@ -36,7 +37,8 @@ export default {
     CreateTemplate,
     EditTemplate,
     DistributeTemplate,
-    ConfirmTemplate
+    ConfirmTemplate,
+    EditBasicTemplate
   },
   data() {
     return {
@@ -71,8 +73,8 @@ export default {
         return "修改字段";
       }
 
-      if (this.eventType === "distribute") {
-        return "";
+      if (this.eventType === "editBasic") {
+        return "基本信息设置";
       }
       if (this.eventType === "confirm") {
         return "提示";
