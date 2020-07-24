@@ -157,11 +157,9 @@ const actions = {
             state.sock.onclose = function () {
                 console.log('websocket关闭')
                 // 登陆的时候再自动重连
-                // if (rootState.user.uuid) {
-                //     setTimeout(() => {
-                //         dispatch('createWebsocket')
-                //     }, 5000)
-                // }
+                setTimeout(() => {
+                    dispatch('createWebsocket')
+                }, 1000)
             }
             resolve()
         })

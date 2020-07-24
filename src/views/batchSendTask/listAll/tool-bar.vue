@@ -51,9 +51,6 @@ export default {
     actionImport() {
       this.$emit("handleImport", "导入");
     },
-    // actionDepartment() {
-    //   this.$emit("actionDepartment", "新建群发");
-    // }
   }
 };
 </script>
