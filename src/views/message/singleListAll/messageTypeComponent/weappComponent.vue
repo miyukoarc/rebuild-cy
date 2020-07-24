@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-17 14:27:53
+ * @LastEditTime: 2020-07-24 20:19:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -11,7 +11,7 @@
     <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
         <div class="left">
           <div class="card-warp">
             <div class="card-top">
@@ -50,7 +50,7 @@
             </div>
           </div>
         </div>
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
   </section>
@@ -186,10 +186,19 @@ export default {
 }
 
 .weaapp-component {
-  .left-warp,
+  margin: 0 10px 20px 10px;
+  .left-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
   .right-warp {
     > p {
-      text-align: center;
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
     }
   }
 }

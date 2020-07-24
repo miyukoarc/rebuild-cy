@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-24 14:06:49
+ * @LastEditTime: 2020-07-24 21:04:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
 -->
 <template>
   <section class="text-component clearfix">
-    <div v-if="item.toUser == fromUserId" class="text-left">
+    <div v-if="item.toUser == toUserId" class="text-left">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == fromUserId" class="text-right">
+    <div v-if="item.fromUser == toUserId" class="text-right">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
@@ -46,24 +46,24 @@ export default {
 <style lang="scss" scoped>
 .left,
 .right {
-  min-height: 30px;
+  min-height: 35px;
   position: relative;
   display: table;
   text-align: center;
   border-radius: 5px;
 }
 .left {
-  background-color: #eee;
+  background-color: #fff;
   max-width: 50%;
   left: 20px;
-  top: 5px;
+  top: 8px;
 }
 .right {
   /*使左右的对话框分开*/
   max-width: 50%;
   left: -20px;
-  top: 5px;
-  background-color: #9eea6a;
+  top: 8px;
+  background-color: #cce4fc;
 }
 .left > span,
 .right > span {
@@ -88,16 +88,16 @@ export default {
 }
 /*分别给左右两边的小三角形定位*/
 .left:before {
-  border-right: 8px solid #eee;
+  border-right: 8px solid #fff;
   left: -16px;
 }
 .right:after {
-  border-left: 8px solid #9eea6a;
+  border-left: 8px solid #cce4fc;
   right: -16px;
 }
 
 .text-component {
-  margin-bottom: 10px;
+  margin: 0 10px 20px 10px;
   .text-left {
     > p {
       font-size: 13px;
@@ -106,7 +106,6 @@ export default {
     }
   }
   .text-right {
-    margin-right: 5px;
     > p {
       font-size: 13px;
       line-height: 18px;

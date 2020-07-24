@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-24 16:23:04
+ * @LastEditTime: 2020-07-24 21:10:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -11,7 +11,7 @@
     <el-card>
       <div class="display-flex">
         <!-- 左侧 侧边栏 -->
-        <div style="width:270px">
+        <div class="left" style="width:270px">
           <!-- 侧边栏 -->
           <div class="chat-side-bar">
             <div class="chat-top-warp display-flex align-items-center">
@@ -116,9 +116,9 @@
                     :label="tab.label"
                     :name="tab.name"
                   >
-                    <div v-if="singleListAll.length>0" style="overflow-y:scroll;height:60vh">
+                    <div v-if="singleListAllData.length>0" style="overflow-y:scroll;height:65vh">
                       <div
-                        v-for="(list,listIndex) in singleListAll"
+                        v-for="(list,listIndex) in singleListAllData"
                         :key="listIndex"
                         class="allChat clearfix"
                       >
@@ -135,7 +135,7 @@
                   </el-tab-pane>
                 </el-tabs>
                 <el-pagination
-                  v-show="singleListAll.length>0"
+                  v-show=" singleListAllData.length>0"
                   background
                   class="pager"
                   layout="total,prev, pager, next,jumper"
@@ -216,6 +216,7 @@ export default {
       currnetMember: {},
       chatMembers: [],
       // 聊天侧边顶部切换
+      singleListAllData: [],
       sideTabActiveName: "1",
       currentActiveName: "",
       sideBarTabs: [
@@ -317,7 +318,8 @@ export default {
     getsinglelist(payload) {
       this.$store
         .dispatch("message/getMessageSingleListAll", payload)
-        .then(() => {
+        .then(res => {
+          this.singleListAllData = res.item;
           this.pageConfig.pageNumber = this.singleListPage.pageNumber + 1;
           this.pageConfig.total = this.singleListPage.total;
         })
@@ -364,9 +366,11 @@ export default {
           }
         });
         this.query.msgType = "all";
+        this.query.page = 0;
         this.getsinglelist(this.query);
       } else {
         this.chatSideData = [];
+        this.singleListAllData = [];
       }
     },
     handleSidebarItem(item, index, tab) {
@@ -378,8 +382,12 @@ export default {
     },
     handleClickChatType() {
       console.log("点击右侧类型", this.chatActiveName);
-      this.query.msgType = this.chatActiveName;
-      this.getsinglelist(this.query);
+      if (this.chatSideData.length > 0) {
+        console.log("有");
+        this.query.msgType = this.chatActiveName;
+        this.query.page = 0;
+        this.getsinglelist(this.query);
+      }
     },
 
     handleSearch(val) {
@@ -419,7 +427,7 @@ export default {
 .single-list-all {
   .right {
     border: 1px solid #eee;
-    padding: 0 20px 0px 20px;
+    // padding: 0 20px;
     .chat-content {
       height: calc(70vh + 40px);
       .no-chat-data {
@@ -532,29 +540,38 @@ export default {
   }
 }
 .pager {
-  padding: 20px 0;
+  // margin: 20px 0 0 0;
   text-align: center;
+  background-color: #fff;
 }
 </style>
 <style lang="scss">
-.chat-side-bar {
-  .el-tabs__nav {
-    text-align: center;
-    width: 100%;
-  }
-  .el-tabs__active-bar {
-    left: 52px;
-  }
-  .el-tabs__content {
-    background-color: #fff;
-    overflow-y: scroll;
+.left {
+  .chat-side-bar {
+    .el-tabs__nav {
+      text-align: center;
+      width: 100%;
+    }
+    .el-tabs__active-bar {
+      left: 52px;
+    }
+    .el-tabs__content {
+      background-color: #fff;
+      overflow-y: scroll;
+    }
   }
 }
+
 .right {
-  .chat-side-bar {
+  .chat-tab-bar {
+    background-color: #f2f3f5;
+    .el-tabs__header {
+      background-color: #fff;
+      padding: 0 20px;
+    }
     .el-tabs__content {
       height: 65vh;
-      background-color: #fff;
+      // padding: 0 20px;
       overflow-y: scroll;
     }
   }

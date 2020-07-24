@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-22 11:16:30
- * @LastEditTime: 2020-07-17 14:23:10
+ * @LastEditTime: 2020-07-24 20:20:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\ddd.vue
@@ -42,10 +42,19 @@ export default{
 
 <style lang="scss" scoped>
 .agree-component {
-  .right-warp,
+  margin: 0 10px 20px 10px;
   .left-warp {
     > p {
-      text-align: center;
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
+  .right-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
     }
   }
   .left,

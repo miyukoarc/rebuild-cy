@@ -1,52 +1,59 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:48:28
- * @LastEditTime: 2020-07-24 16:09:17
+ * @LastEditTime: 2020-07-24 21:05:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\fileComponent.vue
 -->
 <template>
   <section class="file-component">
-    <div v-if="item.toUser == fromUserId" class="left-warp">
+    <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
-          <div class="user-select">
-            <div class="ict file-bg flex-column-center-alinecenter ml-20">
-              <div
-                class="down-load"
-                @click=" handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
-              >
-                <el-icon class="ic el-icon-download" />
+          <div class="file-warp">
+            <div class="file-bg flex-between-alinecenter">
+              <div>
+                <span
+                  v-if="item.messageMedias[0].fileName"
+                  class="file-name"
+                >{{ item.messageMedias[0].fileName }}</span>
+                <p class="file-size">{{ getFileSize (item.messageMedias[0].fileFileSize) }}</p>
               </div>
 
               <svg-icon :icon-class="item.messageMedias[0].fileExt | classFilter" class="excel" />
-              <span
-                v-if="item.messageMedias[0].fileName"
-                class="file-name"
-              >{{ item.messageMedias[0].fileName }}</span>
+            </div>
+            <div
+              class="down-load"
+              @click=" handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
+            >
+              <el-icon class="download-icon el-icon-download" />
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == fromUserId" class="right-warp">
+    <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="right-warp display-flex justify-content-flex-end">
         <div class="right">
-          <div class="user-select">
-            <div class="ict file-bg flex-column-center-alinecenter mr-20">
-              <a :href="item.messageMedias[0].file" download>
-                <el-icon class="ic el-icon-download" />
-              </a>
+          <div class="file-warp">
+            <div class="file-bg flex-between-alinecenter">
+              <div>
+                <span
+                  v-if="item.messageMedias[0].fileName"
+                  class="file-name"
+                >{{ item.messageMedias[0].fileName }}</span>
+                <p class="file-size">{{ getFileSize (item.messageMedias[0].fileFileSize) }}</p>
+              </div>
+
               <svg-icon :icon-class="item.messageMedias[0].fileExt | classFilter" class="excel" />
-              <span
-                v-if="item.messageMedias[0].fileName"
-                class="file-name"
-              >{{ item.messageMedias[0].fileName }}</span>
             </div>
+            <a :href="item.messageMedias[0].file" download>
+              <el-icon class="download-icon el-icon-download" />
+            </a>
           </div>
         </div>
         <el-avatar :src="item.fromAvatar" />
@@ -105,6 +112,21 @@ export default {
       //   .catch(error => {
       //     console.error(error);
       //   });
+    },
+    getFileSize(fileByte) {
+      var fileSizeByte = fileByte;
+      var fileSizeMsg = "";
+      if (fileSizeByte < 1048576)
+        fileSizeMsg = (fileSizeByte / 1024).toFixed(2) + "KB";
+      else if (fileSizeByte == 1048576) fileSizeMsg = "1MB";
+      else if (fileSizeByte > 1048576 && fileSizeByte < 1073741824)
+        fileSizeMsg = (fileSizeByte / (1024 * 1024)).toFixed(2) + "MB";
+      else if (fileSizeByte > 1048576 && fileSizeByte == 1073741824)
+        fileSizeMsg = "1GB";
+      else if (fileSizeByte > 1073741824 && fileSizeByte < 1099511627776)
+        fileSizeMsg = (fileSizeByte / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+      else fileSizeMsg = "文件超过1TB";
+      return fileSizeMsg;
     }
   }
 };
@@ -112,7 +134,7 @@ export default {
 
 <style lang="scss" scoped>
 .file-component {
-  margin-bottom: 10px;
+  margin: 0 10px 20px 10px;
   .left-warp {
     > p {
       font-size: 13px;
@@ -121,7 +143,6 @@ export default {
     }
   }
   .right-warp {
-    margin-right: 5px;
     > p {
       font-size: 13px;
       line-height: 18px;
@@ -130,41 +151,50 @@ export default {
   }
   .left {
     max-width: 50%;
-    left: 10px;
     margin-top: 5px;
+    .file-warp {
+      margin-left: 20px;
+      position: relative;
+      width: 260px;
+      height: 60px;
+      background-color: #fff;
+    }
   }
   .right {
     /*使左右的对话框分开*/
     max-width: 50%;
     top: 5px;
-    left: -10px;
+    .file-warp {
+      margin-right: 20px;
+      position: relative;
+      width: 260px;
+      height: 60px;
+      background-color: #fff;
+    }
   }
 }
 .file-bg {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  background-color: #fafafa;
+  height: 60px;
+  margin: 5px 20px 5px 10px;
   .excel {
-    font-size: 80px;
+    font-size: 42px;
     color: #999;
-    vertical-align: middle;
   }
   .file-name {
     font-size: 14px;
+    line-height: 20px;
+  }
+  .file-size {
+    font-size: 13px;
     line-height: 24px;
-    text-align: center;
-    margin: 0 20px;
+    color: #8796a5;
   }
 }
-.ict {
-  position: relative;
-}
-.ic {
+.download-icon {
   position: absolute;
-  font-size: 28px;
-  right: 10px;
-  top: 5px;
+  font-size: 20px;
+  right: 2px;
+  top: 2px;
   color: #666;
   cursor: pointer;
 }

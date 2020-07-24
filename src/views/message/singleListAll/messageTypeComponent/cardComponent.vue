@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-06-22 19:11:34
+ * @LastEditTime: 2020-07-24 21:05:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -120,10 +120,19 @@ export default{
 }
 
 .card-component {
-  .left-warp,
+  margin: 0 10px 20px 10px;
+  .left-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
   .right-warp {
     > p {
-      text-align: center;
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
     }
   }
 }

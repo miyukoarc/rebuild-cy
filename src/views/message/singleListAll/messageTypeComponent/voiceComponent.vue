@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-07-17 14:24:00
+ * @LastEditTime: 2020-07-24 21:04:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -11,7 +11,7 @@
     <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
         <div class="left">
           <div class="user-select">
             <div
@@ -41,7 +41,7 @@
             />
           </div>
         </div>
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
   </section>
@@ -87,8 +87,20 @@ export default {
 <style lang="scss" scoped>
 .voice-component {
   position: relative;
-  p {
-    text-align: center;
+  margin: 0 10px 20px 10px;
+  .left-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
+  .right-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
+    }
   }
   .left {
     max-width: 50%;
@@ -102,28 +114,32 @@ export default {
     left: -20px;
   }
   .audio-left {
+    position: relative;
     // margin-top: 5px;
     margin-left: 20px;
     width: 200px;
     height: 40px;
-    border-radius: 20px;
-    background-color: rgb(64, 158, 255);
+    border-radius: 5px;
+    background-color: #cce4fc;
     .play-audio {
-      color: #fff;
-      margin-left: 20px;
+      position: absolute;
+      color: #000;
+      left: 20px;
       cursor: pointer;
     }
   }
   .audio-right {
+    position: relative;
     // margin-top: 5px;
     margin-right: 20px;
     width: 200px;
     height: 40px;
-    border-radius: 20px;
-    background-color: rgb(64, 158, 255);
+    border-radius: 5px;
+    background-color: #cce4fc;
     .play-audio {
-      color: #fff;
-      margin-left: 20px;
+      position: absolute;
+      color: #000;
+      right: 20px;
       cursor: pointer;
     }
   }

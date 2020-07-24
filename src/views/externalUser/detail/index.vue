@@ -156,7 +156,12 @@
               <el-table-column label="操作" align="left">
                 <template v-slot="scope">
                   <div>
-                    <el-t-button size="mini" type="primary" @click="handleDetail(scope.row)">聊天记录</el-t-button>
+                    <el-button
+                      size="mini"
+                      type="primary"
+                      :disabled="scope.row.lastMsgTime == null"
+                      @click="handleDetail(scope.row)"
+                    >聊天记录</el-button>
                   </div>
                 </template>
               </el-table-column>
@@ -455,8 +460,8 @@ export default {
       // const externalUserId = this.externalUserDetail.externalUserDetail
       //   .externalUserId;
       const query = {
-        uuid:this.query.uuid,
-        userId,
+        uuid: this.query.uuid,
+        userId
       };
       this.$router.push({
         path: "/message/singleListAll",

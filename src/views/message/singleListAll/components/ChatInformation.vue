@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-15 15:08:24
- * @LastEditTime: 2020-07-24 15:35:20
+ * @LastEditTime: 2020-07-24 19:35:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\components\ChatInfomation.vue
@@ -46,6 +46,7 @@ export default {
 
 <style lang="scss" scoped>
 .chat-info {
+  padding: 0 20px;
   height: 70px;
   font-size: 14px;
   img {
