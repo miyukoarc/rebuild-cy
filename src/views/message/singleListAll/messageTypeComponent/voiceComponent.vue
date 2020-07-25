@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-07-24 21:04:28
+ * @LastEditTime: 2020-07-25 15:03:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -16,8 +16,10 @@
           <div class="user-select">
             <div
               class="audio-left display-flex align-items-center"
+              :style="{'width': widthPercent+'px'}"
               @click="playAudio(item.messageMedias[0].file)"
             >
+              <span class="play-length">{{item.messageMedias[0].playLength}}"</span>
               <i
                 class="play-audio"
                 :class="isPlayAudio? 'el-icon-microphone' :'el-icon-turn-off-microphone'"
@@ -30,8 +32,21 @@
     <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
-        <div class="user-select right">
-          <div
+        <div class="right">
+          <div class="user-select">
+            <div
+              class="audio-right display-flex align-items-center"
+              :style="{'width': widthPercent+'px'}"
+              @click="playAudio(item.messageMedias[0].file)"
+            >
+              <span class="play-length">{{item.messageMedias[0].playLength}}"</span>
+              <i
+                class="play-audio"
+                :class="isPlayAudio? 'el-icon-microphone' :'el-icon-turn-off-microphone'"
+              />
+            </div>
+          </div>
+          <!-- <div
             class="audio-right display-flex align-items-center"
             @click="playAudio(item.messageMedias[0].file)"
           >
@@ -39,7 +54,7 @@
               class="play-audio"
               :class="isPlayAudio? 'el-icon-microphone' :'el-icon-turn-off-microphone'"
             />
-          </div>
+          </div>-->
         </div>
         <el-avatar :src="item.fromAvatar" />
       </div>
@@ -55,12 +70,34 @@ export default {
   props: {
     item: Object,
     toUserId: String,
-    fromUserId: String
+    fromUserId: String,
   },
   data() {
     return {
-      isPlayAudio: false
+      isPlayAudio: false,
     };
+  },
+  computed: {
+    // 语音长度随语音秒数变化
+    widthPercent() {
+      if (this.item.messageMedias[0].playLength <= 2) {
+        return 60;
+      }
+      if (
+        this.item.messageMedias[0].playLength > 2 &&
+        this.item.messageMedias[0].playLength < 30
+      ) {
+        return 100;
+      }
+      if (
+        this.item.messageMedias[0].playLength >= 30 &&
+        this.item.messageMedias[0].playLength < 45
+      ) {
+        return 150;
+      } else {
+        return 200;
+      }
+    },
   },
   methods: {
     playAudio(url) {
@@ -79,8 +116,8 @@ export default {
       amr.onEnded(() => {
         this.isPlayAudio = false;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -112,35 +149,53 @@ export default {
     max-width: 50%;
     top: 5px;
     left: -20px;
+    .user-select {
+      // width: 200px;
+    }
   }
   .audio-left {
     position: relative;
     // margin-top: 5px;
     margin-left: 20px;
-    width: 200px;
+    // width: 200px;
     height: 40px;
     border-radius: 5px;
     background-color: #cce4fc;
     .play-audio {
       position: absolute;
       color: #000;
-      left: 20px;
+      left: 10px;
       cursor: pointer;
+    }
+    .play-length {
+      position: absolute;
+      right: -15px;
+      font-size: 12px;
+      line-height: 14px;
+      top: 25px;
     }
   }
   .audio-right {
     position: relative;
     // margin-top: 5px;
-    margin-right: 20px;
-    width: 200px;
+    // max-width: 300px;
+    // min-width: 60px;
     height: 40px;
+    margin-right: 20px;
     border-radius: 5px;
     background-color: #cce4fc;
     .play-audio {
       position: absolute;
       color: #000;
-      right: 20px;
+      right: 10px;
       cursor: pointer;
+    }
+    .play-length {
+      position: absolute;
+      left: -20px;
+      font-size: 12px;
+      line-height: 14px;
+      top: 25px;
     }
   }
   .video-js .vjs-icon-placeholder {

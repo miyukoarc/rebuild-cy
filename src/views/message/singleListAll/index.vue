@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-24 21:10:30
+ * @LastEditTime: 2020-07-25 18:35:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -116,12 +116,14 @@
                     :label="tab.label"
                     :name="tab.name"
                   >
-                    <div v-if="singleListAllData.length>0" style="overflow-y:scroll;height:65vh">
+                    <div v-show="singleListAllData.length>0" style="overflow-y:scroll;height:65vh">
                       <div
                         v-for="(list,listIndex) in singleListAllData"
                         :key="listIndex"
                         class="allChat clearfix"
                       >
+                        <!-- :is="list.msgType+'Component'" -->
+                        <!-- :is="currentView" -->
                         <component
                           :is="list.msgType+'Component'"
                           :key="listIndex"
@@ -131,7 +133,7 @@
                         />
                       </div>
                     </div>
-                    <div v-else class="no-chat-data">暂无数据</div>
+                    <div v-show="singleListAllData.length<=0" class="no-chat-data">暂无数据</div>
                   </el-tab-pane>
                 </el-tabs>
                 <el-pagination
@@ -176,6 +178,7 @@ import cardComponent from "./messageTypeComponent/cardComponent.vue";
 import linkComponent from "./messageTypeComponent/linkComponent.vue";
 import weappComponent from "./messageTypeComponent/weappComponent.vue";
 import fileComponent from "./messageTypeComponent/fileComponent.vue";
+import chatrecordComponent from "./messageTypeComponent/chatrecordComponent.vue";
 import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_callComponent.vue";
 
 export default {
@@ -194,14 +197,16 @@ export default {
     cardComponent,
     weappComponent,
     fileComponent,
-    meeting_voice_callComponent
+    chatrecordComponent,
+    meeting_voice_callComponent,
   },
   data() {
     return {
+      currentView: "chatrecordComponent",
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
       query: {
         page: 0,
@@ -211,7 +216,7 @@ export default {
         toUserId: "",
         content: "",
         startTime: "",
-        endTime: ""
+        endTime: "",
       },
       currnetMember: {},
       chatMembers: [],
@@ -222,16 +227,16 @@ export default {
       sideBarTabs: [
         {
           label: "全部",
-          name: "1"
+          name: "1",
         },
         {
           label: "单聊",
-          name: "2"
+          name: "2",
         },
         {
           label: "群聊",
-          name: "3"
-        }
+          name: "3",
+        },
       ],
       sideBarsearchValue: "",
       active: "",
@@ -245,48 +250,48 @@ export default {
       chatTypeTabs: [
         {
           label: "全部",
-          name: "all"
+          name: "all",
         },
         {
           label: "文件",
-          name: "file"
+          name: "file",
         },
         {
           label: "链接",
-          name: "link"
+          name: "link",
         },
         {
           label: "图片",
-          name: "image"
+          name: "image",
         },
         {
           label: "视频",
-          name: "video"
+          name: "video",
         },
         {
           label: "语音",
-          name: "voice"
+          name: "voice",
         },
         {
           label: "视频语音通话",
-          name: "voiceVideo"
-        }
-      ]
+          name: "voiceVideo",
+        },
+      ],
     };
   },
   computed: {
     ...mapState({
-      singleLastListAll: state => state.message.singleLastListAll,
-      singleLastListPage: state => state.message.singleLastListPage,
-      singleListAll: state => state.message.singleListAll,
-      singleListPage: state => state.message.singleListPage,
-      chatContentType: state => state.enum.chatContentType
-    })
+      singleLastListAll: (state) => state.message.singleLastListAll,
+      singleLastListPage: (state) => state.message.singleLastListPage,
+      singleListAll: (state) => state.message.singleListAll,
+      singleListPage: (state) => state.message.singleListPage,
+      chatContentType: (state) => state.enum.chatContentType,
+    }),
   },
   created() {
     let payload = {
       type: "externalUser",
-      uuid: this.$route.query.uuid
+      uuid: this.$route.query.uuid,
     };
     this.initDataList(payload);
   },
@@ -295,7 +300,7 @@ export default {
     initDataList(payload) {
       this.$store
         .dispatch("message/getMessageSingleLastListAll", payload)
-        .then(res => {
+        .then((res) => {
           if (res) {
             this.chatSideData = res.allMessageList;
             res.allMessageList.forEach((item, index) => {
@@ -308,22 +313,22 @@ export default {
             this.query.toUserId = this.$route.query.userId;
             this.getsinglelist(this.query)
               .then(() => {})
-              .catch(err => {
+              .catch((err) => {
                 console.log(err);
               });
           }
         })
-        .catch(err => {});
+        .catch((err) => {});
     },
     getsinglelist(payload) {
       this.$store
         .dispatch("message/getMessageSingleListAll", payload)
-        .then(res => {
+        .then((res) => {
           this.singleListAllData = res.item;
           this.pageConfig.pageNumber = this.singleListPage.pageNumber + 1;
           this.pageConfig.total = this.singleListPage.total;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -366,6 +371,7 @@ export default {
           }
         });
         this.query.msgType = "all";
+        this.chatActiveName = "all";
         this.query.page = 0;
         this.getsinglelist(this.query);
       } else {
@@ -391,25 +397,25 @@ export default {
     },
 
     handleSearch(val) {
-      const { userName, departmentsUuid, roleUuid } = val;
-      this.query.userName = userName ? userName : userName;
-      this.query.departmentsUuid = departmentsUuid
-        ? departmentsUuid
-        : departmentsUuid;
-      this.query.roleUuid = roleUuid ? roleUuid : roleUuid;
+      const { content, startTime, endTime } = val;
+      this.query.content = content ? content : '';
+      this.query.startTime = startTime
+        ? startTime
+        : '';
+      this.query.endTime = endTime ? endTime : '';
       console.log(val, "点击搜索");
-      this.initDataList(this.query);
+      this.getsinglelist(this.query);
     },
     handleRefresh() {
       console.log("刷新");
       this.query = this.$options.data().query;
-      this.initDataList(this.query);
+      this.getsinglelist(this.query);
     },
     resetForm() {
       console.log("重置");
       this.searchFrom = {
         keyword: "",
-        planStatu: null
+        planStatu: null,
       };
     },
     changePage(page) {
@@ -418,8 +424,8 @@ export default {
       this.pageConfig.pageNumber = page - 1;
       let msgType = this.chatActiveName;
       this.getsinglelist(this.query);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -567,7 +573,10 @@ export default {
     background-color: #f2f3f5;
     .el-tabs__header {
       background-color: #fff;
-      padding: 0 20px;
+      // padding: 0 20px;
+    }
+    .el-tabs__nav-scroll{
+      margin: 0 20px;
     }
     .el-tabs__content {
       height: 65vh;

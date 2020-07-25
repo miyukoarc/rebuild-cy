@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-24 21:04:45
+ * @LastEditTime: 2020-07-25 11:41:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -35,11 +35,9 @@ export default {
   props: {
     item: Object,
     toUserId: String,
-    fromUserId: String
+    fromUserId: String,
   },
-  mounted() {
-    console.log("22", this.toUserId);
-  }
+  mounted() {},
 };
 </script>
 

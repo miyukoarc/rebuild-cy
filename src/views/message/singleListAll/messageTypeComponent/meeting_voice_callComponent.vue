@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-07-24 20:20:35
+ * @LastEditTime: 2020-07-25 16:34:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -127,7 +127,7 @@ export default {
     width: 200px;
     height: 40px;
     border-radius: 20px;
-    background-color: rgb(64, 158, 255);
+    background-color: #cce4fc;
     .play-audio {
       color: #fff;
       margin-left: 20px;
@@ -140,7 +140,7 @@ export default {
     width: 200px;
     height: 40px;
     border-radius: 20px;
-    background-color: rgb(64, 158, 255);
+    background-color: #cce4fc;
     .play-audio {
       color: #fff;
       margin-left: 20px;

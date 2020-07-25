@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:48:28
- * @LastEditTime: 2020-07-24 21:05:13
+ * @LastEditTime: 2020-07-25 16:32:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\fileComponent.vue
@@ -16,10 +16,10 @@
           <div class="file-warp">
             <div class="file-bg flex-between-alinecenter">
               <div>
-                <span
+                <div
                   v-if="item.messageMedias[0].fileName"
-                  class="file-name"
-                >{{ item.messageMedias[0].fileName }}</span>
+                  class="file-name text-over-2"
+                >{{ item.messageMedias[0].fileName }}</div>
                 <p class="file-size">{{ getFileSize (item.messageMedias[0].fileFileSize) }}</p>
               </div>
 
@@ -42,10 +42,10 @@
           <div class="file-warp">
             <div class="file-bg flex-between-alinecenter">
               <div>
-                <span
+                <div
                   v-if="item.messageMedias[0].fileName"
-                  class="file-name"
-                >{{ item.messageMedias[0].fileName }}</span>
+                  class="file-name text-over-2"
+                >{{fileNameLength}}</div>
                 <p class="file-size">{{ getFileSize (item.messageMedias[0].fileFileSize) }}</p>
               </div>
 
@@ -69,13 +69,33 @@ export default {
   props: {
     item: Object,
     toUserId: String,
-    fromUserId: String
+    fromUserId: String,
+  },
+  computed: {
+    fileNameLength() {
+      if (this.item.messageMedias[0].fileName.length) {
+        if (this.item.messageMedias[0].fileName.length > 25) {
+          return (
+            this.item.messageMedias[0].fileName.substring(0, 15) +
+            "..." +
+            this.item.messageMedias[0].fileName.substring(
+              this.item.messageMedias[0].fileName.length - 10,
+              this.item.messageMedias[0].fileName.length
+            )
+          );
+        } else {
+          return this.item.messageMedias[0].fileName;
+        }
+      } else {
+        return "";
+      }
+    },
   },
   methods: {
     async handleDownload(url, fileName, mime) {
       // 下载附件
       await downloadFile(url)
-        .then(res => {
+        .then((res) => {
           const blob = new Blob([res.data], { type: mime });
           // 注: mime类型必须整正确, 否则下载的文件会损坏
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
@@ -89,7 +109,7 @@ export default {
             window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error);
         });
 
@@ -127,8 +147,8 @@ export default {
         fileSizeMsg = (fileSizeByte / (1024 * 1024 * 1024)).toFixed(2) + "GB";
       else fileSizeMsg = "文件超过1TB";
       return fileSizeMsg;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -156,7 +176,6 @@ export default {
       margin-left: 20px;
       position: relative;
       width: 260px;
-      height: 60px;
       background-color: #fff;
     }
   }
@@ -168,25 +187,25 @@ export default {
       margin-right: 20px;
       position: relative;
       width: 260px;
-      height: 60px;
       background-color: #fff;
     }
   }
 }
 .file-bg {
-  height: 60px;
-  margin: 5px 20px 5px 10px;
+  padding: 10px 20px 10px 10px;
   .excel {
     font-size: 42px;
     color: #999;
   }
   .file-name {
+    max-height: 40px;
     font-size: 14px;
-    line-height: 20px;
+    line-height: 18px;
+    width: 180px;
   }
   .file-size {
-    font-size: 13px;
-    line-height: 24px;
+    font-size: 12px;
+    line-height: 16px;
     color: #8796a5;
   }
 }

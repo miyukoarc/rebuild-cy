@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-09 18:50:40
- * @LastEditTime: 2020-07-24 11:04:08
+ * @LastEditTime: 2020-07-25 17:09:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\enum.js
@@ -88,7 +88,24 @@ const state = {
         HAS_READ_ARTICLE: ''
     },
     chatContentType: {
-        link: '[链接]'
+        link: '[链接]',
+        file: '[文件]',
+        voice: '[语音]',
+        image: '[图片]',
+        video: '[视频]',
+        card: '[名片]',
+        weapp: '[小程序]',
+        chatrecord: '[会话记录消息]',
+        vote: '[投票消息]',
+        collect: '[填表消息]',
+        redpacket: '[红包消息]',
+        meeting: '[会议邀请消息]',
+        docmsg: '[在线文档消息]',
+        markdown: '[MarkDown格式消息]',
+        news: '[图文消息]',
+        calendar: '[日程消息]',
+        revoke: '[撤回消息]',
+        agree: '[同意会话聊天内容]'
     }
 
 }
