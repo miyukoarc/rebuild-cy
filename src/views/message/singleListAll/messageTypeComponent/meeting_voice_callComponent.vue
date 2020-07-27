@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-07-17 15:52:27
+ * @LastEditTime: 2020-07-25 16:34:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -11,19 +11,19 @@
     <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
         <div class="left">
           <!-- <audio controls src="http://10.10.10.198/public/file/5f115351fd03f674878f613e" class="audio-warp">
            您的浏览器不支持 audio 元素。
-          </audio> -->
+          </audio>-->
           <div
-              class="audio-left display-flex align-items-center"
-              @click="playAudio('http://10.10.10.198/public/file/5f115351fd03f674878f613e')"
-            >
-              <i
-                class="play-audio"
-                :class="isPlayAudio? 'el-icon-microphone' :'el-icon-turn-off-microphone'"
-              />
+            class="audio-left display-flex align-items-center"
+            @click="playAudio('http://10.10.10.198/public/file/5f115351fd03f674878f613e')"
+          >
+            <i
+              class="play-audio"
+              :class="isPlayAudio? 'el-icon-microphone' :'el-icon-turn-off-microphone'"
+            />
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
         <div class="right">
           <!-- <audio controls src="http://10.10.10.198/public/file/5f115351fd03f674878f613e" class="audio-warp">
             您的浏览器不支持 audio 元素。
-          </audio> -->
+          </audio>-->
           <div
             class="audio-right display-flex align-items-center"
             @click="playAudio('http://10.10.10.198/public/file/5f115351fd03f674878f613e')"
@@ -45,7 +45,7 @@
             />
           </div>
         </div>
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
   </section>
@@ -91,8 +91,20 @@ export default {
 <style lang="scss" scoped>
 .voice-component {
   position: relative;
-  p {
-    text-align: center;
+  margin: 0 10px 20px 10px;
+  .left-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
+  .right-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
+    }
   }
   .left {
     max-width: 50%;
@@ -115,7 +127,7 @@ export default {
     width: 200px;
     height: 40px;
     border-radius: 20px;
-    background-color: rgb(64, 158, 255);
+    background-color: #cce4fc;
     .play-audio {
       color: #fff;
       margin-left: 20px;
@@ -128,7 +140,7 @@ export default {
     width: 200px;
     height: 40px;
     border-radius: 20px;
-    background-color: rgb(64, 158, 255);
+    background-color: #cce4fc;
     .play-audio {
       color: #fff;
       margin-left: 20px;

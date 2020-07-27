@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-16 19:39:02
+ * @LastEditTime: 2020-07-22 10:33:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -70,25 +70,35 @@ export default {
   watch: {
     "ruleForm.welcomeContent": {
       handler(newVal, oldVal) {
-        console.log(
-          newVal,
-          "newVal",
-          newVal.indexOf('<span class="nickName">客户昵称</span>')
-        );
-        if (newVal.indexOf('<span class="nickName">客户昵称</span>') > -1) {
+        console.log(newVal, "1111", oldVal, "222");
+        if (newVal.indexOf('<span class="nickName">客户昵称</span>&#8203') > -1) {
           this.insertName = false;
         } else {
-          // var index = newVal.indexOf("<span");
-          // console.log(newVal.indexOf("<span"), "9999", index);
-          // console.log(newVal.substr(index), "8888888888888");
+          // if(newVal.length<oldVal.length && oldVal.includes('客户昵称') && oldVal.split('客户昵称')[1]==='</span>'){
+          console.log(oldVal.indexOf("</span>") > -1, "555");
+          if (oldVal.indexOf("</span>") > -1) {
+            console.log("3333333");
+            this.ruleForm.welcomeContent = newVal.split("<span")[0];
+          } else {
+            console.log("44444");
+            this.ruleForm.welcomeContent = newVal.split("<span")[0];
+          }
+
+          this.$refs.chatInput.haldSet(this.ruleForm.welcomeContent);
+          // let str=oldVal.split(newVal);
+          // if('<span class="nickName">客户昵称</span>'.includes(str) && newVal)
+          // newVal=newVal.split('<span>')[0]
+          // console.log(str)
+          // }
+
           // this.ruleForm.welcomeContent = newVal.replace(
           //   newVal.substr(index),
           //   ""
           // );
           this.insertName = true;
         }
-      },
-      immediate: true
+      }
+      // immediate: true
     }
   },
   computed: {

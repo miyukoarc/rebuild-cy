@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-04-30 11:26:19
- * @LastEditTime: 2020-06-10 15:13:18
+ * @LastEditTime: 2020-07-25 16:01:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-element-admin\src\filters\index.js
@@ -159,6 +159,16 @@ export function classFilter(str) {
         return 'excel'
     } else if (str == 'pdf') {
         return 'pdf'
+    } else if (str == 'docx') {
+        return 'doc'
+    } else if (str == 'ppt') {
+        return 'ppt'
+    } else if (str == 'exe') {
+        return 'exe'
+    } else if (str == 'html') {
+        return 'html'
+    } else if (str == 'xls') {
+        return 'xlsx'
     } else {
         return 'file'
     }

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:44:55
- * @LastEditTime: 2020-07-17 14:23:50
+ * @LastEditTime: 2020-07-24 21:04:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\videoComponent.vue
@@ -11,25 +11,23 @@
     <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar :src="item.avatar" />
-        <div class="left">
-          <div class="demo">
-            <video-player
-              ref="videoPlayer"
-              class="video-player vjs-custom-skin"
-              style="object-fit:fill"
-              :playsinline="true"
-              :x5-video-player-fullscreen="true"
-              :options="playerOptions(item,1)"
-            />
-          </div>
+        <el-avatar :src="item.fromAvatar" />
+        <div class="left demo">
+          <video-player
+            ref="videoPlayer"
+            class="video-player vjs-custom-skin"
+            style="object-fit:fill"
+            :playsinline="true"
+            :x5-video-player-fullscreen="true"
+            :options="playerOptions(item,1)"
+          />
         </div>
       </div>
     </div>
     <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
-        <div class="demo user-select right">
+        <div class="demo right">
           <video-player
             ref="videoPlayer"
             class="video-player vjs-custom-skin"
@@ -39,14 +37,13 @@
             :options="playerOptions(item,2)"
           />
         </div>
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "VideoComponent",
   props: {
@@ -148,8 +145,20 @@ export default {
 <style lang="scss" scoped>
 .video-component {
   position: relative;
-  p {
-    text-align: center;
+  margin: 0 10px 20px 10px;
+  .left-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
+  .right-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
+    }
   }
   .left {
     background-color: #f4f4f5;

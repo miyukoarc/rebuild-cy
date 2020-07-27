@@ -24,6 +24,12 @@ import {
 } from '@/api/externalUserTrends'
 
 import {
+    propertyAdd,
+    propertyDelete,
+    getPropertyListAll,
+    propertyListSelect,
+    propertyUpdate,
+    propertyUpdatePropertySort,
     propertyUpdateExternalUserProperty
 } from '@/api/property'
 
@@ -131,6 +137,16 @@ const state = {
     externalUserDetail: {},
     editTagsUuid: [], // 客户详情已有标签 uuid
     /**
+     * 客户详情修改客户属性配置
+     */
+    propertyListAll: [],
+    propertyListAllPage: {
+        total: 0,
+        pageNumber: 0,
+        pageSize: 0
+    },
+
+    /**
      * 所在群列表
      */
     groupListAll: [],
@@ -149,7 +165,6 @@ const state = {
         pageNumber: 0,
         pageSize: 0
     },
-
 }
 
 const mutations = {
@@ -367,8 +382,22 @@ const mutations = {
     },
     SAVE_RESULT_LIST(state, payload) {
         state.result_list = payload;
-    }
+    },
+    // 客户详情修改客户属性配置
+    SAVE_PROERTYLISTALL(state, payload) {
+        state.propertyListAll = payload
+    },
 
+    SET_PROERTYLISTALLPAGE(state, payload) {
+        const {
+            total,
+            pageSize,
+            pageNumber
+        } = payload
+        state.propertyListAllPage.total = total
+        state.propertyListAllPage.pageNumber = pageNumber
+        state.propertyListAllPage.pageSize = pageSize
+    },
 
 
 }
@@ -669,6 +698,104 @@ const actions = {
         commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
             propertyUpdateExternalUserProperty(payload).then(res => {
+                commit('TOGGLE_LOADING', false)
+                resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+                reject(err)
+            })
+        })
+    },
+
+    /**
+     * 获取客户属性配置列表
+     */
+    getPropertyListAll({
+        commit
+    }) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            getPropertyListAll().then(res => {
+                commit('TOGGLE_LOADING', false)
+                commit('SAVE_PROERTYLISTALL', res.items)
+                resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+                reject(err)
+            })
+        })
+    },
+    /**
+     * 客户配置新增
+     * @param {*} param 
+     * @param {*} payload 
+     */
+    propertyAdd({
+        commit
+    }, payload) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            propertyAdd(payload).then(res => {
+                commit('TOGGLE_LOADING', false)
+                resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+                reject(err)
+            })
+        })
+    },
+
+    /**
+     * 客户配置修改
+     * @param {*} param 
+     * @param {*} payload 
+     */
+    propertyUpdate({
+        commit
+    }, payload) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            propertyUpdate(payload).then(res => {
+                commit('TOGGLE_LOADING', false)
+                resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+                reject(err)
+            })
+        })
+    },
+
+    /**
+     * 客户配置删除
+     * @param {*} param 
+     * @param {*} payload 
+     */
+    propertyDelete({
+        commit
+    }, payload) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            propertyDelete(payload).then(res => {
+                commit('TOGGLE_LOADING', false)
+                resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+                reject(err)
+            })
+        })
+    },
+
+    /**
+     * 客户配置上下移动
+     * @param {*} param 
+     * @param {*} payload 
+     */
+    propertyUpdatePropertySort({
+        commit
+    }, payload) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            propertyUpdatePropertySort(payload).then(res => {
                 commit('TOGGLE_LOADING', false)
                 resolve()
             }).catch(err => {

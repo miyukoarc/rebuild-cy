@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-22 13:50:04
- * @LastEditTime: 2020-07-17 14:23:41
+ * @LastEditTime: 2020-07-24 21:04:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\linkComponent.vue
@@ -101,10 +101,19 @@ export default {
 }
 
 .link-component {
-  .left-warp,
+  margin: 0 10px 20px 10px;
+  .left-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
   .right-warp {
     > p {
-      text-align: center;
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
     }
   }
 }

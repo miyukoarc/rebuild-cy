@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-11 11:15:45
- * @LastEditTime: 2020-07-17 02:08:10
+ * @LastEditTime: 2020-07-22 21:01:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\contactWay\detail.vue
@@ -282,7 +282,7 @@ export default {
   },
   data() {
     return {
-      way: "", // 编辑 新增
+      // way: "", // 编辑 新增
       // 基本信息
       uuid: "", // 回显标签
       isShow: false,
@@ -313,23 +313,6 @@ export default {
       mediaId: "",
       mediaUuid: "",
       insertName: true,
-      cities: [
-        {
-          value: "Beijing北京北京北京北京",
-          label: "北京北京北京北京北京北京北京北京北京北京",
-          img: qrCode
-        },
-        {
-          value: "Shanghai",
-          label: "上海",
-          img: qrCode
-        },
-        {
-          value: "Nanjing",
-          label: "南京",
-          img: qrCode
-        }
-      ],
       welcomecontentT: {},
       memberNick: "客户昵称",
       // 功能设置
@@ -344,11 +327,6 @@ export default {
   watch: {
     "ruleForm.welcomeContent": {
       handler(newVal, oldVal) {
-        console.log(
-          newVal,
-          "newVal",
-          newVal.indexOf('<span class="nickName">客户昵称</span>')
-        );
         if (newVal.indexOf('<span class="nickName">客户昵称</span>') > -1) {
           this.insertName = false;
         } else {

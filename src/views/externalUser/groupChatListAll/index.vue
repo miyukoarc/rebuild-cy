@@ -20,7 +20,7 @@
           stripe
           lazy
           highlight-current-row
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column prop="name" label="群名称" align="left"></el-table-column>
@@ -43,7 +43,13 @@
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
           <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
-              <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" :popAuth="true" :auth="permissionMap['externalUser']['externalUser_groupDetail']">详情</el-t-button>
+              <el-t-button
+                type="text"
+                size="mini"
+                @click.stop="handleDetail(scope.$index)"
+                :popAuth="true"
+                :auth="permissionMap['externalUser']['externalUser_groupDetail']"
+              >详情</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -66,11 +72,11 @@
 
 <script>
 // import mHeadedr from "./header";
-import UserDetail from './detail.vue'
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import UserDetail from "./detail.vue";
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -91,10 +97,10 @@ export default {
       query: {
         page: 0,
         size: 10,
-        externalUuid: '',
-        userId: ''
+        externalUuid: "",
+        userId: ""
       }
-    }
+    };
   },
   watch: {},
   computed: {
@@ -107,71 +113,71 @@ export default {
       listGroupPage: state => state.externalUser.listGroupPage,
 
       permissionMap: state => state.permission.permissionMap
-    }),
+    })
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   mounted() {},
   beforeDestroy() {},
   methods: {
     doExport(val) {
-      console.log(val)
+      console.log(val);
     },
     initFilter() {
       this.$store
-        .dispatch('externalUser/getListOwner')
+        .dispatch("externalUser/getListOwner")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListGroup', payload)
+        .dispatch("externalUser/getListGroup", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.listGroupPage.pageNumber + 1
-          this.pageConfig.total = this.listGroupPage.total
+          this.pageConfig.pageNumber = this.listGroupPage.pageNumber + 1;
+          this.pageConfig.total = this.listGroupPage.total;
         })
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: '初始化失败'
-          })
-        })
+            type: "error",
+            message: "初始化失败"
+          });
+        });
     },
     handleDetail(val) {
-      const chatId = this.listGroup[val].chatId
+      const chatId = this.listGroup[val].chatId;
       this.$router.push({
-        path: '/externalUser/groupDetail',
+        path: "/externalUser/groupDetail",
         query: { chatId }
-      })
+      });
     },
     handleSearch(val) {
-      const { externalUuid, userId } = val
+      const { externalUuid, userId } = val;
       this.query.externalUuid = externalUuid
         ? externalUuid
-        : this.query.externalUuid
-      this.query.userId = userId ? userId : this.query.userId
-      this.initDataList(this.query)
+        : this.query.externalUuid;
+      this.query.userId = userId ? userId : this.query.userId;
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      console.log('handleRefresh')
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      console.log("handleRefresh");
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

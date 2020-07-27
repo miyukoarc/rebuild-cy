@@ -100,3 +100,14 @@ export const sendResultHasSend = (payload) => {
         data: payload
     })
 }
+
+/**
+ * 获取详情
+ * @param {string} uuid 
+ */
+export const getDetail = (uuid) => {
+    return request({
+        url: `/batchSendTask/${uuid}`,
+        method: 'get',
+    })
+}

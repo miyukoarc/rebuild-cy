@@ -85,7 +85,6 @@ const actions = {
     }, payload) {
         return new Promise((resolve, reject) => {
             additionFail(payload).then((res) => {
-                console.log(res)
                 resolve()
             }).catch(err => {
 
@@ -127,7 +126,6 @@ const actions = {
             getList(payload).then((res) => {
                 commit('SAVE_LISTALL', res.items)
                 commit('SET_LISTALLPAGE', res)
-                console.log(res)
                 resolve()
             }).catch(err => {
 

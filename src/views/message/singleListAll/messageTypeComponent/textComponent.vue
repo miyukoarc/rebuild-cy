@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-17 14:22:53
+ * @LastEditTime: 2020-07-25 11:41:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -11,7 +11,7 @@
     <div v-if="item.toUser == toUserId" class="text-left">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
         <div class="left">
           <span>{{ item.msgContent }}</span>
         </div>
@@ -23,7 +23,7 @@
         <div class="right">
           <span>{{ item.msgContent }}</span>
         </div>
-        <el-avatar :src="item.avatar" />
+        <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
   </section>
@@ -35,35 +35,33 @@ export default {
   props: {
     item: Object,
     toUserId: String,
-    fromUserId: String
+    fromUserId: String,
   },
-  mounted() {
-    console.log("22", this.toUserId);
-  }
+  mounted() {},
 };
 </script>
 
 <style lang="scss" scoped>
 .left,
 .right {
-  min-height: 40px;
+  min-height: 35px;
   position: relative;
   display: table;
   text-align: center;
   border-radius: 5px;
 }
 .left {
-  background-color: #eee;
+  background-color: #fff;
   max-width: 50%;
   left: 20px;
-  margin-top: 5px;
+  top: 8px;
 }
 .right {
   /*使左右的对话框分开*/
   max-width: 50%;
-  top: 5px;
   left: -20px;
-  background-color: #9eea6a;
+  top: 8px;
+  background-color: #cce4fc;
 }
 .left > span,
 .right > span {
@@ -72,6 +70,8 @@ export default {
   vertical-align: middle;
   padding: 5px 10px;
   text-align: left;
+  font-size: 13px;
+  line-height: 14px;
 }
 .left:before,
 .right:after {
@@ -82,23 +82,32 @@ export default {
   height: 0;
   border: 8px solid transparent;
   position: absolute;
-  top: 11px;
+  top: 5px;
 }
 /*分别给左右两边的小三角形定位*/
 .left:before {
-  border-right: 8px solid #eee;
+  border-right: 8px solid #fff;
   left: -16px;
 }
 .right:after {
-  border-left: 8px solid #9eea6a;
+  border-left: 8px solid #cce4fc;
   right: -16px;
 }
 
 .text-component {
-  .text-left,
+  margin: 0 10px 20px 10px;
+  .text-left {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
   .text-right {
     > p {
-      text-align: center;
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
     }
   }
 }
