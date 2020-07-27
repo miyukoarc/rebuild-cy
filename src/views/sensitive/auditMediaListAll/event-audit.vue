@@ -157,21 +157,21 @@ export default {
       type: Object,
       default: () => {
         return {}
-      }
-    }
+      },
+    },
   },
   components: {
     AsyncUserTag,
     VideoCover,
     TagsDrawer,
-    IconTooltip
+    IconTooltip,
   },
   data() {
     return {
       form: {
         name: '',
         code: '',
-        org: ''
+        org: '',
       },
       //range==1,会签 range==0，或签
       detail: {},
@@ -179,13 +179,23 @@ export default {
       rules: {
         name: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          {
+            min: 3,
+            max: 20,
+            message: '长度在 3 到 20 个字符',
+            trigger: 'blur',
+          },
         ],
         code: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-        ]
-      }
+          {
+            min: 3,
+            max: 20,
+            message: '长度在 3 到 20 个字符',
+            trigger: 'blur',
+          },
+        ],
+      },
     }
   },
   watch: {
@@ -194,27 +204,27 @@ export default {
         this.initData(newVal.uuid)
       },
       immediate: true,
-      deep: true
-    }
+      deep: true,
+    },
   },
   computed: {
     ...mapState({
-      auditState: state => state.enum.auditState,
-      matchFormat: state => state.enum.matchFormat,
-      currentUserUuid: state => state.user.uuid
-    })
+      auditState: (state) => state.enum.auditState,
+      matchFormat: (state) => state.enum.matchFormat,
+      currentUserUuid: (state) => state.user.uuid,
+    }),
   },
   mounted() {},
   methods: {
     initData(payload) {
       this.$store
         .dispatch('audit/getDetail', payload)
-        .then(res => {
+        .then((res) => {
           if (res.mediaOperationType === 'ADD_MEDIA') {
             this.detail = {
               ...res,
               auditAddMedia: this.parse(res.auditAddMedia),
-              auditUsers: this.parse(res.auditUsers)
+              auditUsers: this.parse(res.auditUsers),
             }
 
             // if (res.auditAddMedia) {
@@ -230,7 +240,7 @@ export default {
           if (res.mediaOperationType === 'DELETE_MEDIA') {
             this.detail = {
               ...res,
-              auditUsers: this.parse(res.auditUsers)
+              auditUsers: this.parse(res.auditUsers),
             }
 
             console.log(res.toMedis)
@@ -248,45 +258,32 @@ export default {
             //   : []
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err)
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
     parse(str) {
       return JSON.parse(str)
     },
-    handleConfirm() {
-      const payload = this.form
-
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-        } else {
-          this.$message({
-            type: 'error',
-            message: '请检查输入'
-          })
-        }
-      })
-    },
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
     },
     grouping(list) {
       if (list.length) {
-        let temp = list.map(item => {
+        let temp = list.map((item) => {
           return {
             ...item,
             groupName: item.tagGroupName,
-            groupId: item.tagGroupId
+            groupId: item.tagGroupId,
           }
         })
         return temp.reduce((groups, item) => {
           let groupFound = groups.find(
-            foundItem => item.groupId === foundItem.groupId
+            (foundItem) => item.groupId === foundItem.groupId
           )
           if (groupFound) {
             groupFound.tags.push(item)
@@ -294,7 +291,7 @@ export default {
             let newGroup = {
               groupId: item.tagGroupId,
               groupName: item.tagGroupName,
-              tags: [item]
+              tags: [item],
             }
 
             groups.push(newGroup)
@@ -311,7 +308,7 @@ export default {
       if (Object.keys(list).length) {
         return list.reduce((groups, item) => {
           let groupFound = groups.find(
-            foundItem => item.groupId === foundItem.groupId
+            (foundItem) => item.groupId === foundItem.groupId
           )
           if (groupFound) {
             groupFound.tags.push(item)
@@ -319,7 +316,7 @@ export default {
             let newGroup = {
               groupId: item.groupId,
               groupName: item.groupName,
-              tags: [item]
+              tags: [item],
             }
 
             groups.push(newGroup)
@@ -338,12 +335,12 @@ export default {
       if (action === 'reject') {
         payload = {
           auditConfirmation: 'AUDIT_FAILED',
-          uuids: [uuid]
+          uuids: [uuid],
         }
       } else {
         payload = {
           auditConfirmation: 'APPROVED',
-          uuids: [uuid]
+          uuids: [uuid],
         }
       }
 
@@ -358,14 +355,21 @@ export default {
             onClose: () => {
               this.handleCancel()
               this.handleRefresh()
-            }
+            },
           })
         })
-        .catch(err => {
-          this.$message({
+        .catch((err) => {
+        //   this.$message({
+        //     type: 'error',
+        //     message: err,
+        //   })
+          this.$confirm(err, '错误', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
             type: 'error',
-            message: err
           })
+            .then(() => {})
+            .catch((err) => {})
         })
     },
     handleRefresh() {
@@ -375,7 +379,7 @@ export default {
       if (!!item.range) {
         //range==1 会签
         if (
-          item.userList.some(user => {
+          item.userList.some((user) => {
             return user.auditState === 'TO_BE_REVIEWED'
           })
         ) {
@@ -387,7 +391,7 @@ export default {
         //或签
 
         if (
-          item.userList.every(unit => {
+          item.userList.every((unit) => {
             return unit.auditState === 'TO_BE_REVIEWED'
           })
         ) {
@@ -400,8 +404,8 @@ export default {
     currentUserState(arr) {
       //detail.auditUsers
       let flag = false
-      arr.forEach(item => {
-        item.userList.forEach(user => {
+      arr.forEach((item) => {
+        item.userList.forEach((user) => {
           if (user.uuid === this.currentUserUuid) {
             if (
               user.auditState === 'APPROVED' ||
@@ -417,8 +421,8 @@ export default {
     handleDownload() {
       const url = this.detail.auditAddMedia[0].localId
       window.location.href = `/api/public/file/${url}`
-    }
-  }
+    },
+  },
 }
 </script>
 

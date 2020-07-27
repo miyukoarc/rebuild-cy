@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form ref="form" :model="form" label-width="120px" label-position="left">
-      <el-form-item label="标签组名称" :prop="'tagList.groupName'" :rules="rules.groupName">
+      <el-form-item label="标签组名称" prop="groupName" :rules="rules.groupName">
         <el-input v-model.trim="form.groupName" maxlength="15">
           <span slot="suffix">{{form.groupName.length}}/15</span>
         </el-input>
@@ -17,9 +17,17 @@
           :prop="'tagList.'+index+'.tagName'"
           :rules="rules.tagName"
         >
-          <el-input v-model.trim="form.tagList[index].tagName" maxlength="15">
-            <span slot="suffix">{{form.tagList[index].tagName.length}}/15</span>
-          </el-input>
+          <div class="input-container">
+            <el-input v-model.trim="form.tagList[index].tagName" maxlength="15">
+              <span slot="suffix">{{form.tagList[index].tagName.length}}/15</span>
+            </el-input>
+            <el-t-button
+              class="del-btn"
+              v-if="index!==0"
+              type="text"
+              @click="handleDelete(index)"
+            >删除</el-t-button>
+          </div>
         </el-form-item>
       </div>
       <el-form-item label>
@@ -48,29 +56,34 @@ export default {
         sort: 0,
         tagList: [
           {
-            tagName: ''
-          }
-        ]
+            tagName: '',
+          },
+        ],
       },
       rules: {
         groupName: [
-          { required: true, message: '请输入标签组名称', trigger: 'blur' }
-        //   { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
+          { required: true, message: '请输入标签组名称', trigger: 'blur' },
+          //   { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
         ],
         tagName: [
           { required: true, message: '请输入标签名称', trigger: 'blur' },
-          { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
-        ]
-      }
+          {
+            min: 1,
+            max: 15,
+            message: '长度在 1 到 15 个字符',
+            trigger: 'blur',
+          },
+        ],
+      },
     }
   },
   computed: {
     ...mapState({
-      permissionMap: state => state.permission.permissionMap,
-      tagListAll: state => state.tag.tagListAll,
+      permissionMap: (state) => state.permission.permissionMap,
+      tagListAll: (state) => state.tag.tagListAll,
 
-      auditSetting: state => state.sensitive.auditSetting
-    })
+      auditSetting: (state) => state.sensitive.auditSetting,
+    }),
   },
   watch: {
     'tagListAll.length': {
@@ -78,8 +91,8 @@ export default {
         console.log(newVal)
         this.form.sort = newVal + 1
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   mounted() {
     //   this.form.sort = this.tagListAll.length+1
@@ -87,7 +100,7 @@ export default {
   methods: {
     handleAddTag() {
       this.form.tagList.push({
-        tagName: ''
+        tagName: '',
       })
     },
     handleApply() {
@@ -102,56 +115,54 @@ export default {
       if (this.auditSetting['tag']) {
         groupName = this.form.groupName
 
-        addTagName = this.form.tagList.map(item => item.tagName).join(',')
+        addTagName = this.form.tagList.map((item) => item.tagName).join(',')
 
         payload = {
           groupName,
           sort,
-          addTagName
+          addTagName,
         }
       } else {
         groupName = this.form.groupName
 
         // tagList = this.form.tagList.reduce((sum,curr)=>{[].push({tagName:curr.tagName})},[])
-        this.form.tagList.forEach(item => {
+        this.form.tagList.forEach((item) => {
           tagList.push({ tagName: item.tagName })
         })
 
         payload = {
           groupName,
           sort,
-          tagList
+          tagList,
         }
       }
 
       console.log(payload)
 
-      this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate((valid) => {
         if (valid) {
           this.$store
             .dispatch('tag/addTagIsAudit', payload)
             .then(() => {
-              const message = this.auditSetting['tag']
-                ? '已提交审核'
-                : '已完成'
+              const message = this.auditSetting['tag'] ? '已提交审核' : '已完成'
               this.$message({
                 type: 'success',
-                message: message
+                message: message,
               })
               this.form = this.$options.data().form
               this.handleRefresh()
               this.closeDialog()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: '操作失败'
+                message: '操作失败',
               })
             })
         } else {
           this.$message({
             type: 'error',
-            message: '请检查输入！'
+            message: '请检查输入！',
           })
           return false
         }
@@ -165,10 +176,19 @@ export default {
     },
     handleRefresh() {
       this.$bus.$emit('handleRequest')
-    }
-  }
+    },
+    handleDelete(index) {
+      this.form.tagList.splice(index, 1)
+    },
+  },
 }
 </script>
-
-<style>
-</style> 
+<style lang="scss" scoped>
+.input-container {
+  display: flex;
+  align-items: center;
+  .del-btn {
+    margin: 0 5px;
+  }
+}
+</style>

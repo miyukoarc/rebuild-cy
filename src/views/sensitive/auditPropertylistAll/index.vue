@@ -30,7 +30,8 @@
           <template v-slot="{row}">
             <div>
               <span v-if="row.auditUsers.length===0">--</span>
-              <async-user-drawer v-else :hasPop="true" :users="row.auditUsers[0].userList"></async-user-drawer>
+              <auditor-drawer v-else :levels="row.auditUsers"></auditor-drawer>
+              <!-- <async-user-drawer v-else :hasPop="true" :users="row.auditUsers[0].userList"></async-user-drawer> -->
             </div>
           </template>
         </el-table-column>
@@ -86,6 +87,7 @@
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
 import AuditUser from './components/audit-user'
+import AuditorDrawer from './components/auditor-drawer'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import TagsDrawer from '@/components/TagsDrawer'
@@ -99,6 +101,7 @@ export default {
     ToolBar,
     AsyncUserTag,
     AsyncUserDrawer,
+    AuditorDrawer,
     RoleDrawer,
     TagsDrawer,
     AuditUser

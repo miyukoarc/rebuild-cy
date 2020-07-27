@@ -1,8 +1,10 @@
 <template>
   <div class="login-container">
-    <!-- <div class="iframe-container">
-      <iframe id="qrcode-container" :srcdoc="wxQrCode" style="width:400px;height:600px"></iframe>
-    </div>-->
+    <div id="browser"></div>
+    <webview ref="webview" id="webview"></webview>
+    <div v-if="tipsFlag" class="text-align-center">
+      <h3 class="tips">选择单位获取登录二维码</h3>
+    </div>
     <div class="container">
       <!-- <el-radio-group v-model="tenantId" size="small" @change="changeCorp"> -->
       <div class="choice" v-for="item in loginList" :key="item.tenantId">
@@ -15,7 +17,7 @@
       </div>
       <!-- </el-radio-group> -->
       <div class="text-align-center">
-        <el-button type="primary" size="small" @click="handleLogin">进入</el-button>
+        <el-button type="primary" size="small" @click="handleLogin">确定</el-button>
       </div>
     </div>
   </div>
@@ -31,40 +33,60 @@ export default {
       redirect: undefined,
       otherQuery: {},
       wxQrCode: null,
-      tenantId: ''
+      tenantId: '',
+      loginFlag: false,
+      tipsFlag: true,
     }
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         const query = route.query
         if (query) {
           this.redirect = query.redirect
           this.otherQuery = this.getOtherQuery(query)
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      loginList: state => state.auth.loginList
-    })
+      loginList: (state) => state.auth.loginList,
+    }),
   },
   created() {
-    console.log()
-    const localStorage = JSON.parse(window.localStorage.getItem('corp'))
-    if (localStorage?.name) {
-      const tenantId = localStorage.tenantId + ''
-      this.getWxlogin(tenantId)
-    } else {
-      this.initDataList()
-    }
+    this.initDataList()
+    this.electronTragger()
   },
   mounted() {
-    // this.getWxlogin(this.$route.query.tenantId);
+    this.electronTragger()
   },
   methods: {
+    electronTragger() {
+      if (this.$isElectron()) {
+        const ipcRenderer = window.electron.ipcRenderer
+
+        ipcRenderer.on('login-navigate', (event, payload) => {
+          console.log(payload)
+        })
+        ipcRenderer.on('login-redirect', (event, payload) => {
+          this.loginFlag = true
+          console.log(payload)
+        })
+        console.log('ipcRenderer loaded')
+      }
+    },
+    getQrCode(id, target) {
+      return new WwLogin({
+        id: target,
+        appid: 'wwa266cd2b968ae008',
+        agentid: '1000019',
+        redirect_uri: `http://sidebar.cyscrm.com/api/wxlogin/${id}`,
+        state: '123456',
+        href: '',
+      })
+    },
     getWxlogin(payload) {
       this.$nextTick(async () => {
         const res = await wxLogin(payload)
@@ -72,16 +94,6 @@ export default {
           this.wxQrCode = res
           const style =
             '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
-
-          //   console.log(document.querySelector('#qrcode-container'))
-          //   console.log(res)
-          // document.querySelector('#qrcode-container').innerHTML = res
-
-          //   document.querySelector('#qrcode-container').innerHTML = this.addStr(
-          //     this.wxQrCode,
-          //     style
-          //   )
-        //   document.body.innerHTML = this.addStr(this.wxQrCode, style)
           document.write(this.addStr(this.wxQrCode, style))
         }
       })
@@ -107,22 +119,26 @@ export default {
       this.$store
         .dispatch('auth/getLoginList')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化错误'
+            message: err || '初始化错误',
           })
         })
     },
     handleLogin() {
-      const tenantId = this.tenantId + ''
-      //   this.$router.push({
-      //     path: '/login',
-      //     query: { tenantId }
-      //   })
-      this.getWxlogin(tenantId)
-    }
-  }
+      if (this.loginFlag) {
+        this.$router.push('/welcome')
+      } else {
+        this.tipsFlag = false
+        const tenantId = this.tenantId + ''
+        //   this.getWxlogin(tenantId)
+        this.$isElectron()
+          ? this.getQrCode(tenantId, 'webview')
+          : this.getQrCode(tenantId, 'browser')
+      }
+    },
+  },
 }
 </script>
 
@@ -149,13 +165,17 @@ $cursor: #fff;
   }
 }
 
-
 /* reset element-ui css */
 .login-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   -webkit-app-region: drag;
+
+  #webview {
+    -webkit-app-region: no-drag;
+  }
   .container {
     -webkit-app-region: no-drag;
   }
@@ -274,5 +294,11 @@ $light_gray: #eee;
 .iframe-container {
   width: 300px;
   height: 500px;
+}
+.text-align-center {
+  .tips {
+    margin-bottom: 40px;
+    margin-top: 40px;
+  }
 }
 </style>

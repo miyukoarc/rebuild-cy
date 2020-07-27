@@ -190,7 +190,7 @@ export function myFilter(arr) {
   }, [])
 }
 
-export function toChinesNum(num) {
+export function toChineseNum(num) {
   let changeNum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
   let unit = ["", "十", "百", "千", "万"];
   num = parseInt(num);
