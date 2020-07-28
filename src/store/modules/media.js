@@ -100,7 +100,6 @@ const mutations = {
    */
   SAVE_ARTICLELISTSELECT(state, payload) {
     state.articleListSelect = payload
-    console.log(state.articleListSelect, '8888844')
   },
   /**
    * 切换loading状态

@@ -181,7 +181,7 @@ export default {
       this.initDataList(this.query);
     },
 
-    actionDepartment(a) {
+    actionDepartment() {
       this.$refs.formDialog.dialogVisible = true;
       this.$refs.formDialog.event = "addBatchSendTaskTemplate";
       this.$refs.formDialog.eventType = "addBatchSendTask";

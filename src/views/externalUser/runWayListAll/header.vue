@@ -53,12 +53,7 @@
     <!-- <div class="tag-warp"> -->
     <el-form-item label="客户标签：">
       <div class="tag-border">
-        <el-select
-          v-model="query.tagIds"
-          @change="handleChangeSecond"
-          size="mini"
-          multiple
-        >
+        <el-select v-model="query.tagIds" @change="handleChangeSecond" size="mini" multiple>
           <el-option-group v-for="item in tagListAll" :key="item.groupId" :label="item.groupName">
             <el-option
               v-for="child in item.tagList"
@@ -108,7 +103,7 @@ export default {
         flag: true,
         startTime: "",
         endTime: "",
-        delFollow: ''
+        delFollow: ""
       },
       typeOptions: [
         {
@@ -141,7 +136,7 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListSelect,
       userListAll: state => state.user.listSelect
-      //   departments: state => state.department.departments
+      // departments: state => state.department.departments
     })
   },
   methods: {
@@ -170,7 +165,6 @@ export default {
       this.$emit("handleRefresh");
       this.value = this.$options.data().value;
       this.query = this.$options.data().query;
-      
     }
   }
 };

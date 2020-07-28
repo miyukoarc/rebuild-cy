@@ -159,7 +159,7 @@ const actions = {
                 // 登陆的时候再自动重连
                 setTimeout(() => {
                     dispatch('createWebsocket')
-                }, 1000)
+                }, 5000)
             }
             resolve()
         })

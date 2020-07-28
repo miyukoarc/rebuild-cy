@@ -66,13 +66,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import ComplexSelect from '@/components/ComplexSelect'
-import AsyncUserTag from '@/components/AsyncUserTag'
-import TagSelect from '@/components/TagSelect'
+import { mapState } from "vuex";
+import ComplexSelect from "@/components/ComplexSelect";
+import AsyncUserTag from "@/components/AsyncUserTag";
+import TagSelect from "@/components/TagSelect";
 
 export default {
-  inject: ['reload'],
+  inject: ["reload"],
   components: {
     AsyncUserTag,
     ComplexSelect,
@@ -83,37 +83,37 @@ export default {
       userSelects: [],
       tagSelects: [],
       inputVisible: false,
-      inputValue: '',
+      inputValue: "",
       form: {
-        tagType: 'INSET', //INSET UNIONSET
-        informType: 'USER', //USER,ROLE
-        type: 'MSG',
+        tagType: "INSET", //INSET UNIONSET
+        informType: "USER", //USER,ROLE
+        type: "MSG",
         words: []
       },
       toUserTags: [],
       toRoles: [],
       rules: {
         word: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
         ],
         code: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
         ]
       }
-    }
+    };
   },
   watch: {
-    'form.informType': {
+    "form.informType": {
       handler(newVal, oldVal) {
-        if (newVal == 'ROLE') {
-          this.$set(this.form, 'toRole', [])
-          this.$delete(this.form, 'toUser')
+        if (newVal == "ROLE") {
+          this.$set(this.form, "toRole", []);
+          this.$delete(this.form, "toUser");
         }
-        if (newVal == 'USER') {
-          this.$set(this.form, 'toUser', [])
-          this.$delete(this.form, 'toRole')
+        if (newVal == "USER") {
+          this.$set(this.form, "toUser", []);
+          this.$delete(this.form, "toRole");
         }
       },
       immediate: true
@@ -140,123 +140,123 @@ export default {
       tagListSelect: state => state.tag.tagListSelect
     }),
     toUser() {
-      return this.form.toUser
+      return this.form.toUser;
     }
   },
   mounted() {
-    this.initFilter()
+    this.initFilter();
   },
   methods: {
     initFilter() {
       this.$store
-        .dispatch('role/getRoleListSelect')
+        .dispatch("role/getRoleListSelect")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败'
-          })
-        })
+            type: "error",
+            message: err || "初始化失败"
+          });
+        });
 
       this.$store
-        .dispatch('department/getDepartmentListAll')
+        .dispatch("department/getDepartmentListAll")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败'
-          })
-        })
+            type: "error",
+            message: err || "初始化失败"
+          });
+        });
 
       this.$store
-        .dispatch('tag/getListSelect')
+        .dispatch("tag/getListSelect")
         .then(() => {})
         .catch(err => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败'
-          })
-        })
+            type: "error",
+            message: err || "初始化失败"
+          });
+        });
     },
     handleConfirm() {
-      if (this.form.informType == 'USER') {
+      if (this.form.informType == "USER") {
         this.form.toUser = this.userSelects.map(item => {
-          return item.uuid
-        })
+          return item.uuid;
+        });
       } else {
-        this.form.toRole = this.toRoles
+        this.form.toRole = this.toRoles;
       }
-      this.form.setTag = this.tagSelects.reduce((sum,curr)=>{
-          return sum.concat(curr)
-      },[])
-      const payload = this.form
+      this.form.setTag = this.tagSelects.reduce((sum, curr) => {
+        return sum.concat(curr);
+      }, []);
+      const payload = this.form;
 
-      this.$refs['form'].validate(valid => {
-          console.log(payload)
+      this.$refs["form"].validate(valid => {
+        console.log(payload);
         if (valid) {
           this.$store
-            .dispatch('sensitive/add', payload)
+            .dispatch("sensitive/add", payload)
             .then(() => {
               this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.handleCancel()
-              this.refresh()
+                type: "success",
+                message: "操作成功"
+              });
+              this.handleCancel();
+              this.refresh();
             })
             .catch(err => {
               this.$message({
-                type: 'error',
-                message: '操作失败'
-              })
-            })
+                type: "error",
+                message: "操作失败"
+              });
+            });
         } else {
           this.$message({
-            type: 'error',
-            message: '请检查输入'
-          })
+            type: "error",
+            message: "请检查输入"
+          });
         }
-      })
+      });
     },
     handleCancel() {
-      this.$parent.$parent.dialogVisible = false
+      this.$parent.$parent.dialogVisible = false;
     },
     handleChange() {},
     handleCloseTag() {},
     refresh() {
       this.$store
-        .dispatch('sensitive/getSensitiveListAll')
+        .dispatch("sensitive/getSensitiveListAll")
         .then(() => {
-          this.reload()
+          this.reload();
         })
         .catch(err => {
           this.$message({
-            type: 'error',
+            type: "error",
             message: err
-          })
-        })
+          });
+        });
     },
     handleClose(tag) {
-      this.form.words.splice(this.form.words.indexOf(tag), 1)
+      this.form.words.splice(this.form.words.indexOf(tag), 1);
     },
 
     showInput() {
-      this.inputVisible = true
+      this.inputVisible = true;
       this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus()
-      })
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
     },
 
     handleInputConfirm() {
-      let inputValue = this.inputValue
+      let inputValue = this.inputValue;
       if (inputValue) {
-        this.form.words.push(inputValue)
+        this.form.words.push(inputValue);
       }
-      this.inputVisible = false
-      this.inputValue = ''
+      this.inputVisible = false;
+      this.inputValue = "";
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
