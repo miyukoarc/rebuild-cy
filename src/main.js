@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-27 14:05:27
- * @LastEditTime: 2020-07-21 15:58:55
+ * @LastEditTime: 2020-07-28 11:28:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\main.js
@@ -56,6 +56,16 @@ require('vue-video-player/src/custom-theme.css')
 
 Vue.use(VideoPlayer)
 
+
+import VueAMap from 'vue-amap';
+
+Vue.use(VueAMap);
+VueAMap.initAMapApiLoader({
+    key: '275c08bcc088407d1818818d913a6b96',
+    plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
+    // 默认高德 sdk 版本为 1.4.4
+    v: '1.4.4'
+});
 
 /**
  * If you don't want to use mock-server

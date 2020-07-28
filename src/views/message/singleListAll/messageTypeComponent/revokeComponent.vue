@@ -1,35 +1,28 @@
 <!--
  * @Author: your name
- * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-28 16:01:27
+ * @Date: 2020-07-27 11:09:43
+ * @LastEditTime: 2020-07-27 15:35:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
--->
+ * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\revokeComponent.vue
+--> 
 <template>
-  <section class="text-component clearfix">
-    <div v-if="item.toUser == toUserId" class="text-left">
+  <section class="revoke-component clearfix">
+    <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
-        <div style="margin-right:20px;margin-top:5px">
-          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-          <div class="right">
-            <span>{{ item.msgContent }}</span>
-          </div>
+        <div class="left">
+          <span class="revoke-text">你撤回了一条消息</span>
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == toUserId" class="text-right">
+    <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
-        <div style="margin-right:20px;margin-top:5px">
-          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-          <div class="right">
-            <span>{{ item.msgContent }}</span>
-          </div>
+        <div class="right">
+          <span class="revoke-text">你撤回了一条消息</span>
         </div>
-
         <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
@@ -54,21 +47,21 @@ export default {
   min-height: 35px;
   position: relative;
   display: table;
-  // text-align: center;
+  text-align: center;
   border-radius: 5px;
 }
 .left {
-  background-color: #fff;
+  background-color: #d7d7d7;
   max-width: 50%;
   left: 20px;
   top: 8px;
 }
 .right {
   /*使左右的对话框分开*/
-  // max-width: 50%;
-  // left: -20px;
-  // top: 8px;
-  background-color: #cce4fc;
+  max-width: 50%;
+  left: -20px;
+  top: 8px;
+  background-color: #d7d7d7;
 }
 .left > span,
 .right > span {
@@ -97,25 +90,30 @@ export default {
   left: -16px;
 }
 .right:after {
-  border-left: 8px solid #cce4fc;
+  border-left: 8px solid #d7d7d7;
   right: -16px;
 }
 
-.text-component {
+.revoke-component {
   margin: 0 10px 20px 10px;
-  .text-left {
+  .left-warp {
     > p {
       font-size: 13px;
       line-height: 18px;
       text-align: left;
     }
   }
-  .text-right {
+  .right-warp {
     > p {
       font-size: 13px;
       line-height: 18px;
       text-align: right;
     }
+  }
+  .revoke-text {
+    background-color: #d7d7d7;
+    color: #fff;
+    border-radius: 5px;
   }
 }
 </style>

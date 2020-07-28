@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-25 15:52:51
+ * @LastEditTime: 2020-07-28 16:38:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -13,15 +13,18 @@
       <div class="weaapp-warp display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="card-warp">
             <div class="card-top">
               <div class="weapp-icon">
                 <!-- <img :src='' alt /> -->
                 <svg-icon icon-class="xiaochengxu" class-name="xiaochengxu-icon" />
-                <span>小程序</span>
+                <span>{{item.messageMedias[0].displayName}}</span>
               </div>
-              <strong class="title">{{ item.messageMedias[0].title }} 每日优鲜 ***</strong>
-              <div class="des">{{ item.messageMedias[0].description }}</div>
+              <strong class="title">{{ item.messageMedias[0].title }}</strong>
+              <div class="des">
+                <span>{{ item.messageMedias[0].description }}</span>
+              </div>
             </div>
             <div class="line"></div>
             <div class="app-type">
@@ -35,15 +38,18 @@
       <p>{{ item.msgTime }}</p>
       <div class="weaapp-warp display-flex justify-content-flex-end">
         <div class="right">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="card-warp">
             <div class="card-top">
               <div class="weapp-icon">
                 <!-- <img :src='' alt /> -->
                 <svg-icon icon-class="xiaochengxu" class-name="xiaochengxu-icon" />
-                <span>小程序</span>
+                <span>{{item.messageMedias[0].displayName}}</span>
               </div>
-              <strong class="title">{{ item.messageMedias[0].title }} 每日优鲜 ***</strong>
-              <div class="des">{{ item.messageMedias[0].description }}</div>
+              <strong class="title">{{ item.messageMedias[0].title }}</strong>
+              <div class="des">
+                <span>{{item.messageMedias[0].description }}</span>
+              </div>
             </div>
             <div class="line"></div>
             <div class="app-type">
@@ -96,6 +102,11 @@ export default {
             width: 205px;
             height: 175px;
             background-color: #eee;
+            font-size: 14px;
+            line-height: 16px;
+            span {
+              padding: 5px 10px;
+            }
           }
           .weapp-icon {
             margin-bottom: 10px;
@@ -153,6 +164,11 @@ export default {
             width: 205px;
             height: 175px;
             background-color: #eee;
+            font-size: 14px;
+            line-height: 16px;
+            span {
+              padding: 0 10px;
+            }
           }
           .weapp-icon {
             margin-bottom: 10px;

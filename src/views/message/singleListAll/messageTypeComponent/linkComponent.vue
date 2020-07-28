@@ -1,33 +1,57 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-22 13:50:04
- * @LastEditTime: 2020-07-24 21:04:54
+ * @LastEditTime: 2020-07-28 17:41:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\linkComponent.vue
 -->
 <template>
   <section class="link-component clearfix">
-    <div v-if="item.toUserId == toUserId" class="left-warp">
+    <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <el-avatar :src="item.fromAvatar" />
         <div class="left">
-          <span>
-            <a>{{ item.msgContent }}</a>
-          </span>
+          <div>
+            <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+            <a target="_blank" :href="item.messageMedias[0].linkUrl">
+              <div class="link-warp">
+                <div class="title">{{item.messageMedias[0].title}}</div>
+                <div class="content-warp flex-between-alinecenter">
+                  <div class="content">
+                    <span>{{item.messageMedias[0].description.split(/\r\n|\n|\r/)[0]}}</span>
+                    <p>{{item.messageMedias[0].description.split(/\r\n|\n|\r/)[1]}}</p>
+                  </div>
+                  <img :src="item.messageMedias[0].imageUrl" alt />
+                </div>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </div>
     <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
-        <div class="right">
-          <span>
-            <a>{{ item.msgContent }}</a>
-          </span>
+        <div>
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div class="right">
+            <a target="_blank" :href="item.messageMedias[0].linkUrl">
+              <div class="link-warp">
+                <div class="title">{{item.messageMedias[0].title}}</div>
+                <div class="content-warp flex-between-alinecenter">
+                  <div class="content">
+                    <span>{{item.messageMedias[0].description.split(/\r\n|\n|\r/)[0]}}</span>
+                    <p>{{item.messageMedias[0].description.split(/\r\n|\n|\r/)[1]}}</p>
+                  </div>
+                  <img :src="item.messageMedias[0].imageUrl" alt />
+                </div>
+              </div>
+            </a>
+          </div>
         </div>
-        <el-avatar icon="el-icon-user-solid" />
+        <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
   </section>
@@ -39,8 +63,8 @@ export default {
   props: {
     item: Object,
     toUserId: String,
-    fromUserId: String
-  }
+    fromUserId: String,
+  },
 };
 </script>
 
@@ -52,25 +76,8 @@ export default {
   display: table;
   text-align: center;
   border-radius: 5px;
-  span {
-    a {
-      color: #1890ff;
-    }
-  }
 }
-.left {
-  background-color: #f4f4f5;
-  max-width: 50%;
-  left: 20px;
-  margin-top: 5px;
-}
-.right {
-  /*使左右的对话框分开*/
-  max-width: 50%;
-  top: 5px;
-  left: -20px;
-  background-color: #9eea6a;
-}
+
 .left > span,
 .right > span {
   /*使内容居中*/
@@ -92,11 +99,11 @@ export default {
 }
 /*分别给左右两边的小三角形定位*/
 .left:before {
-  border-right: 8px solid #f4f4f5;
+  border-right: 8px solid #fff;
   left: -16px;
 }
 .right:after {
-  border-left: 8px solid #9eea6a;
+  border-left: 8px solid #fff;
   right: -16px;
 }
 
@@ -108,12 +115,45 @@ export default {
       line-height: 18px;
       text-align: left;
     }
+    .left {
+      background-color: #fff;
+      max-width: 50%;
+      left: 20px;
+      margin-top: 5px;
+    }
   }
   .right-warp {
     > p {
       font-size: 13px;
       line-height: 18px;
       text-align: right;
+    }
+    .right {
+      /*使左右的对话框分开*/
+      max-width: 50%;
+      top: 5px;
+      left: -20px;
+      background-color: #fff;
+    }
+  }
+  .link-warp {
+    width: 240px;
+    padding: 10px;
+    text-align: left;
+    .title {
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    .content-warp {
+      .content {
+        color: #b2b2b2;
+        font-size: 13px;
+        line-height: 16px;
+      }
+      img {
+        width: 40px;
+        height: 40px;
+      }
     }
   }
 }
