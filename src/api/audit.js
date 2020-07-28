@@ -109,9 +109,9 @@ export const batchAuditPermissionConfirmation = (payload) => {
  * @param {object} payload 
  */
 export const batchAuditTagConfirmation = (payload) => {
-    return request({
-      url: '/audit/batchAuditTagConfirmation',
-      method: 'post',
-      data: payload
-    })
-  }
+  return request({
+    url: '/audit/batchAuditTagConfirmation',
+    method: 'post',
+    data: payload
+  })
+}

@@ -32,8 +32,8 @@ import Layout from '@/layout'
  */
 import online from '@/views/signin'
 import offline from '@/views/login'
-import MiniLogin from '@/views/login-back-up'
 import welcome from '@/views/welcome'
+import Qrcode from '@/views/qrcode'
 const loginPage = process.env.VUE_APP_WORK === 'offline' ? offline : online
 export const constantRoutes = [{
     path: '/redirect',
@@ -47,13 +47,11 @@ export const constantRoutes = [{
     path: '/login',
     component: loginPage,
     hidden: true
-  },
-
-  {
-    path: '/miniLogin',
-    component: MiniLogin,
-    hidden: true
   }, {
+    path: '/qrcode',
+    component: Qrcode,
+    hidden: true
+  },{
     path: '/welcome',
     component: welcome,
     hidden: true,

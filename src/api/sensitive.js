@@ -182,5 +182,41 @@ export const setAuditUser = (payload) => {
 }
 
 
+/**
+ * 素材审核列表
+ * @param {object} payload 
+ */
+export const auditMediaListAll = (payload) => {
+    return request({
+        url: '/riskManagement/auditMediaListAll',
+        method: 'get',
+        params: payload
+    })
+}
+
+/**
+ * 审核配置详情
+ * @param {string} uuid 
+ */
+export const auditDetail = (uuid)=>{
+    return request({
+        url: '/riskManagement/'+uuid,
+        method: 'get'
+    })
+}
+
+
+/**
+ * 审核配置详情
+ * @param {string} uuid 
+ */
+export const batchAuditPermissionConfirmation = (payload)=>{
+    return request({
+        url: '/riskManagement/batchAuditPermissionConfirmation',
+        method: 'post',
+        data: payload
+    })
+}
+
 
 

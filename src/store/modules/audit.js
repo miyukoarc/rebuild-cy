@@ -5,6 +5,7 @@ import {
     batchAuditMediaConfirmation,
     batchAuditPermissionConfirmation,
     batchAuditTagConfirmation,
+    getDetail,
 } from '@/api/audit'
 
 const state = {
@@ -60,7 +61,6 @@ const actions = {
             batchAuditMediaConfirmation(payload).then(()=>{
                 resolve()
             }).catch(err=>{
-                
                 reject(err)
             })
         })
@@ -79,7 +79,21 @@ const actions = {
                 reject(err)
             })
         })
-    }
+    },
+    /**
+     * 审核详情
+     * @param {*} param0 
+     * @param {object} payload 
+     */
+    getDetail({commit},payload){
+       return new Promise((resolve,reject)=>{
+           getDetail(payload).then(res=>{
+               resolve(res)
+           }).catch(err=>{
+               reject(err)
+           })
+       })
+    },
 }
 
 

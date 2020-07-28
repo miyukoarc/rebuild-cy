@@ -25,8 +25,11 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
         warnings: false,
         errors: true
     },
+
     disableHostCheck: true,
     proxy: {
+
+
         "/api": {
             headers: {
                 host: '127.0.0.1:3000' //koa服务在3000端口运行
@@ -38,6 +41,8 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
             }
         }
     }
+
+// 21days 
     // before: require('./mock/mock-server.js')
 } : {
     port: 80,
@@ -50,7 +55,10 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
     disableHostCheck: true,
     proxy: {
         [process.env.VUE_APP_BASE_API]: {
-            target: defaultSettings.api_host, // 骋昊
+            // target: 'http://47.111.161.128:9000/',
+            // target: 'http://10.10.10.4:9000', // 光
+            target: 'http://10.10.10.41', // 杜亮
+            // target: 'http://10.10.10.198', // 骋昊
             // ws: true,
             changeOrigin: true,
             pathRewrite: {
@@ -58,14 +66,30 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
             }
         },
         '/public': {
-            target: defaultSettings.api_host,
+            target: 'http://10.10.10.172', // 杜亮
+
+            // target: 'http://47.111.161.128:9000/',
+            // target: 'http://10.10.10.198',
             changeOrigin: true,
         },
+        // "/api": {
+        //   target: "http://localhost:80",
+        //   secure: false,
+        //   autoRewrite: true,
+        //   pathRewrite: {
+        //     "^/api": ""
+        //   }
+        // },
         [process.env.VUE_APP_BASE_API]: {
             headers: {
                 Host: 'sidebar.cyscrm.com'
             },
-            target: defaultSettings.api_host, // 骋昊
+            // target: 'http://47.111.161.128:9000/',
+            // target: "http://10.10.10.198", //陈浩
+            // target: "http://sidebar.cyscrm.com:9000"//线上
+            target: "http://10.10.10.41", //杜亮
+            //   target: 'http://10.10.10.4:9000', //光
+            // target: "http://47.111.161.128:80",
             secure: false,
             // ws: true,
             pathRewrite: {
@@ -76,7 +100,12 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
             headers: {
                 Host: 'sidebar.cyscrm.com'
             },
-            target: defaultSettings.api_host, // 骋昊
+            // target: 'http://47.111.161.128:9000/',
+            // target: "http://10.10.10.198", //陈浩
+            // target: "http://sidebar.cyscrm.com:9000"//线上
+            target: "http://10.10.10.41", //杜亮
+            // target: 'http://10.10.10.4:9000', //光
+            // target: "http://47.111.161.128:80",
             secure: false,
             // ws: true,
             pathRewrite: {
@@ -96,6 +125,9 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
         //     ws: true,
         // }
     }
+
+
+
 }
 
 

@@ -96,6 +96,7 @@
           </div>
         </div>
         <div v-else class="text-align-center" style="line-height:30px;">
+            
           <span class="font-exs color-info">未设置</span>
         </div>
       </div>
@@ -172,11 +173,9 @@ export default {
       this.$emit('handleDelete', val)
     },
     handleChangeCheck(val) {
-      console.log(val)
       this.$emit('change', val)
     },
     handleViewVideo(val) {
-      console.log(val)
 
       this.videoUrl = val
       this.view = 'video'
@@ -218,7 +217,6 @@ export default {
       this.imageUrl = val
       this.view = 'image'
       //   this.width = await this.imageWidth
-      console.log(this.imageWidth)
       this.dialogVisible = true
     },
     handleCheckAll() {

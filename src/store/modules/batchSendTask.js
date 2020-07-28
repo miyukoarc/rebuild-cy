@@ -2,7 +2,8 @@ import {
     getBatchSendTaskListAll,
     getBatchSendTaskDetail,
     getListBatchSendTaskResult,
-    getListMy
+    getListMy,
+    addBatchSendTask
 } from '@/api/batchSendTask'
 
 const state = {
@@ -192,6 +193,22 @@ const actions = {
             getListMy(payload).then(res => {
                 commit('SAVE_LISTMY', res.items)
                 commit('SET_LISTMYPAGE', res)
+                commit('TOGGLE_LOADING', false)
+                resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+                reject()
+            })
+        })
+    },
+    /**
+     * 新建群发任务
+     * @param {*} payload 
+     */
+    addBatchSendTask({ commit }, payload) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            addBatchSendTask(payload).then(res => {
                 commit('TOGGLE_LOADING', false)
                 resolve()
             }).catch(err => {

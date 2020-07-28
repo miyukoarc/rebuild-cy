@@ -224,6 +224,7 @@ export default {
       //   ? contractWayId
       //   : this.query.contractWayId;
       console.log(val, "handleSearch", this.query);
+
       this.initDataList(this.query);
     },
     handleRefresh() {

@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px" class="run-way-list-all-header">
     <el-form-item label="客户名称：">
-      <el-input v-model.trim="query.name" clearable @clear="handleClearable"></el-input>
+      <el-input v-model.trim="query.name" clearable></el-input>
     </el-form-item>
 
     <!-- <el-form-item label="添加渠道：">
@@ -53,7 +53,7 @@
     <!-- <div class="tag-warp"> -->
     <el-form-item label="客户标签：">
       <div class="tag-border">
-        <el-select v-model="query.tagIds" @change="handleSelectedThrottle" size="mini" multiple>
+        <el-select v-model="query.tagIds" @change="handleChangeSecond" size="mini" multiple>
           <el-option-group v-for="item in tagListAll" :key="item.groupId" :label="item.groupName">
             <el-option
               v-for="child in item.tagList"
@@ -136,7 +136,7 @@ export default {
     ...mapState({
       tagListAll: state => state.tag.tagListSelect,
       userListAll: state => state.user.listSelect
-      //   departments: state => state.department.departments
+      // departments: state => state.department.departments
     })
   },
   methods: {
@@ -146,7 +146,7 @@ export default {
       this.query.endTime = this.value[1];
       this.$emit("handleSearch", this.query);
     },
-    handleSelectedThrottle(val) {
+    handleChangeSecond(val) {
       if (this.timer) {
         clearTimeout(this.timer);
       }
@@ -165,9 +165,6 @@ export default {
       this.$emit("handleRefresh");
       this.value = this.$options.data().value;
       this.query = this.$options.data().query;
-    },
-    handleClearable() {
-      this.$emit("handleSearch", this.query);
     }
   }
 };

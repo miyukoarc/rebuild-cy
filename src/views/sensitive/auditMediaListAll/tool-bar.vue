@@ -1,19 +1,10 @@
-<!--
- * @Author: your name
- * @Date: 2020-07-09 18:50:40
- * @LastEditTime: 2020-07-17 16:25:41
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \rebuild-cy\src\views\batchSendTask\listAll\tool-bar.vue
---> 
 <template>
   <div>
     <div class="tool-bar-container">
       <div class="left">
         <el-button type="primary" @click="actionExport" v-if="hasExport">导出Excel</el-button>
         <el-button type="primary" @click="actionImport" v-if="hasImport">导入Excel</el-button>
-       
-        <!-- <span class="font-s color-info">{{msg}}</span> -->
+        <span class="font-s color-info">{{msg}}</span>
       </div>
 
       <div class="right">
@@ -24,7 +15,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   props: {
     msg: {
@@ -39,20 +29,15 @@ export default {
       default: false
     }
   },
-  computed: {
-    ...mapState({
-      permissionMap: state => state.permission.permissionMap
-    })
-  },
   methods: {
     actionExport() {
-      this.$emit("handleExport", "导出");
+      this.$emit('handleExport', '导出')
     },
     actionImport() {
-      this.$emit("handleImport", "导入");
-    },
+      this.$emit('handleImport', '导入')
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

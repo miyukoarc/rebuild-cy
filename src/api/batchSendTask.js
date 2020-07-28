@@ -33,7 +33,7 @@ export const add = (payload) => {
 export const addBatchSendTask = (payload) => {
     return request({
         url: '/batchSendTask/addBatchSendTask',
-        method: 'get',
+        method: 'post',
         data: payload
     })
 

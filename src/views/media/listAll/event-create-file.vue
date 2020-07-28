@@ -6,7 +6,7 @@
         <el-upload
           ref="upload"
           multiple
-          action="/media/addMediaIsAudit"
+          action="/api/media/addMediaIsAudit"
           :show-file-list="true"
           :file-list="fileList"
           :before-upload="beforeVideoUpload"
@@ -23,27 +23,10 @@
             :popAuth="true"
             :auth="permissionMap['media']['media_add']"
           >选取文件</el-t-button>
-          <!-- <div slot="tip" class="el-upload__tip">视频支持，大小不超过10M。</div> -->
         </el-upload>
-        <!-- <div class="input-item">
-          <el-input
-            style="flex:1;"
-            v-model.trim="content[index]"
-            maxlength="4000"
-            type="textarea"
-            show-word-limit
-          ></el-input>
-          <el-t-button v-if="index!==0" class="close-btn" type="text" @click="handleDelete(index)">
-            <i class="el-icon-close"></i>
-          </el-t-button>
-        </div>-->
+
       </el-form-item>
-      <!-- <el-form-item label>
-        <el-t-button size="mini" @click="handleAddContent">
-          <i class="el-icon-plus"></i>
-          添加内容
-        </el-t-button>
-      </el-form-item>-->
+
 
       <el-divider></el-divider>
       <h3>素材配置</h3>
@@ -51,7 +34,7 @@
       <el-form-item label="符合标签">
         <div>
           <el-radio v-model="data.matchFormat" label="CONTAINS_ANY">包含其一</el-radio>
-          <el-radio v-model="data.matchFormat" label="PERFECT_MATCH ">完全匹配</el-radio>
+          <el-radio v-model="data.matchFormat" label="PERFECT_MATCH">完全匹配</el-radio>
         </div>
       </el-form-item>
       <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>
@@ -98,7 +81,6 @@ export default {
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        //   console.log()
         const { uuid } = newVal
         this.data.groupUuid = uuid
       },
@@ -108,7 +90,8 @@ export default {
   computed: {
     ...mapState({
       tagListSelect: state => state.tag.tagListSelect,
-      permissionMap: state => state.permission.permissionMap
+      permissionMap: state => state.permission.permissionMap,
+      auditSetting: state => state.sensitive.auditSetting
     })
   },
   created() {
@@ -160,7 +143,6 @@ export default {
       this.$store
         .dispatch('media/getMediaGroupListAll')
         .then(() => {
-          //   this.reload();
         })
         .catch(err => {
           this.$message({
@@ -171,13 +153,15 @@ export default {
     },
     onSuccess(res, file, list) {
       this.uploadFilesLength++
-      this.$message({
-        type: 'warning',
-        message: '操作完成'
-      })
+                const message = this.auditSetting['media']
+            ? '已提交审核'
+            : '已完成'
+            this.$message({
+            type: 'success',
+            message: message
+            })
       if (this.uploadFilesLength === list.length) {
         this.$bus.$emit('handleRefresh')
-        //   Object.assign(this.$data, this.$options.data())
         this.$parent.$parent.dialogVisible = false
       }
     },

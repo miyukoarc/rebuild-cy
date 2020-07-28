@@ -4,7 +4,7 @@
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" @actionDepartment="actionDepartment">
+      <tool-bar @handleExport="doExport">
         <div slot="right">
           <el-t-button
             type="primary"
@@ -112,7 +112,7 @@ export default {
   },
   created() {
     this.initDataList(this.query);
-    this.initFilter()
+    this.initFilter();
   },
   methods: {
     doExport(val) {
@@ -181,8 +181,11 @@ export default {
       this.initDataList(this.query);
     },
 
-    actionDepartment(a) {
-      console.log(a);
+    actionDepartment() {
+      this.$refs.formDialog.dialogVisible = true;
+      this.$refs.formDialog.event = "addBatchSendTaskTemplate";
+      this.$refs.formDialog.eventType = "addBatchSendTask";
+      this.$refs.formDialog.dialogWidth = "70%";
     }
   }
 };

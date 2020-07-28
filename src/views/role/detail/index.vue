@@ -9,7 +9,7 @@
               :auth="permissionMap['role']['role_update']"
               :popAuth="true"
               @click.stop="handleConfirm"
-            >{{permissionMap['role']['role_update'].needAudit?'提交审核':'完成'}}</el-t-button>
+            >{{auditSetting['permission']?'提交审核':'完成'}}</el-t-button>
           </div>
         </tool-bar>
       </el-card>
@@ -65,6 +65,7 @@ export default {
     ...mapState({
       permissionRenderMap: state => state.permission.permissionRenderMap,
       permissionMap: state => state.permission.permissionMap,
+      auditSetting: state => state.sensitive.auditSetting,
 
       roleDetail: state => state.enum.roleDetail
     })
@@ -76,8 +77,7 @@ export default {
       this.initDetail({ roleCode })
     })
   },
-  mounted(){
-  },
+  mounted() {},
   methods: {
     initDetail(payload) {
       this.$store
@@ -156,24 +156,27 @@ export default {
 
       this.form.permissionUuids = permissionUuids
 
-    //   const payload = await this.form
+      //   const payload = await this.form
 
-      this.$store.dispatch('permission/roleLinkPermissionIsAudit',this.form).then((res)=>{
+      this.$store
+        .dispatch('permission/roleLinkPermissionIsAudit', this.form)
+        .then(res => {
+          const message = this.auditSetting['permission']
+            ? '已提交审核'
+            : '已完成'
           this.$message({
-              type:'success',
-              message: '操作成功'
+            type: 'success',
+            message: message
           })
           const roleCode = this.$route.query.code
-          this.initDetail({roleCode})
-      }).catch(err=>{
+          this.initDetail({ roleCode })
+        })
+        .catch(err => {
           this.$message({
-              type: 'error',
-              message: err||'操作失败'
+            type: 'error',
+            message: err || '操作失败'
           })
-      })
-      
-
-
+        })
     }
   }
 }

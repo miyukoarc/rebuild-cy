@@ -1,12 +1,11 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="敏感词">
-      <el-input v-model.trim="query.word"></el-input>
+      <el-input v-model.trim="query.word" @change="handleChangeSecond"></el-input>
     </el-form-item>
 
     <el-form-item label="触发员工">
-      <!-- <el-input v-model.trim="query.userUuid"></el-input> -->
-      <el-select v-model="query.userUuid" @change="handleChangeThird">
+      <el-select v-model="query.userUuid" @change="handleChangeSecond">
         <el-option
           v-for="item in userListAll"
           :key="item.uuid"

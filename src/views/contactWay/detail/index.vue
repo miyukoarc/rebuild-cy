@@ -166,7 +166,11 @@
                         slot="prefix"
                         v-if="ruleForm.link"
                       >
-                        <img style="width:20px;height:20px" :src="welcomecontentT.imgUrl" alt />
+                        <img
+                          style="width:20px;height:20px"
+                          :src="'/api/public/file/'+welcomecontentT.imgId"
+                          alt
+                        />
                         <div class="input-title">
                           <span>{{welcomecontentT.title}}</span>
                           <div class="input-content text-over">{{welcomecontentT.description}}</div>
@@ -180,7 +184,7 @@
                       >
                         <div class="option-warp flex-between-alinecenter">
                           <div class="link-img">
-                            <img class="option-img" :src="item.imgUrl" />
+                            <img class="option-img" :src="'/api/public/file/'+item.imgId" />
                           </div>
                           <div class="option-content flex-1">
                             <p>{{ item.title }}</p>

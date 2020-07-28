@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body width="600px" center :close-on-click-modal="false">
+        <el-dialog :title="genTitle()" destroy-on-close :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body width="600px" center :close-on-click-modal="false">
             <div>
                 <component :is="event" :transfer="transfer"/>
             </div>
@@ -10,7 +10,7 @@
 
 <script>
 
-import AuditTemplate from './event-audit.vue'
+import AuditTemplate from './event-audit'
 import {mapState} from 'vuex'
 export default {
 components:{
@@ -50,16 +50,9 @@ components:{
   methods: {
 
       genTitle(){
-        //   if(this.eventType==='create'){
-        //       return '创建模板'
-        //   }
 
-        //   if(this.eventType==='edit'){
-        //       return '编辑模板'
-        //   }
-
-          if(this.eventType==='distribute'){
-              return '分配部门'
+          if(this.eventType==='audit'){
+              return '审核详情'
           }
           
           

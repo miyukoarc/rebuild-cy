@@ -1,10 +1,18 @@
 <template>
   <div class="login-container">
-    <!-- <div class="iframe-container">
-      <iframe id="qrcode-container" :srcdoc="wxQrCode" style="width:400px;height:600px"></iframe>
-    </div>-->
+    <transition name="fade">
+      <div v-if="!tipsFlag" class="qrcode-container">
+        <div v-if="loading" class="loading">
+          <i class="el-icon-loading color-info"></i>
+        </div>
+        <div id="browser"></div>
+        <webview ref="webview" id="webview"></webview>
+      </div>
+    </transition>
+    <div v-if="tipsFlag" class="text-align-center">
+      <h3 class="tips">选择单位获取登录二维码</h3>
+    </div>
     <div class="container">
-      <!-- <el-radio-group v-model="tenantId" size="small" @change="changeCorp"> -->
       <div class="choice" v-for="item in loginList" :key="item.tenantId">
         <el-radio
           v-model="tenantId"
@@ -15,14 +23,14 @@
       </div>
       <!-- </el-radio-group> -->
       <div class="text-align-center">
-        <el-button type="primary" size="small" @click="handleLogin">进入</el-button>
+        <el-button type="primary" size="small" @click="handleLogin">确定</el-button>
+        <el-button type="primary" size="small" @click="$router.push({path: '/welcome'})"></el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { wxLogin } from '@/api/user'
 import { mapState } from 'vuex'
 export default {
   name: 'Login',
@@ -31,61 +39,71 @@ export default {
       redirect: undefined,
       otherQuery: {},
       wxQrCode: null,
-      tenantId: ''
+      tenantId: '',
+      tipsFlag: true,
+      loading: false,
     }
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         const query = route.query
         if (query) {
           this.redirect = query.redirect
           this.otherQuery = this.getOtherQuery(query)
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      loginList: state => state.auth.loginList
-    })
+      loginList: (state) => state.auth.loginList,
+    }),
   },
   created() {
-    console.log()
-    const localStorage = JSON.parse(window.localStorage.getItem('corp'))
-    if (localStorage?.name) {
-      const tenantId = localStorage.tenantId + ''
-      this.getWxlogin(tenantId)
-    } else {
-      this.initDataList()
-    }
+    this.initDataList()
+    // this.electronTragger()
   },
   mounted() {
-    // this.getWxlogin(this.$route.query.tenantId);
   },
   methods: {
-    getWxlogin(payload) {
-      this.$nextTick(async () => {
-        const res = await wxLogin(payload)
-        if (res) {
-          this.wxQrCode = res
-          const style =
-            '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
+    electronTragger() {
+      if (this.$isElectron()) {
+        const ipcRenderer = window.electron.ipcRenderer
 
-          //   console.log(document.querySelector('#qrcode-container'))
-          //   console.log(res)
-          // document.querySelector('#qrcode-container').innerHTML = res
-
-          //   document.querySelector('#qrcode-container').innerHTML = this.addStr(
-          //     this.wxQrCode,
-          //     style
-          //   )
-        //   document.body.innerHTML = this.addStr(this.wxQrCode, style)
-          document.write(this.addStr(this.wxQrCode, style))
-        }
+        ipcRenderer.on('login-navigate', (event, payload) => {
+          console.log(payload)
+        })
+        ipcRenderer.on('login-redirect', (event, payload) => {
+          console.log(payload)
+        })
+        console.log('ipcRenderer loaded')
+      }
+    },
+    getQrCode(id, target) {
+      this.$nextTick(() => {
+        return new WwLogin({
+          id: target,
+          appid: 'wwa266cd2b968ae008',
+          agentid: '1000019',
+          redirect_uri: `http://sidebar.cyscrm.com/api/wxlogin/${id}`,
+          state: '123456',
+          href: '',
+        })
       })
     },
+    // getWxlogin(payload) {
+    //   this.$nextTick(async () => {
+    //     const res = await wxLogin(payload)
+    //     if (res) {
+    //       this.wxQrCode = res
+    //       const style =
+    //         '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
+    //       document.write(this.addStr(this.wxQrCode, style))
+    //     }
+    //   })
+    // },
     addStr(str, style) {
       const arr = str.split('</head>')
       return `${arr[0]}${style}</head>${arr[1]}`
@@ -107,22 +125,36 @@ export default {
       this.$store
         .dispatch('auth/getLoginList')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化错误'
+            message: err || '初始化错误',
           })
         })
     },
     handleLogin() {
+      this.tipsFlag = false
       const tenantId = this.tenantId + ''
-      //   this.$router.push({
-      //     path: '/login',
-      //     query: { tenantId }
-      //   })
-      this.getWxlogin(tenantId)
-    }
-  }
+
+      this.loading = true
+      //   this.getWxlogin(tenantId)
+      // this.$isElectron()
+      //   ? this.getQrCode(tenantId, 'webview')
+      //   : this.getQrCode(tenantId, 'browser')
+
+      if (this.$isElectron()) {
+        console.log('!')
+
+        const ipcRenderer = window.electron.ipcRenderer
+        ipcRenderer.send('qrcode-window', this.tenantId)
+        console.log('!')
+        this.loading = false
+      } else {
+        this.getQrCode(tenantId, 'browser')
+        this.loading = false
+      }
+    },
+  },
 }
 </script>
 
@@ -149,19 +181,19 @@ $cursor: #fff;
   }
 }
 
-
 /* reset element-ui css */
 .login-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   -webkit-app-region: drag;
-  .container {
+
+  #webview {
     -webkit-app-region: no-drag;
   }
-  .qrcode-container {
-    width: 500px;
-    height: 500px;
+  .container {
+    -webkit-app-region: no-drag;
   }
   .el-input {
     display: inline-block;
@@ -274,5 +306,19 @@ $light_gray: #eee;
 .iframe-container {
   width: 300px;
   height: 500px;
+}
+.text-align-center {
+  .tips {
+    margin-bottom: 40px;
+    margin-top: 40px;
+  }
+}
+
+.loading {
+  width: 335.6px;
+  height: 300px;
+  text-align: center;
+  line-height: 330px;
+  font-size: 50px;
 }
 </style>
