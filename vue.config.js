@@ -145,7 +145,7 @@ module.exports = {
     assetsDir: 'static',
     lintOnSave: false,
     //   process.env.NODE_ENV === 'development'
-    productionSourceMap: false,
+    productionSourceMap: true,
     devServer: customizeDevServer,
     configureWebpack: {
         // provide the app's title in webpack's name field, so that

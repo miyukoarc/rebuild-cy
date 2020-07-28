@@ -60,7 +60,6 @@ export default {
       });
     },
     handleInput() {
-      console.log(this.$el, "el");
       this.$emit("input", this.$el.innerHTML);
     },
     // 清空编辑器
