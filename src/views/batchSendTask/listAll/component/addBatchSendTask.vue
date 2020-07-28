@@ -69,6 +69,8 @@
                   </span>
                 </div>
               </el-form-item>
+
+              <el-form-item label=" ">将发送给{{form.batchTaskNumber}}位客户</el-form-item>
             </div>
 
             <h5>编辑群发消息</h5>
@@ -168,11 +170,6 @@
                           :on-remove="removeFile"
                         >
                           <el-button size="small" type="primary" v-show="!messageFile">点击上传</el-button>
-                          <!-- <i
-                            class="el-icon-circle-close close"
-                            v-if="messageFile"
-                            @click.stop="handleDelMessageFile"
-                          ></i>-->
                         </el-upload>
                       </div>
                     </section>
@@ -260,14 +257,14 @@ export default {
       isSendImmediately: true,
       rules: {
         userUuid: [
-          { required: true, message: "请选择群发账号", trigger: "change" }
-        ]
+          { required: true, message: "请选择群发账号", trigger: "change" },
+        ],
       },
       query: {
         flag: true,
         tagIds: [],
         size: 500,
-        userId: ""
+        userId: "",
       },
       form: {
         batchTaskNumber: 0,
@@ -280,8 +277,9 @@ export default {
         tempMediaType: "IMAGE",
         text: "",
         userUuid: "",
+        matchFormat: "CONTAINS_ANY",
 
-        sendTime: ""
+        sendTime: "",
       },
 
       insertName: true,
@@ -291,37 +289,37 @@ export default {
 
       mediaId: "",
       welcomecontentT: {},
-      memberNick: "客户昵称"
+      memberNick: "客户昵称",
     };
   },
   created() {
     this.$store
       .dispatch("media/getArticleListSelect")
       .then(() => {})
-      .catch(err => {
+      .catch((err) => {
         this.$message({
           type: "error",
-          message: "初始化失败"
+          message: "初始化失败",
         });
       });
 
     this.$store
       .dispatch("tag/getListSelect")
       .then(() => {})
-      .catch(err => {
+      .catch((err) => {
         this.$message({
           type: "error",
-          message: err
+          message: err,
         });
       });
 
     this.$store
       .dispatch("user/getUserListSelect")
       .then(() => {})
-      .catch(err => {
+      .catch((err) => {
         this.$message({
           type: "error",
-          message: err
+          message: err,
         });
       });
 
@@ -344,15 +342,27 @@ export default {
           this.insertName = true;
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
+    "query.tagIds": {
+      handler(newVal, oldVal) {
+        this.form.tagUuids = newVal;
+      },
+      immediate: true,
+    },
+    "query.flag": {
+      handler(newVal, oldVal) {
+        this.form.matchFormat = newVal ? "CONTAINS_ANY" : "PERFECT_MATCH";
+      },
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      tagListSelect: state => state.tag.tagListSelect,
-      userListAll: state => state.user.listSelect,
-      articleListSelect: state => state.media.articleListSelect
-    })
+      tagListSelect: (state) => state.tag.tagListSelect,
+      userListAll: (state) => state.user.listSelect,
+      articleListSelect: (state) => state.media.articleListSelect,
+    }),
   },
   methods: {
     changeUser(userUuid) {
@@ -367,14 +377,14 @@ export default {
     initDataList() {
       let query = {
         ...this.query,
-        tagIds: this.query.tagIds.toString()
+        tagIds: this.query.tagIds.toString(),
       };
       this.form.batchTaskNumber = 0;
       this.form.externalUserUuids = [];
 
-      getExternalUserListAll(query).then(res => {
+      getExternalUserListAll(query).then((res) => {
         this.form.batchTaskNumber = res.total;
-        res.items.map(obj => {
+        res.items.map((obj) => {
           this.form.externalUserUuids.push(obj.externalUuid);
         });
       });
@@ -388,36 +398,36 @@ export default {
         .then(() => {
           this.reload();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
     },
     submit() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           this.$store
             .dispatch("batchSendTask/addBatchSendTask", this.form)
-            .then(res => {
+            .then((res) => {
               this.$message({
                 type: "success",
-                message: "操作成功"
+                message: "操作成功",
               });
               this.handleCancel();
               this.refresh();
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: "error",
-                message: "操作失败"
+                message: "操作失败",
               });
             });
         } else {
           this.$message({
             type: "error",
-            message: "请检查输入"
+            message: "请检查输入",
           });
         }
       });
@@ -486,7 +496,7 @@ export default {
       this.form.tempMediaKey = null;
     },
     handleChoseLink(val) {
-      this.welcomecontentT = this.articleListSelect.find(item => {
+      this.welcomecontentT = this.articleListSelect.find((item) => {
         return item.uuid === val;
       });
       if (this.welcomecontentT && this.welcomecontentT.uuid) {
@@ -501,8 +511,8 @@ export default {
       this.insertName = false;
       this.form.text =
         this.form.text + `<span class="nickName">${memberNick}</span>&#8203;`;
-    }
-  }
+    },
+  },
 };
 </script>
 
