@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-27 15:26:03
- * @LastEditTime: 2020-07-28 16:35:35
+ * @LastEditTime: 2020-07-28 19:02:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\locationComponent.vue
@@ -16,7 +16,7 @@
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div id="mapa" class="map-container">
             <!-- <div id="container-left"></div> -->
-            <el-amap class="amap-box" ref="amap" :zoom="zoom" :center="center" :events="events">
+            <el-amap class="amap-box" ref="amap" :zoom="zoom" :center="center" >
               <el-amap-marker
                 v-for="marker in markers"
                 :position="marker.position"
@@ -40,7 +40,8 @@
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div id="mapa" class="map-container">
             <!-- <div id="container-right"></div> -->
-            <el-amap class="amap-box" ref="amap" :zoom="zoom" :center="center" :events="events">
+            <!-- <el-amap class="amap-box" ref="amap" :zoom="zoom" :center="center" :events="events"> -->
+              <el-amap class="amap-box" ref="amap" :zoom="zoom" :center="center">
               <el-amap-marker
                 v-for="marker in markers"
                 :position="marker.position"
@@ -78,18 +79,18 @@ export default {
       zoom: 16, //初始化地图显示层级
       events: {
         init(o) {
-          console.log(o, "00000");
+          // console.log(o, "00000");
         },
         zoomchange: (e) => {
-          console.log(e);
+          // console.log(e);
         },
         zoomend: (e) => {
           //获取当前缩放zoom值
-          console.log(this.$refs.amap.$$getInstance().getZoom());
-          console.log(e);
+          // console.log(this.$refs.amap.$$getInstance().getZoom());
+          // console.log(e);
         },
         click: (e) => {
-          alert("map clicked");
+          // alert("map clicked");
         },
       },
       markers: [
@@ -99,24 +100,24 @@ export default {
           visible: true,
         },
       ],
-      plugin: [
-        {
-          pName: "Scale",
-          events: {
-            init(instance) {
-              console.log(instance);
-            },
-          },
-        },
-        {
-          pName: "ToolBar",
-          events: {
-            init(instance) {
-              console.log(instance);
-            },
-          },
-        },
-      ],
+      // plugin: [
+      //   {
+      //     pName: "Scale",
+      //     events: {
+      //       init(instance) {
+      //         console.log(instance);
+      //       },
+      //     },
+      //   },
+      //   {
+      //     pName: "ToolBar",
+      //     events: {
+      //       init(instance) {
+      //         console.log(instance);
+      //       },
+      //     },
+      //   },
+      // ],
     };
   },
 
