@@ -24,7 +24,7 @@
       <!-- </el-radio-group> -->
       <div class="text-align-center">
         <el-button type="primary" size="small" @click="handleLogin">确定</el-button>
-        <el-button type="primary" size="small" @click="$router.push({path: '/welcome'})"></el-button>
+        <!-- <el-button type="primary" size="small" @click="$router.push({path: '/welcome'})"></el-button> -->
       </div>
     </div>
   </div>
@@ -133,26 +133,35 @@ export default {
         })
     },
     handleLogin() {
-      this.tipsFlag = false
-      const tenantId = this.tenantId + ''
 
-      this.loading = true
-      //   this.getWxlogin(tenantId)
-      // this.$isElectron()
-      //   ? this.getQrCode(tenantId, 'webview')
-      //   : this.getQrCode(tenantId, 'browser')
+        if(this.tenantId){
+            this.tipsFlag = false
+            const tenantId = this.tenantId + ''
+      
+            this.loading = true
+            //   this.getWxlogin(tenantId)
+            // this.$isElectron()
+            //   ? this.getQrCode(tenantId, 'webview')
+            //   : this.getQrCode(tenantId, 'browser')
+      
+            if (this.$isElectron()) {
+              console.log('!')
+      
+              const ipcRenderer = window.electron.ipcRenderer
+              ipcRenderer.send('qrcode-window', this.tenantId)
+              console.log('!')
+              this.loading = false
+            } else {
+              this.getQrCode(tenantId, 'browser')
+              this.loading = false
+            }
 
-      if (this.$isElectron()) {
-        console.log('!')
-
-        const ipcRenderer = window.electron.ipcRenderer
-        ipcRenderer.send('qrcode-window', this.tenantId)
-        console.log('!')
-        this.loading = false
-      } else {
-        this.getQrCode(tenantId, 'browser')
-        this.loading = false
-      }
+        }else{
+            this.$message({
+                type: 'warning',
+                message: '请选择组织！'
+            })
+        }
     },
   },
 }

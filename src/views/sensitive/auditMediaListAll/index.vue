@@ -281,13 +281,6 @@ export default {
           })
         })
     },
-    handleDetail(val) {
-      const payload = this.userList[val].uuid
-      this.$router.push({
-        path: '/user/detail',
-        query: { uuid: payload }
-      })
-    },
     handleSearch(val) {
       const { auditConfirmation, handlerId, submitterId } = val
       this.query.auditConfirmation = auditConfirmation

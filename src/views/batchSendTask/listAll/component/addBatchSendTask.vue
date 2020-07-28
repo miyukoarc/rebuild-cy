@@ -27,7 +27,7 @@
               <span>同一个企业每个自然月内仅可针对一个客户/客户群发4条消息，超过限制的用户将会被忽略。</span>
             </el-form-item>
             <el-form-item label="选择群发账号：" prop="userUuid">
-              <el-select v-model="form.userUuid" placeholder="请选择" @change="changeUser">
+              <el-select v-model="form.userUuid" placeholder="请选择" filterable @change="changeUser">
                 <el-option
                   v-for="item in userListAll"
                   :key="item.uuid"
@@ -40,6 +40,8 @@
             <div class="run-way-list-all-header">
               <el-form-item label="客户标签：">
                 <div class="tag-border">
+
+                    <!-- <tag-multi-select v-model="query.tagIds"></tag-multi-select> -->
                   <el-select v-model="query.tagIds" @change="initDataList" size="mini" multiple>
                     <el-option-group
                       v-for="item in tagListSelect"
@@ -251,10 +253,11 @@
 <script>
 import { mapState } from "vuex";
 import inputEdit from "@/components/inputEdit";
+import TagMultiSelect from '@/components/TagMultiSelect'
 import { getExternalUserListAll } from "@/api/externalUser";
 export default {
   inject: ["reload"],
-  components: { inputEdit },
+  components: { inputEdit,TagMultiSelect },
   data() {
     return {
       isSendImmediately: true,

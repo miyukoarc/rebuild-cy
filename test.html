@@ -82,7 +82,14 @@
             }
         }
 
-        console.log(group(list))
+        // console.log(group(list))
+
+        function regFilter(str) {
+            const reg = new RegExp("<\s*div[^>]*>(.*?)<\s*/\s*div>", "g")
+            return str.split(reg).find(item=>{return !item.includes('span')&&item!==''})
+        }
+        const str = '<span>哈罗</span><div>你好呀</div>'
+        console.log(regFilter(str))
     </script>
 </body>
 
