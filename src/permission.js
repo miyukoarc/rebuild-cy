@@ -20,7 +20,7 @@ NProgress.configure({
   showSpinner: false
 }) // NProgress Configuration
 
-const whiteList = ['/login', '/miniLogin', '/board'] // no redirect whitelist
+const whiteList = ['/login', '/qrcode', '/board'] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
   // start progress bar
@@ -60,34 +60,35 @@ router.beforeEach(async (to, from, next) => {
         try {
 
           let accessed
-          await store.dispatch('user/getMyInfo').then((res) => {
-            //   console.log(res)
-            // console.log(store.state.user.name)
 
-            const name = res.name
+          await store.dispatch('user/getMyInfo').then(async(res) => {
 
-            window.watermark = new Watermark(name)
-            window.watermark.create()
-
-          }).catch(err => {
-            Message({
-              type: 'error',
-              message: err || err.message
+              const name = res.name
+              
+              window.watermark = new Watermark(name)
+              window.watermark.create()
+              
+            }).catch(err => {
+                Message({
+                    type: 'error',
+                    message: err || err.message
+                })
             })
-          })
-          
-          await store.dispatch('menu/getMyMenuList')
-          accessed = await store.dispatch('permission/getPermissionListMy')
+            await store.dispatch('menu/getMyMenuList')
+            accessed = await store.dispatch('permission/getPermissionListMy')
 
-          await store.dispatch('websocket/createWebsocket')
+            await store.dispatch('sensitive/auditPropertylistAll')
+
+            await store.dispatch('websocket/createWebsocket')
+
 
           router.addRoutes(
             [...accessed,
-            {
-              path: '*',
-              redirect: '/404',
-              hidden: true
-            }
+              {
+                path: '*',
+                redirect: '/404',
+                hidden: true
+              }
             ]
           )
 
@@ -104,6 +105,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
   } else {
+      console.log(whiteList.indexOf(to.path))
     if (whiteList.indexOf(to.path) !== -1) {
       //   console.log(router, '1')
       next()

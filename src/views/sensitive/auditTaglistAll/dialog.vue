@@ -2,7 +2,7 @@
     <div>
         <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body width="600px" center :close-on-click-modal="false">
             <div>
-                <component :is="event" />
+                <component :is="event" :transfer="transfer"/>
             </div>
         </el-dialog>
     </div>
@@ -10,21 +10,18 @@
 
 <script>
 
-import CreateTemplate from './event-create.vue'
-import EditTemplate from './event-edit.vue'
-import DistributeTemplate from './event-distribute'
+import AuditTemplate from './event-audit.vue'
 import {mapState} from 'vuex'
 export default {
 components:{
-    CreateTemplate,
-    EditTemplate,
-    DistributeTemplate
+    AuditTemplate
 },
   data() {
     return {
       dialogVisible: false,
-      event: 'DistributeTemplate',
-      eventType: ''
+      event: '',
+      eventType: '',
+      transfer: {}
     };
   },
   watch:{

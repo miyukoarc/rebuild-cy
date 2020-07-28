@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 18:01:25
- * @LastEditTime: 2020-07-17 14:23:22
+ * @LastEditTime: 2020-07-24 20:20:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\videoComponent.vue
@@ -11,7 +11,7 @@
     <div v-if="item.toUser == toUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
-        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <el-avatar :src="item.fromAvatar" />
         <div>
           <div class="img-warp revoke-warp mb-5 ml-20" v-if="item.messageMedias">
             <el-popover placement="right" title trigger="hover">
@@ -45,7 +45,7 @@
             />
           </el-popover>
         </div>
-        <el-avatar icon="el-icon-user-solid" />
+        <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
   </section>
@@ -64,11 +64,23 @@ export default {
 
 <style lang="scss" scoped>
 .emotion-component {
-  p {
-    text-align: center;
+  margin: 0 10px 20px 10px;
+  .left-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: left;
+    }
   }
-  .img-warp {
-    margin-top: 5px;
+  .right-warp {
+    > p {
+      font-size: 13px;
+      line-height: 18px;
+      text-align: right;
+    }
   }
+}
+.img-warp {
+  margin-top: 5px;
 }
 </style>

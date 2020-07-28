@@ -14,15 +14,6 @@
       </tool-bar>
     </el-card>
     <el-card class="content-spacing">
-      <!-- <div class="switch-container" v-for="item in listAll" :key="item.uuid">
-        <span class="color-info font-es">{{item.moduleName}}</span>
-        <el-switch
-          @change="handleChange(item)"
-          v-model="form[item.moduleName]"
-          active-text="开"
-          inactive-text="关"
-        ></el-switch>
-      </div>-->
       <el-table
         v-loading="loading"
         :data="listAll"
@@ -39,6 +30,8 @@
           <template v-slot="{row}">
             <div>
               <span v-if="row.auditUsers.length===0">--</span>
+              <auditor-drawer v-else :levels="row.auditUsers"></auditor-drawer>
+              <!-- <async-user-drawer v-else :hasPop="true" :users="row.auditUsers[0].userList"></async-user-drawer> -->
             </div>
           </template>
         </el-table-column>
@@ -58,6 +51,7 @@
               size="mini"
               :popAuth="true"
               :auth="permissionMap['role']['role_update']"
+              @click="handleDetail(row)"
             >详情</el-t-button>
             <el-divider direction="vertical"></el-divider>
 
@@ -92,6 +86,8 @@
 <script>
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
+import AuditUser from './components/audit-user'
+import AuditorDrawer from './components/auditor-drawer'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import TagsDrawer from '@/components/TagsDrawer'
@@ -105,8 +101,10 @@ export default {
     ToolBar,
     AsyncUserTag,
     AsyncUserDrawer,
+    AuditorDrawer,
     RoleDrawer,
-    TagsDrawer
+    TagsDrawer,
+    AuditUser
     // mHeadedr
   },
   data() {
@@ -146,12 +144,12 @@ export default {
     this.initDataList(this.query)
   },
   mounted() {
-      this.$bus.$on('handleRefresh',()=>{
-          this.initDataList(this.query)
-      })
-      this.$once('hook:beforeDestroy',()=>{
-          this.$bus.$off('handleRefresh')
-      })
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
   },
   methods: {
     doExport() {},
@@ -210,16 +208,26 @@ export default {
             type: 'error',
             message: err
           })
-          //   console.log(this.form[moduleName], err, openState)
-          //   this.form[moduleName] = openState
         })
     },
     handleSetting(val) {
-        const uuid = val.uuid
+      const uuid = val.uuid
       this.$refs['formDialog'].event = 'SettingTemplate'
       this.$refs['formDialog'].eventType = 'setting'
       this.$refs['formDialog'].dialogVisible = true
-      this.$refs['formDialog'].transfer = {uuid}
+      this.$refs['formDialog'].transfer = { uuid }
+    },
+    handleDetail(val) {
+      const uuid = val.uuid
+      console.log(val)
+      this.$refs['formDialog'].event = 'DetailTemplate'
+      this.$refs['formDialog'].eventType = 'detail'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = { uuid }
+    },
+    //parseJSON
+    parse(str) {
+      return JSON.parse(str)[0]?.userList || []
     }
   }
 }

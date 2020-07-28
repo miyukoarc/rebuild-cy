@@ -27,8 +27,8 @@
           ref="dragTable"
           lazy
           highlight-current-row
-           header-row-class-name="el-table-header"
-          :default-sort = "{prop: 'sort', order: 'descending'}"
+          header-row-class-name="el-table-header"
+          :default-sort="sortConfig"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="标签组名" align="left" prop="groupName" width="100"></el-table-column>
@@ -77,7 +77,6 @@
 
 <script>
 // import mHeadedr from "./header";
-import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
@@ -89,7 +88,6 @@ export default {
   inject: ['reload'],
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar
     // mHeadedr
@@ -97,6 +95,7 @@ export default {
   name: 'TagListAll',
   data() {
     return {
+      sortConfig: { prop: 'sort', order: 'ascending' },
       pageConfig: {
         total: 0,
         pageNumber: 0,
@@ -140,12 +139,11 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    // this.initFilter()
-    this.$bus.$on('handleRequest',()=>{
-        this.handleRequest()
+    this.$bus.$on('handleRequest', () => {
+      this.handleRequest()
     })
-    this.$once('hook:beforeDestory',()=>{
-        this.$bus.$off('handleRequest')
+    this.$once('hook:beforeDestory', () => {
+      this.$bus.$off('handleRequest')
     })
   },
   mounted() {
@@ -222,8 +220,8 @@ export default {
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },
-    handleRequest(){
-        this.initDataList(this.query)
+    handleRequest() {
+      this.initDataList(this.query)
     },
     handleEdit(index, row) {
       const payload = this.list[index]
@@ -248,7 +246,6 @@ export default {
       const el = this.$refs.dragTable.$el.querySelectorAll(
         '.el-table__body-wrapper > table > tbody'
       )[0]
-      console.log(el)
       this.sortable = Sortable.create(el, {
         ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
         // setData: function(dataTransfer) {
@@ -265,7 +262,7 @@ export default {
           let temp = this.list[0].sort
           this.list[0].sort = this.list[1].sort
           this.list[1].sort = temp
-        //   this.handleChangeSort()
+          this.handleChangeSort()
 
           const targetRow = this.list.splice(evt.oldIndex, 1)[0]
           this.$nextTick(() => {
@@ -281,7 +278,9 @@ export default {
     handleChangeSort() {
       this.$store
         .dispatch('tag/updateTagSort', this.form)
-        .then(() => {})
+        .then(() => {
+            this.initDataList()
+        })
         .catch(err => {
           this.$message({
             type: 'error',

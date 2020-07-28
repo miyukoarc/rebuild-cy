@@ -11,13 +11,13 @@
             type="primary"
             :popAuth="true"
             :auth="permissionMap['audit']['audit_batchAuditPermissionConfirmation']"
-            @click="handleBatchConfrim"
+            @click="handleBatch(action='accessed')"
           >批量通过</el-t-button>
           <el-t-button
             type="primary"
             :popAuth="true"
             :auth="permissionMap['audit']['audit_batchAuditPermissionConfirmation']"
-            @click="handleBatchReject"
+            @click="handleBatch(action='reject')"
           >批量拒绝</el-t-button>
         </div>
       </tool-bar>
@@ -33,49 +33,51 @@
           stripe
           lazy
           highlight-current-row
-          :default-sort="{order:'ascending',prop:'auditState'}"
+          :default-sort="sortConfig"
           @selection-change="handleSelectionChange"
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
-          <el-table-column type="selection"></el-table-column>
-          <el-table-column align="center" label="角色名称" prop="roleName"></el-table-column>
-          <el-table-column width="85" align="center" label="提交人">
+          <el-table-column type="selection" :selectable="selectable"></el-table-column>
+          <el-table-column align="left" label="角色名称" prop="roleName"></el-table-column>
+          <el-table-column align="left" label="提交人">
             <template v-slot="scoped">
               <div>{{scoped.row.submitOperator.name}}</div>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="提交时间" prop="createdAt"></el-table-column>
+          <el-table-column align="left" label="提交时间" prop="createdAt"></el-table-column>
 
-          <el-table-column align="center" label="获取权限类型与内容">
-            <template v-slot="scoped">
-              <div v-if="scoped.row.toPermissions">
-                <!-- {{scoped.row.toPermissions}} -->
-                <span
-                  v-for="item in scoped.row.toPermissions"
-                  :key="item.uuid"
-                >{{item.title}}&nbsp;&nbsp;</span>
+          <el-table-column align="left" label="获取权限类型与内容">
+            <template v-slot="{row}">
+              <div v-if="row.toPermissions.length">
+                <div
+                  class="font-no-wrap"
+                  v-for="item in grouping(row.toPermissions)"
+                  :key="item.module"
+                >
+                  <span class="font-es font-weight-700">{{permissionEnum[item.module]}}：</span>
+                  <span v-html="format(item.permissions)"></span>
+                </div>
               </div>
             </template>
           </el-table-column>
 
-          <!-- <el-table-column align="center" label="内容" prop="text"></el-table-column> -->
-          <!-- <el-table-column label="审核状态" align="center">
-            <template v-slot="scoped">
-              <div>{{auditStateEnum[`${scoped.row.auditState}`]}}</div>
-            </template>
-          </el-table-column> -->
-
-          <el-table-column label="操作" align="center" sortable :sort-method="sortBy">
-            <template v-slot="scoped">
+          <el-table-column align="left" label="状态" sortable
+            prop="auditState"
+            :sort-method="sortMethod"
+            :sort-orders="['ascending','descending',null]">
+            <template v-slot="{row}">
               <div>
-                <span
-                  v-if="scoped.row.auditState!=='TO_BE_REVIEWED'"
-                  :class="scoped.row.auditState==='APPROVED'?'color-success':'color-danger'"
-                >{{auditStateEnum[`${scoped.row.auditState}`]}}</span>
-                <div v-else>
-                  <el-t-button size="mini" type="primary" @click="handleAccess(scoped.row)">通过</el-t-button>
-                  <el-t-button size="mini" type="danger" @click="handleReject(scoped.row)">拒绝</el-t-button>
-                </div>
+                <span v-if="row.auditState==='TO_BE_REVIEWED'" class="color-primary">审核中</span>
+                <span v-else-if="row.auditState==='AUDIT_FAILED'" class="color-danger">已拒绝</span>
+                <span v-else class="color-success">已通过</span>
+              </div>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="操作" align="left">
+            <template v-slot="{row}">
+              <div>
+                <el-t-button type="text" @click="handleAudit(row.uuid)">审核</el-t-button>
               </div>
             </template>
           </el-table-column>
@@ -98,8 +100,6 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
@@ -108,10 +108,8 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar
-    // mHeadedr
   },
   data() {
     return {
@@ -130,6 +128,9 @@ export default {
         submitterId: ''
       },
 
+            sortConfig: { prop: 'auditState', order: 'ascending' },
+
+
       selects: []
     }
   },
@@ -142,12 +143,25 @@ export default {
 
       loading: state => state.sensitive.loading,
       listAll: state => state.sensitive.auditPermissionlist,
-      page: state => state.sensitive.auditPermissionPage
+      page: state => state.sensitive.auditPermissionPage,
+
+      permissionEnum: state => state.enum.roleDetail,
+      auditSetting: state => state.sensitive.auditSetting,
+      currentUserUuid: state => state.user.uuid
     })
   },
   created() {
     this.initDataList(this.query)
     this.initFilter()
+  },
+  mounted() {
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
+
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
   },
   methods: {
     doExport(val) {
@@ -204,6 +218,7 @@ export default {
       console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },
+    //重置
     handleRefresh() {
       console.log('handleRefresh')
       this.query = this.$options.data().query
@@ -219,154 +234,111 @@ export default {
         return item.uuid
       })
     },
-
-    /**
-     * 单挑审批
-     */
-    handleAccess(val) {
-      const payload = {
-        auditConfirmation: 'APPROVED',
-        uuids: [val.uuid]
-      }
-
-      this.$confirm('是否通过当前审批', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(async () => {
-          await this.$store
-            .dispatch('audit/batchAuditTagConfirmation', payload)
-            .then(res => {
-              this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.initDataList(this.query)
-            })
-            .catch(err => {
-              console.error(err)
-              this.$message({
-                type: 'danger',
-                message: '操作失败'
-              })
-            })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    handleReject(val) {
-      const payload = {
-        auditConfirmation: 'AUDIT_FAILED',
-        uuids: [val.uuid]
-      }
-
-      this.$confirm('是否拒绝当前审批', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(async () => {
-          await this.$store
-            .dispatch('audit/batchAuditTagConfirmation', payload)
-            .then(res => {
-              this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.initDataList(this.query)
-            })
-            .catch(err => {
-              
-              this.$message({
-                type: 'danger',
-                message: '操作失败'
-              })
-            })
-        })
-        .catch(err => {
-          
-        })
-    },
     /**
      * 批量审批
      */
-    handleBatchConfrim() {
-      const uuids = this.selects
-      const payload = {
-        auditConfirmation: 'APPROVED',
-        uuids
+    handleBatch(action) {
+      let uuids = this.selects
+      let payload = null
+      if (action === 'reject') {
+        uuids = this.selects
+        payload = {
+          auditConfirmation: 'AUDIT_FAILED',
+          uuids
+        }
+      } else {
+        uuids = this.selects
+        payload = {
+          auditConfirmation: 'APPROVED',
+          uuids
+        }
       }
+
       console.log(payload)
-      if (this.selects.length) {
-        this.$store
-          .dispatch('audit/batchAuditTagConfirmation', payload)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '操作成功',
-              onClose: () => {
-                this.initData()
-              }
-            })
+      this.batchAudit(payload)
+    },
+    batchAudit(payload) {
+      this.$store
+        .dispatch('audit/batchAuditPermissionConfirmation', payload)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功',
+            duration: 1000,
+            onClose: () => {
+              this.initDataList(this.query)
+            }
           })
-          .catch(err => {
-            
-            this.$message({
-              type: 'error',
-              message: '操作失败'
-            })
-          })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '请选择至少一项'
         })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err
+          })
+        })
+    },
+    handleAudit(uuid) {
+      this.$refs['formDialog'].event = 'AuditTemplate'
+      this.$refs['formDialog'].eventType = 'audit'
+      this.$refs['formDialog'].transfer = { uuid }
+      this.$refs['formDialog'].dialogVisible = true
+    },
+    grouping(list) {
+      if (Object.keys(list).length) {
+        return list.reduce((groups, item) => {
+          let groupFound = groups.find(
+            foundItem => item.module === foundItem.module
+          )
+          if (groupFound) {
+            groupFound.permissions.push(item)
+          } else {
+            let newGroup = {
+              module: item.module,
+              permissions: [item]
+            }
+
+            groups.push(newGroup)
+          }
+
+          return groups
+        }, [])
+      } else {
+        return []
       }
     },
-    handleBatchReject() {
-      const uuids = this.selects
-      const payload = {
-        auditConfirmation: 'AUDIT_FAILED',
-        uuids
-      }
-      if (this.selects.length) {
-        this.$store
-          .dispatch('audit/batchAuditTagConfirmation', payload)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '操作成功',
-              onClose: () => {
-                this.initData()
-              }
-            })
-          })
-          .catch(err => {
-            
-            this.$message({
-              type: 'error',
-              message: '操作失败'
-            })
-          })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '请选择至少一项'
-        })
-      }
+    format(arr) {
+      let temp = []
+      temp = arr.map(item => {
+        return item.title
+      })
+      return temp.join('、')
     },
-    /**
-     * 排序
-     */
-    sortBy(a, b) {
-      //   console.log(a, b)
+    selectable(row, index) {
+      let flag = false
+      row.auditUsers.forEach(item => {
+        item.userList.forEach(user => {
+          if (user.uuid === this.currentUserUuid) {
+            //   console.log(user.auditState)
+            if (
+              user.auditState === 'APPROVED' ||
+              user.auditState === 'AUDIT_FAILED'
+            ) {
+              flag = true
+            }
+          }
+        })
+      })
+      return row.auditState === 'TO_BE_REVIEWED'&&!flag
+    },
+        sortMethod(a, b) {
       if (a.auditState === 'TO_BE_REVIEWED') {
         return -1
       }
       if (b.auditState === 'TO_BE_REVIEWED') {
         return 1
+      }
+      if (a.auditState === b.auditState) {
+        return 0
       }
     }
   }

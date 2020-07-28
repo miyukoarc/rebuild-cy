@@ -43,7 +43,8 @@ export default {
   computed: {
     ...mapState({
       listSelect: state => state.department.listSelect,
-      departmentList: state => state.department.departmentList
+      departmentList: state => state.department.departmentList,
+      auditSetting: state => state.sensitive.auditSetting
     })
   },
   created() {
@@ -80,34 +81,33 @@ export default {
         )
       }
       const payload = this.form
-      console.log(this.form)
 
-        this.$refs['form'].validate(valid => {
-          if (valid) {
-            console.log(payload)
-            this.$store
-              .dispatch('media/addGroup', payload)
-              .then(() => {
-                this.$message({
-                  type: 'success',
-                  message: '操作成功'
-                })
-                this.handleCancel()
-                this.refresh()
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          this.$store
+            .dispatch('media/addGroup', payload)
+            .then(() => {
+              const message = this.auditSetting['tag'] ? '已提交审核' : '已完成'
+              this.$message({
+                type: 'success',
+                message: message
               })
-              .catch(err => {
-                this.$message({
-                  type: 'error',
-                  message: '操作失败'
-                })
-              })
-          } else {
-            this.$message({
-              type: 'error',
-              message: '请检查输入'
+              this.handleCancel()
+              this.refresh()
             })
-          }
-        })
+            .catch(err => {
+              this.$message({
+                type: 'error',
+                message: '操作失败'
+              })
+            })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '请检查输入'
+          })
+        }
+      })
     },
     handleCancel() {
       this.$parent.$parent.dialogVisible = false

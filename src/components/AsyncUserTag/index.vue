@@ -14,7 +14,7 @@
                     <div>公司</div>
                   </el-col>
                   <el-col :span="18">
-                    <div v-if="tempUserDetail.departments">{{tempUserDetail.departments[0].name}}</div>
+                    <div>XX部门</div>
                   </el-col>
                 </el-row>
                 <el-row style="margin-bottom:10px;">
@@ -22,7 +22,7 @@
                     <div>部门</div>
                   </el-col>
                   <el-col :span="18">
-                    <div>XX部门</div>
+                    <div v-if="tempUserDetail.departments">{{tempUserDetail.departments[0].name}}</div>
                   </el-col>
                 </el-row>
                 <el-row style="margin-bottom:10px;">
@@ -58,7 +58,7 @@
 
 <script>
 export default {
-  name: "async-user-tag",
+  name: 'async-user-tag',
   props: {
     hasPop: {
       type: Boolean,
@@ -74,7 +74,7 @@ export default {
       watchFlag: false,
       tempUserDetail: {},
       timer: null
-    };
+    }
   },
   watch: {
     //   propsData:{
@@ -91,36 +91,37 @@ export default {
   },
   methods: {
     handleShow() {
-      this.status = true;
+      this.status = true
       if (!Object.keys(this.tempUserDetail).length) {
         this.timer = setTimeout(() => {
           if (this.uuid) {
-            console.log("请求");
-            this.initData(this.uuid);
+            console.log('请求')
+            this.initData(this.uuid)
           }
-        }, 100);
+        }, 100)
       }
     },
     handleClose() {
-      this.status = false;
+      this.status = false
     },
     initData(uuid) {
       this.$store
-        .dispatch("user/getDetail", uuid)
+        .dispatch('user/getDetail', uuid)
         .then(res => {
-          this.tempUserDetail = res;
+          this.tempUserDetail = res
         })
         .catch(err => {
-          console.error(err);
-        });
+          console.error(err)
+        })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
 .container {
   display: inline-block;
   margin-right: 3px;
+  margin-bottom: 3px;
 }
 </style>

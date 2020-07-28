@@ -97,7 +97,7 @@ export default {
         return {
           ...item,
           userList: item.userList.map(unit => {
-            return { userName: unit.name, userId: unit.userId, uuid: unit.uuid }
+            return { name: unit.name, userId: unit.userId, uuid: unit.uuid,auditState: 'TO_BE_REVIEWED' }
           })
         }
       })

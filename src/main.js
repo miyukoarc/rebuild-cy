@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-27 14:05:27
- * @LastEditTime: 2020-07-16 20:51:09
+ * @LastEditTime: 2020-07-21 15:58:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\main.js
@@ -15,7 +15,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import {
-    MessageBox
+  MessageBox
 } from 'element-ui'
 
 import animated from 'animate.css' // npm install animate.css --save安装，在引入
@@ -32,8 +32,10 @@ import router from './router'
 import * as filters from './filters' // global filters
 // register global utility filters
 Object.keys(filters).forEach(key => {
-    Vue.filter(key, filters[key])
+  Vue.filter(key, filters[key])
 })
+
+import './directive/directives'
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -76,35 +78,30 @@ Vue.use(VideoPlayer)
 
 Vue.prototype.$isElectron = isElectron
 if (isElectron()) {
-    /*
-    const electron = window.require('electron')
-    const {
-      ipcRenderer,
-      remote
-    } = electron
-    Vue.prototype.$ipcRenderer = ipcRenderer
-    Vue.prototype.$remote = remote
-    const {BrowserWindow} = remote
-    Vue.prototype.$BrowserWindow = BrowserWindow
-    */
+  // const electron = window.require('electron')
+  /*
+  Vue.prototype.$remote = remote
+  const {BrowserWindow} = remote
+  Vue.prototype.$BrowserWindow = BrowserWindow
+  */
 
-    // console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
+  // console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
 
-    // ipcRenderer.on('asynchronous-reply', (event, arg) => {
-    //   console.log(arg) // prints "pong"
-    // })
-    // ipcRenderer.send('asynchronous-message', 'ping')
-    // console.log(remote)
+  // ipcRenderer.on('asynchronous-reply', (event, arg) => {
+  //   console.log(arg) // prints "pong"
+  // })
+  // ipcRenderer.send('asynchronous-message', 'ping')
+  // console.log(remote)
 }
 
 Vue.component(TButton.name, TButton)
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, {
-        size: 'small'
-    })
-    // 如果想要中文版 element-ui，按如下方式声明
-    // Vue.use(ElementUI)
+  size: 'small'
+})
+// 如果想要中文版 element-ui，按如下方式声明
+// Vue.use(ElementUI)
 
 Vue.prototype.$bus = new Vue(); // event Bus 用于无关系组件间的通信。
 Vue.prototype.$confirm = MessageBox.confirm;
@@ -114,8 +111,8 @@ Vue.prototype.$confirm = MessageBox.confirm;
 Vue.config.productionTip = false
 
 new Vue({
-    el: '#app',
-    router,
-    store,
-    render: h => h(App)
+  el: '#app',
+  router,
+  store,
+  render: h => h(App)
 })

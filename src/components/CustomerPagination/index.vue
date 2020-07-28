@@ -22,8 +22,8 @@ export default {
       }
   },
   methods:{
-      changePage(){
-          this.$emit('currentChange')
+      changePage(val){
+          this.$emit('current-change',val)
       }
   }
 }

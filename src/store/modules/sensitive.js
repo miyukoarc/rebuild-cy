@@ -11,8 +11,24 @@ import {
   update,
   setAuditCloseOrOpen,
   auditPropertylistAll,
-  setAuditUser
+  setAuditUser,
+  auditMediaListAll,
+  auditDetail,
 } from '@/api/sensitive'
+
+function buildAuditSetting(arr) {
+  let temp = {}
+  arr.forEach(item => {
+    Object.defineProperty(temp, item.moduleCode, {
+      value: item.openState,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    })
+  })
+
+  return temp
+}
 const state = {
   /**
    * public state
@@ -44,7 +60,7 @@ const state = {
    * 敏感词
    */
   sensitiveListAll: [],
-  currentWord:{},
+  currentWord: {},
   sensitivePage: {
     total: 0,
     pageSize: 0,
@@ -82,10 +98,24 @@ const state = {
 
   propertyListAll: [],
   propertyPage: {
-      total: 0,
-      pageSize: 0,
-      pageNumber: 0 
-  }
+    total: 0,
+    pageSize: 0,
+    pageNumber: 0
+  },
+  /**
+   * 素材审核
+   */
+  auditMediaList: [],
+  auditMediaPage: {
+    total: 0,
+    pageSize: 0,
+    pageNumber: 0
+  },
+
+  /**
+   * 审核开启状态
+   */
+  auditSetting: {}
 
 
 
@@ -157,8 +187,8 @@ const mutations = {
     state.sensitivePage.pageNumber = pageNumber
     state.sensitivePage.pageSize = pageSize
   },
-  SAVE_CURRENTWORD(state, payload){
-      state.currentWord = payload
+  SAVE_CURRENTWORD(state, payload) {
+    state.currentWord = payload
   },
 
   /**
@@ -197,10 +227,10 @@ const mutations = {
   /**
    * 保存群发审核列表
    */
-  SAVE_BATCHSENDLIST(state,payload) {
+  SAVE_BATCHSENDLIST(state, payload) {
     state.auditBatchSendTaskListAll = payload
   },
-  SET_BATCHSENDPAGE(state,payload) {
+  SET_BATCHSENDPAGE(state, payload) {
     const {
       total,
       pageNumber,
@@ -210,18 +240,38 @@ const mutations = {
     state.auditBatchSendTaskPage.pageNumber = pageNumber
     state.auditBatchSendTaskPage.pageSize = pageSize
   },
-  SAVE_PROPERLIST(state,payload){
-      state.propertyListAll = payload
-  },SET_PROPERPAGE(state,payload){
-      const {
-          total,
-          pageNumber,
-          pageSize
-      } = payload
-      state.propertyPage.total = total
-      state.propertyPage.pageNumber = pageNumber
-      state.propertyPage.pageSize = pageSize
-  }
+  SAVE_PROPERLIST(state, payload) {
+    state.propertyListAll = payload
+  },
+  SET_PROPERPAGE(state, payload) {
+    const {
+      total,
+      pageNumber,
+      pageSize
+    } = payload
+    state.propertyPage.total = total
+    state.propertyPage.pageNumber = pageNumber
+    state.propertyPage.pageSize = pageSize
+  },
+  SET_AUDITSETTING(state, payload) {
+    state.auditSetting = payload
+  },
+  /**
+   * 素材审核
+   */
+  SAVE_MEDIAAUDIT(state, payload) {
+    state.auditMediaList = payload
+  },
+  SET_MEDIAPAGE(state, payload) {
+    const {
+      total,
+      pageNumber,
+      pageSize
+    } = payload
+    state.auditMediaPage.total = total
+    state.auditMediaPage.pageNumber = pageNumber
+    state.auditMediaPage.pageSize = pageSize
+  },
 
 
 
@@ -240,12 +290,20 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getAuditPermissionlistAll(payload).then(res => {
-        commit('SAVE_PERMISSIONLIST', res.items)
+
+        const accessed = res.items.map(item => {
+          return {
+            ...item,
+            auditUsers: JSON.parse(item.auditUsers)
+          }
+        })
+        commit('SAVE_PERMISSIONLIST', accessed)
         commit('SET_PERMISSIONPAGE', res)
         commit('TOGGLE_LOADING', false)
         resolve(res)
       }).catch(err => {
-        
+        console.error(err)
+
         commit('TOGGLE_LOADING', false)
         reject(err)
       })
@@ -263,13 +321,19 @@ const actions = {
 
     return new Promise((resolve, reject) => {
       getAuditTaglistAll(payload).then(res => {
-        commit('SAVE_TAGLIST', res.items)
+        const accessed = res.items.map(item => {
+            return {
+              ...item,
+              auditUsers: JSON.parse(item.auditUsers)
+            }
+          })
+        commit('SAVE_TAGLIST', accessed)
         commit('SET_TAGPAGE', res)
         commit('TOGGLE_LOADING', false)
 
         resolve()
       }).catch(err => {
-        
+
         commit('TOGGLE_LOADING', false)
 
         reject(err)
@@ -292,7 +356,7 @@ const actions = {
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-        
+
         commit('TOGGLE_LOADING', false)
         reject(err)
       })
@@ -314,7 +378,7 @@ const actions = {
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-        
+
         commit('TOGGLE_LOADING', false)
         reject(err)
       })
@@ -336,7 +400,7 @@ const actions = {
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-        
+
         commit('TOGGLE_LOADING', false)
         reject(err)
       })
@@ -358,7 +422,7 @@ const actions = {
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
-        
+
         commit('TOGGLE_LOADING', false)
         reject(err)
       })
@@ -369,105 +433,168 @@ const actions = {
    * @param {*} param0 
    * @param {*} payload 
    */
-  add({commit},payload){
-     return new Promise((resolve,reject)=>{
-         add(payload).then(res=>{
-             resolve()
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  add({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      add(payload).then(res => {
+        resolve()
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
   /**
    * 删除敏感词
    * @param {*} param0 
    * @param {*} payload 
    */
-  deleteSensitive({commit},payload){
-     return new Promise((resolve,reject)=>{
-         deleteSensitive(payload).then(res=>{
-             resolve(res)
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  deleteSensitive({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      deleteSensitive(payload).then(res => {
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
   /**
    * 更新敏感词
    * @param {*} param0 
    * @param {*} payload 
    */
-  update({commit},payload){
-     return new Promise((resolve,reject)=>{
-         update(payload).then(res=>{
-             resolve()
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  update({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      update(payload).then(res => {
+        resolve()
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
   /**
    * 批量设置通知人
    * @param {*} param0 
    * @param {*} payload 
    */
-  updateNoticeUser({commit},payload){
-     return new Promise((resolve,reject)=>{
-         updateNoticeUser(payload).then(res=>{
-             
-             resolve(res)
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  updateNoticeUser({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      updateNoticeUser(payload).then(res => {
+
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
   /**
    * 设置审核开启关闭
    * @param {*} param0 
    * @param {*} payload 
    */
-  setAuditCloseOrOpen({commit},payload){
-     return new Promise((resolve,reject)=>{
-         setAuditCloseOrOpen(payload).then(res=>{
-             resolve()
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  setAuditCloseOrOpen({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      setAuditCloseOrOpen(payload).then(res => {
+        resolve()
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
   /**
    * 审核配置列表
    * @param {*} param0 
    * @param {*} payload 
-   */ 
-  auditPropertylistAll({commit},payload){
-      commit('TOGGLE_LOADING',true)
-     return new Promise((resolve,reject)=>{
-         auditPropertylistAll(payload).then(res=>{
-             commit('TOGGLE_LOADING',false)
-             commit('SAVE_PROPERLIST',res.items)
-             commit('SET_PROPERPAGE',res)
-             resolve()
-         }).catch(err=>{
-             reject(err)
-         }).finally(()=>{
-             commit('TOGGLE_LOADING',false)
-         })
-     })
+   */
+  auditPropertylistAll({
+    commit
+  }, payload) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      auditPropertylistAll(payload).then(res => {
+        const accessed = buildAuditSetting(res.items)
+        const alter = res.items.map(item=>{
+            return {...item,auditUsers:JSON.parse(item.auditUsers)}
+        })
+        commit('TOGGLE_LOADING', false)
+        commit('SAVE_PROPERLIST', alter)
+        commit('SET_AUDITSETTING', accessed)
+        commit('SET_PROPERPAGE', res)
+        resolve()
+      }).catch(err => {
+        reject(err)
+      }).finally(() => {
+        commit('TOGGLE_LOADING', false)
+      })
+    })
   },
   /**
    * 设置审核人
    * @param {*} param0 
    * @param {*} payload 
    */
-  setAuditUser({commit},payload){
-     return new Promise((resolve,reject)=>{
-         setAuditUser(payload).then(res=>{
-             resolve()
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  setAuditUser({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      setAuditUser(payload).then(res => {
+        resolve()
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  /**
+   * 素材审核列表
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  auditMediaListAll({
+    commit
+  }, payload) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      auditMediaListAll(payload).then(res => {
+        const accessed = res.items.map(item => {
+          return {
+            ...item,
+            auditAddMedia: JSON.parse(item.auditAddMedia),
+            auditUsers: JSON.parse(item.auditUsers)
+          }
+        })
+        commit('SAVE_MEDIAAUDIT', accessed)
+        commit('SET_MEDIAPAGE', res)
+        resolve()
+      }).catch(err => {
+        reject(err)
+      }).finally(() => {
+        commit('TOGGLE_LOADING', false)
+      })
+    })
+  },
+  /**
+   * 审核配置详情
+   * @param {*} param0 
+   * @param {string} payload 
+   */
+  auditDetail({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      auditDetail(payload).then(res => {
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   }
 
 

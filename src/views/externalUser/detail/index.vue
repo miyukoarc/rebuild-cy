@@ -43,7 +43,7 @@
               </h4>
               <div
                 class="tag-line"
-                v-if="externalUserDetail.externalUserDetailCorpTagsList.corpTags != null"
+                v-if="externalUserDetail.externalUserDetailCorpTagsList && externalUserDetail.externalUserDetailCorpTagsList.corpTags != null"
               >
                 <span
                   v-for="(companyTags,key,index) in externalUserDetail.externalUserDetailCorpTagsList.corpTags"
@@ -156,7 +156,12 @@
               <el-table-column label="操作" align="left">
                 <template v-slot="scope">
                   <div>
-                    <el-t-button size="mini" type="primary" @click="handleDetail(scope.row)">聊天记录</el-t-button>
+                    <el-button
+                      size="mini"
+                      type="primary"
+                      :disabled="scope.row.lastMsgTime == null"
+                      @click="handleDetail(scope.row)"
+                    >聊天记录</el-button>
                   </div>
                 </template>
               </el-table-column>
@@ -168,7 +173,9 @@
           <el-card class="group-chart">
             <h4 class="font-es">所在群聊</h4>
 
-            <div v-if="limitedListGroup.length>0">
+            <div
+              v-if="externalUserDetail.externalUserDetailGroupChatsList && limitedListGroup.length>0"
+            >
               <transition-group name="fade">
                 <div
                   v-for="(item,index) in limitedListGroup"
@@ -449,23 +456,12 @@ export default {
     },
     // 聊天
     handleDetail(row) {
-      // const userId = row.userId;
-      // const externalUserId = this.user[index].externalUser.externalUserId;
-      // const query = {
-      //   userId,
-      //   externalUserId
-      // };
-      // this.$router.push({
-      //   path: "/message/singleListAll",
-      //   query
-      // });
-      console.log(row, "row");
       const userId = row.userId;
-      const externalUserId = this.externalUserDetail.externalUserDetail
-        .externalUserId;
+      // const externalUserId = this.externalUserDetail.externalUserDetail
+      //   .externalUserId;
       const query = {
-        userId,
-        externalUserId
+        uuid: this.query.uuid,
+        userId
       };
       this.$router.push({
         path: "/message/singleListAll",

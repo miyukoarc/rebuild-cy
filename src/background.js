@@ -75,15 +75,40 @@ function createWindow() {
   }
   // win.loadFile('./dist/index.html')
 
-
   win.on('ready-to-show', () => {
+    console.log(ready - to - show)
     win.show()
+
   })
   win.on('closed', (event, args) => {
     win = null
     // win.hide(); 
     // win.setSkipTaskbar(true);
     event.preventDefault();
+  })
+
+
+  win.webContents.on('will-navigate', (event, url) => {
+    // event.preventDefault()
+    //   if(url.match('sidebar.cysrcrm.com')){
+    const str = JSON.stringify(url)
+    win.webContents.send('login-navigate', str)
+    //   }
+
+  })
+
+  let loginFlag = false
+
+  win.webContents.on('will-redirect', (event, url) => {
+    //   event.preventDefault()
+      if(url==='http://sidebar.cyscrm.com/'&&!loginFlag){
+          
+          const str = JSON.stringify(url)
+        //   win.webContents.send('login-redirect', str)
+          loginFlag = true
+      }
+
+      console.log(loginFlag)
   })
 
   win.on('maximize', (event, args) => {
@@ -94,6 +119,7 @@ function createWindow() {
   win.on('unmaximize', (event, args) => {
     win.webContents.send('unmaximizeWindow', false)
   })
+
 
 
 }
@@ -190,6 +216,33 @@ ipcMain.on('closeWindow', e => {
 })
 
 
+
+ipcMain.on('qrcode-window',(event,args)=>{
+    let newWin = new BrowserWindow({
+        width: 480,
+        height: 480,
+        frame: true,
+        webPreferences:{
+            nodeIntegration: true
+        }
+    })
+
+    Promise.resolve(newWin).then(()=>{
+        newWin.loadURL(`http://localhost/#/qrcode?tenantId=${args}`)
+    }).then(()=>{
+        
+        newWin.on('close', ()=> { newWin = null })
+        newWin.show()
+        
+    })
+
+    newWin.webContents.on('will-navigate',(event,url)=>{
+
+    })
+
+})
+
+
 // 2020-06-24，main.js中，汪轩昂新增
 ipcMain.on('asynchronous-message', (event, arg) => {
   var edge = require('electron-edge-js');
@@ -205,7 +258,11 @@ ipcMain.on('asynchronous-message', (event, arg) => {
   });
 
   batchSendTask(arg, (err, val) => {
-    event.reply("asynchronous-message-reply", { err, val, data: arg })
+    event.reply("asynchronous-message-reply", {
+      err,
+      val,
+      data: arg
+    })
   })
 })
 
@@ -226,7 +283,11 @@ ipcMain.on('openChat', (event, arg) => {
   });
 
   openChat(arg, (err, res) => {
-    event.reply("reply-openChat", { err, res, val: arg })
+    event.reply("reply-openChat", {
+      err,
+      res,
+      val: arg
+    })
   })
 })
 
@@ -245,7 +306,11 @@ ipcMain.on('inputEnter', (event, arg) => {
   });
 
   inputEnter(arg, (err, res) => {
-    event.reply("reply-inputEnter", { err, res, val: arg })
+    event.reply("reply-inputEnter", {
+      err,
+      res,
+      val: arg
+    })
   })
 })
 
@@ -264,7 +329,11 @@ ipcMain.on('AddCustomerByMobiles', (event, arg) => {
   });
 
   AddCustomerByMobiles(arg, (err, res) => {
-    event.reply("reply-AddCustomerByMobiles", { err, res, val: arg })
+    event.reply("reply-AddCustomerByMobiles", {
+      err,
+      res,
+      val: arg
+    })
   })
 })
 
@@ -283,6 +352,10 @@ ipcMain.on('SendMessage', (event, arg) => {
   });
 
   SendMessage(arg, (err, res) => {
-    event.reply("reply-SendMessage", { err, res, val: arg })
+    event.reply("reply-SendMessage", {
+      err,
+      res,
+      val: arg
+    })
   })
 })
