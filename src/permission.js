@@ -20,7 +20,7 @@ NProgress.configure({
   showSpinner: false
 }) // NProgress Configuration
 
-const whiteList = ['/login', '/miniLogin', '/board'] // no redirect whitelist
+const whiteList = ['/login', '/qrcode', '/board'] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
   // start progress bar
@@ -105,6 +105,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
   } else {
+      console.log(whiteList.indexOf(to.path))
     if (whiteList.indexOf(to.path) !== -1) {
       //   console.log(router, '1')
       next()

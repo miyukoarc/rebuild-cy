@@ -121,6 +121,7 @@ function createWindow() {
   })
 
 
+
 }
 
 // Quit when all windows are closed.
@@ -212,6 +213,33 @@ ipcMain.on('restoreWindow', e => {
 
 ipcMain.on('closeWindow', e => {
   win.close()
+})
+
+
+
+ipcMain.on('qrcode-window',(event,args)=>{
+    let newWin = new BrowserWindow({
+        width: 480,
+        height: 480,
+        frame: true,
+        webPreferences:{
+            nodeIntegration: true
+        }
+    })
+
+    Promise.resolve(newWin).then(()=>{
+        newWin.loadURL(`http://localhost/#/qrcode?tenantId=${args}`)
+    }).then(()=>{
+        
+        newWin.on('close', ()=> { newWin = null })
+        newWin.show()
+        
+    })
+
+    newWin.webContents.on('will-navigate',(event,url)=>{
+
+    })
+
 })
 
 

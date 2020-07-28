@@ -47,6 +47,8 @@ export default {
             this.$router.push({
                 path: '/dashboard'
             })
+
+            this.$store.dispatch('user/getMyInfo').then(()=>{}).catch(err=>{console.log(err)})
         }
     }
 }

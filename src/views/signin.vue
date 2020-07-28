@@ -1,12 +1,18 @@
 <template>
   <div class="login-container">
-    <div id="browser"></div>
-    <webview ref="webview" id="webview"></webview>
+    <transition name="fade">
+      <div v-if="!tipsFlag" class="qrcode-container">
+        <div v-if="loading" class="loading">
+          <i class="el-icon-loading color-info"></i>
+        </div>
+        <div id="browser"></div>
+        <webview ref="webview" id="webview"></webview>
+      </div>
+    </transition>
     <div v-if="tipsFlag" class="text-align-center">
       <h3 class="tips">选择单位获取登录二维码</h3>
     </div>
     <div class="container">
-      <!-- <el-radio-group v-model="tenantId" size="small" @change="changeCorp"> -->
       <div class="choice" v-for="item in loginList" :key="item.tenantId">
         <el-radio
           v-model="tenantId"
@@ -18,13 +24,13 @@
       <!-- </el-radio-group> -->
       <div class="text-align-center">
         <el-button type="primary" size="small" @click="handleLogin">确定</el-button>
+        <el-button type="primary" size="small" @click="$router.push({path: '/welcome'})"></el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { wxLogin } from '@/api/user'
 import { mapState } from 'vuex'
 export default {
   name: 'Login',
@@ -34,8 +40,8 @@ export default {
       otherQuery: {},
       wxQrCode: null,
       tenantId: '',
-      loginFlag: false,
       tipsFlag: true,
+      loading: false,
     }
   },
   watch: {
@@ -57,10 +63,9 @@ export default {
   },
   created() {
     this.initDataList()
-    this.electronTragger()
+    // this.electronTragger()
   },
   mounted() {
-    this.electronTragger()
   },
   methods: {
     electronTragger() {
@@ -71,33 +76,34 @@ export default {
           console.log(payload)
         })
         ipcRenderer.on('login-redirect', (event, payload) => {
-          this.loginFlag = true
           console.log(payload)
         })
         console.log('ipcRenderer loaded')
       }
     },
     getQrCode(id, target) {
-      return new WwLogin({
-        id: target,
-        appid: 'wwa266cd2b968ae008',
-        agentid: '1000019',
-        redirect_uri: `http://sidebar.cyscrm.com/api/wxlogin/${id}`,
-        state: '123456',
-        href: '',
+      this.$nextTick(() => {
+        return new WwLogin({
+          id: target,
+          appid: 'wwa266cd2b968ae008',
+          agentid: '1000019',
+          redirect_uri: `http://sidebar.cyscrm.com/api/wxlogin/${id}`,
+          state: '123456',
+          href: '',
+        })
       })
     },
-    getWxlogin(payload) {
-      this.$nextTick(async () => {
-        const res = await wxLogin(payload)
-        if (res) {
-          this.wxQrCode = res
-          const style =
-            '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
-          document.write(this.addStr(this.wxQrCode, style))
-        }
-      })
-    },
+    // getWxlogin(payload) {
+    //   this.$nextTick(async () => {
+    //     const res = await wxLogin(payload)
+    //     if (res) {
+    //       this.wxQrCode = res
+    //       const style =
+    //         '<style>#login{width:100%;margin: 20px auto; text-align:center}</style>'
+    //       document.write(this.addStr(this.wxQrCode, style))
+    //     }
+    //   })
+    // },
     addStr(str, style) {
       const arr = str.split('</head>')
       return `${arr[0]}${style}</head>${arr[1]}`
@@ -127,15 +133,25 @@ export default {
         })
     },
     handleLogin() {
-      if (this.loginFlag) {
-        this.$router.push('/welcome')
+      this.tipsFlag = false
+      const tenantId = this.tenantId + ''
+
+      this.loading = true
+      //   this.getWxlogin(tenantId)
+      // this.$isElectron()
+      //   ? this.getQrCode(tenantId, 'webview')
+      //   : this.getQrCode(tenantId, 'browser')
+
+      if (this.$isElectron()) {
+        console.log('!')
+
+        const ipcRenderer = window.electron.ipcRenderer
+        ipcRenderer.send('qrcode-window', this.tenantId)
+        console.log('!')
+        this.loading = false
       } else {
-        this.tipsFlag = false
-        const tenantId = this.tenantId + ''
-        //   this.getWxlogin(tenantId)
-        this.$isElectron()
-          ? this.getQrCode(tenantId, 'webview')
-          : this.getQrCode(tenantId, 'browser')
+        this.getQrCode(tenantId, 'browser')
+        this.loading = false
       }
     },
   },
@@ -178,10 +194,6 @@ $cursor: #fff;
   }
   .container {
     -webkit-app-region: no-drag;
-  }
-  .qrcode-container {
-    width: 500px;
-    height: 500px;
   }
   .el-input {
     display: inline-block;
@@ -300,5 +312,13 @@ $light_gray: #eee;
     margin-bottom: 40px;
     margin-top: 40px;
   }
+}
+
+.loading {
+  width: 335.6px;
+  height: 300px;
+  text-align: center;
+  line-height: 330px;
+  font-size: 50px;
 }
 </style>
