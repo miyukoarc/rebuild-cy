@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:44:55
- * @LastEditTime: 2020-07-24 21:04:37
+ * @LastEditTime: 2020-07-28 16:36:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\videoComponent.vue
@@ -13,6 +13,7 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left demo">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <video-player
             ref="videoPlayer"
             class="video-player vjs-custom-skin"
@@ -28,6 +29,7 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="demo right">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <video-player
             ref="videoPlayer"
             class="video-player vjs-custom-skin"

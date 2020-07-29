@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 18:01:25
- * @LastEditTime: 2020-07-24 20:20:20
+ * @LastEditTime: 2020-07-28 16:30:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\videoComponent.vue
@@ -12,6 +12,7 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
+        <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
         <div>
           <div class="img-warp revoke-warp mb-5 ml-20" v-if="item.messageMedias">
             <el-popover placement="right" title trigger="hover">
@@ -33,7 +34,7 @@
     <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end mb-5">
-        <div v-if="item.type == 'revoke'" class="user-select revoke">你撤回了一条消息内容是</div>
+        <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
         <div class="img-warp revoke-warp mr-20" v-if="item.messageMedias">
           <el-popover placement="right" title trigger="hover">
             <img :src="item.messageMedias[0].file" style="width:400px;height:400px" />

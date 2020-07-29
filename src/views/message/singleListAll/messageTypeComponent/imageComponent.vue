@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 17:35:09
- * @LastEditTime: 2020-07-24 21:05:03
+ * @LastEditTime: 2020-07-28 16:42:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\imageComponent.vue
@@ -14,6 +14,7 @@
         <el-avatar :src="item.fromAvatar" />
         <div>
           <div class="img-warp-left revoke-warp" v-if="item.messageMedias">
+            <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
             <el-popover placement="right" title trigger="hover">
               <img :src="item.messageMedias[0].file" style="width:400px;height:400px" />
               <img
@@ -29,9 +30,10 @@
     </div>
     <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
+
       <div class="display-flex justify-content-flex-end mb-5">
-        <div v-if="item.type == 'revoke'" class="user-select revoke">你撤回了一条消息内容是</div>
         <div class="img-warp-right revoke-warp" v-if="item.messageMedias">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <el-popover placement="right" title trigger="hover">
             <img :src="item.messageMedias[0].file" style="width:400px;height:400px" />
             <img
@@ -54,9 +56,9 @@ export default {
   props: {
     item: Object,
     toUserId: String,
-    fromUserId: String
+    fromUserId: String,
   },
-  created() {}
+  created() {},
 };
 </script>
 

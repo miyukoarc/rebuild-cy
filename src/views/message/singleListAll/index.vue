@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-25 18:35:18
+ * @LastEditTime: 2020-07-28 20:22:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -178,7 +178,10 @@ import cardComponent from "./messageTypeComponent/cardComponent.vue";
 import linkComponent from "./messageTypeComponent/linkComponent.vue";
 import weappComponent from "./messageTypeComponent/weappComponent.vue";
 import fileComponent from "./messageTypeComponent/fileComponent.vue";
+// import revokeComponent from "./messageTypeComponent/revokeComponent.vue";
+import docmsgComponent from "./messageTypeComponent/docmsgComponent.vue";
 import chatrecordComponent from "./messageTypeComponent/chatrecordComponent.vue";
+import locationComponent from "./messageTypeComponent/locationComponent.vue";
 import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_callComponent.vue";
 
 export default {
@@ -195,14 +198,18 @@ export default {
     videoComponent,
     agreeComponent,
     cardComponent,
+    linkComponent,
     weappComponent,
     fileComponent,
+    // revokeComponent,
+    docmsgComponent,
     chatrecordComponent,
+    locationComponent,
     meeting_voice_callComponent,
   },
   data() {
     return {
-      currentView: "chatrecordComponent",
+      currentView: "locationComponent",
       pageConfig: {
         total: 0,
         pageNumber: 0,
@@ -384,6 +391,11 @@ export default {
       this.activeIdx = index;
       this.currnetMember = item;
       this.query.toUserId = item._id;
+      let payload = {
+        type: "externalUser",
+        uuid: this.$route.query.uuid,
+      };
+      this.initDataList(payload);
       this.getsinglelist(this.query);
     },
     handleClickChatType() {
@@ -398,11 +410,9 @@ export default {
 
     handleSearch(val) {
       const { content, startTime, endTime } = val;
-      this.query.content = content ? content : '';
-      this.query.startTime = startTime
-        ? startTime
-        : '';
-      this.query.endTime = endTime ? endTime : '';
+      this.query.content = content ? content : "";
+      this.query.startTime = startTime ? startTime : "";
+      this.query.endTime = endTime ? endTime : "";
       console.log(val, "点击搜索");
       this.getsinglelist(this.query);
     },
@@ -545,6 +555,7 @@ export default {
     }
   }
 }
+
 .pager {
   // margin: 20px 0 0 0;
   text-align: center;
@@ -575,7 +586,7 @@ export default {
       background-color: #fff;
       // padding: 0 20px;
     }
-    .el-tabs__nav-scroll{
+    .el-tabs__nav-scroll {
       margin: 0 20px;
     }
     .el-tabs__content {
@@ -597,5 +608,14 @@ export default {
 .chat-side-bar-content /deep/.el-tabs__nav-wrap::after {
   // position: static !important;
   height: 1px;
+}
+.revoke-content {
+  width: 140px;
+  font-size: 13px;
+  background-color: #d7d7d7;
+  color: #fff;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
 }
 </style>
