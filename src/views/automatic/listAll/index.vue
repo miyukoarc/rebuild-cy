@@ -56,15 +56,6 @@
           <el-table-column label="操作" align="left">
         
             <template slot-scope="scope">
-              <!-- <el-t-button
-                type="text"
-                :popAuth="true"
-                :auth="permissionMap['riskManagement']['riskManagement_update']"
-                size="mini"
-                @click.stop="handleEdit(scope.$index)"
-              >编辑</el-t-button> -->
-
-              <!-- <el-divider direction="vertical"></el-divider> -->
               <el-t-button
                 type="text"
                 :popAuth="true"
@@ -76,15 +67,7 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />
+        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
       </div>
     </el-card>
 
@@ -102,6 +85,7 @@ import AsyncUserTag from '@/components/AsyncUserTag'
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import TagsDrawer from '@/components/TagsDrawer'
 import RoleDrawer from '@/components/RoleDrawer'
+import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -112,8 +96,8 @@ export default {
     AsyncUserTag,
     AsyncUserDrawer,
     RoleDrawer,
-    TagsDrawer
-    // mHeadedr
+    TagsDrawer,
+    CustomerPagination
   },
   data() {
     return {
@@ -216,11 +200,11 @@ export default {
       this.query.startTime = startTime ? startTime : this.query.startTime
       this.query.endTime = endTime ? endTime : this.query.endTime
       this.query.word = word ? word : this.query.word
-      console.log(val, 'handleSearch')
+      this.query.page = 0
       this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log('handleRefresh')
+
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },
@@ -261,12 +245,7 @@ export default {
         .catch(err => {})
     },
     handleEdit(index) {
-      // let { toUser, type, uuid, word } = this.listAll[index]
-      //   toUser = toUser.map(item => {
-      //     return item.userId
-      //   })
-      // console.log(toUser)
-      //   const payload = { toUser, type, uuid, word }
+
       let {
         uuid,
         type,
@@ -318,6 +297,10 @@ export default {
     },
     handleSelectionChange(val) {
       this.rowSelects = val
+    },
+    changeSize(val){
+        this.query.size = val 
+        this.initDataList(this.query)
     }
   }
 }

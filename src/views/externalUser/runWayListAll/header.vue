@@ -16,7 +16,7 @@
     </el-form-item>-->
 
     <el-form-item label="流失类型：">
-      <el-select v-model="query.delFollow" @change="handleSelectedChange">
+      <el-select v-model="query.delFollow">
         <el-option
           v-for="(item,index) in typeOptions"
           :key="index"
@@ -27,7 +27,7 @@
     </el-form-item>
 
     <el-form-item label="所属员工：">
-      <el-select v-model="query.userUuid" @change="handleSelectedChange">
+      <el-select filterable v-model="query.userUuid">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -53,7 +53,7 @@
     <!-- <div class="tag-warp"> -->
     <el-form-item label="客户标签：">
       <div class="tag-border">
-        <el-select v-model="query.tagIds" @change="handleChangeSecond" size="mini" multiple>
+        <el-select filterable v-model="query.tagIds" size="mini" multiple>
           <el-option-group v-for="item in tagListAll" :key="item.groupId" :label="item.groupName">
             <el-option
               v-for="child in item.tagList"
@@ -141,10 +141,9 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      console.log(val);
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
-      this.$emit("handleSearch", this.query);
+    //   this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
       if (this.timer) {
@@ -155,7 +154,6 @@ export default {
       }, 1000);
     },
     handleSelectedChange(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {

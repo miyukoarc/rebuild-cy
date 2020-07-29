@@ -18,7 +18,7 @@
           stripe
           lazy
           highlight-current-row
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="触发内容" align="left">
@@ -28,11 +28,7 @@
           </el-table-column>
           <el-table-column label="触发员工" align="left">
             <template v-slot="{row}">
-              <async-user-tag
-                size="small"
-                type="info"
-                :uuid="row.triggerUser.uuid"
-              >
+              <async-user-tag size="small" type="info" :uuid="row.triggerUser.uuid">
                 <i class="el-icon-user-solid"></i>
                 {{row.triggerUser.name}}
               </async-user-tag>
@@ -41,15 +37,11 @@
           <el-table-column label="触发时间" align="left" prop="createdAt"></el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
+        <customer-pagination
+          :pageConfig="pageConfig"
           @current-change="changePage"
-        />
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -58,11 +50,10 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-// import UserDetail from './detail.vue'
+import CustomerPagination from '@/components/CustomerPagination'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import AsyncUserTag from '@/components/AsyncUserTag'
 export default {
@@ -70,15 +61,15 @@ export default {
     ListHeader,
     AsyncUserTag,
     FormDialog,
-    ToolBar
-    // mHeadedr
+    ToolBar,
+    CustomerPagination,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
@@ -87,19 +78,17 @@ export default {
         word: '',
         userUuid: '',
         startTime: '',
-        endTime: ''
-      }
+        endTime: '',
+      },
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      //   tagListAll: state => state.tag.tagListAll,
-
-      loading: state => state.sensitive.loading,
-      listAll: state => state.sensitive.logListAll,
-      page: state => state.sensitive.logListAllPage
-    })
+      loading: (state) => state.sensitive.loading,
+      listAll: (state) => state.sensitive.logListAll,
+      page: (state) => state.sensitive.logListAllPage,
+    }),
   },
   created() {
     this.initDataList(this.query)
@@ -113,23 +102,13 @@ export default {
      * 初始化筛选信息
      */
     initFilter() {
-    //   this.$store
-    //     .dispatch('tag/getListSelect')
-    //     .then(() => {})
-    //     .catch(err => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '初始化失败'
-    //       })
-    //     })
-
       this.$store
         .dispatch('user/getUserListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -144,10 +123,10 @@ export default {
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -155,20 +134,19 @@ export default {
       const payload = this.userList[val].uuid
       this.$router.push({
         path: '/user/detail',
-        query: { uuid: payload }
+        query: { uuid: payload },
       })
     },
     handleSearch(val) {
-      const { startTime, endTime,userUuid,word } = val
+      const { startTime, endTime, userUuid, word } = val
       this.query.startTime = startTime ? startTime : this.query.startTime
       this.query.endTime = endTime ? endTime : this.query.endTime
       this.query.userUuid = userUuid ? userUuid : this.query.userUuid
       this.query.word = word ? word : this.query.word
-      console.log(val, 'handleSearch')
+      this.query.page = 0
       this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log('handleRefresh')
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },
@@ -176,8 +154,12 @@ export default {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
-    }
-  }
+    },
+    changeSize(val) {
+      this.page.size = val
+      this.initDataList(this.query)
+    },
+  },
 }
 </script>
 

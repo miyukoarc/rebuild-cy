@@ -97,7 +97,7 @@
 <script>
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -204,11 +204,10 @@ export default {
       this.query.submitterId = submitterId
         ? submitterId
         : this.query.submitterId
-      console.log(val, 'handleSearch')
+      this.query.page = 0
       this.initDataList(this.query)
     },
     handleRefresh() {//重置
-      console.log('handleRefresh')
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },
@@ -266,7 +265,6 @@ export default {
     },
 
     handleAudit(uuid) {
-      console.log(uuid)
       this.$refs['formDialog'].event = 'AuditTemplate'
       this.$refs['formDialog'].eventType = 'audit'
       this.$refs['formDialog'].transfer = { uuid }
@@ -299,6 +297,10 @@ export default {
       if (a.auditState === b.auditState) {
         return 0
       }
+    },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
     }
   }
 }

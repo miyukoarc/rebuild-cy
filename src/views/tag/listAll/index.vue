@@ -59,15 +59,6 @@
           </el-table-column>
         </el-table>
 
-        <!-- <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />-->
       </div>
     </el-card>
 
@@ -79,7 +70,7 @@
 // import mHeadedr from "./header";
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 import Sortable from 'sortablejs'
@@ -90,7 +81,6 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar
-    // mHeadedr
   },
   name: 'TagListAll',
   data() {

@@ -144,16 +144,7 @@
           </el-table-column>
         </el-table>
 
-        <!-- <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        /> -->
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage"></customer-pagination>
+        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
       </div>
     </el-card>
 
@@ -177,11 +168,10 @@
 <script>
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import VideoCover from '@/components/VideoCover'
 import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import media from '../../../store/modules/media'
 
 export default {
   components: {
@@ -189,7 +179,7 @@ export default {
     FormDialog,
     ToolBar,
     VideoCover,
-    CustomerPagination
+    CustomerPagination,
   },
   data() {
     return {
@@ -201,7 +191,7 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
       sortConfig: { prop: 'auditState', order: 'ascending' },
 
@@ -211,26 +201,26 @@ export default {
         auditConfirmation: '',
         auditType: 'MEDIA',
         handlerId: '',
-        submitterId: ''
+        submitterId: '',
       },
 
-      selects: []
+      selects: [],
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      auditStateEnum: state => state.enum.auditState,
+      auditStateEnum: (state) => state.enum.auditState,
       //   tagListAll: state => state.tag.tagListAll,
-      permissionMap: state => state.permission.permissionMap,
-      auditState: state => state.emnu.auditState,
-      mediaType: state => state.enum.mediaType,
+      permissionMap: (state) => state.permission.permissionMap,
+      auditState: (state) => state.emnu.auditState,
+      mediaType: (state) => state.enum.mediaType,
 
-      loading: state => state.sensitive.loading,
-      listAll: state => state.sensitive.auditMediaList,
-      page: state => state.sensitive.auditMediaPage,
-      currentUserUuid: state => state.user.uuid
-    })
+      loading: (state) => state.sensitive.loading,
+      listAll: (state) => state.sensitive.auditMediaList,
+      page: (state) => state.sensitive.auditMediaPage,
+      currentUserUuid: (state) => state.user.uuid,
+    }),
   },
   created() {
     this.initDataList(this.query)
@@ -256,10 +246,10 @@ export default {
       this.$store
         .dispatch('user/getUserListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -274,10 +264,10 @@ export default {
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -290,6 +280,7 @@ export default {
       this.query.submitterId = submitterId
         ? submitterId
         : this.query.submitterId
+      this.query.page = 0
       this.initDataList(this.query)
     },
     handleRefresh() {
@@ -297,13 +288,13 @@ export default {
       this.initDataList(this.query)
     },
     changePage(key) {
-        console.log(key)
+      console.log(key)
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
     },
     handleSelectionChange(val) {
-      this.selects = val.map(item => {
+      this.selects = val.map((item) => {
         return item.uuid
       })
     },
@@ -314,7 +305,7 @@ export default {
       const uuids = this.selects
       const payload = {
         auditConfirmation: 'APPROVED',
-        uuids
+        uuids,
       }
       if (this.selects.length) {
         this.$store
@@ -325,19 +316,19 @@ export default {
               message: '操作成功',
               onClose: () => {
                 this.initData()
-              }
+              },
             })
           })
-          .catch(err => {
+          .catch((err) => {
             this.$message({
               type: 'error',
-              message: '操作失败'
+              message: '操作失败',
             })
           })
       } else {
         this.$message({
           type: 'error',
-          message: '请选择至少一项'
+          message: '请选择至少一项',
         })
       }
     },
@@ -345,7 +336,7 @@ export default {
       const uuids = this.selects
       const payload = {
         auditConfirmation: 'AUDIT_FAILED',
-        uuids
+        uuids,
       }
       if (this.selects.length) {
         this.$store
@@ -356,19 +347,19 @@ export default {
               message: '操作成功',
               onClose: () => {
                 this.initData()
-              }
+              },
             })
           })
-          .catch(err => {
+          .catch((err) => {
             this.$message({
               type: 'error',
-              message: '操作失败'
+              message: '操作失败',
             })
           })
       } else {
         this.$message({
           type: 'error',
-          message: '请选择至少一项'
+          message: '请选择至少一项',
         })
       }
     },
@@ -406,8 +397,8 @@ export default {
     },
     selectable(row, index) {
       let flag = false
-      row.auditUsers.forEach(item => {
-        item.userList.forEach(user => {
+      row.auditUsers.forEach((item) => {
+        item.userList.forEach((user) => {
           if (user.uuid === this.currentUserUuid) {
             //   console.log(user.auditState)
             if (
@@ -428,13 +419,13 @@ export default {
         uuids = this.selects
         payload = {
           auditConfirmation: 'AUDIT_FAILED',
-          uuids
+          uuids,
         }
       } else {
         uuids = this.selects
         payload = {
           auditConfirmation: 'APPROVED',
-          uuids
+          uuids,
         }
       }
 
@@ -450,13 +441,13 @@ export default {
             duration: 1000,
             onClose: () => {
               this.initDataList(this.query)
-            }
+            },
           })
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
@@ -470,8 +461,12 @@ export default {
       if (a.auditState === b.auditState) {
         return 0
       }
+    },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
     }
-  }
+  },
 }
 </script>
 

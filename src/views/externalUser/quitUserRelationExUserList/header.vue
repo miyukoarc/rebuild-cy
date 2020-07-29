@@ -5,7 +5,7 @@
     </el-form-item>
 
     <el-form-item label="客户状态：">
-      <el-select v-model="query.status" @change="handleSelectedChange">
+      <el-select v-model="query.status">
         <el-option
           v-for="(item,index) in contractWay"
           :key="index"
@@ -75,24 +75,20 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      console.log(val);
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
-      this.$emit("handleSearch", this.query);
+
     },
     handleChangeFirst(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleSelectedChange(val) {
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {

@@ -118,23 +118,12 @@
                 size="mini"
                 @click.stop="handleDelete(scope.row)"
               >删除</el-t-button>
-              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
+
             </template>
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />
+        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
       </div>
     </el-card>
 
@@ -143,27 +132,22 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
-
 import AsyncUserTag from "@/components/AsyncUserTag";
 import TagsDrawer from "@/components/TagsDrawer";
-
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
+import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from "vuex";
-import { truncate } from "fs";
 
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar,
     TagsDrawer,
-    AsyncUserTag
-    // mHeadedr
+    AsyncUserTag,
+    CustomerPagination
   },
   data() {
     return {
@@ -309,7 +293,7 @@ export default {
       this.query.creatorUuid = creatorUuid ? creatorUuid : "";
       this.query.endTime = endTime ? endTime : "";
       this.query.startTime = startTime ? startTime : "";
-      console.log(this.query, "query");
+      this.query.page = 0
       this.initDataList(this.query);
     },
     sortNumber(max, min) {
@@ -402,12 +386,11 @@ export default {
         .catch(err => {});
     },
     handleSelectionChange(val) {
-      console.log(val, "9999");
-      // const arr = val;
       this.selects = val;
-      // this.selects = arr.map(item => {
-      //   return item.uuid;
-      // });
+    },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
     }
   }
 };
