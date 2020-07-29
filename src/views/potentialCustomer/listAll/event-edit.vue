@@ -50,6 +50,7 @@ export default {
     return {
       checkboxGroup: [],
       hasParent: false,
+      changeTag:false,
       form: {
         mobile: "",
         name: "",
@@ -100,12 +101,14 @@ export default {
   methods: {
     // 选择标签
     handleCheckedTagsChange(tag, index) {
+      this.changeTag = true
       this.checkboxGroup = tag;
     },
     // 确认提交潜在客户
     handleConfirm() {
-      this.form.tagId = this.checkboxGroup;
-      console.log(this.form, "99");
+      if (this.changeTag) {
+        this.form.tagId = this.checkboxGroup;
+      }
       this.$store
         .dispatch("potentialCustomer/potentialCustomerUpdate", this.form)
         .then(() => {
