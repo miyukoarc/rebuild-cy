@@ -47,8 +47,13 @@
           <el-table-column align="left" label="提交时间" prop="createdAt" sortable></el-table-column>
 
           <el-table-column align="left" label="添加/删除的标签内容">
-            <template v-slot="scoped">
-              <div>{{scoped.row.tagContent}}</div>
+            <template v-slot="{row}">
+              <div class="tag-container">
+                <div>{{tagOperationType[row.tagOperationType]}}</div>
+                <div>
+                  <!-- <el-tag v-for="tag in row.tagChangeContent" :key="tag.tagId" size="mini">{{tag.tagName}}</el-tag> -->
+                </div>
+              </div>
             </template>
           </el-table-column>
 
@@ -138,6 +143,7 @@ export default {
       loading: (state) => state.sensitive.loading,
       listAll: (state) => state.sensitive.auditTaglist,
       page: (state) => state.sensitive.auditTagPage,
+      tagOperationType: state => state.enum.tagOperationType
     }),
   },
   created() {
@@ -327,17 +333,7 @@ export default {
   text-align: center;
 }
 
-// .app-container {
-//   border-top: 1px solid #e9e9e9;
-//   background: white;
-//   .roles-table {
-//     margin-top: 30px;
-//   }
-//   .permission-tree {
-//     margin-bottom: 30px;
-//   }
-// }
-// header .el-header button {
-//   margin-right: 5px;
-// }
+.tag-container {
+  display: flex;
+}
 </style>

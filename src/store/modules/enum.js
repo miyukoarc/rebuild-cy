@@ -110,6 +110,11 @@ const state = {
   matchFormat: {
     "CONTAINS_ANY": '包含任意',
     "PERFECT_MATCH": '完全匹配'
+  },
+  tagOperationType:{
+    UPDATE_TAG: '修改标签',
+    DELETE_TAG_GROUP: '删除标签组',
+    ADD_TAG: '添加标签组'
   }
 
 }

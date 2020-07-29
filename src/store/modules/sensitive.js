@@ -349,7 +349,8 @@ const actions = {
           return {
             ...item,
             auditUsers: JSON.parse(item.auditUsers),
-            tagChangeContent: JSON.parse(item.tagChangeContent)
+            tagChangeContent: JSON.parse(item.tagChangeContent),
+            tagBeforeChangeContent: JSON.parse(item.tagBeforeChangeContent)
           }
         })
         commit('SAVE_TAGLIST', accessed)
