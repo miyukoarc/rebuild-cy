@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-27 14:05:27
- * @LastEditTime: 2020-07-17 22:28:33
+ * @LastEditTime: 2020-07-29 16:02:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\potentialCustomer\listAll\event-distribute.vue
@@ -84,27 +84,22 @@ export default {
       this.closeDialog();
     },
     handleConfrim() {
-      // this.form.forEach(item => {
-      //   this.form.userUuid = item.uuid;
-      // });
-      // console.log(
-      // let uuid = this.form.uuid.map(item => {
-      //   return item.uuid;
-      // });
-      //  ,'9999999999999' );
-      // this.form.uuid = uuid;
-      // console.log(this.form, "form");
-      this.$store
-        .dispatch("potentialCustomer/allocation", this.form)
-        .then(res => {
-          this.code(res.code);
+      const payload = this.form
+      this.$store.dispatch('potentialCustomer/allocation',payload).then(()=>{
+        this.$message({
+          type: 'success',
+          message: '操作成功'
         })
-        .catch(err => {
-          this.$message({
-            type: "error",
-            message: err
-          });
-        });
+        this.closeDialog()
+        this.handleRefresh()
+        
+      }).catch(err=>{
+        this.$message({
+          type: 'error',
+          message: err
+        })
+
+      })
     },
     code(code) {
       if (code == 1) {

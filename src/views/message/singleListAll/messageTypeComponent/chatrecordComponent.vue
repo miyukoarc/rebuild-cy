@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-25 17:44:32
- * @LastEditTime: 2020-07-28 15:30:49
+ * @LastEditTime: 2020-07-29 15:13:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\chatrecordComponent.vue
@@ -24,7 +24,7 @@
             </li>
           </ul>
           <div class="line"></div>
-          <div v-show="item" class="show-more">查看更多</div>
+          <div v-show="item" class="show-more" @click="handleClickViewMore(item)">查看更多</div>
         </div>
       </div>
     </div>
@@ -43,7 +43,7 @@
             </li>
           </ul>
           <div class="line"></div>
-          <div v-show="item" class="show-more">查看更多</div>
+          <div v-show="item" class="show-more"  @click="handleClickViewMore(item)">查看更多</div>
         </div>
         <el-avatar :src="item.fromAvatar" />
       </div>
@@ -67,6 +67,11 @@ export default {
     }),
   },
   mounted() {},
+  methods: {
+    handleClickViewMore(item) {
+      this.$emit('handleClickViewMore',item)
+    },
+  },
 };
 </script>
 

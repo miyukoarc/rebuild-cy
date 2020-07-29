@@ -77,8 +77,8 @@ export default {
     transfer: {
       handler(newVal, oldVal) {
         console.log(newVal, "newVal");
-        const { belong, uuid, selectedTag, mobile } = newVal;
-        this.form.name = belong.name;
+        const { belong, uuid, selectedTag, mobile,name } = newVal;
+        this.form.name = name;
         this.form.belongUuid = belong.uuid;
         this.form.uuid = uuid;
         this.form.mobile = mobile;
