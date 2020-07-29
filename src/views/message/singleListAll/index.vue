@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-29 17:50:56
+ * @LastEditTime: 2020-07-29 21:01:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -156,12 +156,13 @@
         </div>
       </div>
     </el-card>
+    <form-dialog ref="formDialog"></form-dialog>
   </section>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-
+import FormDialog from "./dialog";
 import ChatSideBar from "./components/ChatSideBar.vue";
 
 import ChatInformation from "./components/ChatInformation.vue";
@@ -188,6 +189,7 @@ import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_ca
 export default {
   name: "ListSingleAll",
   components: {
+    FormDialog,
     ChatSideBar,
     ChatTabBar,
     ChatInformation,
@@ -344,11 +346,11 @@ export default {
       console.log("搜索s");
     },
     handleClickViewMore(val) {
-      console.log(val, "val");
-      // this.$refs["formDialog"].dialogVisible = true;
-      // this.$refs["formDialog"].event = "EditTemplate";
-      // this.$refs["formDialog"].eventType = "edit";
-      // this.$refs["formDialog"].transfer = item;
+      console.log(val, "val====");
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].event = "showMoreTemplate";
+      this.$refs["formDialog"].eventType = "showMore";
+      this.$refs["formDialog"].transfer = val;
     },
     handleClickSideBarTab(e) {
       console.log(e.label, "点击侧边栏tab切换");
