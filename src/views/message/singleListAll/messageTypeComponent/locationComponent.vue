@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-27 15:26:03
- * @LastEditTime: 2020-07-28 19:02:22
+ * @LastEditTime: 2020-07-29 10:15:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\locationComponent.vue
@@ -15,15 +15,15 @@
         <div class="left amap-page-container">
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div id="mapa" class="map-container">
-            <!-- <div id="container-left"></div> -->
-            <el-amap class="amap-box" ref="amap" :zoom="zoom" :center="center" >
+            <div :id="id" class="maps"></div>
+            <!-- <el-amap class="amap-box" ref="amap" :zoom="zoom" :center="center">
               <el-amap-marker
                 v-for="marker in markers"
                 :position="marker.position"
                 :key="marker.id"
                 :icon="marker.icon"
               ></el-amap-marker>
-            </el-amap>
+            </el-amap>-->
             <div class="address">
               <span>{{item.messageMedias[0].title}}</span>
               <p>{{item.messageMedias[0].address}}</p>
@@ -39,16 +39,16 @@
         <div class="right amap-page-container">
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div id="mapa" class="map-container">
-            <!-- <div id="container-right"></div> -->
+            <div :id="id" class="maps"></div>
             <!-- <el-amap class="amap-box" ref="amap" :zoom="zoom" :center="center" :events="events"> -->
-              <el-amap class="amap-box" ref="amap" :zoom="zoom" :center="center">
+            <!-- <el-amap class="amap-box" ref="amap" :zoom="zoom" :center="center">
               <el-amap-marker
                 v-for="marker in markers"
                 :position="marker.position"
                 :key="marker.id"
                 :icon="marker.icon"
               ></el-amap-marker>
-            </el-amap>
+            </el-amap>-->
             <div class="address">
               <span>{{item.messageMedias[0].title}}</span>
               <p>{{item.messageMedias[0].address}}</p>
@@ -75,31 +75,32 @@ export default {
   },
   data() {
     return {
-      center: [121.539693, 31.126667], //地图中心点坐标
-      zoom: 16, //初始化地图显示层级
-      events: {
-        init(o) {
-          // console.log(o, "00000");
-        },
-        zoomchange: (e) => {
-          // console.log(e);
-        },
-        zoomend: (e) => {
-          //获取当前缩放zoom值
-          // console.log(this.$refs.amap.$$getInstance().getZoom());
-          // console.log(e);
-        },
-        click: (e) => {
-          // alert("map clicked");
-        },
-      },
-      markers: [
-        {
-          position: [121.539693, 31.126667],
-          icon: "",
-          visible: true,
-        },
-      ],
+      id: `id${Math.random()}`,
+      // center: [121.539693, 31.126667], //地图中心点坐标
+      // zoom: 16, //初始化地图显示层级
+      // events: {
+      //   init(o) {
+      //     // console.log(o, "00000");
+      //   },
+      //   zoomchange: (e) => {
+      //     // console.log(e);
+      //   },
+      //   zoomend: (e) => {
+      //     //获取当前缩放zoom值
+      //     // console.log(this.$refs.amap.$$getInstance().getZoom());
+      //     // console.log(e);
+      //   },
+      //   click: (e) => {
+      //     // alert("map clicked");
+      //   },
+      // },
+      // markers: [
+      //   {
+      //     position: [121.539693, 31.126667],
+      //     icon: "",
+      //     visible: true,
+      //   },
+      // ],
       // plugin: [
       //   {
       //     pName: "Scale",
@@ -125,40 +126,57 @@ export default {
     // this.initMap();
   },
   mounted() {
-    // var map = new AMap.Map("container-left", {
-    //   zoom: 11, //级别
-    //   center: [116.397428, 39.90923], //中心点坐标
-    //   viewMode: "3D", //使用3D视图
-    // });
+    var map = new AMap.Map(this.id, {
+      zoom: 16, //级别
+      center: [
+        this.item.messageMedias[0].longitude,
+        this.item.messageMedias[0].latitude,
+      ], //中心点坐标
+      viewMode: "3D", //使用3D视图
+    });
+    this.$nextTick(_=>{
+      document.querySelector('.amap-maps').addEventListener('mousemove',e=>{
+        e.passive = false
+      })
+    })
+    var marker = new AMap.Marker({
+      position: new AMap.LngLat(
+        this.item.messageMedias[0].longitude,
+        this.item.messageMedias[0].latitude
+      ), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+      title: "",
+    });
 
+    // 将创建的点标记添加到已有的地图实例：
+    map.add(marker);
     // var map = new AMap.Map("container-right", {
     //   zoom: 11, //级别
     //   center: [116.397428, 39.90923], //中心点坐标
     //   viewMode: "3D", //使用3D视图
     // });
 
-    document.addEventListener(
-      "touchmove",
-      function (event) {
-        event.preventDefault();
-      },
-      {
-        passive: false,
-      }
-    );
+    // document.addEventListener(
+    //   "mousemove",
+    //   function (event) {
+    //     event.preventDefault();
+    //   },
+    //   {
+    //     passive: false,
+    //   }
+    // );
 
-    this.markers.forEach((item) => {
-      this.$nextTick(() => {
-        this.center = [
-          this.item.messageMedias[0].longitude,
-          this.item.messageMedias[0].latitude,
-        ];
-        item.position = [
-          this.item.messageMedias[0].longitude,
-          this.item.messageMedias[0].latitude,
-        ];
-      });
-    });
+    // this.markers.forEach((item) => {
+    //   this.$nextTick(() => {
+    //     this.center = [
+    //       this.item.messageMedias[0].longitude,
+    //       this.item.messageMedias[0].latitude,
+    //     ];
+    //     item.position = [
+    //       this.item.messageMedias[0].longitude,
+    //       this.item.messageMedias[0].latitude,
+    //     ];
+    //   });
+    // });
   },
   methods: {
     // initMap() {
@@ -181,8 +199,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.amap-box,
-.AMap.Map {
+* {
   touch-action: none;
 }
 .amap-demo {
@@ -244,6 +261,9 @@ export default {
     position: relative;
     width: 295px;
     height: 185px;
+    .maps {
+      height: 185px;
+    }
     .address {
       width: 295px;
       height: 32px;

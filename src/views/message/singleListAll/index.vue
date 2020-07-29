@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-28 16:52:15
+ * @LastEditTime: 2020-07-28 20:22:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -391,6 +391,11 @@ export default {
       this.activeIdx = index;
       this.currnetMember = item;
       this.query.toUserId = item._id;
+      let payload = {
+        type: "externalUser",
+        uuid: this.$route.query.uuid,
+      };
+      this.initDataList(payload);
       this.getsinglelist(this.query);
     },
     handleClickChatType() {
