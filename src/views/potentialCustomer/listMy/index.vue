@@ -168,7 +168,7 @@ export default {
     FormDialog,
     ToolBar,
     TagsDrawer,
-    AsyncUserTag
+    AsyncUserTag,
     // mHeadedr
   },
   data() {
@@ -176,7 +176,7 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
@@ -189,24 +189,24 @@ export default {
         endTime: "",
         flag: "",
         min: "",
-        max: ""
+        max: "",
       },
 
-      selects: []
+      selects: [],
     };
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      loading: state => state.potentialCustomer.loading,
-      listMy: state => state.potentialCustomer.listMy,
-      listMyPage: state => state.potentialCustomer.listMyPage,
-      permissionMap: state => state.permission.permissionMap
+      tagListAll: (state) => state.tag.tagListAll,
+      loading: (state) => state.potentialCustomer.loading,
+      listMy: (state) => state.potentialCustomer.listMy,
+      listMyPage: (state) => state.potentialCustomer.listMyPage,
+      permissionMap: (state) => state.permission.permissionMap,
     }),
     routesData() {
       return this.routes;
-    }
+    },
   },
   created() {
     this.initDataList(this.query);
@@ -231,30 +231,30 @@ export default {
       this.$store
         .dispatch("tag/getListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
 
       this.$store
         .dispatch("department/getDepartmentListAll")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: err || "初始化失败"
+            message: err || "初始化失败",
           });
         });
 
       this.$store
         .dispatch("user/getUserListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
     },
@@ -269,10 +269,10 @@ export default {
           this.pageConfig.pageNumber = this.listMyPage.pageNumber + 1;
           this.pageConfig.total = this.listMyPage.total;
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
     },
@@ -298,7 +298,7 @@ export default {
         max,
         min,
         name,
-        startTime
+        startTime,
       } = val;
       if (val.flag == 2) {
         this.query.flag = true;
@@ -340,9 +340,10 @@ export default {
       this.$refs["formDialog"].dialogVisible = true;
     },
     handleDistribute() {
-      const uuid = this.selects.map(item => {
+      const uuid = this.selects.map((item) => {
         return item.uuid;
       });
+
       const payload = { uuid };
       if (this.selects.length) {
         this.$refs["formDialog"].event = "DistributeTemplate";
@@ -352,14 +353,15 @@ export default {
       } else {
         this.$message({
           type: "warning",
-          message: "请至少选择一个客户"
+          message: "请至少选择一个客户",
         });
       }
     },
+
     handleSelectionChange(val) {
       console.log(val);
       const arr = val;
-      this.selects = arr.map(item => {
+      this.selects = arr.map((item) => {
         return item.uuid + "";
       });
     },
@@ -372,7 +374,25 @@ export default {
       } else {
         this.$message({
           type: "warning",
-          message: "请至少选择一个客户"
+          message: "请至少选择一个客户",
+        });
+      }
+    },
+    handleDistribute() {
+      const uuid = this.selects.map((item) => {
+        return item.uuid;
+      });
+
+      const payload = { uuid };
+      if (this.selects.length) {
+        this.$refs["formDialog"].event = "DistributeTemplate";
+        this.$refs["formDialog"].eventType = "distribute";
+        this.$refs["formDialog"].dialogVisible = true;
+        this.$refs["formDialog"].transfer = payload;
+      } else {
+        this.$message({
+          type: "warning",
+          message: "请至少选择一个客户",
         });
       }
     },
@@ -381,7 +401,7 @@ export default {
       console.log(row, "777");
       this.$refs.multipleTable.clearSelection();
       this.handleSelectionChange([row]);
-      this.selects.forEach(row => {
+      this.selects.forEach((row) => {
         this.$refs.multipleTable.toggleRowSelection(row);
       });
       this.$refs["formDialog"].event = "DistributeTemplate";
@@ -390,14 +410,14 @@ export default {
       this.$refs["formDialog"].transfer = row;
     },
     handleEdit(row) {
-      const { belong, uuid, mobile } = row;
+      const { belong, uuid, mobile, name } = row;
       let selectedTag = [];
-      row.potentialCustomerTags.map(item => {
-        item.tags.map(tag => {
+      row.potentialCustomerTags.map((item) => {
+        item.tags.map((tag) => {
           selectedTag.push(tag.tagId);
         });
       });
-      const payload = { belong, uuid, selectedTag, mobile };
+      const payload = { belong, uuid, selectedTag, mobile, name };
       this.$refs["formDialog"].event = "EditTemplate";
       this.$refs["formDialog"].eventType = "edit";
       this.$refs["formDialog"].dialogVisible = true;
@@ -409,7 +429,7 @@ export default {
       this.$confirm("是否删除当前客户", "删除潜在客户", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           await this.$store
@@ -417,18 +437,18 @@ export default {
             .then(() => {
               this.$message({
                 type: "success",
-                message: "操作成功"
+                message: "操作成功",
               });
               this.initDataList();
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: "error",
-                message: err
+                message: err,
               });
             });
         })
-        .catch(err => {});
+        .catch((err) => {});
     },
     handleSelectionChange(val) {
       console.log(val, "9999");
@@ -437,8 +457,8 @@ export default {
       // this.selects = arr.map(item => {
       //   return item.uuid;
       // });
-    }
-  }
+    },
+  },
 };
 </script>
 

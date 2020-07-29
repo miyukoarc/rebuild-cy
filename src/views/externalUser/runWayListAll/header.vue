@@ -37,7 +37,7 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item label="添加时间：">
+    <el-form-item label="流失时间：">
       <el-date-picker
         v-model="value"
         type="daterange"

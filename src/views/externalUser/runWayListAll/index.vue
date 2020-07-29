@@ -62,7 +62,9 @@
           </el-table-column>
           <el-table-column label="标签" align="left">
             <template v-slot="scope">
-              <tags-drawer-obj v-if="scope.row.tags" :tags="scope.row.tags.corpTags"></tags-drawer-obj>
+              <tags-drawer v-if="scope.row.tags.length>0" :tags="scope.row.tags"></tags-drawer>
+              <span v-else>--</span>
+              <!-- <tags-drawer-obj v-if="scope.row.tags" :tags="scope.row.tags.corpTags"></tags-drawer-obj> -->
             </template>
           </el-table-column>
           <el-table-column label="流失时间" align="left" prop="updatedAt"></el-table-column>
@@ -112,7 +114,7 @@ import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 import AsyncUserTag from "@/components/AsyncUserTag";
-import TagsDrawerObj from "@/components/TagsDrawerObj";
+import TagsDrawer from "@/components/TagsDrawer";
 import UserTag from "@/components/UserTag";
 
 export default {
@@ -123,8 +125,8 @@ export default {
     FormDialog,
     ToolBar,
     AsyncUserTag,
-    TagsDrawerObj,
-    UserTag
+    TagsDrawer,
+    UserTag,
     // mHeadedr
   },
   data() {
@@ -133,7 +135,7 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
@@ -145,18 +147,18 @@ export default {
         userUuid: "",
         startTime: "",
         endTime: "",
-        delFollow: ""
-      }
+        delFollow: "",
+      },
     };
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      loading: state => state.externalUser.loading,
-      runWayListAll: state => state.externalUser.runWayListAll,
-      runWayListAllPage: state => state.externalUser.runWayListAllPage
-    })
+      tagListAll: (state) => state.tag.tagListAll,
+      loading: (state) => state.externalUser.loading,
+      runWayListAll: (state) => state.externalUser.runWayListAll,
+      runWayListAllPage: (state) => state.externalUser.runWayListAllPage,
+    }),
   },
   created() {
     this.initDataList(this.query);
@@ -174,11 +176,11 @@ export default {
           this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1;
           this.pageConfig.total = this.runWayListAllPage.total;
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
     },
@@ -190,20 +192,20 @@ export default {
       this.$store
         .dispatch("tag/getListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
 
       this.$store
         .dispatch("user/getUserListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
     },
@@ -211,7 +213,7 @@ export default {
     handleDetail(index, row) {
       this.$router.push({
         path: `/externalUser/detail/${row.externalUser.uuid}`,
-        query: { userId: row.user.userId }
+        query: { userId: row.user.userId },
       });
     },
     handleSearch(val) {
@@ -223,7 +225,7 @@ export default {
         flag,
         startTime,
         endTime,
-        delFollow
+        delFollow,
       } = val;
       if (delFollow === "") {
         this.query.delFollow = "";
@@ -254,8 +256,8 @@ export default {
     },
     doExport(val) {
       console.log(val);
-    }
-  }
+    },
+  },
 };
 </script>
 

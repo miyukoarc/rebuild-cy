@@ -15,7 +15,7 @@
       </el-select>
     </el-form-item>-->
 
-    <el-form-item label="所属员工：">
+    <!-- <el-form-item label="所属员工：">
       <el-select v-model="query.belongUuid" clearable @change="handleSelectedChange">
         <el-option
           v-for="item in userListAll"
@@ -24,7 +24,7 @@
           :value="item.uuid"
         ></el-option>
       </el-select>
-    </el-form-item>
+    </el-form-item> -->
 
     <el-form-item label="添加员工：">
       <el-select v-model="query.creatorUuid" clearable @change="handleSelectedChange">
@@ -37,7 +37,7 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item label="添加时间：">
+    <el-form-item label="入库时间：">
       <el-date-picker
         v-model="value"
         type="daterange"

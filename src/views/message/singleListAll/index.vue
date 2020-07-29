@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-28 20:22:02
+ * @LastEditTime: 2020-07-29 15:12:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -130,6 +130,7 @@
                           :item="list"
                           :to-user-id="query.toUserId"
                           :from-user-id="query.fromUserId"
+                          @handleClickViewMore="handleClickViewMore"
                         />
                       </div>
                     </div>
@@ -341,6 +342,13 @@ export default {
     },
     handleClickSearch() {
       console.log("搜索s");
+    },
+    handleClickViewMore(val){
+      console.log(val,'val')
+      // this.$refs["formDialog"].dialogVisible = true;
+      // this.$refs["formDialog"].event = "EditTemplate";
+      // this.$refs["formDialog"].eventType = "edit";
+      // this.$refs["formDialog"].transfer = item;
     },
     handleClickSideBarTab(e) {
       console.log(e.label, "点击侧边栏tab切换");
