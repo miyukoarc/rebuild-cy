@@ -23,17 +23,16 @@
           label:'name',
           children:'children'
         }"
-        @change="handleChangeSecond"
       ></el-select-tree>
     </el-form-item>
 
     <el-form-item label="员工角色：">
-      <el-select v-model="query.roleUuid" clearable @change="handleChangeThird">
+      <el-select v-model="query.roleUuid" clearable filterable>
         <el-option v-for="item in roleList" :key="item.uuid" :label="item.name" :value="item.uuid"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="会话存档授权状态：">
-      <el-select v-model="query.isMessageUser" clearable @change="handleChangeForth">
+      <el-select v-model="query.isMessageUser" clearable>
         <el-option
           v-for="item in isMessageUserList"
           :key="item.isMessageUser"
@@ -43,7 +42,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="允许登陆授权：">
-      <el-select v-model="query.visible" clearable @change="handleChangeFifth">
+      <el-select v-model="query.visible" clearable>
         <el-option
           v-for="item in visibleList"
           :key="item.visible"
@@ -53,7 +52,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="通讯录授权：">
-      <el-select v-model="query.isFollowUser" clearable @change="handleChangeSixth">
+      <el-select v-model="query.isFollowUser" clearable >
         <el-option
           v-for="item in isFollowUserList"
           :key="item.isFollowUser"

@@ -24,12 +24,6 @@
             :auth="permissionMap['riskManagement']['riskManagement_add']"
             @click.stop="handleBatchChange"
           >设置通知人</el-t-button>
-          <!-- <el-t-button
-            type="primary"
-            :popAuth="true"
-            :auth="permissionMap['riskManagement']['riskManagement_add']"
-            @click.stop="handleCreate"
-          >设置适用敏感词</el-t-button>-->
         </div>
       </tool-bar>
     </el-card>
@@ -88,9 +82,7 @@
                 <div>{{row.tagType=='INSET'?'包含其一':'全部满足'}}</div>
                 <tags-drawer :tags="row.sensitiveSetTag"></tags-drawer>
               </div>
-              <!-- <div v-if="Object.keys(row.sensitiveSetTag).length>1"> -->
-              <!-- </div> -->
-              <!-- <div v-else>--</div> -->
+
             </template>
           </el-table-column>
 
@@ -147,8 +139,6 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
@@ -161,14 +151,12 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar,
     AsyncUserTag,
     AsyncUserDrawer,
     RoleDrawer,
     TagsDrawer
-    // mHeadedr
   },
   data() {
     return {

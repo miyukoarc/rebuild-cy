@@ -56,7 +56,7 @@
         <el-radio v-model="form.tagType" label="UNIONSET">完全匹配</el-radio>
       </div>
     </el-form-item>
-    <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>
+    <tag-multi-select v-model="tagSelects"></tag-multi-select>
 
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
@@ -69,14 +69,14 @@
 import { mapState } from "vuex";
 import ComplexSelect from "@/components/ComplexSelect";
 import AsyncUserTag from "@/components/AsyncUserTag";
-import TagSelect from "@/components/TagSelect";
+import TagMultiSelect from '@/components/TagMultiSelect'
 
 export default {
   inject: ["reload"],
   components: {
     AsyncUserTag,
     ComplexSelect,
-    TagSelect
+    TagMultiSelect
   },
   data() {
     return {
@@ -136,7 +136,7 @@ export default {
   computed: {
     ...mapState({
       departmentList: state => state.department.departmentList,
-      listSelect: state => state.role.listSelect,
+      listSelect: state => state.role.roleListSelect,
       tagListSelect: state => state.tag.tagListSelect
     }),
     toUser() {
@@ -186,13 +186,10 @@ export default {
       } else {
         this.form.toRole = this.toRoles;
       }
-      this.form.setTag = this.tagSelects.reduce((sum, curr) => {
-        return sum.concat(curr);
-      }, []);
+      this.form.setTag = this.tagSelects
       const payload = this.form;
 
       this.$refs["form"].validate(valid => {
-        console.log(payload);
         if (valid) {
           this.$store
             .dispatch("sensitive/add", payload)

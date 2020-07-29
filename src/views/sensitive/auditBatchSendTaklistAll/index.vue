@@ -110,7 +110,7 @@
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
         />-->
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage"></customer-pagination>
+        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
       </div>
     </el-card>
 
@@ -121,7 +121,7 @@
 <script>
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import TagsDrawer from '@/components/TagsDrawer'
 import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
@@ -451,6 +451,10 @@ export default {
       })
       return row.auditState === 'TO_BE_REVIEWED' && !flag
     },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
+    }
   },
 }
 </script>

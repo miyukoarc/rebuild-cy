@@ -57,15 +57,10 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />
+        <customer-pagination 
+        :pageConfig="pageConfig" 
+        @current-change="changePage" 
+        @size-change="changeSize"></customer-pagination>
       </div>
     </el-card>
 
@@ -74,121 +69,126 @@
 </template>
 
 <script>
-import ListHeader from "./header.vue";
-import FormDialog from "./dialog";
-import ToolBar from "./tool-bar";
-import { mapState, mapMutations, mapActions } from "vuex";
+import ListHeader from './header.vue'
+import FormDialog from './dialog'
+import ToolBar from './tool-bar'
+import CustomerPagination from '@/components/CustomerPagination'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {
     ListHeader,
     FormDialog,
-    ToolBar
+    ToolBar,
+    CustomerPagination
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
       query: {
         page: 0,
-        size: 10
-      }
-    };
+        size: 10,
+      },
+    }
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
+      tagListAll: (state) => state.tag.tagListAll,
 
-      loading: state => state.batchSendTask.loading,
-      batchSendTaskListAll: state => state.batchSendTask.batchSendTaskListAll,
-      page: state => state.batchSendTask.listAllPage,
+      loading: (state) => state.batchSendTask.loading,
+      batchSendTaskListAll: (state) => state.batchSendTask.batchSendTaskListAll,
+      page: (state) => state.batchSendTask.listAllPage,
 
-      permissionMap: state => state.permission.permissionMap
-    })
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
-    this.initDataList(this.query);
-    this.initFilter();
+    this.initDataList(this.query)
+    this.initFilter()
   },
   methods: {
     doExport(val) {
-      console.log(val);
+      console.log(val)
     },
     /**
      * 初始化筛选信息
      */
     initFilter() {
       this.$store
-        .dispatch("tag/getListSelect")
+        .dispatch('tag/getListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
 
       this.$store
-        .dispatch("user/getAllUserList")
+        .dispatch('user/getAllUserList')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch("batchSendTask/getBatchSendTaskListAll", payload)
+        .dispatch('batchSendTask/getBatchSendTaskListAll', payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1;
-          this.pageConfig.total = this.page.total;
+          this.pageConfig.pageNumber = this.page.pageNumber + 1
+          this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
     handleDetail(val) {
-      this.$router.push(`/batchSendTask/detail/${val.uuid}`);
+      this.$router.push(`/batchSendTask/detail/${val.uuid}`)
     },
     handleSearch(val) {
-      const { tagIds, name } = val;
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds;
-      this.query.name = name ? name : this.query.name;
-      console.log(val, "handleSearch");
-      this.initDataList(this.query);
+      const { tagIds, name } = val
+      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
+      this.query.name = name ? name : this.query.name
+      this.query.page = 0
+      this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log("handleRefresh");
-      this.query = this.$options.data().query;
-      this.initDataList(this.query);
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
     },
     changePage(key) {
-      this.query.page = key - 1;
-      this.pageConfig.pageNumber = key - 1;
-      this.initDataList(this.query);
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key - 1
+      this.initDataList(this.query)
     },
 
     actionDepartment() {
-      this.$refs.formDialog.dialogVisible = true;
-      this.$refs.formDialog.event = "addBatchSendTaskTemplate";
-      this.$refs.formDialog.eventType = "addBatchSendTask";
-      this.$refs.formDialog.dialogWidth = "70%";
-    }
-  }
-};
+      this.$refs.formDialog.dialogVisible = true
+      this.$refs.formDialog.event = 'addBatchSendTaskTemplate'
+      this.$refs.formDialog.eventType = 'addBatchSendTask'
+      this.$refs.formDialog.dialogWidth = '70%'
+    },
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

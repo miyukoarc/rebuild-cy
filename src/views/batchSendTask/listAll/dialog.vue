@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      event: "DistributeTemplate",
+      event: "",
       eventType: "",
       dialogWidth: "600px"
     };

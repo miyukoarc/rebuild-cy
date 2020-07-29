@@ -118,23 +118,12 @@
                 size="mini"
                 @click.stop="handleDelete(scope.row)"
               >删除</el-t-button>
-              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
+
             </template>
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />
+        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
       </div>
     </el-card>
 
@@ -143,34 +132,29 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
-
 import AsyncUserTag from "@/components/AsyncUserTag";
 import TagsDrawer from "@/components/TagsDrawer";
-
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
+import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from "vuex";
-import { truncate } from "fs";
 
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar,
     TagsDrawer,
     AsyncUserTag,
-    // mHeadedr
+    CustomerPagination
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10,
+        pageSize: 10
       },
 
       query: {
@@ -183,21 +167,21 @@ export default {
         endTime: "",
         flag: "",
         min: "",
-        max: "",
+        max: ""
       },
 
-      selects: [],
+      selects: []
     };
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: (state) => state.tag.tagListAll,
-      loading: (state) => state.potentialCustomer.loading,
-      listAll: (state) => state.potentialCustomer.listAll,
-      page: (state) => state.potentialCustomer.listAllPage,
-      permissionMap: (state) => state.permission.permissionMap,
-    }),
+      tagListAll: state => state.tag.tagListAll,
+      loading: state => state.potentialCustomer.loading,
+      listAll: state => state.potentialCustomer.listAll,
+      page: state => state.potentialCustomer.listAllPage,
+      permissionMap: state => state.permission.permissionMap
+    })
   },
   created() {
     this.initDataList(this.query);
@@ -222,30 +206,30 @@ export default {
       this.$store
         .dispatch("tag/getListSelect")
         .then(() => {})
-        .catch((err) => {
+        .catch(err => {
           this.$message({
             type: "error",
-            message: "初始化失败",
+            message: "初始化失败"
           });
         });
 
       this.$store
         .dispatch("department/getDepartmentListAll")
         .then(() => {})
-        .catch((err) => {
+        .catch(err => {
           this.$message({
             type: "error",
-            message: err || "初始化失败",
+            message: err || "初始化失败"
           });
         });
 
       this.$store
         .dispatch("user/getUserListSelect")
         .then(() => {})
-        .catch((err) => {
+        .catch(err => {
           this.$message({
             type: "error",
-            message: "初始化失败",
+            message: "初始化失败"
           });
         });
     },
@@ -260,10 +244,10 @@ export default {
           this.pageConfig.pageNumber = this.page.pageNumber + 1;
           this.pageConfig.total = this.page.total;
         })
-        .catch((err) => {
+        .catch(err => {
           this.$message({
             type: "error",
-            message: "初始化失败",
+            message: "初始化失败"
           });
         });
     },
@@ -271,7 +255,7 @@ export default {
       const payload = this.userList[val].uuid;
       this.$router.push({
         path: "/user/detail",
-        query: { uuid: payload },
+        query: { uuid: payload }
       });
     },
     handleSearch(val) {
@@ -289,7 +273,7 @@ export default {
         max,
         min,
         name,
-        startTime,
+        startTime
       } = val;
       if (val.flag == 2) {
         this.query.flag = true;
@@ -309,7 +293,7 @@ export default {
       this.query.creatorUuid = creatorUuid ? creatorUuid : "";
       this.query.endTime = endTime ? endTime : "";
       this.query.startTime = startTime ? startTime : "";
-      console.log(this.query, "query");
+      this.query.page = 0
       this.initDataList(this.query);
     },
     sortNumber(max, min) {
@@ -350,7 +334,6 @@ export default {
     },
     handleAllocation(row) {
       row.uuid = [row.uuid];
-      console.log(row, "777");
       this.$refs.multipleTable.clearSelection();
       this.handleSelectionChange([row]);
       this.selects.forEach(row => {
@@ -362,15 +345,14 @@ export default {
       this.$refs["formDialog"].transfer = row;
     },
     handleEdit(row) {
-      console.log(row, "row");
-      const { belong, uuid, mobile, name } = row;
+      const { belong, uuid, mobile } = row;
       let selectedTag = [];
-      row.potentialCustomerTags.map((item) => {
-        item.tags.map((tag) => {
+      row.potentialCustomerTags.map(item => {
+        item.tags.map(tag => {
           selectedTag.push(tag.tagId);
         });
       });
-      const payload = { belong, uuid, selectedTag, mobile, name };
+      const payload = { belong, uuid, selectedTag, mobile };
       this.$refs["formDialog"].event = "EditTemplate";
       this.$refs["formDialog"].eventType = "edit";
       this.$refs["formDialog"].dialogVisible = true;
@@ -382,7 +364,7 @@ export default {
       this.$confirm("是否删除当前客户", "删除潜在客户", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
         .then(async () => {
           await this.$store
@@ -390,28 +372,27 @@ export default {
             .then(() => {
               this.$message({
                 type: "success",
-                message: "操作成功",
+                message: "操作成功"
               });
               this.initDataList();
             })
-            .catch((err) => {
+            .catch(err => {
               this.$message({
                 type: "error",
-                message: err,
+                message: err
               });
             });
         })
-        .catch((err) => {});
+        .catch(err => {});
     },
     handleSelectionChange(val) {
-      console.log(val, "9999");
-      // const arr = val;
       this.selects = val;
-      // this.selects = arr.map(item => {
-      //   return item.uuid;
-      // });
     },
-  },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
+    }
+  }
 };
 </script>
 

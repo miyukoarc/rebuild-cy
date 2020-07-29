@@ -20,7 +20,7 @@
           highlight-current-row
           header-row-class-name="el-table-header"
         >
-          <!-- <el-table-column type="selection"></el-table-column> -->
+
           <el-table-column label="流失客户" align="left">
             <template v-slot="scope">
               <div class="user-card">
@@ -55,26 +55,19 @@
                   {{item.name}}
                 </async-user-tag>
               </div>
-              <!-- <!-- <div v-if="Object.keys(row.toRole).length">
-                <role-drawer :roles="row.toRole"></role-drawer>
-              </div>-->
+
             </template>
           </el-table-column>
           <el-table-column label="标签" align="left">
             <template v-slot="scope">
-              <tags-drawer v-if="scope.row.tags.length>0" :tags="scope.row.tags"></tags-drawer>
-              <span v-else>--</span>
-              <!-- <tags-drawer-obj v-if="scope.row.tags" :tags="scope.row.tags.corpTags"></tags-drawer-obj> -->
+              <tags-drawer-obj v-if="scope.row.tags" :tags="scope.row.tags.corpTags"></tags-drawer-obj>
             </template>
           </el-table-column>
           <el-table-column label="流失时间" align="left" prop="updatedAt"></el-table-column>
           <el-table-column label="流失类型" align="left">
             <template v-slot="scope">{{scope.row.delFollow?'被客户删除':'主动删除客户'}}</template>
           </el-table-column>
-          <!-- <el-table-column label="渠道来源" align="left">
-            <template v-slot="scope">
-            </template>
-          </el-table-column>-->
+
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-button
@@ -82,22 +75,16 @@
                 size="mini"
                 @click.stop="handleDetail(scope.$index,scope.row)"
               >详情</el-button>
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />
+        <customer-pagination 
+        :pageConfig="pageConfig" 
+        @current-change="changePage" 
+        @size-change="changeSize">
+        </customer-pagination>
+
       </div>
     </el-card>
 
@@ -106,28 +93,26 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 import AsyncUserTag from "@/components/AsyncUserTag";
-import TagsDrawer from "@/components/TagsDrawer";
+import TagsDrawerObj from "@/components/TagsDrawerObj";
 import UserTag from "@/components/UserTag";
+import CustomerPagination from '@/components/CustomerPagination'
 
 export default {
   name: "runWayListAll",
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar,
     AsyncUserTag,
-    TagsDrawer,
+    TagsDrawerObj,
     UserTag,
-    // mHeadedr
+    CustomerPagination
   },
   data() {
     return {
@@ -135,7 +120,7 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10,
+        pageSize: 10
       },
 
       query: {
@@ -147,18 +132,18 @@ export default {
         userUuid: "",
         startTime: "",
         endTime: "",
-        delFollow: "",
-      },
+        delFollow: ""
+      }
     };
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: (state) => state.tag.tagListAll,
-      loading: (state) => state.externalUser.loading,
-      runWayListAll: (state) => state.externalUser.runWayListAll,
-      runWayListAllPage: (state) => state.externalUser.runWayListAllPage,
-    }),
+      tagListAll: state => state.tag.tagListAll,
+      loading: state => state.externalUser.loading,
+      runWayListAll: state => state.externalUser.runWayListAll,
+      runWayListAllPage: state => state.externalUser.runWayListAllPage
+    })
   },
   created() {
     this.initDataList(this.query);
@@ -176,11 +161,11 @@ export default {
           this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1;
           this.pageConfig.total = this.runWayListAllPage.total;
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(err);
           this.$message({
             type: "error",
-            message: "初始化失败",
+            message: "初始化失败"
           });
         });
     },
@@ -192,28 +177,28 @@ export default {
       this.$store
         .dispatch("tag/getListSelect")
         .then(() => {})
-        .catch((err) => {
+        .catch(err => {
           this.$message({
             type: "error",
-            message: "初始化失败",
+            message: "初始化失败"
           });
         });
 
       this.$store
         .dispatch("user/getUserListSelect")
         .then(() => {})
-        .catch((err) => {
+        .catch(err => {
           this.$message({
             type: "error",
-            message: "初始化失败",
+            message: "初始化失败"
           });
         });
     },
 
     handleDetail(index, row) {
       this.$router.push({
-        path: `/externalUser/detail/${row.externalUser.uuid}`,
-        query: { userId: row.user.userId },
+        path: `/externalUser/detail/${row.uuid}`,
+        query: { userId: row.user.userId }
       });
     },
     handleSearch(val) {
@@ -225,7 +210,7 @@ export default {
         flag,
         startTime,
         endTime,
-        delFollow,
+        delFollow
       } = val;
       if (delFollow === "") {
         this.query.delFollow = "";
@@ -240,8 +225,9 @@ export default {
       this.query.userUuid = userUuid ? userUuid : this.query.userUuid;
       this.query.startTime = startTime ? startTime : this.query.startTime;
       this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.query.page = 0
       // this.query.delFollow = delFollow ? delFollow : this.query.delFollow;
-      console.log(val, "handleSearch");
+    //   console.log(val, "handleSearch");
       this.initDataList(this.query);
     },
     handleRefresh() {
@@ -257,7 +243,11 @@ export default {
     doExport(val) {
       console.log(val);
     },
-  },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
+    }
+  }
 };
 </script>
 

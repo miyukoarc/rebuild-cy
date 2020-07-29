@@ -1,13 +1,14 @@
 <template>
   <div>
     <div class="tool-bar-container">
-        <div class="left">
-            <slot name="left"></slot>
-        </div>
+      <div class="left">
+        <slot name="left"></slot>
+      </div>
       <div class="middle-left">
         <el-button type="primary" @click="actionExport" v-if="hasExport">导出Excel</el-button>
         <el-button type="primary" @click="actionImport" v-if="hasImport">导入Excel</el-button>
-        <!-- <span class="font-s color-info">{{msg}}</span> -->
+        <el-button type="text" @click="actionRefresh" v-if="hasRefresh">更新数据</el-button>
+        <span class="font-s color-info">{{msg}}</span>
       </div>
 
       <div class="right">
@@ -20,14 +21,18 @@
 <script>
 export default {
   props: {
-    // msg: {
-    //   type: String
-    // },
+    msg: {
+      type: String
+    },
     hasExport: {
       type: Boolean,
       default: true
     },
     hasImport: {
+      type: Boolean,
+      default: false
+    },
+    hasRefresh: {
       type: Boolean,
       default: false
     }
@@ -38,6 +43,9 @@ export default {
     },
     actionImport() {
       this.$emit('handleImport', '导入')
+    },
+    actionRefresh(){
+        this.$emit('handleRefresh')
     }
   }
 }
@@ -47,10 +55,9 @@ export default {
 .tool-bar-container {
   display: flex;
   justify-content: space-between;
-  .left{
-      display: flex;
-      align-items: center;
-      margin: 0 20px 0 0;
+  .left {
+    display: flex;
+    align-items: center;
   }
 
   .middle-left {

@@ -1,11 +1,11 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="敏感词">
-      <el-input v-model.trim="query.word" @change="handleChangeSecond"></el-input>
+      <el-input v-model.trim="query.word"></el-input>
     </el-form-item>
 
     <el-form-item label="触发员工">
-      <el-select v-model="query.userUuid" @change="handleChangeSecond">
+      <el-select v-model="query.userUuid">
         <el-option
           v-for="item in userListAll"
           :key="item.uuid"
@@ -15,15 +15,6 @@
       </el-select>
     </el-form-item>
 
-    
-
-    <!-- <el-form-item label="手机号码">
-      <el-input v-model.trim="query.name"></el-input>
-    </el-form-item>
-
-    <el-form-item label="批量添加次数">
-      <el-input v-model.trim="query.name"></el-input>
-    </el-form-item>-->
 
     <el-form-item label="触发时间">
       <el-date-picker
@@ -91,10 +82,9 @@ export default {
   },
   methods: {
     handleChangeFirst(val) {
-      console.log(val)
       this.query.startTime = val[0]
       this.query.endTime = val[1]
-      this.$emit('handleSearch', this.query)
+    //   this.$emit('handleSearch', this.query)
     },
     handleChangeSecond(val) {
       console.log(val)

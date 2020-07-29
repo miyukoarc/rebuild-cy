@@ -7,7 +7,7 @@
     <el-card class="content-spacing">
       <tool-bar :hasExport="false">
         <div slot="right">
-          <!-- <el-t-button type="primary">新建文章</el-t-button> -->
+
           <el-t-button
             type="primary"
             :popAuth="true"
@@ -57,25 +57,12 @@
                 :popAuth="true"
                 :auth="permissionMap['media']['media_delete']"
               >删除</el-t-button>
-              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
 
-        <!-- <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />-->
 
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage"></customer-pagination>
+        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
       </div>
     </el-card>
 
@@ -84,8 +71,6 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
@@ -97,10 +82,8 @@ export default {
   components: {
     CustomerPagination,
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar
-    // mHeadedr
   },
   data() {
     return {
@@ -189,12 +172,11 @@ export default {
     handleSearch(val) {
       const { title } = val
       this.query.title = title ? title : this.query.title
-      //   this.query.name = name ? name : this.query.name
-      console.log(val, 'handleSearch')
+      this.query.page = 0
+
       this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log('handleRefresh')
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },
@@ -247,6 +229,10 @@ export default {
       this.$router.push({
         path: '/media/browsingRecords/' + uuid
       })
+    },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
     }
   }
 }

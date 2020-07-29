@@ -4,30 +4,8 @@
       <el-input v-model.trim="query.name" clearable></el-input>
     </el-form-item>
 
-    <!-- <el-form-item label="添加渠道：">
-      <el-select v-model="query.contractWayId" clearable @change="handleSelectedChange">
-        <el-option
-          v-for="(item,index) in contractWay"
-          :key="index"
-          :label="item.type"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-    </el-form-item>-->
-
-    <!-- <el-form-item label="所属员工：">
-      <el-select v-model="query.belongUuid" clearable @change="handleSelectedChange">
-        <el-option
-          v-for="item in userListAll"
-          :key="item.userId"
-          :label="item.name"
-          :value="item.uuid"
-        ></el-option>
-      </el-select>
-    </el-form-item> -->
-
-    <el-form-item label="添加员工：">
-      <el-select v-model="query.creatorUuid" clearable @change="handleSelectedChange">
+    <el-form-item label="所属员工：">
+      <el-select filterable v-model="query.belongUuid" clearable>
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -37,7 +15,18 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item label="入库时间：">
+    <el-form-item label="添加员工：">
+      <el-select v-model="query.creatorUuid" clearable filterable>
+        <el-option
+          v-for="item in userListAll"
+          :key="item.userId"
+          :label="item.name"
+          :value="item.uuid"
+        ></el-option>
+      </el-select>
+    </el-form-item>
+
+    <el-form-item label="添加时间：">
       <el-date-picker
         v-model="value"
         type="daterange"
@@ -131,10 +120,9 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      console.log(val);
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
-      this.$emit("handleSearch", this.query);
+    //   this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
       if (this.timer) {
@@ -145,7 +133,6 @@ export default {
       }, 1000);
     },
     handleSelectedChange(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {

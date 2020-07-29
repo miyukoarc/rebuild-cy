@@ -24,7 +24,7 @@
     </el-form-item>-->
 
     <el-form-item label="审批人：">
-      <el-select v-model="query.handlerId" clearable @change="handleChangeThird">
+      <el-select v-model="query.handlerId" filterable clearable>
         <el-option
           v-for="item in userListSelect"
           :key="item.uuid"
@@ -35,7 +35,7 @@
     </el-form-item>
 
     <el-form-item label="审批状态：">
-      <el-select v-model="query.auditConfirmation" clearable @change="handleChangeThird">
+      <el-select v-model="query.auditConfirmation" clearable>
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -46,7 +46,7 @@
     </el-form-item>
 
     <el-form-item label="提起人：">
-      <el-select v-model="query.submitterId" clearable @change="handleChangeThird">
+      <el-select v-model="query.submitterId" filterable clearable>
         <el-option
           v-for="item in userListSelect"
           :key="item.uuid"
@@ -111,7 +111,6 @@ export default {
   },
   methods: {
     handleChangeFirst(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
@@ -119,7 +118,6 @@ export default {
       this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {

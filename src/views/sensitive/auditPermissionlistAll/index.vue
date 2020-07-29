@@ -61,10 +61,14 @@
             </template>
           </el-table-column>
 
-          <el-table-column align="left" label="状态" sortable
+          <el-table-column
+            align="left"
+            label="状态"
+            sortable
             prop="auditState"
             :sort-method="sortMethod"
-            :sort-orders="['ascending','descending',null]">
+            :sort-orders="['ascending','descending',null]"
+          >
             <template v-slot="{row}">
               <div>
                 <span v-if="row.auditState==='TO_BE_REVIEWED'" class="color-primary">审核中</span>
@@ -83,15 +87,8 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />
+
+        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize" />
       </div>
     </el-card>
 
@@ -102,14 +99,16 @@
 <script>
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import CustomerPagination from '@/components/CustomerPagination'
+import ToolBar from '@/components/ToolBar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {
     ListHeader,
     FormDialog,
-    ToolBar
+    ToolBar,
+    CustomerPagination
   },
   data() {
     return {
@@ -330,7 +329,7 @@ export default {
       })
       return row.auditState === 'TO_BE_REVIEWED'&&!flag
     },
-        sortMethod(a, b) {
+    sortMethod(a, b) {
       if (a.auditState === 'TO_BE_REVIEWED') {
         return -1
       }
@@ -340,6 +339,10 @@ export default {
       if (a.auditState === b.auditState) {
         return 0
       }
+    },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
     }
   }
 }
@@ -357,18 +360,4 @@ export default {
   padding: 20px 0;
   text-align: center;
 }
-
-// .app-container {
-//   border-top: 1px solid #e9e9e9;
-//   background: white;
-//   .roles-table {
-//     margin-top: 30px;
-//   }
-//   .permission-tree {
-//     margin-bottom: 30px;
-//   }
-// }
-// header .el-header button {
-//   margin-right: 5px;
-// }
 </style>

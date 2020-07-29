@@ -16,7 +16,7 @@
     </el-form-item>-->
 
     <el-form-item label="创建员工：">
-      <el-select v-model="query.userId" @change="handleSelectedChange" disabled>
+      <el-select v-model="query.userId" filterable disabled>
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
