@@ -304,7 +304,6 @@ export default {
       }
     },
     groupingDelete(list) {
-      console.log(list, 'grouping')
       if (Object.keys(list).length) {
         return list.reduce((groups, item) => {
           let groupFound = groups.find(

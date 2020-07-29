@@ -59,7 +59,19 @@
           </el-table-column>
 
           <el-table-column align="left" label="客户标签">
-            <template v-slot="{row}"></template>
+            <template v-slot="{row}">
+                <div>
+                    <el-row>
+                        <el-col :span="8">
+                            <span class="color-primary font-exs" v-if="row.matchFormat">{{matchFormat[row.matchFormat]}}</span>
+                            <span v-else>--</span>
+                        </el-col>
+                        <el-col :span="16">
+                            <tags-drawer v-if="row.toTags&&Object.keys(row.toTags).length" :tags="grouping(row.toTags)"></tags-drawer>
+                        </el-col>
+                    </el-row>
+                </div>
+            </template>
           </el-table-column>
 
           <el-table-column
@@ -67,6 +79,7 @@
             label="状态"
             sortable
             prop="auditState"
+            width="80"
             :sort-method="sortMethod"
             :sort-orders="['ascending','descending',null]"
           >
@@ -79,7 +92,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" width="80" align="right">
             <template v-slot="{row}">
               <div>
                 <el-t-button type="text" @click="handleAudit(row.uuid)">审核</el-t-button>
@@ -88,7 +101,7 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
+        <!-- <el-pagination
           background
           class="pager"
           layout="total,prev, pager, next,jumper"
@@ -96,8 +109,8 @@
           :current-page.sync="pageConfig.pageNumber"
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
-        />
-        <!-- <customer-pagination :pageConfig="pageConfig" @current-change="changePage"></customer-pagination> -->
+        />-->
+        <customer-pagination :pageConfig="pageConfig" @current-change="changePage"></customer-pagination>
       </div>
     </el-card>
 
@@ -109,6 +122,8 @@
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from './tool-bar'
+import TagsDrawer from '@/components/TagsDrawer'
+import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -116,6 +131,8 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar,
+    CustomerPagination,
+    TagsDrawer
   },
   data() {
     return {
@@ -145,6 +162,7 @@ export default {
       auditStateEnum: (state) => state.enum.auditState,
       auditState: (state) => state.emnu.auditState,
       mediaType: (state) => state.enum.mediaType,
+      matchFormat: state => state.enum.matchFormat,
       permissionMap: (state) => state.permission.permissionMap,
 
       loading: (state) => state.sensitive.loading,
@@ -193,11 +211,9 @@ export default {
       this.query.submitterId = submitterId
         ? submitterId
         : this.query.submitterId
-      console.log(val, 'handleSearch')
       this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log('handleRefresh')
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },
@@ -210,6 +226,45 @@ export default {
       this.selects = val.map((item) => {
         return item.uuid
       })
+    },
+    handleBatch(action) {
+      let uuids = this.selects
+      let payload = null
+      if (action === 'reject') {
+        uuids = this.selects
+        payload = {
+          auditConfirmation: 'AUDIT_FAILED',
+          uuids
+        }
+      } else {
+        uuids = this.selects
+        payload = {
+          auditConfirmation: 'APPROVED',
+          uuids
+        }
+      }
+
+      this.batchAudit(payload)
+    },
+    batchAudit(payload) {
+      this.$store
+        .dispatch('audit/batchAuditBatchTaskConfirmation', payload)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功',
+            duration: 1000,
+            onClose: () => {
+              this.initDataList(this.query)
+            }
+          })
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err
+          })
+        })
     },
 
     /**
@@ -338,6 +393,31 @@ export default {
           type: 'error',
           message: '请选择至少一项',
         })
+      }
+    },
+
+    grouping(list) {
+      if (Object.keys(list).length) {
+        return list.reduce((groups, item) => {
+          let groupFound = groups.find(
+            (foundItem) => item.groupId === foundItem.groupId
+          )
+          if (groupFound) {
+            groupFound.tags.push(item)
+          } else {
+            let newGroup = {
+              groupId: item.groupId,
+              groupName: item.groupName,
+              tags: [item],
+            }
+
+            groups.push(newGroup)
+          }
+
+          return groups
+        }, [])
+      } else {
+        return []
       }
     },
     /**

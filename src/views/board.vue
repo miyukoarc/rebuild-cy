@@ -67,7 +67,7 @@
     </div>
 
     <div class="mb-20">
-      <tag-select-fix v-model="selectTags"></tag-select-fix>
+      <tag-multi-select v-model="selectTags" @select-change="handleChange"></tag-multi-select>
     </div>
   </div>
 </template>
@@ -95,7 +95,7 @@ export default {
     IconTooltip,
     ComplexSelect,
     TagSelect,
-    TagSelectFix
+    TagMultiSelect
   },
   //   directives: {
   //   loading: {
@@ -525,6 +525,9 @@ export default {
   methods: {
     handleDetail(uuid) {
       console.log(uuid)
+    },
+    handleChange(val){
+      console.log(val)
     },
     initData() {
       this.$store

@@ -9,11 +9,11 @@
 <template>
   <div>
     <div class="drawer-container" v-if="JSON.stringify(alterGroups) != '{}'">
-      <transition-group name="fade">
+      <transition name="fade" >
         <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="8">
-              <div class="font-es group-name">{{key}}：</div>
+              <div class="font-exs color-info group-name">{{key}}：</div>
             </el-col>
             <el-col :span="16">
               <div class="tags-container">
@@ -28,7 +28,7 @@
             </el-col>
           </el-row>
         </div>
-      </transition-group>
+      </transition>
       <div class="text-align-center" v-if="total>2">
         <el-button type="text" size="mini" @click="curly=!curly">
           <span>{{curly?'展开':'收起'}}</span>

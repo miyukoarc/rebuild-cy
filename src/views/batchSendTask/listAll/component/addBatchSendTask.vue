@@ -117,7 +117,8 @@
                           :on-success="handleSetMessageImage"
                           :before-upload="beforeUploadImage"
                         >
-                          <img v-if="messageImage" :src="messageImage" class="avatar" />
+                        <el-image fit="contain" class="avatar" v-if="messageImage" :src="messageImage"></el-image>
+                          <!-- <img v-if="messageImage" :src="messageImage" class="avatar" /> -->
                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                         <i

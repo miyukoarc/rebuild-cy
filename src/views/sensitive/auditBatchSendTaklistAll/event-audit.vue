@@ -31,69 +31,41 @@
       </div>
     </el-form-item>
 
-    <el-form-item label="素材：">
-      <div class="media-container" v-if="detail.mediaOperationType==='ADD_MEDIA'">
-        <el-image
-          v-if="detail.auditAddMedia[0].type==='IMAGE'"
-          fit="contain"
-          :src="`/api/public/file/${detail.auditAddMedia[0].localId}`"
-        ></el-image>
-        <video
-          controls
-          style="width:400px;height:300px"
-          v-if="detail.auditAddMedia[0].type==='VIDEO'"
-          :src="`/api/public/file/${detail.auditAddMedia[0].localId}`"
-        ></video>
-        <div
-          class="text-container"
-          v-if="detail.auditAddMedia[0].type==='TEXT'"
-        >{{detail.auditAddMedia[0].textContents}}</div>
-        <div class="article-container" v-if="detail.auditAddMedia[0].type==='ARTICLE'">
-          <h3>{{detail.auditAddMedia[0].title}}</h3>
-          <div class="font-es" v-html="detail.articleContent"></div>
-        </div>
-        <div class="file-container" v-if="detail.auditAddMedia[0].type==='FILE'">
-          <el-button size="small" @click="handleDownload">
-            <i class="el-icon-document"></i>
-            {{detail.auditAddMedia[0].fileName}}&emsp;
-            <i class="el-icon-download"></i>
-          </el-button>
-        </div>
-      </div>
-
-      <div class="media-container" v-if="detail.mediaOperationType==='DELETE_MEDIA'">
-        <el-image
-          v-if="detail.toMedis[0].type==='IMAGE'"
-          fit="contain"
-          :src="`/api/public/file/${detail.toMedis[0].localId}`"
-        ></el-image>
-        <video
-          controls
-          style="width:400px;height:300px"
-          v-if="detail.toMedis[0].type==='VIDEO'"
-          :src="`/api/public/file/${detail.toMedis[0].localId}`"
-        ></video>
-        <div
-          class="text-container"
-          v-if="detail.toMedis[0].type==='TEXT'"
-        >{{detail.toMedis[0].textContents}}</div>
-        <div class="article-container" v-if="detail.toMedis[0].type==='ARTICLE'">
-          <h3>{{detail.toMedis[0].title}}</h3>
-          <div class="font-es" v-html="detail.articleContent"></div>
-        </div>
-        <div class="file-container" v-if="detail.toMedis[0].type==='FILE'">
-          <el-button size="small" @click="handleDownload">
-            <i class="el-icon-document"></i>
-            {{detail.toMedis[0].fileName}}&emsp;
-            <i class="el-icon-download"></i>
-          </el-button>
-        </div>
+    <el-form-item label="群发类型：">
+      <div>
+        <span>{{detail.sendType}}</span>
       </div>
     </el-form-item>
 
+    <el-form-item label="文字消息：">
+      <div v-html="detail.textContent"></div>
+    </el-form-item>
+
+    <el-form-item label="文字内容：">
+      <article-board v-if="detail.mediaUuid" :uuid="detail.mediaUuid"></article-board>
+      <el-image
+          v-if="detail.tempMediaType==='IMAGE'"
+          fit="contain"
+          :src="`/api/public/file/${detail.tempMediaKey}`"
+        ></el-image>
+        <video
+          controls
+          style="width:400px;height:300px"
+          v-if="detail.tempMediaType==='VIDEO'"
+          :src="`/api/public/file/${detail.tempMediaKey}`"
+        ></video>
+        <div class="file-container" v-if="detail.tempMediaType==='FILE'">
+          <el-button size="small" @click="handleDownload">
+            <i class="el-icon-document"></i>
+            下载文件&emsp;
+            <i class="el-icon-download"></i>
+          </el-button>
+        </div>
+    </el-form-item>
+
     <el-form-item label="标签配置：">
-      <div v-if="detail.auditAddMedia">
-        <span class="color-primary font-exs">{{matchFormat[detail.auditAddMedia[0].matchFormat]}}</span>
+      <div v-if="detail.matchFormat">
+        <span class="color-primary font-exs">{{matchFormat[detail.matchFormat]}}</span>
         <icon-tooltip>
           <div>
             <div class="font-exs color-info">包含任意：至少包含一个标签。</div>
@@ -150,6 +122,7 @@ import AsyncUserTag from '@/components/AsyncUserTag'
 import VideoCover from '@/components/VideoCover'
 import TagsDrawer from '@/components/TagsDrawer'
 import IconTooltip from '@/components/IconTooltip'
+import ArticleBoard from './components/article-board'
 export default {
   inject: ['reload'],
   props: {
@@ -165,6 +138,7 @@ export default {
     VideoCover,
     TagsDrawer,
     IconTooltip,
+    ArticleBoard,
   },
   data() {
     return {
@@ -220,43 +194,14 @@ export default {
       this.$store
         .dispatch('audit/getDetail', payload)
         .then((res) => {
-          if (res.mediaOperationType === 'ADD_MEDIA') {
-            this.detail = {
-              ...res,
-              auditAddMedia: this.parse(res.auditAddMedia),
-              auditUsers: this.parse(res.auditUsers),
-            }
-
-            // if (res.auditAddMedia) {
-            const arr = this.parse(res.auditAddMedia)[0].tagsDto
-
-            console.log(arr)
-
-            this.tags = this.grouping(arr)
-            // } else {
-            //   this.tags = []
-            // }
+          this.detail = {
+            ...res,
+            auditUsers: this.parse(res.auditUsers),
           }
-          if (res.mediaOperationType === 'DELETE_MEDIA') {
-            this.detail = {
-              ...res,
-              auditUsers: this.parse(res.auditUsers),
-            }
 
-            console.log(res.toMedis)
+          this.tags = this.grouping(res.toTags)
 
-            // if (Object.keys(res.toMedis).length) {
-            const arr = res.toMedis[0].toTags
-            console.log(arr)
-            this.tags = this.groupingDelete(arr)
-            // } else {
-            //   this.tags = []
-            // }
-
-            // this.tags = Object.keys(this.detail.toMedis).length
-            //   ? this.groupingDelete(this.detail.toMedis[0].toTags)
-            //   : []
-          }
+          //   this.tags = this.grouping(arr)
         })
         .catch((err) => {
           console.error(err)
@@ -273,15 +218,8 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     grouping(list) {
-      if (list.length) {
-        let temp = list.map((item) => {
-          return {
-            ...item,
-            groupName: item.tagGroupName,
-            groupId: item.tagGroupId,
-          }
-        })
-        return temp.reduce((groups, item) => {
+      if (Object.keys(list).length) {
+        return list.reduce((groups, item) => {
           let groupFound = groups.find(
             (foundItem) => item.groupId === foundItem.groupId
           )
@@ -289,8 +227,8 @@ export default {
             groupFound.tags.push(item)
           } else {
             let newGroup = {
-              groupId: item.tagGroupId,
-              groupName: item.tagGroupName,
+              groupId: item.groupId,
+              groupName: item.groupName,
               tags: [item],
             }
 
@@ -359,10 +297,10 @@ export default {
           })
         })
         .catch((err) => {
-        //   this.$message({
-        //     type: 'error',
-        //     message: err,
-        //   })
+          //   this.$message({
+          //     type: 'error',
+          //     message: err,
+          //   })
           this.$confirm(err, '错误', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -419,7 +357,7 @@ export default {
       return flag
     },
     handleDownload() {
-      const url = this.detail.auditAddMedia[0].localId
+      const url = this.detail.tempMediaKey
       window.location.href = `/api/public/file/${url}`
     },
   },

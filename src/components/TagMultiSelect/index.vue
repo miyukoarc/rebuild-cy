@@ -69,6 +69,8 @@ export default {
             }
           })
         })
+
+        this.$emit('select-change','select-change')
       }
       //   immediate: true
     }
@@ -84,7 +86,6 @@ export default {
             }
           })
         })
-        console.log('筛选项初始化成功')
       })
       .catch(err => {
         console.error(err)

@@ -40,10 +40,13 @@
               <el-radio v-model="form.matchFormat" label="CONTAINS_ANY">包含其一</el-radio>
               <el-radio v-model="form.matchFormat" label="PERFECT_MATCH">完全匹配</el-radio>
             </div>
+            <div class="select-zoom">
+
+          <tag-multi-select v-model="form.tagUuids"></tag-multi-select>
+            </div>
           </el-form-item>
 
           <!-- <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select> -->
-          <tag-multi-select v-model="form.tagUuids"></tag-multi-select>
           <el-form-item style="margin-bottom:24px;">
             <MDinput v-model="form.title" :maxlength="20" name="name">文章标题</MDinput>
             <MDinput v-model="form.description" :maxlength="100" name="name">文章描述</MDinput>
@@ -212,17 +215,19 @@ export default {
         const payload = this.form
         const groupUuid = this.groupUuid
         const uuid = this.$route.params.uuid
-        this.handleUpdate({ data: { ...payload, uuid }, params: { groupUuid } })
+        const tagUuids = this.form.tagUuids.join(',')
+        this.handleUpdate({ data: { ...payload, uuid,tagUuids }, params: { groupUuid } })
       }
       if (this.mode === 'CREATE') {
         const payload = this.form
         const type = this.type
         const groupUuid = this.groupUuid
+        const tagUuids = this.form.tagUuids.join(',')
         // const tagUuids = this.tagSelects.reduce((sum, curr) => {
         //   return sum.concat(curr)
         // }, []).join(',')
 
-        this.handleCreate({ data: payload, params: { type, groupUuid } })
+        this.handleCreate({ data: {...payload,tagUuids}, params: { type, groupUuid } })
       }
       this.flag = true
     },
@@ -302,5 +307,8 @@ export default {
   width: 178px;
   height: 178px;
   display: block;
+}
+.select-zoom{
+    padding: 15px;
 }
 </style>
