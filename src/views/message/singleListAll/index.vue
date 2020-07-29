@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-29 15:12:37
+ * @LastEditTime: 2020-07-29 17:50:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -282,7 +282,7 @@ export default {
         },
         {
           label: "视频语音通话",
-          name: "voiceVideo",
+          name: "meeting_voice_call",
         },
       ],
     };
@@ -343,8 +343,8 @@ export default {
     handleClickSearch() {
       console.log("搜索s");
     },
-    handleClickViewMore(val){
-      console.log(val,'val')
+    handleClickViewMore(val) {
+      console.log(val, "val");
       // this.$refs["formDialog"].dialogVisible = true;
       // this.$refs["formDialog"].event = "EditTemplate";
       // this.$refs["formDialog"].eventType = "edit";
@@ -395,24 +395,67 @@ export default {
       }
     },
     handleSidebarItem(item, index, tab) {
-      console.log(item, "点击侧边栏用户", index, tab);
-      this.activeIdx = index;
-      this.currnetMember = item;
-      this.query.toUserId = item._id;
       let payload = {
         type: "externalUser",
         uuid: this.$route.query.uuid,
       };
-      this.initDataList(payload);
-      this.getsinglelist(this.query);
+      this.$store
+        .dispatch("message/getMessageSingleLastListAll", payload)
+        .then((res) => {
+          if (res) {
+            if (tab.label == "全部") {
+              this.chatSideData = res.allMessageList;
+            }
+            if (tab.label == "单聊") {
+              this.chatSideData = res.singleMessageList;
+            }
+            if (tab.label == "群聊") {
+              this.chatSideData = res.groupMessageList;
+            }
+            console.log(item, "点击侧边栏用户", index, tab);
+            this.activeIdx = index;
+            this.currnetMember = item;
+            this.query.toUserId = item._id;
+            // let payload = {
+            //   type: "externalUser",
+            //   uuid: this.$route.query.uuid,
+            // };
+            // this.initDataList(payload);
+            this.getsinglelist(this.query);
+          }
+        })
+        .catch((err) => {});
     },
+
     handleClickChatType() {
       console.log("点击右侧类型", this.chatActiveName);
       if (this.chatSideData.length > 0) {
         console.log("有");
-        this.query.msgType = this.chatActiveName;
-        this.query.page = 0;
-        this.getsinglelist(this.query);
+        let payload = {
+          type: "externalUser",
+          uuid: this.$route.query.uuid,
+        };
+        this.$store
+          .dispatch("message/getMessageSingleLastListAll", payload)
+          .then((res) => {
+            if (res) {
+              console.log('3233')
+              if (this.sideTabActiveName == "1") {
+                this.chatSideData = res.allMessageList;
+              }
+              if (this.sideTabActiveName == "2") {
+                this.chatSideData = res.singleMessageList;
+              }
+              if (this.sideTabActiveName == "3") {
+                this.chatSideData = res.groupMessageList;
+              }
+              // this.currnetMember = item;
+              this.query.msgType = this.chatActiveName;
+              this.query.page = 0;
+              this.getsinglelist(this.query);
+            }
+          })
+          .catch((err) => {});
       }
     },
 
