@@ -60,17 +60,23 @@
 
           <el-table-column align="left" label="客户标签">
             <template v-slot="{row}">
-                <div>
-                    <el-row>
-                        <el-col :span="8">
-                            <span class="color-primary font-exs" v-if="row.matchFormat">{{matchFormat[row.matchFormat]}}</span>
-                            <span v-else>--</span>
-                        </el-col>
-                        <el-col :span="16">
-                            <tags-drawer v-if="row.toTags&&Object.keys(row.toTags).length" :tags="grouping(row.toTags)"></tags-drawer>
-                        </el-col>
-                    </el-row>
-                </div>
+              <div>
+                <el-row>
+                  <el-col :span="8">
+                    <span
+                      class="color-primary font-exs"
+                      v-if="row.matchFormat"
+                    >{{matchFormat[row.matchFormat]}}</span>
+                    <span v-else>--</span>
+                  </el-col>
+                  <el-col :span="16">
+                    <tags-drawer
+                      v-if="row.toTags&&Object.keys(row.toTags).length"
+                      :tags="grouping(row.toTags)"
+                    ></tags-drawer>
+                  </el-col>
+                </el-row>
+              </div>
             </template>
           </el-table-column>
 
@@ -110,7 +116,11 @@
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
         />-->
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
+        <customer-pagination
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -132,7 +142,7 @@ export default {
     FormDialog,
     ToolBar,
     CustomerPagination,
-    TagsDrawer
+    TagsDrawer,
   },
   data() {
     return {
@@ -162,7 +172,7 @@ export default {
       auditStateEnum: (state) => state.enum.auditState,
       auditState: (state) => state.emnu.auditState,
       mediaType: (state) => state.enum.mediaType,
-      matchFormat: state => state.enum.matchFormat,
+      matchFormat: (state) => state.enum.matchFormat,
       permissionMap: (state) => state.permission.permissionMap,
 
       loading: (state) => state.sensitive.loading,
@@ -228,23 +238,30 @@ export default {
       })
     },
     handleBatch(action) {
-      let uuids = this.selects
-      let payload = null
-      if (action === 'reject') {
-        uuids = this.selects
-        payload = {
-          auditConfirmation: 'AUDIT_FAILED',
-          uuids
+      if (this.selects.length) {
+        let uuids = this.selects
+        let payload = null
+        if (action === 'reject') {
+          uuids = this.selects
+          payload = {
+            auditConfirmation: 'AUDIT_FAILED',
+            uuids,
+          }
+        } else {
+          uuids = this.selects
+          payload = {
+            auditConfirmation: 'APPROVED',
+            uuids,
+          }
         }
-      } else {
-        uuids = this.selects
-        payload = {
-          auditConfirmation: 'APPROVED',
-          uuids
-        }
-      }
 
-      this.batchAudit(payload)
+        this.batchAudit(payload)
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请至少选择一项',
+        })
+      }
     },
     batchAudit(payload) {
       this.$store
@@ -256,13 +273,13 @@ export default {
             duration: 1000,
             onClose: () => {
               this.initDataList(this.query)
-            }
+            },
           })
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
@@ -451,10 +468,10 @@ export default {
       })
       return row.auditState === 'TO_BE_REVIEWED' && !flag
     },
-    changeSize(val){
-        this.query.size = val
-        this.initDataList(this.query)
-    }
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
   },
 }
 </script>

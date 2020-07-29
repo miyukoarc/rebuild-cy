@@ -184,10 +184,10 @@ export default {
         this.$parent.$parent.dialogVisible = false
       }
     },
-    onError() {
+    onError(err) {
       this.$message({
         type: 'error',
-        message: '上传失败'
+        message: err||'上传失败'
       })
     },
     submitUpload() {

@@ -87,8 +87,11 @@
           </el-table-column>
         </el-table>
 
-
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize" />
+        <customer-pagination
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        />
       </div>
     </el-card>
 
@@ -108,14 +111,14 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar,
-    CustomerPagination
+    CustomerPagination,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
@@ -124,30 +127,29 @@ export default {
         auditConfirmation: '',
         auditType: 'PERMISSION',
         handlerId: '',
-        submitterId: ''
+        submitterId: '',
       },
 
-            sortConfig: { prop: 'auditState', order: 'ascending' },
+      sortConfig: { prop: 'auditState', order: 'ascending' },
 
-
-      selects: []
+      selects: [],
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      auditStateEnum: state => state.enum.auditState,
+      auditStateEnum: (state) => state.enum.auditState,
       //   tagListAll: state => state.tag.tagListAll,
-      permissionMap: state => state.permission.permissionMap,
+      permissionMap: (state) => state.permission.permissionMap,
 
-      loading: state => state.sensitive.loading,
-      listAll: state => state.sensitive.auditPermissionlist,
-      page: state => state.sensitive.auditPermissionPage,
+      loading: (state) => state.sensitive.loading,
+      listAll: (state) => state.sensitive.auditPermissionlist,
+      page: (state) => state.sensitive.auditPermissionPage,
 
-      permissionEnum: state => state.enum.roleDetail,
-      auditSetting: state => state.sensitive.auditSetting,
-      currentUserUuid: state => state.user.uuid
-    })
+      permissionEnum: (state) => state.enum.roleDetail,
+      auditSetting: (state) => state.sensitive.auditSetting,
+      currentUserUuid: (state) => state.user.uuid,
+    }),
   },
   created() {
     this.initDataList(this.query)
@@ -173,10 +175,10 @@ export default {
       this.$store
         .dispatch('user/getUserListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -191,10 +193,10 @@ export default {
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -202,7 +204,7 @@ export default {
       const payload = this.userList[val].uuid
       this.$router.push({
         path: '/user/detail',
-        query: { uuid: payload }
+        query: { uuid: payload },
       })
     },
     handleSearch(val) {
@@ -229,7 +231,7 @@ export default {
       this.initDataList(this.query)
     },
     handleSelectionChange(val) {
-      this.selects = val.map(item => {
+      this.selects = val.map((item) => {
         return item.uuid
       })
     },
@@ -237,24 +239,29 @@ export default {
      * 批量审批
      */
     handleBatch(action) {
-      let uuids = this.selects
-      let payload = null
-      if (action === 'reject') {
-        uuids = this.selects
-        payload = {
-          auditConfirmation: 'AUDIT_FAILED',
-          uuids
+      if (this.selects.length) {
+        let uuids = this.selects
+        let payload = null
+        if (action === 'reject') {
+          uuids = this.selects
+          payload = {
+            auditConfirmation: 'AUDIT_FAILED',
+            uuids,
+          }
+        } else {
+          uuids = this.selects
+          payload = {
+            auditConfirmation: 'APPROVED',
+            uuids,
+          }
         }
+        this.batchAudit(payload)
       } else {
-        uuids = this.selects
-        payload = {
-          auditConfirmation: 'APPROVED',
-          uuids
-        }
+        this.$message({
+          type: 'warning',
+          message: '请至少选择一项',
+        })
       }
-
-      console.log(payload)
-      this.batchAudit(payload)
     },
     batchAudit(payload) {
       this.$store
@@ -266,13 +273,13 @@ export default {
             duration: 1000,
             onClose: () => {
               this.initDataList(this.query)
-            }
+            },
           })
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
@@ -286,14 +293,14 @@ export default {
       if (Object.keys(list).length) {
         return list.reduce((groups, item) => {
           let groupFound = groups.find(
-            foundItem => item.module === foundItem.module
+            (foundItem) => item.module === foundItem.module
           )
           if (groupFound) {
             groupFound.permissions.push(item)
           } else {
             let newGroup = {
               module: item.module,
-              permissions: [item]
+              permissions: [item],
             }
 
             groups.push(newGroup)
@@ -307,15 +314,15 @@ export default {
     },
     format(arr) {
       let temp = []
-      temp = arr.map(item => {
+      temp = arr.map((item) => {
         return item.title
       })
       return temp.join('、')
     },
     selectable(row, index) {
       let flag = false
-      row.auditUsers.forEach(item => {
-        item.userList.forEach(user => {
+      row.auditUsers.forEach((item) => {
+        item.userList.forEach((user) => {
           if (user.uuid === this.currentUserUuid) {
             //   console.log(user.auditState)
             if (
@@ -327,7 +334,7 @@ export default {
           }
         })
       })
-      return row.auditState === 'TO_BE_REVIEWED'&&!flag
+      return row.auditState === 'TO_BE_REVIEWED' && !flag
     },
     sortMethod(a, b) {
       if (a.auditState === 'TO_BE_REVIEWED') {
@@ -340,11 +347,11 @@ export default {
         return 0
       }
     },
-    changeSize(val){
-        this.query.size = val
-        this.initDataList(this.query)
-    }
-  }
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
+  },
 }
 </script>
 

@@ -348,7 +348,8 @@ const actions = {
         const accessed = res.items.map(item => {
           return {
             ...item,
-            auditUsers: JSON.parse(item.auditUsers)
+            auditUsers: JSON.parse(item.auditUsers),
+            tagChangeContent: JSON.parse(item.tagChangeContent)
           }
         })
         commit('SAVE_TAGLIST', accessed)

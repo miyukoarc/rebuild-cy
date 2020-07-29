@@ -139,22 +139,19 @@ export default {
             const tenantId = this.tenantId + ''
       
             this.loading = true
-            //   this.getWxlogin(tenantId)
-            // this.$isElectron()
-            //   ? this.getQrCode(tenantId, 'webview')
-            //   : this.getQrCode(tenantId, 'browser')
+
       
-            if (this.$isElectron()) {
-              console.log('!')
+            // if (this.$isElectron()) {
+            //   console.log('!')
       
-              const ipcRenderer = window.electron.ipcRenderer
-              ipcRenderer.send('qrcode-window', this.tenantId)
-              console.log('!')
-              this.loading = false
-            } else {
+            //   const ipcRenderer = window.electron.ipcRenderer
+            //   ipcRenderer.send('qrcode-window', this.tenantId)
+            //   console.log('!')
+            //   this.loading = false
+            // } else {
               this.getQrCode(tenantId, 'browser')
               this.loading = false
-            }
+            // }
 
         }else{
             this.$message({

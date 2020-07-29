@@ -8,11 +8,11 @@
         <el-col class="tags" :span="16">
           <div v-for="(tag,index) in group.tagList" :key="tag.uuid" class="tag-container">
             <el-tag
-              size="mini"
+              size="medium"
               :type="alterType(groupIndex,index,tag.uuid)"
               style="margin-right:3px;"
               @click="handleToggle(groupIndex,tag,index)"
-            >{{tag.tagName}}-{{tag.uuid}}</el-tag>
+            ><span class="color-primary font-es">{{tag.tagName}}</span></el-tag>
           </div>
         </el-col>
       </el-row>
@@ -37,25 +37,25 @@ export default {
       type: Array,
       default: () => {
         return []
-      }
-    }
+      },
+    },
   },
   model: {
     props: 'value',
-    event: 'change'
+    event: 'change',
   },
   data() {
     return {
       originArr: [], //rawdata 负责渲染
       fullArr: [], //全选状态
       curly: false, //折叠状态
-      stateArr: [] //响应式状态
+      stateArr: [], //响应式状态
     }
   },
   computed: {
     alterArr() {
       return this.curly ? this.originArr.slice(0, 2) : this.originArr
-    }
+    },
   },
   watch: {
     value: {
@@ -70,10 +70,10 @@ export default {
           })
         })
 
-        this.$emit('select-change','select-change')
-      }
+        this.$emit('select-change', 'select-change')
+      },
       //   immediate: true
-    }
+    },
   },
   created() {
     this.initData()
@@ -87,7 +87,7 @@ export default {
           })
         })
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err)
       })
   },
@@ -99,10 +99,10 @@ export default {
       return new Promise((resolve, reject) => {
         this.$store
           .dispatch('tag/getListSelect')
-          .then(res => {
+          .then((res) => {
             this.originArr = res
-            res.forEach(item => {
-              let temp = item.tagList.map(tag => {
+            res.forEach((item) => {
+              let temp = item.tagList.map((tag) => {
                 return tag.uuid
               })
               this.fullArr.push(temp)
@@ -112,7 +112,7 @@ export default {
 
             resolve()
           })
-          .catch(err => {
+          .catch((err) => {
             console.error(err)
             reject(err)
           })
@@ -132,7 +132,7 @@ export default {
 
       if (temp.includes(tag.uuid)) {
         temp.splice(
-          temp.findIndex(item => {
+          temp.findIndex((item) => {
             return item == tag.uuid
           }),
           1
@@ -151,8 +151,8 @@ export default {
       console.log(output)
 
       this.$emit('change', output)
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -6,91 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .abc:hover .cover {
-            color: aqua;
+
+        *{
+            box-sizing: border-box;
+        }
+        
+        .container {
+            width: 500px;
+            display: grid;
+            grid-gap: 5px;
+            grid-template-columns: repeat(auto-fit, 100px);
+            grid-template-rows: repeat(auto-fill, 100px);
+        }
+        .item {
+            border: 1px solid red;
         }
     </style>
 </head>
 
 <body>
-    <div class="abc">
-        <span class="cover">1231</span></div>
-    <script>
+    <div class="container">
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
 
-        let list = [{
-            tagGroupName: '测试分组',
-            tagGroupId: 1,
-            tagName: '一号'
-        }, {
-            tagGroupName: '测试分组',
-            tagGroupId: 1,
-            tagName: '二号'
-        }, {
-            tagGroupName: '测试分组',
-            tagGroupId: 1,
-            tagName: '三号'
-        }, {
-            tagGroupName: '测试2号分组',
-            tagGroupId: 2,
-            tagName: '2hao'
-        }, {
-            tagGroupName: '测试2号分组',
-            tagGroupId: 2,
-            tagName: '32hao'
-        }, {
-            tagGroupName: '测试2号分组',
-            tagGroupId: 2,
-            tagName: '21'
-        }]
-
-        function group(arr) {
-            temp = arr.map(item => { return { ...item, groupName: item.tagGroupId, groupId: item.tagGroupId } })
-            console.log(temp)
-            return temp.reduce((groups, item) => {
-                let groupFound = groups.find(foundItem => { return foundItem.groupId == item.groupId })
-
-                if (groupFound) {
-                    groupFound.tags.push(item)
-                } else {
-                    let newGroup = {
-                        groupName: item.groupName,
-                        groupId: item.groupId,
-                        tags: [item]
-                    }
-
-                    groups.push(newGroup)
-                }
-
-                return groups
-            }, [])
-        }
-
-
-        var arr = [{ city: "上海", location: "浦东" },
-        { city: "上海", location: "静安" },
-        { city: "北京", location: "内环" },
-        { city: "北京", location: "五环" },
-        { city: "苏州", location: "苏州" }]
-        var cities = {};
-
-        for (var i = 0; i < arr.length; i++) {
-            if (cities[arr[i].city]) {
-                cities[arr[i].city].push(arr[i].location)
-            }
-            else {
-                cities[arr[i].city] = [arr[i].location]
-            }
-        }
-
-        // console.log(group(list))
-
-        function regFilter(str) {
-            const reg = new RegExp("<\s*div[^>]*>(.*?)<\s*/\s*div>", "g")
-            return str.split(reg).find(item=>{return !item.includes('span')&&item!==''})
-        }
-        const str = '<span>哈罗</span><div>你好呀</div>'
-        console.log(regFilter(str))
-    </script>
+    </div>
 </body>
 
 </html>

@@ -144,7 +144,11 @@
           </el-table-column>
         </el-table>
 
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
+        <customer-pagination
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -298,71 +302,6 @@ export default {
         return item.uuid
       })
     },
-    /**
-     * 批量审批
-     */
-    handleBatchConfrim() {
-      const uuids = this.selects
-      const payload = {
-        auditConfirmation: 'APPROVED',
-        uuids,
-      }
-      if (this.selects.length) {
-        this.$store
-          .dispatch('audit/batchAuditTagConfirmation', payload)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '操作成功',
-              onClose: () => {
-                this.initData()
-              },
-            })
-          })
-          .catch((err) => {
-            this.$message({
-              type: 'error',
-              message: '操作失败',
-            })
-          })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '请选择至少一项',
-        })
-      }
-    },
-    handleBatchReject() {
-      const uuids = this.selects
-      const payload = {
-        auditConfirmation: 'AUDIT_FAILED',
-        uuids,
-      }
-      if (this.selects.length) {
-        this.$store
-          .dispatch('audit/batchAuditTagConfirmation', payload)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '操作成功',
-              onClose: () => {
-                this.initData()
-              },
-            })
-          })
-          .catch((err) => {
-            this.$message({
-              type: 'error',
-              message: '操作失败',
-            })
-          })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '请选择至少一项',
-        })
-      }
-    },
     handleView(type, str) {
       const mediaId = str[0].localId
 
@@ -413,23 +352,30 @@ export default {
       return row.auditState === 'TO_BE_REVIEWED' && !flag
     },
     handleBatch(action) {
-      let uuids = this.selects
-      let payload = null
-      if (action === 'reject') {
-        uuids = this.selects
-        payload = {
-          auditConfirmation: 'AUDIT_FAILED',
-          uuids,
+      if (this.selects.length) {
+        let uuids = this.selects
+        let payload = null
+        if (action === 'reject') {
+          uuids = this.selects
+          payload = {
+            auditConfirmation: 'AUDIT_FAILED',
+            uuids,
+          }
+        } else {
+          uuids = this.selects
+          payload = {
+            auditConfirmation: 'APPROVED',
+            uuids,
+          }
         }
-      } else {
-        uuids = this.selects
-        payload = {
-          auditConfirmation: 'APPROVED',
-          uuids,
-        }
-      }
 
-      this.batchAudit(payload)
+        this.batchAudit(payload)
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请至少选择一项',
+        })
+      }
     },
     batchAudit(payload) {
       this.$store
@@ -462,10 +408,10 @@ export default {
         return 0
       }
     },
-    changeSize(val){
-        this.query.size = val
-        this.initDataList(this.query)
-    }
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
   },
 }
 </script>

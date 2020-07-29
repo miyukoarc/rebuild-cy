@@ -16,12 +16,6 @@
           </el-t-button>
         </div>
       </el-form-item>
-      <!-- <el-form-item label>
-        <el-t-button size="mini" @click="handleAddContent">
-          <i class="el-icon-plus"></i>
-          添加内容
-        </el-t-button>
-      </el-form-item> -->
 
       <el-divider></el-divider>
       <h3>素材配置</h3>
@@ -35,13 +29,6 @@
       <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>
 
       <el-form-item label="引用条例">
-        <!-- <div>
-          <el-radio v-model="matchFormat" label="CONTAINS_ANY">包含其一</el-radio>
-          <el-radio v-model="matchFormat" label="PERFECT_MATCH ">完全匹配</el-radio>
-        </div> -->
-        <!-- <el-select v-model="select"> -->
-
-        <!-- </el-select> -->
       </el-form-item>
 
       <div class="text-align-center">
@@ -119,16 +106,15 @@ export default {
       const type = this.type
       const tagUuids = this.tagSelects.reduce((sum,curr)=>{
           return sum.concat(curr)
-      },[])
+      },[]).join(',')
       const matchFormat = this.matchFormat
       const data = { tagUuids, matchFormat }
-      const params = { groupUuid, type, content }
+      const params = { groupUuid, type, content,...data }
 
       this.$refs['form'].validate(valid => {
         if (valid) {
-          //   console.log(payload)
           this.$store
-            .dispatch('media/addMediaIsAudit', { data, params })
+            .dispatch('media/addMediaIsAudit', {  params })
             .then(() => {
               this.$message({
                 type: 'success',
