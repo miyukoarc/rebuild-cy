@@ -46,7 +46,6 @@
             </div>
           </el-form-item>
 
-          <!-- <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select> -->
           <el-form-item style="margin-bottom:24px;">
             <MDinput v-model="form.title" :maxlength="20" name="name">文章标题</MDinput>
             <MDinput v-model="form.description" :maxlength="100" name="name">文章描述</MDinput>
@@ -82,7 +81,7 @@ export default {
     Tinymce,
     MDinput,
     TagSelect,
-    TagMultiSelect
+    TagMultiSelect,
   },
   data() {
     return {
@@ -100,7 +99,6 @@ export default {
       groupUuid: '',
       flag: false,
       type: 'ARTICLE',
-      
     }
   },
   watch: {
@@ -116,19 +114,19 @@ export default {
           this.mode = 'CREATE'
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      articleDetail: state => state.media.articleDetail,
-      mediaGroupListAll: state => state.media.mediaGroupListAll,
-      permissionMap: state => state.permission.permissionMap,
-    //   tagListSelect: state => state.tag.tagListSelect
+      articleDetail: (state) => state.media.articleDetail,
+      mediaGroupListAll: (state) => state.media.mediaGroupListAll,
+      permissionMap: (state) => state.permission.permissionMap,
+      //   tagListSelect: state => state.tag.tagListSelect
     }),
     defaultCover() {
       return defaultCover()
-    }
+    },
   },
   created() {
     this.initFilter()
@@ -139,13 +137,17 @@ export default {
       this.$store
         .dispatch('media/getArticleDetail', uuid)
         .then(() => {
+
           const {
             imgId,
             imgUrl,
             articleContent,
             description,
-            title
+            title,
+            matchFormat,
+            toTags
           } = this.articleDetail
+          this.form.tagUuids =  this.articleDetail.toTags.map(item=>{return item.uuid})
           const groupUuid = this.articleDetail?.mediaGroup?.uuid
           this.form.imgId = imgId
           this.coverUrl = imgUrl
@@ -154,10 +156,10 @@ export default {
           this.form.title = title
           this.groupUuid = groupUuid
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -165,24 +167,24 @@ export default {
       this.$store
         .dispatch('media/getMediaGroupListAll')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           console.error(err)
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
 
-    //   this.$store
-    //     .dispatch('tag/getListSelect')
-    //     .then(() => {})
-    //     .catch(err => {
-    //       console.error(err)
-    //       this.$message({
-    //         type: 'error',
-    //         message: err || '初始化失败'
-    //       })
-    //     })
+      //   this.$store
+      //     .dispatch('tag/getListSelect')
+      //     .then(() => {})
+      //     .catch(err => {
+      //       console.error(err)
+      //       this.$message({
+      //         type: 'error',
+      //         message: err || '初始化失败'
+      //       })
+      //     })
     },
     beforeUpload() {},
     onSuccess(res, file) {
@@ -197,14 +199,14 @@ export default {
       if (!isimg) {
         this.$message({
           message: '只能上传JPG,GIF,PNG格式的图片！',
-          type: 'error'
+          type: 'error',
         })
         return false
       }
       if (!isLtSize) {
         this.$message({
           message: '大小不能超过2M！',
-          type: 'error'
+          type: 'error',
         })
         return false
       }
@@ -215,8 +217,8 @@ export default {
         const payload = this.form
         const groupUuid = this.groupUuid
         const uuid = this.$route.params.uuid
-        const tagUuids = this.form.tagUuids.join(',')
-        this.handleUpdate({ data: { ...payload, uuid,tagUuids,groupUuid }})
+        const tagUuids = this.form.tagUuids
+        this.handleUpdate({ data: { ...payload, uuid, tagUuids, groupUuid } })
       }
       if (this.mode === 'CREATE') {
         const payload = this.form
@@ -224,8 +226,10 @@ export default {
         const groupUuid = this.groupUuid
         const tagUuids = this.form.tagUuids.join(',')
 
-
-        this.handleCreate({ data: {...payload,tagUuids}, params: { type, groupUuid } })
+        this.handleCreate({
+          data: { ...payload, tagUuids },
+          params: { type, groupUuid },
+        })
       }
       this.flag = true
     },
@@ -240,14 +244,14 @@ export default {
             onClose: () => {
               this.$router.go(-1)
               this.flag = false
-            }
+            },
           })
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err)
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
@@ -262,18 +266,18 @@ export default {
             onClose: () => {
               this.$router.go(-1)
               this.flag = false
-            }
+            },
           })
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err)
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -306,7 +310,7 @@ export default {
   height: 178px;
   display: block;
 }
-.select-zoom{
-    padding: 15px;
+.select-zoom {
+  padding: 15px;
 }
 </style>

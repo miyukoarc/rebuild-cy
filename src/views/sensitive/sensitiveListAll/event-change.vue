@@ -74,7 +74,7 @@ export default {
   computed: {
     ...mapState({
       departmentList: state => state.department.departmentList,
-      listSelect: state => state.role.listSelect
+      listSelect: state => state.role.roleListSelect
     })
   },
   created() {

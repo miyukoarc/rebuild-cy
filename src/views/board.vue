@@ -69,6 +69,10 @@
     <div class="mb-20">
       <tag-multi-select v-model="selectTags" @select-change="handleChange"></tag-multi-select>
     </div>
+
+    <div class="mb-20">
+      <multi-tree-select v-model="multiSelects" :section="'department'"></multi-tree-select>
+    </div>
   </div>
 </template>
 
@@ -83,6 +87,7 @@ import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import ComplexSelect from '@/components/ComplexSelect'
 import TagSelect from '@/components/TagSelect'
 import TagMultiSelect from '@/components/TagMultiSelect'
+import MultiTreeSelect from '@/components/MultiTreeSelect'
 import { mapState } from 'vuex'
 export default {
   components: {
@@ -95,23 +100,12 @@ export default {
     IconTooltip,
     ComplexSelect,
     TagSelect,
-    TagMultiSelect
+    TagMultiSelect,
+    MultiTreeSelect,
   },
-  //   directives: {
-  //   loading: {
-  //     // 指令的定义
-  //     componentUpdated: function (el,binding) {
-  //         if(binding.value){
-  //             document.querySelector('#loading').style.display = ''
-  //         }else{
-  //             document.querySelector('#loading').style.display = 'none'
-  //         }
-  //     //   el.focus()
-  //     }
-  //   }
-  // },
   data() {
     return {
+      multiSelects: [],
       selectTags: [84],
       result: [],
       loading: false,
@@ -138,7 +132,7 @@ export default {
           position: '',
           updatedAt: '2020-06-30 20:23:10',
           isFollowUser: true,
-          status: 1
+          status: 1,
         },
         {
           isMessageUser: false,
@@ -159,7 +153,7 @@ export default {
           position: '',
           updatedAt: '2020-06-30 20:23:10',
           isFollowUser: true,
-          status: 1
+          status: 1,
         },
         {
           isMessageUser: false,
@@ -180,7 +174,7 @@ export default {
           position: '',
           updatedAt: '2020-06-30 20:23:10',
           isFollowUser: true,
-          status: 1
+          status: 1,
         },
         {
           isMessageUser: false,
@@ -201,8 +195,8 @@ export default {
           position: '',
           updatedAt: '2020-06-30 20:23:10',
           isFollowUser: true,
-          status: 1
-        }
+          status: 1,
+        },
       ],
       clearable: true,
       defaultExpandAll: true,
@@ -221,8 +215,8 @@ export default {
               childrens: [
                 { label: '达坂城区', id: '7', childrens: [] },
                 { label: '头屯河区', id: '8', childrens: [] },
-                { label: '乌鲁木齐县', id: '9', childrens: [] }
-              ]
+                { label: '乌鲁木齐县', id: '9', childrens: [] },
+              ],
             },
             {
               label: '克拉玛依市',
@@ -230,19 +224,19 @@ export default {
               childrens: [
                 { label: '克拉玛依区', id: '10', childrens: [] },
                 { label: '白碱滩区', id: '11', childrens: [] },
-                { label: '独山子区', id: '12', childrens: [] }
-              ]
+                { label: '独山子区', id: '12', childrens: [] },
+              ],
             },
             { label: '吐鲁番地区', id: '4', childrens: [] },
             { label: '哈密地区', id: '5', childrens: [] },
-            { label: '昌吉回族自治州', id: '6', childrens: [] }
-          ]
-        }
+            { label: '昌吉回族自治州', id: '6', childrens: [] },
+          ],
+        },
       ],
       treeProps: {
         value: 'id',
         children: 'childrens',
-        label: 'label'
+        label: 'label',
       },
       value1: [],
       disabledValues: [],
@@ -263,7 +257,7 @@ export default {
               uuid: 81,
               version: 0,
               auditState: 1,
-              updatedAt: '2020-06-30 13:41:56'
+              updatedAt: '2020-06-30 13:41:56',
             },
             {
               createdAt: '2020-06-30 13:41:56',
@@ -277,9 +271,9 @@ export default {
               uuid: 80,
               version: 0,
               auditState: 1,
-              updatedAt: '2020-06-30 13:41:56'
-            }
-          ]
+              updatedAt: '2020-06-30 13:41:56',
+            },
+          ],
         },
         {
           groupName: '6/24测试2',
@@ -297,9 +291,9 @@ export default {
               uuid: 79,
               version: 0,
               auditState: 1,
-              updatedAt: '2020-06-24 14:15:51'
-            }
-          ]
+              updatedAt: '2020-06-24 14:15:51',
+            },
+          ],
         },
         {
           groupName: '6/24测试',
@@ -317,9 +311,9 @@ export default {
               uuid: 78,
               version: 0,
               auditState: 1,
-              updatedAt: '2020-06-24 14:13:12'
-            }
-          ]
+              updatedAt: '2020-06-24 14:13:12',
+            },
+          ],
         },
         {
           groupName: '测试',
@@ -337,9 +331,9 @@ export default {
               uuid: 77,
               version: 0,
               auditState: 1,
-              updatedAt: '2020-06-23 16:32:22'
-            }
-          ]
+              updatedAt: '2020-06-23 16:32:22',
+            },
+          ],
         },
         {
           groupName: '最大盈利行 ',
@@ -357,7 +351,7 @@ export default {
               uuid: 70,
               version: 0,
               auditState: 1,
-              updatedAt: '2020-06-20 17:54:22'
+              updatedAt: '2020-06-20 17:54:22',
             },
             {
               createdAt: '2020-06-20 17:54:22',
@@ -371,7 +365,7 @@ export default {
               uuid: 69,
               version: 0,
               auditState: 1,
-              updatedAt: '2020-06-20 17:54:22'
+              updatedAt: '2020-06-20 17:54:22',
             },
             {
               createdAt: '2020-06-20 17:54:22',
@@ -385,7 +379,7 @@ export default {
               uuid: 68,
               version: 0,
               auditState: 1,
-              updatedAt: '2020-06-20 17:54:22'
+              updatedAt: '2020-06-20 17:54:22',
             },
             {
               createdAt: '2020-06-20 17:54:22',
@@ -399,7 +393,7 @@ export default {
               uuid: 67,
               version: 0,
               auditState: 1,
-              updatedAt: '2020-06-20 17:54:22'
+              updatedAt: '2020-06-20 17:54:22',
             },
             {
               createdAt: '2020-06-20 17:54:22',
@@ -413,21 +407,21 @@ export default {
               uuid: 66,
               version: 0,
               auditState: 1,
-              updatedAt: '2020-06-20 17:54:22'
-            }
-          ]
-        }
+              updatedAt: '2020-06-20 17:54:22',
+            },
+          ],
+        },
       ],
 
       tree: [],
-      tempUserDetail: {}
+      tempUserDetail: {},
     }
   },
   computed: {
     ...mapState({
-      departmentList: state => state.department.departmentList,
-      tagListSelect: state => state.tag.tagListSelect
-    })
+      departmentList: (state) => state.department.departmentList,
+      tagListSelect: (state) => state.tag.tagListSelect,
+    }),
   },
   created() {
     setTimeout(() => {
@@ -436,11 +430,11 @@ export default {
           name: '中国总公司',
           department: [
             {
-              name: '人事部'
+              name: '人事部',
             },
             {
-              name: '市场部'
-            }
+              name: '市场部',
+            },
           ],
           children: [
             {
@@ -450,33 +444,33 @@ export default {
                   name: '余杭营业部',
                   department: [
                     {
-                      name: '人事部'
+                      name: '人事部',
                     },
                     {
-                      name: '市场部'
-                    }
-                  ]
+                      name: '市场部',
+                    },
+                  ],
                 },
                 {
                   name: '萧山营业部',
                   department: [
                     {
-                      name: '人事部'
+                      name: '人事部',
                     },
                     {
-                      name: '市场部'
-                    }
-                  ]
-                }
+                      name: '市场部',
+                    },
+                  ],
+                },
               ],
               department: [
                 {
-                  name: '人事部'
+                  name: '人事部',
                 },
                 {
-                  name: '市场部'
-                }
-              ]
+                  name: '市场部',
+                },
+              ],
             },
             {
               name: '南京分公司',
@@ -485,36 +479,36 @@ export default {
                   name: '雨花台营业部',
                   department: [
                     {
-                      name: '人事部'
+                      name: '人事部',
                     },
                     {
-                      name: '市场部'
-                    }
-                  ]
+                      name: '市场部',
+                    },
+                  ],
                 },
                 {
                   name: '玄武营业部',
                   department: [
                     {
-                      name: '人事部'
+                      name: '人事部',
                     },
                     {
-                      name: '市场部'
-                    }
-                  ]
-                }
+                      name: '市场部',
+                    },
+                  ],
+                },
               ],
               department: [
                 {
-                  name: '人事部'
+                  name: '人事部',
                 },
                 {
-                  name: '市场部'
-                }
-              ]
-            }
-          ]
-        }
+                  name: '市场部',
+                },
+              ],
+            },
+          ],
+        },
       ]
     }, 10)
     this.initData()
@@ -526,31 +520,31 @@ export default {
     handleDetail(uuid) {
       console.log(uuid)
     },
-    handleChange(val){
+    handleChange(val) {
       console.log(val)
     },
     initData() {
       this.$store
         .dispatch('department/getDepartmentListAll')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
 
       this.$store
         .dispatch('tag/getListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

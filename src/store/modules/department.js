@@ -133,14 +133,11 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getDepartmentListAll(payload).then(res => {
-        //   const accessed = flatten(res.items)
         commit('SAVE_LIST', res.items)
-        // commit('SAVE_FLATTENLIST',accessed)
         commit('TOGGLE_LOADING', false)
-        resolve(res)
+        resolve(res.items)
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-
         reject(err)
       })
     })

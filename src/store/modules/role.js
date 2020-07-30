@@ -123,6 +123,7 @@ const actions = {
         commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
             getRoleListSelect().then(res => {
+                console.log(res)
                 commit('SAVE_LIST_SELECT', res.items)
                 commit('TOGGLE_LOADING', false)
                 resolve()
