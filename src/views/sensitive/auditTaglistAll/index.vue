@@ -49,9 +49,11 @@
           <el-table-column align="left" label="添加/删除的标签内容">
             <template v-slot="{row}">
               <div class="tag-container">
-                <div>{{tagOperationType[row.tagOperationType]}}</div>
-                <div>
-                  <!-- <el-tag v-for="tag in row.tagChangeContent" :key="tag.tagId" size="mini">{{tag.tagName}}</el-tag> -->
+                <div style="width:60px;">{{tagOperationType[row.tagOperationType]}}</div>&emsp;&emsp;
+                <div v-if="row.tagOperationType==='DELETE_TAG_GROUP'">
+                    <span class="font-exs color-info">{{row.tagChangeContent[0].groupName}}</span>
+                  <el-tag v-for="tag in row.tagChangeContent" :key="tag.tagId" size="mini">{{tag.tagName}}</el-tag>
+                  <!-- <el-tag size="mini" v-if="row.tagChangeContent.length>1">...</el-tag> -->
                 </div>
               </div>
             </template>

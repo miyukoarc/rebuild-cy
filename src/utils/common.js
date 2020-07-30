@@ -30,6 +30,7 @@ export function classifyTag(arr) {
         groupName: arr[i].groupName,
         groupId: arr[i].groupId,
         sort: arr[i].sort,
+        auditStateForOperation: arr[i].auditStateForOperation,
         tags: []
       })
       tempId = arr[i].groupId

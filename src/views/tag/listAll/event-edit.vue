@@ -39,13 +39,11 @@
         <el-button size="small" type="text" @click="handleAddTag">添加标签</el-button>
       </el-form-item>
 
-      <!-- <el-form-item   label> -->
       <div style="text-align:center;">
         <el-t-button size="small" @click="handleCancel">取消</el-t-button>
         <el-t-button size="small" type="primary" @click="handleConfirm">确定</el-t-button>
       </div>
 
-      <!-- </el-form-item> -->
     </el-form>
   </div>
 </template>
@@ -123,9 +121,8 @@ export default {
       const deleteFlag = this.form.tagList.every((item) => {
         return item.deleted === true
       })
-      console.log(deleteFlag)
       if (!deleteFlag) {
-          this.doConfirm()
+        this.doConfirm()
       } else {
         this.$confirm('删除所有标签将删除标签组，是否删除标签组？', 'Warning', {
           confirmButtonText: '确定',
@@ -133,7 +130,7 @@ export default {
           type: 'warning',
         })
           .then(async () => {
-              await this.doConfirm()
+            await this.doConfirm()
           })
           .catch((err) => {})
       }
@@ -146,9 +143,10 @@ export default {
       this.$store
         .dispatch('tag/updateTagIsAudit', payload)
         .then(() => {
+          const message = this.auditSetting['tag'] ? '已提交审核' : '已完成'
           this.$message({
             type: 'success',
-            message: '操作成功',
+            message: message,
           })
           this.handleFresh()
           this.closeDialog()
@@ -219,7 +217,7 @@ export default {
         .catch((err) => {})
     },
     handleFresh() {
-      this.$bus.$emit('handleRequset')
+      this.$bus.$emit('handleRequest')
     },
     checkState(item) {
       if (item.hasOwnProperty('deleted')) {
