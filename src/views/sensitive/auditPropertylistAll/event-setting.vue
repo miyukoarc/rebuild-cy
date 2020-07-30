@@ -40,11 +40,11 @@ export default {
       type: Object,
       default: () => {
         return {}
-      }
-    }
+      },
+    },
   },
   components: {
-    AddTag
+    AddTag,
   },
   data() {
     return {
@@ -52,19 +52,19 @@ export default {
       query: {
         startTime: '',
         endTime: '',
-        word: ''
+        word: '',
       },
       form: {
         auditUserList: [
           {
             level: 1,
             range: 1,
-            userList: [] //userId
-          }
+            userList: [], //userId
+          },
         ],
-        uuid: ''
+        uuid: '',
       },
-      levels: 1
+      levels: 1,
     }
   },
   watch: {
@@ -73,8 +73,9 @@ export default {
         const uuid = newVal.uuid
         this.form.uuid = uuid
       },
-      immediate: true
-    }
+
+      immediate: true,
+    },
   },
   computed: {},
   methods: {
@@ -84,7 +85,7 @@ export default {
       const obj = {
         level: addLevel,
         range: 1,
-        userList: [] //userId
+        userList: [], //userId
       }
 
       this.form.auditUserList.push(obj)
@@ -93,42 +94,63 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     handleConfirm() {
-      const auditUserList = this.form.auditUserList.map(item => {
-        return {
-          ...item,
-          userList: item.userList.map(unit => {
-            return { name: unit.name, userId: unit.userId, uuid: unit.uuid,auditState: 'TO_BE_REVIEWED' }
-          })
-        }
+      const emptyFlag = this.form.auditUserList.every((item) => {
+        return item.userList.length != 0
       })
-      const form = this.form
-      const payload = { ...form, auditUserList }
-      console.log(payload)
-      this.$store
-        .dispatch('sensitive/setAuditUser', payload)
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '操作成功',
-            duration: 1000,
-            onClose: () => {
+
+      if (emptyFlag) {
+        const auditUserList = this.form.auditUserList.map((item) => {
+          return {
+            ...item,
+            userList: item.userList.map((unit) => {
+              return {
+                name: unit.name,
+                userId: unit.userId,
+                uuid: unit.uuid,
+                auditState: 'TO_BE_REVIEWED',
+              }
+            }),
+          }
+        })
+        const form = this.form
+        const payload = { ...form, auditUserList }
+        this.$store
+          .dispatch('sensitive/setAuditUser', payload)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '操作成功',
+              duration: 1000,
+              onClose: () => {
                 this.handleRefresh()
                 this.handleCancel()
-            }
+              },
+            })
           })
-        })
-        .catch(err => {
-          console.error(err)
-          this.$message({
-            type: 'error',
-            message: errw
+          .catch((err) => {
+            console.error(err)
+            this.$message({
+              type: 'error',
+              message: errw,
+            })
           })
+      } else {
+        //   this.handleCancel()
+        this.$confirm('是否放弃设置审批人', 'warning', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
         })
+          .then(async () => {})
+          .catch((err) => {
+            console.error(err)
+          })
+      }
     },
-    handleRefresh(){
-        this.$bus.$emit('handleRefresh')
-    }
-  }
+    handleRefresh() {
+      this.$bus.$emit('handleRefresh')
+    },
+  },
 }
 </script>
 

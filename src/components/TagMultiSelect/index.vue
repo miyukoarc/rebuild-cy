@@ -8,11 +8,11 @@
         <el-col class="tags" :span="16">
           <div v-for="(tag,index) in group.tagList" :key="tag.uuid" class="tag-container">
             <el-tag
-              size="medium"
+              size="small"
               :type="alterType(groupIndex,index,tag.uuid)"
               style="margin-right:3px;"
               @click="handleToggle(groupIndex,tag,index)"
-            ><span class="color-primary font-es">{{tag.tagName}}</span></el-tag>
+            ><span class="color-info font-es">{{tag.tagName}}</span></el-tag>
           </div>
         </el-col>
       </el-row>
@@ -169,6 +169,7 @@ export default {
       .tag-container {
         cursor: pointer;
         display: inline-block;
+        margin-bottom: 3px;
         .tag {
           height: 20px;
           padding: 0 5px;

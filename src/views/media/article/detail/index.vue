@@ -216,16 +216,14 @@ export default {
         const groupUuid = this.groupUuid
         const uuid = this.$route.params.uuid
         const tagUuids = this.form.tagUuids.join(',')
-        this.handleUpdate({ data: { ...payload, uuid,tagUuids }, params: { groupUuid } })
+        this.handleUpdate({ data: { ...payload, uuid,tagUuids,groupUuid }})
       }
       if (this.mode === 'CREATE') {
         const payload = this.form
         const type = this.type
         const groupUuid = this.groupUuid
         const tagUuids = this.form.tagUuids.join(',')
-        // const tagUuids = this.tagSelects.reduce((sum, curr) => {
-        //   return sum.concat(curr)
-        // }, []).join(',')
+
 
         this.handleCreate({ data: {...payload,tagUuids}, params: { type, groupUuid } })
       }

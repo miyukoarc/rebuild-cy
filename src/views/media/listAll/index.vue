@@ -7,9 +7,11 @@
     <el-row>
       <el-col :span="5">
         <el-card class="content-spacing" style="min-height:84vh;margin-right:20px;">
-          <el-form label-position="left" label-width="100px">
+          <el-form label-position="left" label-width="60px">
             <el-form-item label="搜索：">
-              <el-input v-model="search" @change="handleSearch"></el-input>
+              <el-input v-model="groupName" @keypress.enter="handleSearchGroup">
+                <el-button slot="append" icon="el-icon-search" @click="handleSearchGroup"></el-button>
+              </el-input>
             </el-form-item>
           </el-form>
           <div class="text-align-center" style="margin-bottom:20px;">
@@ -100,7 +102,7 @@
               <article-board
                 ref="articleBoard"
                 @handleEditArticle="handleEditArticle"
-                @handleCreateArticle ="handleCreateArticle"
+                @handleCreateArticle="handleCreateArticle"
                 @handleDelete="handleDelete"
                 @handleTransfer="(payload)=>handleTransfer('articleBoard',payload)"
               ></article-board>
@@ -142,7 +144,7 @@ export default {
     VideoBoard,
     ArticleBoard,
     FileBoard,
-    AllBoard
+    AllBoard,
   },
   data() {
     return {
@@ -150,25 +152,25 @@ export default {
         startTime: '',
         endTime: '',
         fileName: '',
-        groupUuid: ''
+        groupUuid: '',
       },
-      search: '',
+      groupName: '',
       activeName: 'zero',
       currentGroup: {},
       uploadImage: {
         groupUuid: '',
-        type: 'IMAGE'
+        type: 'IMAGE',
       },
       uploadVideo: {
         groupUuid: '',
-        type: 'VIDEO'
+        type: 'VIDEO',
       },
       uploadFile: {
         groupUuid: '',
-        type: 'FILE'
+        type: 'FILE',
       },
       imageTypes: ['image/jpeg', 'image/gif', 'image/png'],
-      timer: null
+      timer: null,
     }
   },
   watch: {
@@ -183,16 +185,16 @@ export default {
           //   this.query.groupUuid = this.groupListAll[0].uuid//初始化
         })
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      groupListAll: state => state.media.mediaGroupListAll,
-      loading: state => state.media.loading,
+      groupListAll: (state) => state.media.mediaGroupListAll,
+      loading: (state) => state.media.loading,
 
-      permissionMap: state => state.permission.permissionMap
-    })
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
     this.initDataList()
@@ -207,8 +209,11 @@ export default {
     })
   },
   methods: {
+    handleSearchGroup() {
+      const groupName = this.groupName
+      this.initDataList({ groupName })
+    },
     handleSearch(val) {
-      console.log('sousuo', val)
       if (this.timer) {
         clearTimeout(this.timer)
       }
@@ -223,10 +228,10 @@ export default {
       this.$store
         .dispatch('media/getMediaGroupListAll', payload)
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败' || err
+            message: '初始化失败' || err,
           })
         })
     },
@@ -234,10 +239,10 @@ export default {
       this.$store
         .dispatch('media/getMediaListAll', payload)
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败' || err
+            message: '初始化失败' || err,
           })
         })
     },
@@ -271,7 +276,7 @@ export default {
       this.$confirm('是否删除当前分组', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(async () => {
           await this.$store
@@ -279,18 +284,18 @@ export default {
             .then(() => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               this.initDataList()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: err
+                message: err,
               })
             })
         })
-        .catch(err => {})
+        .catch((err) => {})
     },
     handleRowClick(val) {
       console.log(val)
@@ -325,16 +330,16 @@ export default {
         .then(() => {
           this.$message({
             type: 'success',
-            message: '操作成功'
+            message: '操作成功',
           })
           this.initMediaList(this.query)
           this.$refs[target].closeDialog()
           //   Object.assign(this.$data, this.$options.data())
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '操作失败'
+            message: err || '操作失败',
           })
         })
     },
@@ -343,7 +348,7 @@ export default {
       this.$confirm('是否删除当前素材', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(async () => {
           await this.$store
@@ -351,37 +356,37 @@ export default {
             .then(() => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               this.handleRefresh()
-            //   Object.assign(this.$data, this.$options.data())
+              //   Object.assign(this.$data, this.$options.data())
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: err
+                message: err,
               })
             })
         })
-        .catch(err => {})
+        .catch((err) => {})
     },
     handleCreateArticle(val) {
       this.$router.push({
-        path: '/media/article/detail/0'
+        path: '/media/article/detail/0',
       })
     },
     handleEditArticle(val) {
       val
       this.$router.push({
-        path: '/media/article/detail/' + val
+        path: '/media/article/detail/' + val,
       })
     },
     handleRefresh() {
       const groupUuid = this.currentGroup.uuid
       this.query.groupUuid = groupUuid
       this.initMediaList({ ...this.query, groupUuid })
-    }
-  }
+    },
+  },
 }
 </script>
 

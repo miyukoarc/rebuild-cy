@@ -47,18 +47,16 @@
           <!-- <el-table-column label="文章描述" align="left"></el-table-column> -->
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
+              <span v-if="scope.row.auditStateForOperation==='UNDER_REVCIEW'" class="color-primary">审核中</span>
               <el-button
-                type="primary"
+                v-else
+                type="text"
                 size="mini"
                 @click.stop="handleEdit(scope.$index,scope.row)"
               >编辑</el-button>
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
-
       </div>
     </el-card>
 
@@ -80,7 +78,7 @@ export default {
   components: {
     ListHeader,
     FormDialog,
-    ToolBar
+    ToolBar,
   },
   name: 'TagListAll',
   data() {
@@ -89,14 +87,14 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 1000
+        pageSize: 1000,
       },
 
       query: {
         page: 0,
         size: 10,
         groupName: '',
-        tagName: ''
+        tagName: '',
       },
       sortable: null,
       list: [],
@@ -107,25 +105,25 @@ export default {
         tagSorts: [
           {
             sort: 0,
-            tagGroupId: ''
+            tagGroupId: '',
           },
           {
             sort: 0,
-            tagGroupId: ''
-          }
-        ]
-      }
+            tagGroupId: '',
+          },
+        ],
+      },
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      loading: state => state.tag.loading,
+      loading: (state) => state.tag.loading,
       //   listAll: state => state.tag.tagListAll,
-      page: state => state.tag.tagListPage,
+      page: (state) => state.tag.tagListPage,
 
-      permissionMap: state => state.permission.permissionMap
-    })
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
     this.initDataList(this.query)
@@ -150,20 +148,20 @@ export default {
       this.$store
         .dispatch('tag/getListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
 
       this.$store
         .dispatch('user/getAllUserList')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -173,22 +171,22 @@ export default {
     initDataList(payload) {
       this.$store
         .dispatch('tag/getTagList', payload)
-        .then(res => {
+        .then((res) => {
           //初始化分页
           this.list = JSON.parse(JSON.stringify(res))
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
-          this.oldList = this.list.map(v => v.groupId)
+          this.oldList = this.list.map((v) => v.groupId)
           this.newList = this.oldList.slice()
           //   this.$nextTick(() => {
           // this.setSort()
           //   })
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
     },
@@ -196,7 +194,7 @@ export default {
       const payload = this.userList[val].uuid
       this.$router.push({
         path: '/user/detail',
-        query: { uuid: payload }
+        query: { uuid: payload },
       })
     },
     handleSearch(val) {
@@ -243,7 +241,7 @@ export default {
         //   // Detail see : https://github.com/RubaXa/Sortable/issues/1012
         //   dataTransfer.setData('Text', '')
         // },
-        onEnd: evt => {
+        onEnd: (evt) => {
           const { newIndex, oldIndex } = evt
           this.form.tagSorts[0].sort = this.list[newIndex].sort
           this.form.tagSorts[1].sort = this.list[oldIndex].sort
@@ -262,23 +260,23 @@ export default {
           // for show the changes, you can delete in you code
           const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
           this.newList.splice(evt.newIndex, 0, tempIndex)
-        }
+        },
       })
     },
     handleChangeSort() {
       this.$store
         .dispatch('tag/updateTagSort', this.form)
         .then(() => {
-            this.initDataList()
+          this.initDataList()
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

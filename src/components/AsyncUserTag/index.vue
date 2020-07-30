@@ -95,7 +95,6 @@ export default {
       if (!Object.keys(this.tempUserDetail).length) {
         this.timer = setTimeout(() => {
           if (this.uuid) {
-            console.log('请求')
             this.initData(this.uuid)
           }
         }, 100)
