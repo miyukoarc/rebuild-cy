@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
     <el-form-item label="规则名称：">
-      <el-input v-model.trim="query.name" clearable placeholder="请输入规则名称" disabled></el-input>
+      <el-input v-model.trim="query.name" clearable placeholder="请输入规则名称"></el-input>
     </el-form-item>
 
     <!-- <el-form-item label="添加渠道：">
@@ -15,8 +15,15 @@
       </el-select>
     </el-form-item>-->
 
+    <el-form-item label="关键词：">
+      <el-input v-model.trim="query.name" clearable placeholder="请输入关键词"></el-input>
+    </el-form-item>
+    <el-form-item label="回复内容：">
+      <el-input v-model.trim="query.name" clearable placeholder="请输入回复内容"></el-input>
+    </el-form-item>
+
     <el-form-item label="创建员工：">
-      <el-select v-model="query.userId" filterable disabled>
+      <el-select v-model="query.userId" clearable filterable @clear="handleClearable('userId')">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -25,29 +32,10 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="关键词：">
-      <el-input v-model.trim="query.name" clearable placeholder="请输入关键词" disabled></el-input>
-    </el-form-item>
-    <el-form-item label="回复内容：">
-      <el-input v-model.trim="query.name" clearable placeholder="请输入回复内容" disabled></el-input>
-    </el-form-item>
-
-    <el-form-item label="创建时间：">
-      <el-date-picker
-        v-model="value"
-        type="daterange"
-        :value-format="'yyyy-MM-dd HH:mm:ss'"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        @change="handleSelectedTime"
-        :default-time="['00:00:00', '23:59:59']" disabled
-      ></el-date-picker>
-    </el-form-item>
 
     <el-form-item label="客户标签：">
       <div class="tag-border">
-        <el-select v-model="query.tagIds" @change="handleChangeSecond" size="mini" multiple disabled>
+        <el-select v-model="query.tagIds" @change="handleChangeSecond" size="mini" multiple>
           <el-option-group v-for="(item,key) in tagListAll" :key="key" :label="item.groupName">
             <el-option
               v-for="(child,index) in item.tagList"
@@ -73,6 +61,19 @@
       </div>
     </el-form-item>
 
+    <el-form-item label="创建时间：">
+      <el-date-picker
+        v-model="value"
+        type="daterange"
+        :value-format="'yyyy-MM-dd HH:mm:ss'"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @change="handleSelectedTime"
+        :default-time="['00:00:00', '23:59:59']"
+      ></el-date-picker>
+    </el-form-item>
+
     <div class="handle-warp">
       <el-form-item label=" ">
         <el-t-button size="mini" type="primary" @click="handleSearch">搜索</el-t-button>
@@ -83,73 +84,77 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       value: [],
       contractWay: [
         {
-          type: '员工主动添加',
-          id: '1'
+          type: "员工主动添加",
+          id: "1",
         },
         {
-          type: '员工被动添加',
-          id: '2'
+          type: "员工被动添加",
+          id: "2",
         },
         {
-          type: '二维码扫码添加',
-          id: '3'
-        }
+          type: "二维码扫码添加",
+          id: "3",
+        },
       ],
       query: {
-        name: '',
-        contractWayId: '',
-        userId: '',
+        name: "",
+        contractWayId: "",
+        userId: "",
         tagIds: [],
         flag: true,
-        startTime: '',
-        endTime: ''
+        startTime: "",
+        endTime: "",
       },
-      timer: null
-    }
+      timer: null,
+    };
   },
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListSelect,
-      userListAll: state => state.user.listSelect
+      tagListAll: (state) => state.tag.tagListSelect,
+      userListAll: (state) => state.user.listSelect,
       //   departments: state => state.department.departments
-    })
+    }),
   },
   methods: {
     handleSelectedTime(val) {
-      console.log(val)
-      this.query.startTime = this.value[0]
-      this.query.endTime = this.value[1]
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.query.startTime = this.value[0];
+      this.query.endTime = this.value[1];
+      // this.$emit('handleSearch', this.query)
     },
     handleChangeSecond(val) {
       if (this.timer) {
-        clearTimeout(this.timer)
+        clearTimeout(this.timer);
       }
       this.timer = setTimeout(() => {
-        this.$emit('handleSearch', this.query)
-      }, 1000)
+        this.$emit("handleSearch", this.query);
+      }, 1000);
     },
     handleSelectedChange(val) {
-      console.log(val)
-      this.$emit('handleSearch', this.query)
+      console.log(val);
+      this.$emit("handleSearch", this.query);
     },
     handleSearch() {
-      this.$emit('handleSearch', this.query)
+      this.$emit("handleSearch", this.query);
     },
     handleRefresh() {
-      this.$emit('handleRefresh')
-      this.value = this.$options.data().value
-      this.query = this.$options.data().query
-    }
-  }
-}
+      this.$emit("handleRefresh");
+      this.value = this.$options.data().value;
+      this.query = this.$options.data().query;
+    },
+    handleClearable(val) {
+      this.query[val] = "";
+      // this.$emit("handleSearch", this.query);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
