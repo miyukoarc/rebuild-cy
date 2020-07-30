@@ -23,7 +23,7 @@
           header-row-class-name="el-table-header"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column :selectable="selectable" type="selection" width="55"></el-table-column>
           <el-table-column label="创建人">
             <template v-slot="scope">
               <div>{{scope.row.creator.name}}</div>
@@ -47,13 +47,19 @@
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
           <el-table-column label="操作">
             <template v-slot="{row}">
-              <!-- <el-t-button type="text" @click.stop="handleEdit(row)">编辑</el-t-button> -->
-              <el-t-button type="text" @click.stop="handleDelete(row.uuid)">删除</el-t-button>
+              <span class="color-primary" v-if="row.auditStateForOperation==='UNDER_REVCIEW'">审核中</span>
+              <el-t-button v-else type="text" @click.stop="handleDelete(row.uuid)">删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>
 
-        <card-grid v-else ref="cardGrid" v-model="selects" :options="listAll" @handleDelete="handleDelete"></card-grid>
+        <card-grid
+          v-else
+          ref="cardGrid"
+          v-model="selects"
+          :options="listAll"
+          @handleDelete="handleDelete"
+        ></card-grid>
       </keep-alive>
     </div>
 
@@ -78,7 +84,7 @@ export default {
       checked: false,
       mode: 'list',
       selects: [],
-      groupUuid: 0
+      groupUuid: 0,
     }
   },
   watch: {
@@ -91,17 +97,17 @@ export default {
           })
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      loading: state => state.media.loading,
-      permissionMap: state => state.permission.permissionMap,
-      listAll: state => state.media.mediaList,
-      mediaType: state => state.enum.mediaType,
-      groupListAll: state => state.media.mediaGroupListAll
-    })
+      loading: (state) => state.media.loading,
+      permissionMap: (state) => state.permission.permissionMap,
+      listAll: (state) => state.media.mediaList,
+      mediaType: (state) => state.enum.mediaType,
+      groupListAll: (state) => state.media.mediaGroupListAll,
+    }),
   },
   mounted() {},
   methods: {
@@ -116,7 +122,7 @@ export default {
       this.$emit('handleDelete', arr)
     },
     handleSelectionChange(val) {
-      this.selects = val.map(item => {
+      this.selects = val.map((item) => {
         return item.uuid
       })
     },
@@ -144,7 +150,7 @@ export default {
       } else {
         this.$message({
           type: 'warning',
-          message: '请至少勾选一项！'
+          message: '请至少勾选一项！',
         })
       }
     },
@@ -155,7 +161,7 @@ export default {
       } else {
         this.$message({
           type: 'warning',
-          message: '请至少选择一项！'
+          message: '请至少选择一项！',
         })
       }
     },
@@ -166,8 +172,11 @@ export default {
 
     closeDialog() {
       this.$refs['dialogTransfer'].dialogVisible = false
-    }
-  }
+    },
+    selectable(row, index) {
+      return row.auditStateForOperation !== 'UNDER_REVCIEW'
+    },
+  },
 }
 </script>
 
@@ -175,6 +184,5 @@ export default {
 .header-container {
   display: flex;
   justify-content: space-between;
-
 }
 </style>

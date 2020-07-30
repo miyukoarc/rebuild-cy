@@ -239,7 +239,7 @@ export default {
       this.initDataList(this.query)
     },
     changeSize(val) {
-      this.query.size = 10
+      this.query.size = val
       this.initDataList(this.query)
     },
     handleExport(val) {

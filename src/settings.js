@@ -29,8 +29,8 @@ module.exports = {
     tagsView: true,
     showAuth: false,
     // api_host: 'http://10.10.10.198', // 本地接口url 骋浩 
-    api_host: 'http://10.10.10.230', // 杜亮
+    // api_host: 'http://10.10.10.82', // 杜亮
     // api_host:'http://10.10.10.4:9000', // 光
     // api_host: "http://sidebar.cyscrm.com:9000"// 线上
-    // api_host:'http://47.111.161.128:9000/', // 线上IP
+    api_host:'http://47.111.161.128:9000/', // 线上IP
 }
