@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-28 13:56:22
- * @LastEditTime: 2020-07-25 18:37:11
+ * @LastEditTime: 2020-07-30 17:53:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\header.vue
@@ -9,7 +9,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item>
-      <el-input v-model.trim="query.content" size="mini" placeholder="请输入搜索聊天内容">
+      <el-input v-model.trim="query.content" size="mini" placeholder="请输入搜索聊天内容" style="width:180px">
         <i slot="prefix" class="el-input__icon el-icon-search search-icon" @click="handleSearch"></i>
       </el-input>
     </el-form-item>
@@ -24,6 +24,7 @@
         end-placeholder="结束日期"
         :default-time="['00:00:00', '23:59:59']"
         @change="handleSelectedTime"
+        style="width:260px"
       ></el-date-picker>
     </el-form-item>
     <el-form-item>
@@ -51,9 +52,13 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      console.log(val);
-      this.query.startTime = this.value[0];
-      this.query.endTime = this.value[1];
+      if (val) {
+        this.query.startTime = this.value[0];
+        this.query.endTime = this.value[1];
+      } else {
+        this.query.startTime = "";
+        this.query.endTime = "";
+      }
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {

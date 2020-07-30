@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-28 15:29:23
+ * @LastEditTime: 2020-07-30 16:24:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <div v-if="item.fromUser == fromUserId" class="right-warp">
+    <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
