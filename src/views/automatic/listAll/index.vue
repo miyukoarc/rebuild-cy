@@ -53,6 +53,32 @@
           <el-table-column label="回复内容" align="left" prop="replyWord"></el-table-column>
           <!-- <el-table-column label="适用标签" align="left">--</el-table-column>
           <el-table-column label="创建人" align="left">--</el-table-column> -->
+          <el-table-column label="企业标签" align="left">
+            <template v-slot="{row}">
+              <tags-drawer
+                v-if="row.autoReplyTags !==null"
+                :tags="row.autoReplyTags"
+              ></tags-drawer>
+              <span v-else>--</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="所属员工" align="left">
+            <template v-slot="{row}">
+              <div v-if="Object.keys(row.creator).length">
+                <async-user-tag
+                  size="small"
+                  v-for="item in [row.creator]"
+                  type="info"
+                  :key="item.uuid"
+                  :uuid="item.uuid"
+                >
+                  <i class="el-icon-user-solid"></i>
+                  {{item.name}}
+                </async-user-tag>
+              </div>
+
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="left">
         
             <template slot-scope="scope">
@@ -131,7 +157,7 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    // this.initFilter()
+    this.initFilter()
   },
   methods: {
     doExport(val) {

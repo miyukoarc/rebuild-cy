@@ -688,7 +688,7 @@ img.option-img {
     }
   }
 }
-.contact-way-detail {
+// .contact-way-detail {
   .message-content {
     margin: 20px 0;
     .img-warp {
@@ -775,5 +775,5 @@ img.option-img {
       }
     }
   }
-}
+// }
 </style>
