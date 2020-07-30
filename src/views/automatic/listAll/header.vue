@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
     <el-form-item label="规则名称：">
-      <el-input v-model.trim="query.name" clearable placeholder="请输入规则名称"></el-input>
+      <el-input v-model.trim="query.ruleName" clearable placeholder="请输入规则名称"></el-input>
     </el-form-item>
 
     <!-- <el-form-item label="添加渠道：">
@@ -16,13 +16,13 @@
     </el-form-item>-->
 
     <el-form-item label="关键词：">
-      <el-input v-model.trim="query.name" clearable placeholder="请输入关键词"></el-input>
+      <el-input v-model.trim="query.keyWord" clearable placeholder="请输入关键词"></el-input>
     </el-form-item>
     <el-form-item label="回复内容：">
-      <el-input v-model.trim="query.name" clearable placeholder="请输入回复内容"></el-input>
+      <el-input v-model.trim="query.replyWord" clearable placeholder="请输入回复内容"></el-input>
     </el-form-item>
 
-    <el-form-item label="创建员工：">
+    <!-- <el-form-item label="创建员工：">
       <el-select v-model="query.userId" clearable filterable @clear="handleClearable('userId')">
         <el-option
           v-for="item in userListAll"
@@ -31,7 +31,7 @@
           :value="item.userId"
         ></el-option>
       </el-select>
-    </el-form-item>
+    </el-form-item>-->
 
     <el-form-item label="客户标签：">
       <div class="tag-border">
@@ -104,9 +104,10 @@ export default {
         },
       ],
       query: {
-        name: "",
-        contractWayId: "",
-        userId: "",
+        ruleName: "",
+        keyWord: "",
+        replyWord: "",
+        // userId: "",
         tagIds: [],
         flag: true,
         startTime: "",
@@ -136,10 +137,6 @@ export default {
       this.timer = setTimeout(() => {
         this.$emit("handleSearch", this.query);
       }, 1000);
-    },
-    handleSelectedChange(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
     },
     handleSearch() {
       this.$emit("handleSearch", this.query);

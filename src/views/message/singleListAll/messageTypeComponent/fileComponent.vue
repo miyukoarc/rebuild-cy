@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:48:28
- * @LastEditTime: 2020-07-28 16:29:58
+ * @LastEditTime: 2020-07-30 17:40:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\fileComponent.vue
@@ -46,7 +46,7 @@
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div
             class="file-warp"
-            @dblclick="handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt,item.revokeType)"
+            @dblclick="handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
           >
             <div class="file-bg flex-between-alinecenter">
               <div>
@@ -100,8 +100,8 @@ export default {
     },
   },
   methods: {
-    async handleDownload(url, fileName, mime, revoke) {
-      if (revoke) {
+    async handleDownload(url, fileName, mime) {
+      
         // 下载附件
         await downloadFile(url)
           .then((res) => {
@@ -141,7 +141,7 @@ export default {
         //   .catch(error => {
         //     console.error(error);
         //   });
-      }
+      
     },
     getFileSize(fileByte) {
       var fileSizeByte = fileByte;

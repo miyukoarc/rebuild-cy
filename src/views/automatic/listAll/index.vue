@@ -50,15 +50,24 @@
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="规则名称" align="left" prop="ruleWord"></el-table-column>
           <el-table-column label="关键词" align="left" prop="keyWord"></el-table-column>
-          <el-table-column label="回复内容" align="left" prop="replyWord"></el-table-column>
-          <!-- <el-table-column label="适用标签" align="left">--</el-table-column>
-          <el-table-column label="创建人" align="left">--</el-table-column> -->
-          <el-table-column label="企业标签" align="left">
+          <el-table-column label="回复内容" align="left" prop="replyWord">
             <template v-slot="{row}">
-              <tags-drawer
-                v-if="row.autoReplyTags !==null"
-                :tags="row.autoReplyTags"
-              ></tags-drawer>
+              <div>
+                <span
+                  v-if="row.autoReplyType !='CONTENT'"
+                >{{autoReplyContentType[row.autoReplyType]}}</span>
+                <p>{{row.replyWord}}</p>
+              </div>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column label="适用标签" align="left">--</el-table-column>
+          <el-table-column label="创建人" align="left">--</el-table-column>-->
+          <el-table-column label="企业标签" align="left" >
+            <template v-slot="{row}">
+              <div v-if="row.autoReplyTags.length>0">
+                <strong>{{row.autoReplyTagType=='CONTAIN'?'包含其一':'完全匹配'}}</strong>
+                <tags-drawer v-if="row.autoReplyTags.length>0" :tags="row.autoReplyTags"></tags-drawer>
+              </div>
               <span v-else>--</span>
             </template>
           </el-table-column>
@@ -76,11 +85,9 @@
                   {{item.name}}
                 </async-user-tag>
               </div>
-
             </template>
           </el-table-column>
           <el-table-column label="操作" align="left">
-        
             <template slot-scope="scope">
               <el-t-button
                 type="text"
@@ -93,7 +100,11 @@
           </el-table-column>
         </el-table>
 
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
+        <customer-pagination
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -104,15 +115,15 @@
 <script>
 // import mHeadedr from "./header";
 
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import AsyncUserTag from '@/components/AsyncUserTag'
-import AsyncUserDrawer from '@/components/AsyncUserDrawer'
-import TagsDrawer from '@/components/TagsDrawer'
-import RoleDrawer from '@/components/RoleDrawer'
-import CustomerPagination from '@/components/CustomerPagination'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import AsyncUserTag from "@/components/AsyncUserTag";
+import AsyncUserDrawer from "@/components/AsyncUserDrawer";
+import TagsDrawer from "@/components/TagsDrawer";
+import RoleDrawer from "@/components/RoleDrawer";
+import CustomerPagination from "@/components/CustomerPagination";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -123,45 +134,50 @@ export default {
     AsyncUserDrawer,
     RoleDrawer,
     TagsDrawer,
-    CustomerPagination
+    CustomerPagination,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
         page: 0,
-        size: 10
-        // startTime: '',
-        // endTime: '',
-        // word: ''
+        size: 10,
+        ruleName: "",
+        keyWord: "",
+        replyWord: "",
+        // userId: "",
+        tagIds: [],
+        flag: true,
+        startTime: "",
+        endTime: "",
       },
-      rowSelects: []
-    }
+      rowSelects: [],
+    };
   },
   watch: {},
   computed: {
     ...mapState({
       //   tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.automatic.loading,
-      listAll: state => state.automatic.listAll,
-      page: state => state.automatic.page,
-
-      permissionMap: state => state.permission.permissionMap
-    })
+      loading: (state) => state.automatic.loading,
+      listAll: (state) => state.automatic.listAll,
+      page: (state) => state.automatic.page,
+      permissionMap: (state) => state.permission.permissionMap,
+      autoReplyContentType: (state) => state.enum.autoReplyContentType,
+    }),
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   methods: {
     doExport(val) {
-      console.log(val)
+      console.log(val);
     },
     /**
      * 初始化筛选信息
@@ -177,101 +193,112 @@ export default {
       //       })
       //     })
       this.$store
-        .dispatch('tag/getListSelect')
+        .dispatch("tag/getListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败'
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
 
       this.$store
-        .dispatch('user/getUserListSelect')
+        .dispatch("user/getUserListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败'
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('automatic/getListAll', payload)
+        .dispatch("automatic/getListAll", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败'
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
     handleDetail(val) {
-      const payload = this.userList[val].uuid
+      const payload = this.userList[val].uuid;
       this.$router.push({
-        path: '/user/detail',
-        query: { uuid: payload }
-      })
+        path: "/user/detail",
+        query: { uuid: payload },
+      });
     },
     handleSearch(val) {
-      const { startTime, endTime, word } = val
-      this.query.startTime = startTime ? startTime : this.query.startTime
-      this.query.endTime = endTime ? endTime : this.query.endTime
-      this.query.word = word ? word : this.query.word
-      this.query.page = 0
-      this.initDataList(this.query)
+      const {
+        ruleName,
+        keyWord,
+        replyWord,
+        tagIds,
+        flag,
+        startTime,
+        endTime,
+      } = val;
+      console.log(this.query, "2223233121213455");
+      this.query.ruleName = ruleName ? ruleName : "";
+      this.query.keyWord = keyWord ? keyWord : "";
+      this.query.replyWord = replyWord ? replyWord : "";
+      this.query.tagIds = tagIds ? tagIds + "" : [];
+      this.query.flag = flag ? true : false;
+      this.query.startTime = startTime ? startTime : "";
+      this.query.endTime = endTime ? endTime : "";
+      this.query.page = 0;
+      this.initDataList(this.query);
     },
     handleRefresh() {
-
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     handleCreate() {
-      this.$refs['formDialog'].event = 'CreateTemplate'
-      this.$refs['formDialog'].eventType = 'create'
-      this.$refs['formDialog'].dialogVisible = true
+      this.$refs["formDialog"].event = "CreateTemplate";
+      this.$refs["formDialog"].eventType = "create";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     handleDelete(index) {
-      const payload = { uuid: this.listAll[index].uuid }
-      this.$confirm('是否删除当前自动回复', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      const payload = { uuid: this.listAll[index].uuid };
+      this.$confirm("是否删除当前自动回复", "Warning", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       })
         .then(async () => {
           await this.$store
-            .dispatch('automatic/doDelete', payload)
+            .dispatch("automatic/doDelete", payload)
             .then(() => {
               this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.initDataList(this.query)
+                type: "success",
+                message: "操作成功",
+              });
+              this.initDataList(this.query);
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
-                type: 'error',
-                message: err
-              })
-            })
+                type: "error",
+                message: err,
+              });
+            });
         })
-        .catch(err => {})
+        .catch((err) => {});
     },
     handleEdit(index) {
-
       let {
         uuid,
         type,
@@ -280,11 +307,11 @@ export default {
         sensitiveSetTag,
         toUser,
         toRole,
-        word
-      } = this.listAll[index]
-      sensitiveSetTag = JSON.parse(JSON.stringify(sensitiveSetTag))
-      toUser = JSON.parse(JSON.stringify(toUser))
-      toRole = JSON.parse(JSON.stringify(toRole))
+        word,
+      } = this.listAll[index];
+      sensitiveSetTag = JSON.parse(JSON.stringify(sensitiveSetTag));
+      toUser = JSON.parse(JSON.stringify(toUser));
+      toRole = JSON.parse(JSON.stringify(toRole));
 
       const transfer = {
         uuid,
@@ -294,42 +321,42 @@ export default {
         sensitiveSetTag,
         toUser,
         toRole,
-        word
-      }
-      const payload = this.listAll[index]
-      this.$store.commit('sensitive/SAVE_CURRENTWORD', payload)
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
-      this.$refs['formDialog'].dialogVisible = true
-      this.$refs['formDialog'].transfer = transfer
+        word,
+      };
+      const payload = this.listAll[index];
+      this.$store.commit("sensitive/SAVE_CURRENTWORD", payload);
+      this.$refs["formDialog"].event = "EditTemplate";
+      this.$refs["formDialog"].eventType = "edit";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = transfer;
     },
     handleBatchChange() {
       if (this.rowSelects.length) {
-        let sensitiveUuid = this.rowSelects.map(item => {
-          return item.uuid
-        })
+        let sensitiveUuid = this.rowSelects.map((item) => {
+          return item.uuid;
+        });
         // sensitiveUuid = JSON.parse(JSON.stringify(sensitiveUuid))
-        const transfer = { sensitiveUuid }
-        this.$refs['formDialog'].event = 'ChangeTemplate'
-        this.$refs['formDialog'].eventType = 'change'
-        this.$refs['formDialog'].dialogVisible = true
-        this.$refs['formDialog'].transfer = transfer
+        const transfer = { sensitiveUuid };
+        this.$refs["formDialog"].event = "ChangeTemplate";
+        this.$refs["formDialog"].eventType = "change";
+        this.$refs["formDialog"].dialogVisible = true;
+        this.$refs["formDialog"].transfer = transfer;
       } else {
         this.$message({
-          type: 'warning',
-          message: '请至少选择一项'
-        })
+          type: "warning",
+          message: "请至少选择一项",
+        });
       }
     },
     handleSelectionChange(val) {
-      this.rowSelects = val
+      this.rowSelects = val;
     },
-    changeSize(val){
-        this.query.size = val 
-        this.initDataList(this.query)
-    }
-  }
-}
+    changeSize(val) {
+      this.query.size = val;
+      this.initDataList(this.query);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

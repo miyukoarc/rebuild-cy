@@ -134,9 +134,6 @@ export default {
         this.$emit("handleSearch", this.query);
       }, 1000);
     },
-    handleSelectedChange(val) {
-      this.$emit("handleSearch", this.query);
-    },
     handleSearch() {
       this.$emit("handleSearch", this.query);
     },

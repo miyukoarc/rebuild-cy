@@ -17,6 +17,7 @@
           row-key="uuid"
           stripe
           lazy
+          fit
           highlight-current-row
           header-row-class-name="el-table-header"
         >
