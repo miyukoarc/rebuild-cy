@@ -350,14 +350,14 @@ export default {
       this.$refs['formDialog'].transfer = row
     },
     handleEdit(row) {
-      const { belong, uuid, mobile } = row
+      const { belong, uuid, mobile,name } = row
       let selectedTag = []
       row.potentialCustomerTags.map((item) => {
         item.tags.map((tag) => {
           selectedTag.push(tag.tagId)
         })
       })
-      const payload = { belong, uuid, selectedTag, mobile }
+      const payload = { belong, uuid, selectedTag, mobile, name }
       this.$refs['formDialog'].event = 'EditTemplate'
       this.$refs['formDialog'].eventType = 'edit'
       this.$refs['formDialog'].dialogVisible = true

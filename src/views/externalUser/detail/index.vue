@@ -176,7 +176,7 @@
             <div
               v-if="externalUserDetail.externalUserDetailGroupChatsList && limitedListGroup.length>0"
             >
-              <transition-group name="fade">
+              <!-- <transition-group name="fade"> -->
                 <div
                   v-for="(item,index) in limitedListGroup"
                   :key="index"
@@ -202,7 +202,7 @@
                   </div>
                   <span class="check-chatting-detail" @click="handleGroupRouter(item)">查看</span>
                 </div>
-              </transition-group>
+              <!-- </transition-group> -->
               <div class="open-all" @click="unlimited">
                 <span
                   v-if="limited"

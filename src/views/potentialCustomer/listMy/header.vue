@@ -4,7 +4,7 @@
       <el-input v-model.trim="query.name" clearable></el-input>
     </el-form-item>
 
-    <el-form-item label="所属员工：">
+    <!-- <el-form-item label="所属员工：">
       <el-select filterable v-model="query.belongUuid" clearable>
         <el-option
           v-for="item in userListAll"
@@ -13,7 +13,7 @@
           :value="item.uuid"
         ></el-option>
       </el-select>
-    </el-form-item>
+    </el-form-item> -->
 
     <el-form-item label="添加员工：">
       <el-select v-model="query.creatorUuid" clearable filterable>

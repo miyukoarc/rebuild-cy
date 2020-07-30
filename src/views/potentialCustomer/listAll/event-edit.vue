@@ -40,86 +40,104 @@ export default {
   props: {
     transfer: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   components: {
-    TagsSelected
+    TagsSelected,
   },
   data() {
     return {
       checkboxGroup: [],
       hasParent: false,
+      changeTag: false,
       form: {
         mobile: "",
         name: "",
         tagId: [],
         belongUuid: "",
-        uuid: ""
+        uuid: "",
       },
       rules: {
         name: [
           { required: true, message: "请输入客户名称", trigger: "blur" },
-          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
+          {
+            min: 3,
+            max: 20,
+            message: "长度在 3 到 20 个字符",
+            trigger: "blur",
+          },
         ],
         mobile: [
           { required: true, message: "请输入手机号", trigger: "blur" },
-          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
+          {
+            min: 3,
+            max: 20,
+            message: "长度在 3 到 20 个字符",
+            trigger: "blur",
+          },
         ],
         remark: [
           { required: true, message: "请输入备注", trigger: "blur" },
-          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
-        ]
-      }
+          {
+            min: 3,
+            max: 20,
+            message: "长度在 3 到 20 个字符",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   watch: {
     transfer: {
       handler(newVal, oldVal) {
         console.log(newVal, "newVal");
-        const { belong, uuid, selectedTag, mobile,name } = newVal;
+        const { belong, uuid, selectedTag, mobile, name } = newVal;
         this.form.name = name;
         this.form.belongUuid = belong.uuid;
         this.form.uuid = uuid;
         this.form.mobile = mobile;
         if (selectedTag.length > 0) {
-          selectedTag.map(item => {
+          selectedTag.map((item) => {
             this.form.tagId.push(item);
           });
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      tagListSelect: state => state.tag.tagListSelect
-    })
+      tagListSelect: (state) => state.tag.tagListSelect,
+    }),
   },
   mounted() {},
   methods: {
     // 选择标签
     handleCheckedTagsChange(tag, index) {
+      this.changeTag = true;
       this.checkboxGroup = tag;
     },
     // 确认提交潜在客户
     handleConfirm() {
-      this.form.tagId = this.checkboxGroup;
-      console.log(this.form, "99");
+      if (this.changeTag) {
+        this.form.tagId = this.checkboxGroup;
+      }
       this.$store
         .dispatch("potentialCustomer/potentialCustomerUpdate", this.form)
         .then(() => {
           this.$message({
             type: "success",
-            message: "操作成功"
+            message: "操作成功",
           });
           this.handleCancel();
           this.refresh();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "操作失败"
+            message: "操作失败",
           });
         });
     },
@@ -163,14 +181,14 @@ export default {
         .then(() => {
           this.reload();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: err
+            message: err,
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

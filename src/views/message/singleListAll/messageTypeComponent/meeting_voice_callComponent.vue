@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-07-28 17:56:52
+ * @LastEditTime: 2020-07-29 19:14:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -14,9 +14,9 @@
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-          <audio controls :src="item.messageMedias[0].file" class="audio-warp">
-           您的浏览器不支持 audio 元素。
-          </audio>
+           <div style="height:42px;background-color:#fff">
+          <audio controls :src="item.messageMedias[0].file" class="audio-warp">您的浏览器不支持 audio 元素。</audio>
+           </div>
           <!-- <div
             class="audio-left display-flex align-items-center"
             @click="playAudio(item.messageMedias[0].file)"
@@ -25,7 +25,7 @@
               class="play-audio"
               :class="isPlayAudio? 'el-icon-microphone' :'el-icon-turn-off-microphone'"
             />
-          </div> -->
+          </div>-->
         </div>
       </div>
     </div>
@@ -34,9 +34,10 @@
       <div class="display-flex justify-content-flex-end">
         <div class="right">
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-          <audio controls :src="item.messageMedias[0].file" class="audio-warp">
-            您的浏览器不支持 audio 元素。
-          </audio>
+          <div style="height:42px;background-color:#fff">
+            <audio controls :src="item.messageMedias[0].file" class="audio-warp">您的浏览器不支持 audio 元素。</audio>
+          </div>
+
           <!-- <div
             class="audio-right display-flex align-items-center"
             @click="playAudio(item.messageMedias[0].file)"
@@ -61,16 +62,20 @@ export default {
   props: {
     item: Object,
     toUserId: String,
-    fromUserId: String
+    fromUserId: String,
   },
   data() {
     return {
-      isPlayAudio: false
+      isPlayAudio: false,
     };
   },
   methods: {
     playAudio(url) {
       const that = this;
+      // var amrFromMp3 = new BenzAMRRecorder();
+      // amrFromMp3.initWithUrl(url).then(function () {
+      //   window.location.href = window.URL.createObjectURL(amrFromMp3.getBlob());
+      // });
       var amr = new BenzAMRRecorder();
       amr.initWithUrl(url).then(() => {
         // amr.isPlaying() 返回音频的播放状态 是否正在播放 返回boolean类型
@@ -85,8 +90,8 @@ export default {
       amr.onEnded(() => {
         this.isPlayAudio = false;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -120,8 +125,12 @@ export default {
     margin-right: 10px;
   }
   .audio-warp {
-    width: 200px;
+    width: 300px;
     height: 40px;
+    margin-top: 1px;
+  }
+  audio{
+    background-color: #fff;
   }
   .audio-left {
     // margin-top: 5px;

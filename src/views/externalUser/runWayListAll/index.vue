@@ -197,7 +197,7 @@ export default {
 
     handleDetail(index, row) {
       this.$router.push({
-        path: `/externalUser/detail/${row.uuid}`,
+        path: `/externalUser/detail/${row.externalUser.uuid}`,
         query: { userId: row.user.userId }
       });
     },

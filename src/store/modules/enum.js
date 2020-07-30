@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-09 18:50:40
- * @LastEditTime: 2020-07-25 17:09:51
+ * @LastEditTime: 2020-07-29 17:29:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\enum.js
@@ -128,8 +128,8 @@ const actions = {
 }
 
 export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions
+    namespaced: true,
+    state,
+    mutations,
+    actions
 }
