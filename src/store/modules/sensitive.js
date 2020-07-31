@@ -31,18 +31,18 @@ function buildAuditSetting(arr) {
 }
 
 function regFilter(str) {
-  if (str!==null) {
+  if (str !== null) {
     if (str.includes('span')) {
       const reg = new RegExp("<\s*div[^>]*>(.*?)<\s*/\s*div>", "g")
       let temp = ''
       temp = str.split(reg).find(item => {
         return !item.includes('span') && item !== ''
       })
-      if(temp){
+      if (temp) {
 
-          return temp
-      }else {
-          return '--'
+        return temp
+      } else {
+        return '--'
       }
     } else {
 
@@ -51,6 +51,44 @@ function regFilter(str) {
   } else {
     return '--'
   }
+}
+
+function myFilter(arr1, arr2) {
+  let arr1Temp = []
+  let arr2Temp = []
+  let temp = [] //交集
+  arr1.forEach(item1 => {
+    arr2.forEach(item2 => {
+      if (item1 === item2) {
+        temp.push(item1)
+      }
+    })
+  })
+
+  console.log(temp)
+
+  arr1.forEach(item => {
+    if (!temp.find(unit => {
+        return unit.uuid === item.uuid
+      })) {
+      arr1Temp.push(item)
+    }
+  })
+
+  arr2.forEach(item => {
+    if (!temp.find(unit => {
+        return unit.uuid === item.uuid
+      })) {
+
+      arr2Temp.push(item)
+    }
+  })
+
+
+  return [
+    [...arr1Temp],
+    [...arr2Temp]
+  ]
 }
 
 
@@ -347,11 +385,14 @@ const actions = {
     return new Promise((resolve, reject) => {
       getAuditTaglistAll(payload).then(res => {
         const accessed = res.items.map(item => {
+        //   const temp = myFilter(JSON.parse(item.tagBeforeChangeContent),
+        //     JSON.parse(item.tagChangeContent))
+        //     console.log(temp)
           return {
             ...item,
             auditUsers: JSON.parse(item.auditUsers),
+            tagBeforeChangeContent: JSON.parse(item.tagBeforeChangeContent),
             tagChangeContent: JSON.parse(item.tagChangeContent),
-            tagBeforeChangeContent: JSON.parse(item.tagBeforeChangeContent)
           }
         })
         commit('SAVE_TAGLIST', accessed)

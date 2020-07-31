@@ -52,8 +52,16 @@
                 <div style="width:60px;">{{tagOperationType[row.tagOperationType]}}</div>&emsp;&emsp;
                 <div v-if="row.tagOperationType==='DELETE_TAG_GROUP'">
                     <span class="font-exs color-info">{{row.tagChangeContent[0].groupName}}</span>
-                  <el-tag v-for="tag in row.tagChangeContent" :key="tag.tagId" size="mini">{{tag.tagName}}</el-tag>
+                  <!-- <el-tag v-for="tag in row.tagChangeContent" :key="tag.tagId" size="mini">{{tag.tagName}}</el-tag> -->
                   <!-- <el-tag size="mini" v-if="row.tagChangeContent.length>1">...</el-tag> -->
+                </div>
+
+                <div v-if="row.tagOperationType==='ADD_TAG'">
+                    <span class="font-exs color-info">{{row.tagChangeContent[0].groupName}}</span>
+                </div>
+
+                <div v-if="row.tagOperationType==='UPDATE_TAG'">
+                    
                 </div>
               </div>
             </template>

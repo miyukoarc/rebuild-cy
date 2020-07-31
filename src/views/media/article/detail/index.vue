@@ -105,8 +105,7 @@ export default {
     $route: {
       handler(newVal, oldVal) {
         const uuid = newVal.params.uuid
-        // console.log(-uuid)
-        if (uuid) {
+        if (+uuid) {
           this.mode = 'UPDATE'
           this.$set(this.form, 'uuid', uuid)
           this.initDetail(uuid)

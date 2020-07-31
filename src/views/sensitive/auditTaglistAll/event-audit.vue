@@ -91,21 +91,21 @@ export default {
       type: Object,
       default: () => {
         return {}
-      }
-    }
+      },
+    },
   },
   components: {
     AsyncUserTag,
     VideoCover,
     TagsDrawer,
-    IconTooltip
+    IconTooltip,
   },
   data() {
     return {
       form: {
         name: '',
         code: '',
-        org: ''
+        org: '',
       },
       //range==1,会签 range==0，或签
       detail: {},
@@ -114,24 +114,34 @@ export default {
       rules: {
         name: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          {
+            min: 3,
+            max: 20,
+            message: '长度在 3 到 20 个字符',
+            trigger: 'blur',
+          },
         ],
         code: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-        ]
-      }
+          {
+            min: 3,
+            max: 20,
+            message: '长度在 3 到 20 个字符',
+            trigger: 'blur',
+          },
+        ],
+      },
     }
   },
   computed: {
     ...mapState({
-      auditState: state => state.enum.auditState,
-      matchFormat: state => state.enum.matchFormat,
-      permissionEnum: state => state.enum.roleDetail,
+      auditState: (state) => state.enum.auditState,
+      matchFormat: (state) => state.enum.matchFormat,
+      permissionEnum: (state) => state.enum.roleDetail,
 
-      auditSetting: state => state.sensitive.auditSetting,
-      currentUserUuid: state => state.user.uuid
-    })
+      auditSetting: (state) => state.sensitive.auditSetting,
+      currentUserUuid: (state) => state.user.uuid,
+    }),
   },
   watch: {
     transfer: {
@@ -139,8 +149,8 @@ export default {
         this.initData(newVal.uuid)
       },
       immediate: true,
-      deep: true
-    }
+      deep: true,
+    },
   },
   created() {
     // this.initData(this.transfer?.uuid)
@@ -150,24 +160,24 @@ export default {
     initData(payload) {
       this.$store
         .dispatch('audit/getDetail', payload)
-        .then(res => {
+        .then((res) => {
           this.detail = {
             ...res,
             auditUsers: this.parse(res.auditUsers),
             tagBeforeChangeContent: res.tagBeforeChangeContent
-              ? this.parse(res.tagBeforeChangeContent)
+              ? this.groupingTags(this.parse(res.tagBeforeChangeContent))
               : [],
             tagChangeContent: res.tagChangeContent
-              ? this.parse(res.tagChangeContent)
-              : []
+              ? this.groupingTags(this.parse(res.tagChangeContent))
+              : [],
           }
 
           this.permissionList = this.grouping(res.toPermissions)
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
@@ -183,12 +193,12 @@ export default {
       if (action === 'reject') {
         payload = {
           auditConfirmation: 'AUDIT_FAILED',
-          uuids: [uuid]
+          uuids: [uuid],
         }
       } else {
         payload = {
           auditConfirmation: 'APPROVED',
-          uuids: [uuid]
+          uuids: [uuid],
         }
       }
       this.$store
@@ -201,13 +211,13 @@ export default {
             onClose: () => {
               this.handleCancel()
               this.handleRefresh()
-            }
+            },
           })
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
@@ -218,7 +228,7 @@ export default {
       if (!!item.range) {
         //range==1 会签
         if (
-          item.userList.some(user => {
+          item.userList.some((user) => {
             return user.auditState === 'TO_BE_REVIEWED'
           })
         ) {
@@ -230,7 +240,7 @@ export default {
         //或签
 
         if (
-          item.userList.every(unit => {
+          item.userList.every((unit) => {
             return unit.auditState === 'TO_BE_REVIEWED'
           })
         ) {
@@ -244,14 +254,38 @@ export default {
       if (Object.keys(list).length) {
         return list.reduce((groups, item) => {
           let groupFound = groups.find(
-            foundItem => item.module === foundItem.module
+            (foundItem) => item.module === foundItem.module
           )
           if (groupFound) {
             groupFound.permissions.push(item)
           } else {
             let newGroup = {
               module: item.module,
-              permissions: [item]
+              permissions: [item],
+            }
+
+            groups.push(newGroup)
+          }
+
+          return groups
+        }, [])
+      } else {
+        return []
+      }
+    },
+    groupingTags(list) {
+      if (Object.keys(list).length) {
+        return list.reduce((groups, item) => {
+          let groupFound = groups.find(
+            (foundItem) => item.groupId === foundItem.groupId
+          )
+          if (groupFound) {
+            groupFound.tags.push(item)
+          } else {
+            let newGroup = {
+              groupId: item.groupId,
+              groupName: item.groupName,
+              tags: [item],
             }
 
             groups.push(newGroup)
@@ -265,7 +299,7 @@ export default {
     },
     format(arr) {
       let temp = []
-      temp = arr.map(item => {
+      temp = arr.map((item) => {
         return item.title
       })
       return temp.join('、')
@@ -273,8 +307,8 @@ export default {
     currentUserState(arr) {
       //detail.auditUsers
       let flag = false
-      arr.forEach(item => {
-        item.userList.forEach(user => {
+      arr.forEach((item) => {
+        item.userList.forEach((user) => {
           if (user.uuid === this.currentUserUuid) {
             if (
               user.auditState === 'APPROVED' ||
@@ -287,8 +321,8 @@ export default {
       })
 
       return flag
-    }
-  }
+    },
+  },
 }
 </script>
 
