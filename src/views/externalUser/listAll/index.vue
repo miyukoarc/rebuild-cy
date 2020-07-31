@@ -76,15 +76,6 @@
           </el-table-column>
         </el-table>
 
-        <!-- <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />-->
         <customer-pagination
           :pageConfig="pageConfig"
           @current-change="changePage"
@@ -92,14 +83,11 @@
         ></customer-pagination>
       </div>
     </el-card>
-
-    <form-dialog ref="formDialog"></form-dialog>
   </div>
 </template>
 
 <script>
 import ListHeader from './header.vue'
-import FormDialog from './dialog'
 import ToolBar from './tool-bar'
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import UserDrawer from '@/components/UserDrawer'
@@ -111,7 +99,6 @@ export default {
   components: {
     AsyncUserDrawer,
     ListHeader,
-    FormDialog,
     ToolBar,
     UserDrawer,
     TagsDrawerObj,
@@ -229,7 +216,6 @@ export default {
       this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log('handleRefresh')
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },

@@ -235,6 +235,7 @@
                 :disabled="isSendImmediately"
                 type="datetime"
                 placeholder="选择日期时间"
+                :default-time="['00:00:00', '23:59:59']"
               ></el-date-picker>
             </el-form-item>
 
@@ -420,7 +421,7 @@ export default {
                 message: "操作成功",
               });
               this.handleCancel();
-              this.refresh();
+              this.handleRefresh();
             })
             .catch((err) => {
               this.$message({
@@ -516,6 +517,9 @@ export default {
       this.form.text =
         this.form.text + `<span class="nickName">${memberNick}</span>&#8203;`;
     },
+    handleRefresh(){
+        this.$bus.$emit('handleRefresh')
+    }
   },
 };
 </script>

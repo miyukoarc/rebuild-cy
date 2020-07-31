@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" ref="form"  label-width="100px" label-position="left">
+  <el-form :model="form" ref="form" label-width="100px" label-position="left">
     <el-form-item label="被通知人">
       <div>
         <el-radio v-model="form.informType" label="USER">员工通知</el-radio>
@@ -40,42 +40,41 @@ import { mapState } from 'vuex'
 export default {
   inject: ['reload'],
   props: {
-      transfer: {
-          type: Object,
-          default: ()=>{
-              return {}
-          }
-      }
+    transfer: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
   },
   components: {
-    ComplexSelect
+    ComplexSelect,
   },
   data() {
     return {
-    
       roleSelects: [],
       userSelects: [],
       form: {
-          informType: 'ROLE',//USER//ROLE
-          sensitiveUuid: [],
-          noticeUuid: [],
-      }
+        informType: 'ROLE', //USER//ROLE
+        sensitiveUuid: [],
+        noticeUuid: [],
+      },
     }
   },
-  watch:{
-      transfer:{
-          handler(newVal,oldVal){
-              console.log(newVal.sensitiveUuid)
-              this.form.sensitiveUuid = newVal.sensitiveUuid
-          },
-          immediate:true
-      }
+  watch: {
+    transfer: {
+      handler(newVal, oldVal) {
+        console.log(newVal.sensitiveUuid)
+        this.form.sensitiveUuid = newVal.sensitiveUuid
+      },
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      departmentList: state => state.department.departmentList,
-      listSelect: state => state.role.roleListSelect
-    })
+      departmentList: (state) => state.department.departmentList,
+      listSelect: (state) => state.role.roleListSelect,
+    }),
   },
   created() {
     this.initFilter()
@@ -85,20 +84,20 @@ export default {
       this.$store
         .dispatch('role/getRoleListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
 
       this.$store
         .dispatch('department/getDepartmentListAll')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
     },
@@ -106,35 +105,38 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     handleConfirm() {
+      const noticeUuid = this.userSelects.length
+        ? this.userSelects.map((item) => {
+            return item.uuid
+          })
+        : this.roleSelects.map((item) => {
+            return item.uuid
+          })
 
+      const payload = { ...this.form, noticeUuid }
 
-            const noticeUuid = this.userSelects.length? this.userSelects.map(item=>{return item.uuid}):this.roleSelects.map(item=>{return item.uuid})
-
-            const payload = {...this.form,noticeUuid}
-
-            console.log(payload)
-
-            this.$store.dispatch('sensitive/updateNoticeUser',payload)
-            .then((res)=>{
-                if(res.code==0){
-                    this.$message({
-                        type: 'success',
-                        message: '操作成功'
-                    })
-                    this.reload()
-                }
+      this.$store
+        .dispatch('sensitive/updateNoticeUser', payload)
+        .then((res) => {
+          if (res.code == 0) {
+            this.$message({
+              type: 'success',
+              message: '操作成功',
             })
-            .catch(err=>{
-                this.$message({
-                    type:'error',
-                    message: err||'操作失败'
-                })
-            })
-
-        
-
+            this.handleRefresh()
+          }
+        })
+        .catch((err) => {
+          this.$message({
+            type: 'error',
+            message: err || '操作失败',
+          })
+        })
+    },
+    handleRefresh(){
+        this.$bus.$emit('handleRefresh')
     }
-  }
+  },
 }
 </script>
 

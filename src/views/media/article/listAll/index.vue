@@ -66,14 +66,12 @@
       </div>
     </el-card>
 
-    <form-dialog ref="formDialog"></form-dialog>
   </div>
 </template>
 
 <script>
 import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
@@ -82,7 +80,6 @@ export default {
   components: {
     CustomerPagination,
     ListHeader,
-    FormDialog,
     ToolBar
   },
   data() {

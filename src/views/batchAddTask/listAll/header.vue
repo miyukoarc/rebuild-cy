@@ -1,7 +1,7 @@
 <template>
-  <el-form ref="searchForm" inline>
+  <el-form ref="searchForm"  inline label-width="120px">
     <el-form-item label="任务状态：">
-      <el-select v-model="query.status" clearable @change="handleChangeFirst">
+      <el-select v-model="query.status" clearable >
         <el-option
           v-for="item in statusList"
           :key="item.value"
@@ -11,7 +11,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="创建人：">
-      <el-select v-model="query.creatorUuid" clearable @change="handleChangeFirst">
+      <el-select v-model="query.creatorUuid" clearable filterable>
         <el-option
           v-for="item in userListSelect"
           :key="item.uuid"
@@ -29,6 +29,7 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         @change="handleChangeSecond"
+        :default-time="['00:00:00', '23:59:59']"
       ></el-date-picker>
     </el-form-item>
 
@@ -94,7 +95,7 @@ export default {
         this.query.starttime = "";
         this.query.endtime = "";
       }
-      this.$emit("handleSearch", this.query);
+    //   this.$emit("handleSearch", this.query);
     },
     handleSearch() {
       this.$emit("handleSearch", this.query);

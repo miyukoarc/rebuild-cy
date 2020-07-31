@@ -75,7 +75,7 @@ export default {
                 message: "操作成功"
               });
               this.handleCancel();
-              this.refresh();
+              this.$bus.$emit('handleRefresh')
             })
             .catch(err => {
               
@@ -94,19 +94,6 @@ export default {
     },
     handleCancel() {
       this.$parent.$parent.dialogVisible = false;
-    },
-    refresh() {
-      this.$store
-        .dispatch("media/getMediaGroupListAll")
-        .then(() => {
-        //   this.reload();
-        })
-        .catch(err => {
-          this.$message({
-            type: "error",
-            message: err
-          });
-        });
     }
   }
 };

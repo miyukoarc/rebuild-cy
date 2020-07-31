@@ -178,8 +178,6 @@ export default {
   watch: {},
   computed: {
     ...mapState({
-      //   tagListAll: state => state.tag.tagListAll,
-
       loading: (state) => state.sensitive.loading,
       listAll: (state) => state.sensitive.sensitiveListAll,
       page: (state) => state.sensitive.sensitivePage,
@@ -191,6 +189,16 @@ export default {
     this.initDataList(this.query)
     this.initFilter()
   },
+  mounted(){
+      this.$bus.$on('handleRefresh',()=>{
+          this.initDataList(this.query)
+      })
+
+      this.$once('hook:beforeDestroy',()=>{
+          this.$bus.$off('handleRefresh')
+      })
+  },
+
   methods: {
     doExport(val) {
       console.log(val)
@@ -199,15 +207,6 @@ export default {
      * 初始化筛选信息
      */
     initFilter() {
-      //   this.$store
-      //     .dispatch('sensitive/getSensitiveListAll')
-      //     .then(() => {})
-      //     .catch(err => {
-      //       this.$message({
-      //         type: 'error',
-      //         message: '初始化失败'
-      //       })
-      //     })
       this.$store
         .dispatch('tag/getListSelect')
         .then(() => {})

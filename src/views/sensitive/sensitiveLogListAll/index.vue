@@ -13,17 +13,16 @@
         <el-table
           v-loading="loading"
           :data="listAll"
-          style="width: 100%"
           row-key="uuid"
           stripe
           lazy
           highlight-current-row
           header-row-class-name="el-table-header"
         >
-          <el-table-column type="selection"></el-table-column>
+          <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="触发内容" align="left">
             <template v-slot="{row}">
-              <dir>{{row.sensitive.word}}</dir>
+              <div>{{row.sensitive.word}}</div>
             </template>
           </el-table-column>
           <el-table-column label="触发员工" align="left">
@@ -44,23 +43,21 @@
         ></customer-pagination>
       </div>
     </el-card>
-
-    <form-dialog ref="formDialog"></form-dialog>
   </div>
 </template>
 
 <script>
-import CustomerPagination from '@/components/CustomerPagination'
 import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from '@/components/ToolBar'
 import { mapState, mapMutations, mapActions } from 'vuex'
+
+import CustomerPagination from '@/components/CustomerPagination'
 import AsyncUserTag from '@/components/AsyncUserTag'
+import ToolBar from '@/components/ToolBar'
+
 export default {
   components: {
     ListHeader,
     AsyncUserTag,
-    FormDialog,
     ToolBar,
     CustomerPagination,
   },
@@ -156,7 +153,7 @@ export default {
       this.initDataList(this.query)
     },
     changeSize(val) {
-      this.page.size = val
+      this.query.size = val
       this.initDataList(this.query)
     },
   },

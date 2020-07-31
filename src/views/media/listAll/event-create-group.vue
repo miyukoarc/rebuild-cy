@@ -87,13 +87,12 @@ export default {
           this.$store
             .dispatch('media/addGroup', payload)
             .then(() => {
-              const message = this.auditSetting['tag'] ? '已提交审核' : '已完成'
               this.$message({
                 type: 'success',
-                message: message
+                message: '操作成功'
               })
               this.handleCancel()
-              this.refresh()
+              this.handleRefresh()
             })
             .catch(err => {
               this.$message({
@@ -112,18 +111,8 @@ export default {
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
     },
-    refresh() {
-      this.$store
-        .dispatch('media/getMediaGroupListAll')
-        .then(() => {
-          //   this.reload();
-        })
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: err
-          })
-        })
+    handleRefresh(){
+        this.$bus.$emit('handleRefresh')
     }
   }
 }

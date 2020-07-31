@@ -88,14 +88,11 @@
 
       </div>
     </el-card>
-
-    <form-dialog ref="formDialog"></form-dialog>
   </div>
 </template>
 
 <script>
 import ListHeader from "./header.vue";
-import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
 
@@ -108,7 +105,6 @@ export default {
   name: "runWayListAll",
   components: {
     ListHeader,
-    FormDialog,
     ToolBar,
     AsyncUserTag,
     TagsDrawerObj,

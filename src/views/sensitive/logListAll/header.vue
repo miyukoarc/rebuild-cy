@@ -14,12 +14,14 @@
 
     <el-form-item label="发生时间：">
       <el-date-picker
-        v-model="value"
+        v-model="datePicker"
         type="daterange"
         :value-format="'yyyy-MM-dd HH-mm-ss'"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+        @change="handleChangeTime"
+        :default-time="['00:00:00', '23:59:59']"
       ></el-date-picker>
     </el-form-item>
 
@@ -55,48 +57,47 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      value: "",
+      datePicker: [],
       query: {
-        name: "",
-        tagIds: "",
-        userId: ""
+        name: '',
+        tagIds: '',
+        userId: '',
+        startTime: '',
+        endTime: '',
         // roleUuid: ''
-      }
-    };
+      },
+    }
   },
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      userListAll: state => state.user.userListAll
+      tagListAll: (state) => state.tag.tagListAll,
+      userListAll: (state) => state.user.userListAll,
       //   departments: state => state.department.departments
-    })
+    }),
   },
   methods: {
-    handleChangeFirst(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
-    },
-    handleChangeSecond(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
-    },
-    handleChangeThird(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
+    handleChangeTime(val) {
+      if (val) {
+        this.query.startTime = val[0]
+        this.query.endTime = val[1]
+      } else {
+        this.query.startTime = ''
+        this.query.endTime = ''
+      }
     },
     handleSearch() {
-      this.$emit("handleSearch", this.query);
+      this.$emit('handleSearch', this.query)
     },
     handleRefresh() {
-      this.$emit("handleRefresh");
-      this.query = this.$options.data().query;
-    }
-  }
-};
+      this.query = this.$options.data().query
+      this.$emit('handleRefresh')
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

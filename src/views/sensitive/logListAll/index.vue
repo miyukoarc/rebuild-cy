@@ -5,8 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}条记录`">
-      </tool-bar>
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}条记录`"></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -19,29 +18,27 @@
           stripe
           lazy
           highlight-current-row
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="所属模块" align="left" prop="entity"></el-table-column>
           <el-table-column label="事件" align="left" prop="event"></el-table-column>
           <el-table-column label="操作员工" align="left">
-              <template v-slot="scope">
-                  <div>{{scope.row.operator.name}}</div>
-              </template>
+            <template v-slot="scope">
+              <div>{{scope.row.operator.name}}</div>
+            </template>
           </el-table-column>
           <el-table-column label="时间" align="left" prop="createdAt"></el-table-column>
           <el-table-column label="操作" align="left">
-            <!-- <template slot-scope="scope"> -->
-                <el-button size="mini" disabled>详情</el-button>
-              <!-- <el-t-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)" >详情</el-t-button> -->
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
-            <!-- </template> -->
+            <el-button size="mini" disabled>详情</el-button>
           </el-table-column>
         </el-table>
 
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
+        <customer-pagination
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -61,38 +58,38 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar,
-    CustomerPagination
+    CustomerPagination,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
         page: 0,
         size: 10,
         startTime: '',
-        endTime: ''
+        endTime: '',
         // flag: true,
         // name: '',
         // tagIds: '',
         // userId: '',
         // roleUuid: ''
-      }
+      },
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
+      tagListAll: (state) => state.tag.tagListAll,
 
-      loading: state => state.logRecords.loading,
-      listAll: state => state.logRecords.logListAll,
-      page: state => state.logRecords.logListPage
-    })
+      loading: (state) => state.logRecords.loading,
+      listAll: (state) => state.logRecords.logListAll,
+      page: (state) => state.logRecords.logListPage,
+    }),
   },
   created() {
     this.initDataList(this.query)
@@ -110,20 +107,20 @@ export default {
       this.$store
         .dispatch('tag/getListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
 
       this.$store
         .dispatch('user/getAllUserList')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -131,7 +128,6 @@ export default {
      * 初始化表格信息
      */
     initDataList(payload) {
-
       this.$store
         .dispatch('logRecords/getLogListAll', payload)
         .then(() => {
@@ -139,10 +135,10 @@ export default {
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -150,31 +146,33 @@ export default {
       const payload = this.userList[val].uuid
       this.$router.push({
         path: '/user/detail',
-        query: { uuid: payload }
+        query: { uuid: payload },
       })
     },
     handleSearch(val) {
-      const { tagIds, name } = val
+      const { tagIds, name,endTime,startTime } = val
       this.query.tagIds = tagIds ? tagIds : this.query.tagIds
       this.query.name = name ? name : this.query.name
-      console.log(val, 'handleSearch')
+      this.query.endTime = endTime ? endTime : this.query.endTime
+      this.query.startTime = startTime ? startTime : this.query.startTime
+      console.log(this.query)
       this.initDataList(this.query)
     },
     handleRefresh() {
       console.log('handleRefresh')
       this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.initDataList()
     },
     changePage(key) {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
     },
-    changeSize(val){
-        this.query.size = val
-        this.initDataList(this.query)
-    }
-  }
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
+  },
 }
 </script>
 

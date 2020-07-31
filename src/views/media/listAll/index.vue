@@ -292,7 +292,9 @@ export default {
               this.$message({
                 type: 'error',
                 message: err,
+                duration: 3000
               })
+              
             })
         })
         .catch((err) => {})
