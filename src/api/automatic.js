@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-17 23:18:57
- * @LastEditTime: 2020-07-31 15:17:02
+ * @LastEditTime: 2020-07-31 16:51:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\api\automatic.js
@@ -77,5 +77,17 @@ export const automaticDefaultDetail = () => {
     return requset({
         url: '/automatic/defaultDetail',
         method: 'get'
+    })
+}
+
+/**
+ * 自动回复开关
+ * @param {object} payload 
+ */
+export const automaticSwitchReply = (payload) => {
+    return requset({
+        url: '/automatic/switchReply',
+        method: 'post',
+        data: payload
     })
 }

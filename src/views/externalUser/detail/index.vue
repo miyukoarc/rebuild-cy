@@ -52,7 +52,7 @@
                 >
                   <span class="group-name">{{key}}：</span>
                   <el-tag
-                    type="primary"
+                    type="info"
                     size="mini"
                     style="margin-right:5px;margin-bottom:5px"
                     v-for="item in companyTags"

@@ -8,7 +8,7 @@
       <div class="mb-10">
         <div class="flex-alinecenter">
           <span class="font-es mr-15">自动回复开关</span>
-          <el-switch v-model="isReplySwitch"></el-switch>
+          <el-switch v-model="isReplySwitch" @change="handleClickReplySwitch"></el-switch>
           <span class="ml-20 mr-10 font-es">自动回复是针对客户的常见问题而设置的标准回复内容,可快速响应客户的问题。管理员可统一添加关键词和自动回复的消息</span>
           <el-t-button type="primary" size="mini" @click.stop="handleClickSetAutoReplay">设置</el-t-button>
         </div>
@@ -240,6 +240,16 @@ export default {
           });
         });
     },
+    handleClickReplySwitch() {
+      let payload = {
+        flag: this.isReplySwitch,
+      };
+      this.$store
+        .dispatch("automatic/automaticSwitchReply", payload)
+        .then(() => {})
+        .catch((err) => {});
+    },
+
     handleDetail(val) {
       const payload = this.userList[val].uuid;
       this.$router.push({

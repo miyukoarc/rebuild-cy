@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-17 23:18:57
- * @LastEditTime: 2020-07-31 15:28:56
+ * @LastEditTime: 2020-07-31 16:52:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\automatic.js
@@ -12,7 +12,8 @@ import {
     doDelete,
     automaticSwitchReplyInterval,
     automaticAddDefault,
-    automaticDefaultDetail
+    automaticDefaultDetail,
+    automaticSwitchReply
 } from '@/api/automatic'
 
 const state = {
@@ -153,6 +154,22 @@ const actions = {
             automaticDefaultDetail(payload).then(res => {
                 commit('SAVE_AUTOMATICDEFAULTDETAIL', res)
                 resolve(res)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
+    /**
+     * 自动回复开关
+     * @param {*} param0 
+     * @param {*} payload 
+     */
+    automaticSwitchReply({
+        commit
+    }, payload) {
+        return new Promise((resolve, reject) => {
+            automaticSwitchReply(payload).then(res => {
+                resolve()
             }).catch(err => {
                 reject(err)
             })
