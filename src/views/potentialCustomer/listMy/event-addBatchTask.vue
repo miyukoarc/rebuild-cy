@@ -9,6 +9,7 @@
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="选择日期时间"
+          :default-time="['00:00:00', '23:59:59']"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="消息内容：" prop="content">

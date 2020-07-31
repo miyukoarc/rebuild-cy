@@ -122,7 +122,7 @@ export default {
                     message: "操作成功"
                   });
                   this.handleCancel();
-                  this.refresh();
+                  this.handleRefresh();
                   break;
               }
           // this.$message({
@@ -147,19 +147,9 @@ export default {
       // }
       // });
     },
-    refresh() {
-      this.$store
-        .dispatch("externalUser/getQuitUserRelationExUserList")
-        .then(() => {
-          this.reload();
-        })
-        .catch(err => {
-          this.$message({
-            type: "error",
-            message: err
-          });
-        });
-    }
+    handleRefresh(){
+        this.$bus.$emit('handleRefresh')
+    },
   }
 };
 </script>

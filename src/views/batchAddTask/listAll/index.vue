@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :usersNumber="userPage.total" @handleExport="doExport" @handleUpdate="handleUpdate"></tool-bar>
+      <tool-bar :hasRefresh="true" @handleRefresh="handleRefresh" :usersNumber="userPage.total" @handleExport="doExport" @handleUpdate="handleUpdate"></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -79,166 +79,167 @@
 </template>
 
 <script>
-import ListHeader from "./header.vue";
-import FormDialog from "./dialog";
-import ToolBar from "./tool-bar";
-import { mapState } from "vuex";
-import { cancelBatchAddTask } from "@/api/potentialCustomer";
+import ListHeader from './header.vue'
+import FormDialog from './dialog'
+import ToolBar from '@/components/ToolBar'
+import { mapState } from 'vuex'
+import { cancelBatchAddTask } from '@/api/potentialCustomer'
 
 export default {
   components: {
     ListHeader,
     FormDialog,
-    ToolBar
+    ToolBar,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 1,
-        pageSize: 20
+        pageSize: 20,
       },
 
       query: {
         page: 0,
         size: 20,
-        status: "",
-        creatorUuid: "",
-        starttime: "",
-        endtime: ""
-      }
-    };
+        status: '',
+        creatorUuid: '',
+        starttime: '',
+        endtime: '',
+      },
+    }
   },
   watch: {},
   computed: {
     ...mapState({
-      loading: state => state.externalUser.loading,
-      batchTaskListmy: state => state.externalUser.batchTaskListmy,
-      userPage: state => state.externalUser.batchTaskListmyPage,
+      loading: (state) => state.externalUser.loading,
+      batchTaskListmy: (state) => state.externalUser.batchTaskListmy,
+      userPage: (state) => state.externalUser.batchTaskListmyPage,
 
-      permissionMap: state => state.permission.permissionMap,
+      permissionMap: (state) => state.permission.permissionMap,
 
-      batchAddTaskEnum: state => state.enum.batchAddTask
+      batchAddTaskEnum: (state) => state.enum.batchAddTask,
     }),
     addStatus() {
-      return function(val) {
+      return function (val) {
         switch (val) {
-          case "NOTSTARTED":
-            return "color-primary";
-          case "INTERRUPT":
-            return "color-danger";
-          case "PROCESSING":
-            return "color - success";
-          case "CANCELED":
-            return "";
-          case "FINISHED":
-            return "";
+          case 'NOTSTARTED':
+            return 'color-primary'
+          case 'INTERRUPT':
+            return 'color-danger'
+          case 'PROCESSING':
+            return 'color - success'
+          case 'CANCELED':
+            return ''
+          case 'FINISHED':
+            return ''
         }
-      };
-    }
+      }
+    },
   },
   created() {
-    this.initDataList(this.query);
-    this.initFilter();
+    this.initDataList(this.query)
+    this.initFilter()
   },
   mounted() {
-    this.$bus.$on("handleRefresh", () => {
-      this.initDataList(this.query);
-    });
-  },
-  beforeDestroy() {
-    this.$bus.$off("handleRefresh");
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
+
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
   },
   methods: {
     doExport(val) {
-      console.log("请求接口导出全部");
+      console.log('请求接口导出全部')
     },
 
     initFilter() {
       this.$store
-        .dispatch("user/getUserListSelect")
+        .dispatch('user/getUserListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
 
     handleUpdate() {
-      this.initDataList(this.query);
+      this.initDataList(this.query)
     },
 
     initDataList(payload) {
       this.$store
-        .dispatch("externalUser/getListMy", payload)
+        .dispatch('externalUser/getListMy', payload)
         .then(() => {
           // 初始化分页
-          this.pageConfig.pageNumber = this.userPage.pageNumber + 1;
-          this.pageConfig.total = this.userPage.total;
+          this.pageConfig.pageNumber = this.userPage.pageNumber + 1
+          this.pageConfig.total = this.userPage.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
     handleDetail(val) {
-      const uuid = this.batchTaskListmy[val].uuid;
+      const uuid = this.batchTaskListmy[val].uuid
       this.$router.push({
-        path: "/batchAddTask/detail/" + uuid
-      });
+        path: '/batchAddTask/detail/' + uuid,
+      })
     },
     handleCancel(val) {
-      this.$confirm("是否取消当前项", "Warning", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('是否取消当前项', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       }).then(() => {
         cancelBatchAddTask({
-          uuid: this.batchTaskListmy[val].uuid
+          uuid: this.batchTaskListmy[val].uuid,
         })
-          .then(res => {
+          .then((res) => {
             this.$message({
-              type: "success",
-              message: "操作成功"
-            });
-            this.initDataList();
+              type: 'success',
+              message: '操作成功',
+            })
+            this.initDataList()
           })
-          .catch(err => {
+          .catch((err) => {
             this.$message({
-              type: "error",
-              message: err
-            });
-          });
-      });
+              type: 'error',
+              message: err,
+            })
+          })
+      })
     },
     handleContinue(val) {},
     handleSearch(val) {
-      const { creatorUuid, endtime, starttime, status } = val;
-      this.query.creatorUuid = creatorUuid ? creatorUuid : creatorUuid;
-      this.query.endtime = endtime ? endtime : endtime;
-      this.query.starttime = starttime ? starttime : starttime;
-      this.query.status = status ? status : status;
+      const { creatorUuid, endtime, starttime, status } = val
+      this.query.creatorUuid = creatorUuid ? creatorUuid : creatorUuid
+      this.query.endtime = endtime ? endtime : endtime
+      this.query.starttime = starttime ? starttime : starttime
+      this.query.status = status ? status : status
 
-      console.log(val, "handleSearch");
-      this.initDataList(this.query);
+      console.log(val, 'handleSearch')
+      this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log("handleRefresh");
-      this.query = this.$options.data().query;
-      this.initDataList(this.query);
+      console.log('handleRefresh')
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
     },
     changePage(key) {
-      console.log(this.query);
-      this.query.page = key - 1;
-      this.pageConfig.pageNumber = key;
-      this.initDataList(this.query);
-    }
-  }
-};
+      console.log(this.query)
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key
+      this.initDataList(this.query)
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

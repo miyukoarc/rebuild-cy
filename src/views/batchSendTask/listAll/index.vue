@@ -29,17 +29,7 @@
           header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="id" align="left">
-            <template v-slot="scope">
-              <div class="user-card" v-if="scope.row.externalUser">
-                <el-image
-                  :src="scope.row.externalUser.avatar"
-                  lazy
-                  style="width:30px;height:30px;margin-right:10px"
-                ></el-image>
-                <span>{{scope.row.externalUser.name}}</span>
-              </div>
-            </template>
+          <el-table-column label="id" align="left" prop="msgId">
           </el-table-column>
           <el-table-column label="发送者" align="left">
             <template v-slot="scope">
@@ -71,8 +61,9 @@
 <script>
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import CustomerPagination from '@/components/CustomerPagination'
+
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -110,6 +101,15 @@ export default {
   created() {
     this.initDataList(this.query)
     this.initFilter()
+  },
+  mounted(){
+      this.$bus.$on('handleRefresh',()=>{
+          this.initDataList(this.query)
+      })
+
+      this.$once('hook:beforeDestroy',()=>{
+          this.$bus.$off('handleRefresh')
+      })
   },
   methods: {
     doExport(val) {

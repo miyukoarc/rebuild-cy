@@ -66,10 +66,10 @@
 
 <script>
 import ListHeader from './header.vue'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 import ToolBar from '@/components/ToolBar'
 import CustomerPagination from '@/components/CustomerPagination'
-import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {

@@ -187,9 +187,9 @@ export default {
       )
         .then(async () => {
           //是否未设置审批人
-          const emptyFlag = val.auditUsers.every((item) => {
-            return item.userList.length != 0
-          })
+          const emptyFlag = !!val.auditUsers.length
+
+        //   console.log(emptyFlag,val.auditUsers)
 
           if (emptyFlag) {
             const payload = {

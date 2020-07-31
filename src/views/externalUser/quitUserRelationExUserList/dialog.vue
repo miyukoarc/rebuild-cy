@@ -26,20 +26,16 @@
 </template>
 
 <script>
-import CreateTemplate from "./event-create.vue";
-import EditTemplate from "./event-edit.vue";
 import DistributeTemplate from "./event-distribute";
 import { mapState } from "vuex";
 export default {
   components: {
-    CreateTemplate,
-    EditTemplate,
     DistributeTemplate
   },
   data() {
     return {
       dialogVisible: false,
-      event: "DistributeTemplate",
+      event: "",
       eventType: "distribute",
       selectedAllData: []
     };

@@ -100,17 +100,6 @@
             </template>
           </el-table-column>
         </el-table>
-
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />
-
         <customer-pagination
           :pageConfig="pageConfig"
           @current-change="changePage"

@@ -155,6 +155,10 @@ export default {
     this.$bus.$on('handleRefresh', () => {
       this.initDataList(this.query)
     })
+
+    this.$once('hook:beforeDestroy',()=>{
+        this.$bus.$off('handleRefresh')
+    })
   },
   methods: {
     doExport(val) {

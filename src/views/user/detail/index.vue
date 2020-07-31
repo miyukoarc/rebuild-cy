@@ -42,6 +42,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             @change="handleChange"
+            :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
         </div>
       </div>
@@ -156,20 +157,28 @@ export default {
   watch: {
     $route: {
       handler(newVal, oldVal) {
-        console.log(newVal.params.uuid);
         const uuid = newVal.params.uuid;
         this.$once("hook:created", () => {
           this.initData(uuid);
         });
+
       },
       immediate: true
     },
     date: {
       handler(newVal, oldVal) {
         this.changeDate(newVal);
-        this.initBoard(this.form);
+        // this.initBoard(this.form);
       },
       immediate: true
+    },
+    'form.userid.length':{
+        handler(newVal,oldVal){
+            // console.log(newVal)
+            if(newVal){
+                this.initBoard(this.form)
+            }
+        }
     }
   },
   computed: {
@@ -185,13 +194,16 @@ export default {
     // this.initBoard(this.form)
   },
   mounted() {
-    this.form.userid.push(this.$route.params.uuid);
+    
   },
   methods: {
     initData(payload) {
       this.$store
         .dispatch("user/getDetail", payload)
-        .then(() => {})
+        .then((res) => {
+            const {userId} = res
+            this.form.userid.push(userId)
+        })
         .catch(err => {
           console.error(err);
           this.$message({

@@ -51,8 +51,9 @@ function regFilter(str) {
   } else {
     return '--'
   }
-
 }
+
+
 const state = {
   /**
    * public state

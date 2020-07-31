@@ -91,7 +91,9 @@
                 <div class="cover-image" v-if="articleDetail.imgId">
                     <el-image fit="contain" :src="`/api/public/file/${articleDetail.imgId}`"></el-image>
                 </div>
-              <div v-html="articleDetail.articleContent"></div>
+              <div class="article-container">
+                  <div v-html="articleDetail.articleContent"></div>
+              </div>
             </div>
           </el-card>
         </div>
@@ -294,5 +296,9 @@ export default {
 .cover-image{
     height: 150px;
     width: 100px;
+}
+.article-container{
+    height: 400px;
+    overflow-y: scroll;
 }
 </style>

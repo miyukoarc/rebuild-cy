@@ -156,7 +156,7 @@ export default {
             .catch((err) => {
               this.$message({
                 type: 'error',
-                message: '操作失败',
+                message: err||'操作失败',
               })
             })
         } else {
