@@ -5,7 +5,7 @@
         <div class="group-chat-info flex-between-alinecenter">
           <div class="group-list flex-between-alinecenter">
             <div class="group-list-left flex-column-center-alinecenter">
-              <svg-icon icon-class="groupChat" class="font-el"/>
+              <svg-icon icon-class="groupChat" class="font-el" />
               <div class="font-exs">群聊</div>
             </div>
 
@@ -50,9 +50,10 @@
             </div>
           </div>
         </div>
-        <div class="no-group">
+        <div class="notice-content" v-if="groupDetail.notice">{{groupDetail.notice}}</div>
+        <div class="no-group" v-else>
           <div class="no-group-view">
-            <img src="~@/assets/icon/no-group-message.png" alt>
+            <img src="~@/assets/icon/no-group-message.png" alt />
             <p>暂无群公告</p>
           </div>
         </div>
@@ -69,26 +70,33 @@
           stripe
           lazy
           highlight-current-row
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="成员" align="left">
             <template v-slot="scope">
               <div style="display:flex;align-items:center;">
-                <el-image style="width:30px;height:30px;margin-right:10px;" lazy :src="scope.row.avatar"></el-image>
+                <el-image
+                  style="width:30px;height:30px;margin-right:10px;"
+                  lazy
+                  :src="scope.row.avatar"
+                ></el-image>
                 <span>{{scope.row.username}}</span>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="入群时间" prop="join_time" align="left">
-          </el-table-column>
-          <el-table-column label="入群方式" prop="scene" align="left">
-          </el-table-column>
+          <el-table-column label="入群时间" prop="join_time" align="left"></el-table-column>
+          <el-table-column label="入群方式" prop="scene" align="left"></el-table-column>
           <el-table-column label="操作" align="left">
-              <template v-slot="scope">
-                  <el-t-button type="primary" size="mini" :auth="permissionMap['user']['user_detail']" :popAuth="true" @click.stop="handleDetail(scope.$index)">详情</el-t-button>
-
-              </template>
+            <template v-slot="scope">
+              <el-t-button
+                type="primary"
+                size="mini"
+                :auth="permissionMap['user']['user_detail']"
+                :popAuth="true"
+                @click.stop="handleDetail(scope.row)"
+              >详情</el-t-button>
+            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -97,65 +105,72 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
-    data(){
-        return {}
+  data() {
+    return {};
+  },
+  computed: {
+    ...mapState({
+      groupDetail: (state) => state.externalUser.groupDetail,
+      loading: (state) => state.externalUser.loading,
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
+  },
+  watch: {
+    $route: {
+      handler(newVal, oldVal) {
+        const payload = newVal.query;
+        // console.log(newVal.query)
+        this.$once("hook:created", () => {
+          this.initDetail(payload);
+        });
+      },
+      immediate: true,
     },
-    computed:{
-        ...mapState({
-            groupDetail: state => state.externalUser.groupDetail,
-            loading: state=> state.externalUser.loading,
-            permissionMap: state => state.permission.permissionMap
-        })
+  },
+  methods: {
+    initDetail(payload) {
+      this.$store
+        .dispatch("externalUser/getGroupDetail", payload)
+        .then(() => {})
+        .catch((err) => {
+          console.error(err);
+          this.$message({
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
-    watch:{
-        $route:{
-            handler(newVal,oldVal){
-                const payload = newVal.query
-                // console.log(newVal.query)
-                this.$once('hook:created',()=>{
-                    this.initDetail(payload)
-                })
-            },
-            immediate:true
-        }
+    handleDetail(row) {
+      if (row.type == 1) {
+        const uuid = row.uuid;
+        this.$router.push({
+          path: "/user/detail/" + uuid,
+        });
+      }
+      if (row.type == 2) {
+        const uuid = row.uuid;
+        this.$router.push({
+          path: "/externalUser/detail/" + uuid,
+        });
+      }
     },
-    methods:{
-        initDetail(payload){
-            this.$store.dispatch('externalUser/getGroupDetail',payload).then(()=>{})
-            .catch(err=>{
-                console.error(err)
-                this.$message({
-                    type: 'error',
-                    message:err||'初始化失败'
-                })
-            })
-        },
-        handleDetail(index){
-            const userId = this.groupDetail.member_list[index].userId
-            console.log(userId)
-            this.$router.push({
-                path: '/user/detail/'+userId,
-                query: {userId}
-            })
-        }
-    }
-
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.container-card{
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-    border: 1px solid #EBEEF5;
-    background-color: #FFF;
-    padding: 20px;
+.container-card {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #ebeef5;
+  background-color: #fff;
+  padding: 20px;
 }
 .list-group-detail {
   .el-card {
     .el-card__body {
-        flex: 1;
+      flex: 1;
       width: 100% !important;
     }
   }
@@ -274,6 +289,10 @@ export default {
           }
         }
       }
+    }
+    .notice-content {
+      font-size: 14px;
+      line-height: 28px;
     }
     .no-group {
       margin-top: 15px;

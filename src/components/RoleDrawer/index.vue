@@ -1,9 +1,17 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-31 16:41:29
+ * @LastEditTime: 2020-07-31 18:16:13
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\components\RoleDrawer\index.vue
+--> 
 <template>
   <div class="role-drawer">
     <el-tag
       style="margin-right:3px;"
       size="small"
-      type="primary"
+      type="info"
       v-for="role in alterRoles"
       :key="role.uuid"
     >
