@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-09 18:50:40
- * @LastEditTime: 2020-07-30 18:27:30
+ * @LastEditTime: 2020-07-31 16:14:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\enum.js
@@ -121,6 +121,20 @@ const state = {
         IMAGE: '[图片]',
         ARTICLE: '[文章]',
     },
+    externalUserAddwayType: {
+        '0': '未知来源',
+        '1': '扫描二维码',
+        '2': '搜索手机号',
+        '3': '名片分享',
+        '4': '群聊',
+        '5': '手机通讯录',
+        '6': '微信联系人',
+        '7': '来自微信的添加好友申请',
+        '8': '安装第三方应用时自动添加的客服人员',
+        '9': '搜索邮箱',
+        '201': '内部成员共享',
+        '202': '管理员/ 负责人分配'
+    }
 
 }
 

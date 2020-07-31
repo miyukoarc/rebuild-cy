@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-29 21:01:39
+ * @LastEditTime: 2020-07-31 14:57:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -137,7 +137,13 @@
                     <div v-show="singleListAllData.length<=0" class="no-chat-data">暂无数据</div>
                   </el-tab-pane>
                 </el-tabs>
-                <el-pagination
+                <customer-pagination
+                v-show=" singleListAllData.length>0"
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
+                <!-- <el-pagination
                   v-show=" singleListAllData.length>0"
                   background
                   class="pager"
@@ -146,7 +152,7 @@
                   :current-page.sync="pageConfig.page"
                   :page-size="pageConfig.size"
                   @current-change="changePage"
-                />
+                /> -->
                 <div class="search-form" style="margin-top:5px">
                   <chat-search @handleSearch="handleSearch" @handleRefresh="handleRefresh"></chat-search>
                 </div>
@@ -169,6 +175,7 @@ import ChatInformation from "./components/ChatInformation.vue";
 import ChatTabBar from "./components/ChatTabBar.vue";
 
 import ChatSearch from "./components/ChatSearch.vue";
+import CustomerPagination from '@/components/CustomerPagination'
 
 import textComponent from "./messageTypeComponent/textComponent.vue";
 import imageComponent from "./messageTypeComponent/imageComponent.vue";
@@ -189,6 +196,7 @@ import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_ca
 export default {
   name: "ListSingleAll",
   components: {
+    CustomerPagination,
     FormDialog,
     ChatSideBar,
     ChatTabBar,
@@ -480,6 +488,10 @@ export default {
         keyword: "",
         planStatu: null,
       };
+    },
+    changeSize(val) {
+      this.query.size = val
+     this.getsinglelist(this.query);
     },
     changePage(page) {
       console.log(page, "点击分页");

@@ -93,12 +93,14 @@
           <section class="message-content display-flex" v-show="form.autoReplyType == 'FILE'">
             <div class="img-warp">
               <el-upload
-                class="avatar-uploader"
                 action="/api/upload"
                 :on-success="handleSetMessageFile"
                 :before-upload="beforeUploadFile"
                 :before-remove="beforeRemoveFile"
                 :on-remove="removeFile"
+                multiple
+                :show-file-list="true"
+                :file-list="fileList"
               >
                 <el-button size="small" type="primary" v-show="!messageFile">点击上传</el-button>
               </el-upload>
@@ -522,11 +524,46 @@ export default {
     padding: 6px 15px;
   }
 }
-.message-content {
-  .el-select-dropdown {
-    .el-select-dropdown__item {
-      height: auto;
-      line-height: 1px;
+
+.option-warp {
+  img.option-img {
+    width: 46px;
+    height: 46px;
+  }
+  .option-content {
+    margin-left: 10px;
+    color: #8492a6;
+    font-size: 13px;
+    line-height: 14px;
+  }
+}
+
+.label-warp {
+  .el-input__prefix {
+    width: 90%;
+  }
+  .label-input {
+    background-color: #fff;
+    color: #606266;
+    font-size: 13px;
+    height: 30px;
+    outline: 0;
+    padding: 0px 15px;
+    margin-top: 1px;
+    width: 95%;
+    .input-title {
+      margin-left: 5px;
+      font-size: 13px;
+      line-height: 14px;
+      text-align: left;
+      width: 95%;
+    }
+    .input-content {
+      width: 450px;
+      height: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
@@ -595,6 +632,14 @@ export default {
 </style>
 
 <style lang="scss">
+.message-content {
+  .el-select-dropdown {
+    .el-select-dropdown__item {
+      height: auto;
+      line-height: 1px;
+    }
+  }
+}
 .avatar-uploader {
   .el-upload {
     border: 1px dashed #d9d9d9;

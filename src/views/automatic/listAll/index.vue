@@ -5,6 +5,14 @@
     </el-card>
 
     <el-card class="content-spacing">
+      <div class="mb-10">
+        <div class="flex-alinecenter">
+          <span class="font-es mr-15">自动回复开关</span>
+          <el-switch v-model="isReplySwitch"></el-switch>
+          <span class="ml-20 mr-10 font-es">自动回复是针对客户的常见问题而设置的标准回复内容,可快速响应客户的问题。管理员可统一添加关键词和自动回复的消息</span>
+          <el-t-button type="primary" size="mini" @click.stop="handleClickSetAutoReplay">设置</el-t-button>
+        </div>
+      </div>
       <tool-bar
         @handleExport="doExport"
         :msg="`共${pageConfig.total}条记录`"
@@ -45,9 +53,8 @@
           lazy
           highlight-current-row
           header-row-class-name="el-table-header"
-          @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection"></el-table-column>
+          <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="规则名称" align="left" prop="ruleWord"></el-table-column>
           <el-table-column label="关键词" align="left" prop="keyWord"></el-table-column>
           <el-table-column label="回复内容" align="left" prop="replyWord">
@@ -62,7 +69,7 @@
           </el-table-column>
           <!-- <el-table-column label="适用标签" align="left">--</el-table-column>
           <el-table-column label="创建人" align="left">--</el-table-column>-->
-          <el-table-column label="企业标签" align="left" >
+          <el-table-column label="企业标签" align="left">
             <template v-slot="{row}">
               <div v-if="row.autoReplyTags.length>0">
                 <strong>{{row.autoReplyTagType=='CONTAIN'?'包含其一':'完全匹配'}}</strong>
@@ -138,6 +145,7 @@ export default {
   },
   data() {
     return {
+      isReplySwitch: false,
       pageConfig: {
         total: 0,
         pageNumber: 0,
@@ -169,6 +177,7 @@ export default {
       page: (state) => state.automatic.page,
       permissionMap: (state) => state.permission.permissionMap,
       autoReplyContentType: (state) => state.enum.autoReplyContentType,
+      replySwitch: (state) => state.automatic.replySwitch,
     }),
   },
   created() {
@@ -222,6 +231,7 @@ export default {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1;
           this.pageConfig.total = this.page.total;
+          this.isReplySwitch = this.replySwitch;
         })
         .catch((err) => {
           this.$message({
@@ -247,7 +257,6 @@ export default {
         startTime,
         endTime,
       } = val;
-      console.log(this.query, "2223233121213455");
       this.query.ruleName = ruleName ? ruleName : "";
       this.query.keyWord = keyWord ? keyWord : "";
       this.query.replyWord = replyWord ? replyWord : "";
@@ -266,6 +275,11 @@ export default {
       this.query.page = key - 1;
       this.pageConfig.pageNumber = key - 1;
       this.initDataList(this.query);
+    },
+    handleClickSetAutoReplay() {
+      this.$refs["formDialog"].event = "CreateSetTemplate";
+      this.$refs["formDialog"].eventType = "createSet";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     handleCreate() {
       this.$refs["formDialog"].event = "CreateTemplate";
