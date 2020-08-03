@@ -93,7 +93,8 @@
 
     <el-form-item label="标签配置：">
       <div v-if="detail.auditAddMedia">
-        <span class="color-primary font-exs">{{matchFormat[detail.auditAddMedia[0].matchFormat]}}</span>
+        <span class="color-primary font-exs" v-if="tags.length">{{matchFormat[detail.auditAddMedia[0].matchFormat]}}</span>
+        <span class="color-primary font-exs">未配置标签</span>
         <icon-tooltip>
           <div>
             <div class="font-exs color-info">包含任意：至少包含一个标签。</div>
@@ -228,9 +229,15 @@ export default {
             }
 
             // if (res.auditAddMedia) {
-            const arr = this.parse(res.auditAddMedia)[0].tagsDto
+            let arr
 
-            console.log(arr)
+            if(Object.keys(res.toTags).length){
+                arr = res.toTags
+            }else {
+                arr = this.parse(res.auditAddMedia)[0].tagsDto||[]
+            }
+
+            console.log(arr,res.toTags)
 
             this.tags = this.grouping(arr)
             // } else {
@@ -273,7 +280,7 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     grouping(list) {
-      if (list.length) {
+      if (Object.keys(list).length) {
         let temp = list.map((item) => {
           return {
             ...item,

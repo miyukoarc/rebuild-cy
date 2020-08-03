@@ -71,7 +71,7 @@
     </div>
 
     <div class="mb-20">
-      <multi-tree-select v-model="multiSelects" :section="'department'"></multi-tree-select>
+      <multi-tree-select v-model="multiSelects" :section="'user'"></multi-tree-select>
     </div>
   </div>
 </template>

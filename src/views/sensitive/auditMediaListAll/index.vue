@@ -102,7 +102,7 @@
                 <div
                   class="font-no-wrap"
                   v-if="row.toMedis[0].type==='TEXT'"
-                >{{row.toMedis[0].textContents}}</div>
+                >{{row.toMedis[0].content}}</div> 
                 <div v-if="row.toMedis[0].type==='ARTICLE'">《{{row.toMedis[0].title}}》</div>
                 <div v-if="row.toMedis[0].type==='FILE'">{{row.toMedis[0].fileName}}</div>
               </div>

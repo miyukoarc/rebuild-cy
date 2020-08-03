@@ -41,8 +41,7 @@
               <el-radio v-model="form.matchFormat" label="PERFECT_MATCH">完全匹配</el-radio>
             </div>
             <div class="select-zoom">
-
-          <tag-multi-select v-model="form.tagUuids"></tag-multi-select>
+              <tag-multi-select v-model="form.tagUuids"></tag-multi-select>
             </div>
           </el-form-item>
 
@@ -93,7 +92,7 @@ export default {
         content: '',
         imgId: '',
         matchFormat: 'CONTAINS_ANY',
-        tagUuids: []
+        tagUuids: [],
       },
       tagSelects: [],
       groupUuid: '',
@@ -105,7 +104,7 @@ export default {
     $route: {
       handler(newVal, oldVal) {
         const uuid = newVal.params.uuid
-        if (+uuid) {
+        if (-uuid) {
           this.mode = 'UPDATE'
           this.$set(this.form, 'uuid', uuid)
           this.initDetail(uuid)
@@ -135,8 +134,7 @@ export default {
     initDetail(uuid) {
       this.$store
         .dispatch('media/getArticleDetail', uuid)
-        .then(() => {
-
+        .then(res => {
           const {
             imgId,
             imgUrl,
@@ -144,10 +142,12 @@ export default {
             description,
             title,
             matchFormat,
-            toTags
-          } = this.articleDetail
-          this.form.tagUuids =  this.articleDetail.toTags.map(item=>{return item.uuid})
-          const groupUuid = this.articleDetail?.mediaGroup?.uuid
+            toTags,
+          } = res
+          this.form.tagUuids = res.toTags.map((item) => {
+            return item.uuid
+          })
+          const groupUuid = res?.mediaGroup?.uuid
           this.form.imgId = imgId
           this.coverUrl = imgUrl
           this.form.content = articleContent
@@ -156,6 +156,7 @@ export default {
           this.groupUuid = groupUuid
         })
         .catch((err) => {
+          console.error(err)
           this.$message({
             type: 'error',
             message: '初始化失败',

@@ -102,7 +102,7 @@ export default {
       type: String,
       default: 'user'
     },
-    value: {
+    selects: {
       type: Array,
       default: () => {
         return []
@@ -116,7 +116,7 @@ export default {
     }
   },
   model: {
-    prop: 'value',
+    prop: 'selects',
     event: 'change'
   },
   data() {
@@ -136,6 +136,8 @@ export default {
       this.$refs['tree'].filter(val)
     }
   },
+  computed: {
+  },
   created(){
       this.initData()
   },
@@ -147,16 +149,16 @@ export default {
       if (!value) return true
       return data.name.indexOf(value) !== -1
     },
-    initData() {//部门树
+    initData() {
       this.$store
         .dispatch('department/getDepartmentListAll')
-        .then(res => {
-            this.departmentList = res
+        .then((res) => {
+          this.departmentList = res
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
     },
