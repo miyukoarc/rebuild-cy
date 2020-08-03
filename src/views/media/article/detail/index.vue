@@ -120,6 +120,7 @@ export default {
       articleDetail: (state) => state.media.articleDetail,
       mediaGroupListAll: (state) => state.media.mediaGroupListAll,
       permissionMap: (state) => state.permission.permissionMap,
+      auditSetting: (state) => state.sensitive.auditSetting,
       //   tagListSelect: state => state.tag.tagListSelect
     }),
     defaultCover() {
@@ -134,7 +135,7 @@ export default {
     initDetail(uuid) {
       this.$store
         .dispatch('media/getArticleDetail', uuid)
-        .then(res => {
+        .then((res) => {
           const {
             imgId,
             imgUrl,
@@ -218,7 +219,20 @@ export default {
         const groupUuid = this.groupUuid
         const uuid = this.$route.params.uuid
         const tagUuids = this.form.tagUuids
-        this.handleUpdate({ data: { ...payload, uuid, tagUuids, groupUuid } })
+
+        if (this.auditSetting['media']) {
+          this.handleUpdate({
+            data: {
+              ...payload,
+              uuid,
+              tagUuids,
+              groupUuid,
+              auditState: 'TO_BE_REVIEWED',
+            },
+          })
+        } else {
+          this.handleUpdate({ data: { ...payload, uuid, tagUuids, groupUuid } })
+        }
       }
       if (this.mode === 'CREATE') {
         const payload = this.form
@@ -234,12 +248,14 @@ export default {
       this.flag = true
     },
     handleUpdate(payload) {
+      const message = this.auditSetting['media'] ? '已提交审核' : '已完成'
+
       this.$store
         .dispatch('media/updataArticle', payload)
         .then(() => {
           this.$message({
             type: 'success',
-            message: '操作成功',
+            message: message,
             duration: 1000,
             onClose: () => {
               this.$router.go(-1)

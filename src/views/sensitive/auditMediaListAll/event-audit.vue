@@ -32,6 +32,12 @@
     </el-form-item>
 
     <el-form-item label="素材：">
+      <div class="media-container" v-if="detail.mediaOperationType==='UPDATE_ARTICLE'">
+        <div class="article-container" v-if="detail.auditAddMedia[0].type==='ARTICLE'">
+          <h3>{{detail.auditAddMedia[0].title}}</h3>
+          <div class="font-es" v-html="detail.articleContent"></div>
+        </div>
+      </div>
       <div class="media-container" v-if="detail.mediaOperationType==='ADD_MEDIA'">
         <el-image
           v-if="detail.auditAddMedia[0].type==='IMAGE'"
@@ -93,7 +99,10 @@
 
     <el-form-item label="标签配置：">
       <div v-if="detail.auditAddMedia">
-        <span class="color-primary font-exs" v-if="tags.length">{{matchFormat[detail.auditAddMedia[0].matchFormat]}}</span>
+        <span
+          class="color-primary font-exs"
+          v-if="tags.length"
+        >{{matchFormat[detail.auditAddMedia[0].matchFormat]}}</span>
         <span class="color-primary font-exs" v-else>未配置标签</span>
         <icon-tooltip>
           <div>
@@ -231,13 +240,13 @@ export default {
             // if (res.auditAddMedia) {
             let arr
 
-            if(Object.keys(res.toTags).length){
-                arr = res.toTags
-            }else {
-                arr = this.parse(res.auditAddMedia)[0].tagsDto||[]
+            if (Object.keys(res.toTags).length) {
+              arr = res.toTags
+            } else {
+              arr = this.parse(res.auditAddMedia)[0].tagsDto || []
             }
 
-            console.log(arr,res.toTags)
+            console.log(arr, res.toTags)
 
             this.tags = this.grouping(arr)
             // } else {
@@ -263,6 +272,30 @@ export default {
             // this.tags = Object.keys(this.detail.toMedis).length
             //   ? this.groupingDelete(this.detail.toMedis[0].toTags)
             //   : []
+          }
+
+          if (res.mediaOperationType === 'UPDATE_ARTICLE') {
+            this.detail = {
+              ...res,
+              auditAddMedia: this.parse(res.auditAddMedia),
+              auditUsers: this.parse(res.auditUsers),
+            }
+
+            // if (res.auditAddMedia) {
+            let arr
+
+            if (Object.keys(res.toTags).length) {
+              arr = res.toTags
+            } else {
+              arr = this.parse(res.auditAddMedia)[0].tagsDto || []
+            }
+
+            console.log(arr, res.toTags)
+
+            this.tags = this.grouping(arr)
+            // } else {
+            //   this.tags = []
+            // }
           }
         })
         .catch((err) => {
@@ -365,10 +398,10 @@ export default {
           })
         })
         .catch((err) => {
-        //   this.$message({
-        //     type: 'error',
-        //     message: err,
-        //   })
+          //   this.$message({
+          //     type: 'error',
+          //     message: err,
+          //   })
           this.$confirm(err, '错误', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',

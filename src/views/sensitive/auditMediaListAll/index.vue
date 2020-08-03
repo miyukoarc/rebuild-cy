@@ -40,7 +40,8 @@
           <el-table-column type="selection" :selectable="selectable"></el-table-column>
           <el-table-column width="85" align="left" label="提交人">
             <template v-slot="{row}">
-              <div>{{row.submitOperator.name}}</div>
+              <div v-if="row.mediaOperationType==='UPDATE_ARTICLE'">{{row.approvedOperator.name}}</div>
+              <div v-else>{{row.submitOperator.name}}</div>
             </template>
           </el-table-column>
 
@@ -102,7 +103,7 @@
                 <div
                   class="font-no-wrap"
                   v-if="row.toMedis[0].type==='TEXT'"
-                >{{row.toMedis[0].content}}</div> 
+                >{{row.toMedis[0].content}}</div>
                 <div v-if="row.toMedis[0].type==='ARTICLE'">《{{row.toMedis[0].title}}》</div>
                 <div v-if="row.toMedis[0].type==='FILE'">{{row.toMedis[0].fileName}}</div>
               </div>
@@ -112,6 +113,7 @@
           <el-table-column align="left" label="新增/删除">
             <template v-slot="{row}">
               <div>
+                <span class="color-primary" v-if="row.mediaOperationType==='UPDATE_ARTICLE'">修改</span>
                 <span class="color-success" v-if="row.mediaOperationType==='ADD_MEDIA'">新增</span>
                 <span class="color-danger" v-if="row.mediaOperationType==='DELETE_MEDIA'">删除</span>
               </div>

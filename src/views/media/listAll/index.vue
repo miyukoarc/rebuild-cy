@@ -202,6 +202,7 @@ export default {
   mounted() {
     this.$bus.$on('handleRefresh', () => {
       this.handleRefresh(this.query)
+      this.initDataList()
     })
 
     this.$once('hook:beforeDestroy', () => {
@@ -361,7 +362,6 @@ export default {
                 message: '操作成功',
               })
               this.handleRefresh()
-              //   Object.assign(this.$data, this.$options.data())
             })
             .catch((err) => {
               this.$message({
