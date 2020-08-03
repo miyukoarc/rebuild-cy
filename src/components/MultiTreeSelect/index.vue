@@ -1,10 +1,11 @@
 <template>
   <div v-if="section==='department'" class="select-container">
     <el-row>
-      <el-col :span="12">
+      <el-col :span="11" style="margin-right:20px;">
         <div class>
-          <el-input class="filter-input" placeholder="输入关键字" v-model.trim="filterText"></el-input>
+          <el-input size="small" class="filter-input" placeholder="输入关键字" v-model.trim="filterText"></el-input>
           <el-tree
+            v-if="multiple"
             ref="tree"
             @check="handleCheck"
             :data="departmentList"
@@ -19,20 +20,36 @@
               <el-tag size="mini" type="info">{{data.orgNode?'组织':'部门'}}</el-tag>
             </div>
           </el-tree>
+          <el-tree
+            v-else
+            ref="tree"
+            @check-change="handleCheckSingle"
+            :data="departmentList"
+            node-key="uuid"
+            :props="propsObj"
+            default-expand-all
+            show-checkbox
+            :filter-node-method="filterNode"
+          >
+            <div slot-scope="{node,data}">
+              <span>{{node.label}}</span>
+              <el-tag size="mini" type="info">{{data.orgNode?'组织':'部门'}}</el-tag>
+            </div>
+          </el-tree>
         </div>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="11">
         <div style="margin-top:32px;">
           <div class="line-tag color-info" v-for="(item,index) in selects" :key="index">
             <div>
               <i class="el-icon-s-operation"></i>
               {{item.name}}
             </div>
-            <div>
+            <!-- <div>
               <span class="close-btn" @click="handleCloseTag(item)">
                 <i class="el-icon-close color-info"></i>
               </span>
-            </div>
+            </div>-->
           </div>
         </div>
       </el-col>
@@ -49,22 +66,23 @@
             :data="departmentList"
             node-key="uuid"
             :props="propsObj"
-            @node-click="handleNodeClick"
             default-expand-all
             :filter-node-method="filterNode"
           >
             <div slot-scope="{node,data}">
-              <span>{{node.label}}</span>
+              <span @click.stop="handleNodeClick(data,node)">{{node.label}}</span>
               <el-tag size="mini" type="info">{{data.orgNode?'组织':'部门'}}</el-tag>
               <keep-alive>
                 <user-list
                   ref="userList"
-                  v-if="currentDepart===node.key"
+                  v-if="currentDepart===node.key&&showUser"
                   :index="node.key"
                   :uuid="node.key"
                   @output="handleOutput"
                   @cult="handleCult"
+                  @single="hanldeSingle"
                   :key="node.key"
+                  :multiple="multiple"
                 ></user-list>
               </keep-alive>
             </div>
@@ -80,7 +98,7 @@
             </div>
             <div>
               <span class="close-btn" @click="handleCloseUserTag(item)">
-                <i class="el-icon-close color-info"></i>
+                <!-- <i class="el-icon-close color-info"></i> -->
               </span>
             </div>
           </div>
@@ -95,51 +113,55 @@ import UserList from './user-list'
 import { intercept, myFilter } from '@/utils/common'
 export default {
   components: {
-    UserList
+    UserList,
   },
   props: {
     section: {
       type: String,
-      default: 'user'
+      default: 'department',
     },
     selects: {
       type: Array,
       default: () => {
         return []
-      }
+      },
     },
     options: {
       type: Array,
       default: () => {
         return []
-      }
-    }
+      },
+    },
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
   },
   model: {
     prop: 'selects',
-    event: 'change'
+    event: 'change',
   },
   data() {
     return {
       filterText: '',
       propsObj: {
         label: 'name',
-        children: 'children'
+        children: 'children',
       },
       currentDepart: null,
       userListTemp: [],
-      departmentList: []
+      departmentList: [],
+      showUser: false,
     }
   },
   watch: {
     filterText(val) {
       this.$refs['tree'].filter(val)
-    }
+    },
   },
-  computed: {
-  },
-  created(){
-      this.initData()
+  computed: {},
+  created() {
+    this.initData()
   },
   mounted() {
     //   this.initNodeData()
@@ -166,11 +188,11 @@ export default {
       const payload = { departmentsUuid: 3 }
       this.$store
         .dispatch('user/getAllUserList', payload)
-        .then(res => {})
-        .catch(err => {
+        .then((res) => {})
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '加载失败'
+            message: err || '加载失败',
           })
         })
     },
@@ -190,14 +212,14 @@ export default {
       /**
        * 左删除
        */
-      const flatten = data =>
+      const flatten = (data) =>
         data.reduce(
           (arr, { uuid, children = [] }) =>
             arr.concat([{ uuid }], flatten(children)),
           []
         )
 
-      const keys = flatten(filterTree).map(item => {
+      const keys = flatten(filterTree).map((item) => {
         return item.uuid
       })
 
@@ -206,7 +228,7 @@ export default {
        */
       const queue = []
 
-      flatten(filterTree).forEach(item => {
+      flatten(filterTree).forEach((item) => {
         temp.forEach((unit, index) => {
           if (item.uuid === unit.uuid) {
             queue.push(unit)
@@ -214,8 +236,8 @@ export default {
         })
       })
       this.$nextTick(async () => {
-        await this.$refs['tree'].getHalfCheckedKeys().forEach(uuid => {
-          temp.forEach(unit => {
+        await this.$refs['tree'].getHalfCheckedKeys().forEach((uuid) => {
+          temp.forEach((unit) => {
             if (unit.uuid == uuid) {
               queue.push(unit)
             }
@@ -225,7 +247,7 @@ export default {
         /**
          * 右删除
          */
-        queue.forEach(item => {
+        queue.forEach((item) => {
           temp.splice(temp.indexOf(item), 1)
         })
 
@@ -237,7 +259,7 @@ export default {
       /**
        * 左删除
        */
-      keys.forEach(key => {
+      keys.forEach((key) => {
         this.$refs['tree'].setChecked(key, false, true)
       })
     },
@@ -262,6 +284,7 @@ export default {
      * 点击node节点
      */
     handleNodeClick(data, node) {
+      this.showUser = !this.showUser
       this.currentDepart = node.key
     },
     handleOutput(arr) {
@@ -276,9 +299,9 @@ export default {
     handleCult(val) {
       let temp = []
       if (val.length) {
-        val.forEach(item => {
+        val.forEach((item) => {
           this.userListTemp.splice(
-            this.userListTemp.findIndex(unit => {
+            this.userListTemp.findIndex((unit) => {
               return item.uuid == unit.uuid
             }),
             1
@@ -287,7 +310,7 @@ export default {
         // this.userListTemp = []
       } else {
         this.userListTemp.splice(
-          this.userListTemp.findIndex(item => {
+          this.userListTemp.findIndex((item) => {
             return item.uuid == val
           }),
           1
@@ -301,36 +324,36 @@ export default {
      * 删除标签
      */
     handleCloseUserTag(val) {
-      const uuid = val.uuid
-      let temp = this.selects
-      temp.splice(
-        temp.findIndex(item => {
-          return item.uuid == val.uuid
-        }),
-        1
-      )
-
-      //   const trigger = this.selects.map(item=>{return item.uuid})
-
-      //   console.log(trigger)
-
-      //   this.$refs['userList'].handleChange(trigger)
-
-      this.$nextTick(() => {
-        let target = this.$refs['userList'].selects
-
-        target.splice(
-          target.findIndex(item => {
-            return item == val.uuid
-          }),
-          1
-        )
-      })
-
-      // console.log(target)
-      // this.$emit('change',temp)
+      //   console.log(val)
+      //   this.selects.splice(
+      //     this.selects.findIndex((item) => {
+      //       return item.uuid == val.uuid
+      //     }),
+      //     1
+      //   )
+      // //   this.$nextTick(() => {
+      //     let target = this.$refs['userList'].selects
+      //     // this.$refs['userList'].isIndeterminate = true
+      //     target.splice(
+      //       target.findIndex((item) => {
+      //         return item == val.uuid
+      //       }),
+      //       1
+      //     )
+    },
+    /**
+     * 单选树
+     */
+    handleCheckSingle(data, checked, node) {
+      if (checked) {
+        this.$refs.tree.setCheckedNodes([data])
+      }
+      this.$emit('change', [data])
+    },
+    hanldeSingle(val){
+        this.$emit('change',val)
     }
-  }
+  },
 }
 </script>
 <style lang="scss" scoped>

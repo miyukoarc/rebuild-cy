@@ -50,13 +50,13 @@
                 :popAuth="true"
                 :auth="permissionMap['media']['media_browsing_Records']"
               >记录</el-t-button>
-              <el-t-button
+              <!-- <el-t-button
                 size="mini"
                 type="text"
                 @click.stop="handleDelete(scope.$index)"
                 :popAuth="true"
                 :auth="permissionMap['media']['media_delete']"
-              >删除</el-t-button>
+              >删除</el-t-button> -->
             </template>
           </el-table-column>
         </el-table>

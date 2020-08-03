@@ -5,21 +5,35 @@
     </div>
     <div v-else>
       <div v-if="list.length">
-        <!-- <el-checkbox
-          :indeterminate="isIndeterminate"
-          v-model="checkAll"
-          @change="handleCheckAllChange"
-        >全选</el-checkbox> -->
-        <el-checkbox-group v-model="selects" @change="handleChange">
-          <div v-for="(item,index) in list" :key="index" style="margin-bottom:3px;">
-            <el-checkbox :label="item.uuid">
+        <div v-if="multiple">
+          <el-checkbox
+            :indeterminate="isIndeterminate"
+            v-model="checkAll"
+            @change="handleCheckAllChange"
+          >
+            <span class="color-info font-exs">全选</span>
+          </el-checkbox>
+          <el-checkbox-group v-model="selects" @change="handleChange">
+            <div v-for="(item,index) in list" :key="index" style="margin-bottom:3px;">
+              <el-checkbox :label="item.uuid">
+                <el-tag size="mini" type="info">
+                  <i class="el-icon-user-solid"></i>
+                  {{item.name}}
+                </el-tag>
+              </el-checkbox>
+            </div>
+          </el-checkbox-group>
+        </div>
+        <div v-else>
+          <div v-for="(item,index) in list" :key="index">
+            <el-radio v-model="selects[0]" :label="item.uuid" style="margin-bottom:3px;">
               <el-tag size="mini" type="info">
                 <i class="el-icon-user-solid"></i>
                 {{item.name}}
               </el-tag>
-            </el-checkbox>
+            </el-radio>
           </div>
-        </el-checkbox-group>
+        </div>
       </div>
       <div v-else>
         <el-divider>未分配员工</el-divider>
@@ -33,11 +47,15 @@ export default {
   props: {
     uuid: {
       type: Number,
-      default: null
+      default: null,
     },
     index: {
-      type: Number
-    }
+      type: Number,
+    },
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -47,64 +65,56 @@ export default {
       selects: [],
       isIndeterminate: false,
       checkAll: false,
-      clearFlag: false
+      clearFlag: false,
     }
   },
   watch: {
     uuid: {
       handler(newVal, oldVal) {
         // console.log(newVal, oldVal)
-      }
+      },
     },
     clearFlag: {
       handler(newVal, oldVal) {
         // console.log('清空')
-      }
+      },
     },
     selects: {
       handler(newVal, oldVal) {
-        // console.log(newVal, oldVal)
         const pick = (source, target) =>
-          source.filter(srcItem => target.includes(srcItem.uuid))
+          source.filter((srcItem) => target.includes(srcItem.uuid))
 
         const arr = pick(this.list, newVal)
 
         if (newVal.length > oldVal.length) {
           this.$emit('output', arr)
-        //   console.log('output')
         } else if (newVal.length < oldVal.length) {
-          const intersection = oldVal.filter(item => !newVal.includes(item))
-
-        //   console.log(intersection)
+          const intersection = oldVal.filter((item) => !newVal.includes(item))
 
           if (intersection.length < 2) {
-            // console.log('单点删除')
             this.$emit('cult', intersection[0])
           } else {
-            // console.log('清空')
             this.$emit('cult', intersection)
           }
         } else {
-        //   console.log(
-        //     this.list.map(item => {
-        //       return item.uuid
-        //     }),
-        //     newVal
-        //   )
+          // if(!this.multiple){
 
-          const intersection = this.list.filter(
-            item => !newVal.includes(item.uuid)
-          )
-
-        //   console.log('unchecked', intersection)
+        //   console.log(newVal)
+          const arr = pick(this.list, newVal)
+          this.$emit('single', arr)
+          // this.$emit('output', newVal)
+          // }
+          //   const intersection = this.list.filter(
+          //     item => !newVal.includes(item.uuid)
+          //   )
         }
-      }
-    }
+      },
+    },
   },
   computed: {
     alterUuid() {
       return this.uuid
-    }
+    },
   },
   mounted() {
     this.initData(this.alterUuid)
@@ -115,33 +125,31 @@ export default {
       this.loading = true
       this.$store
         .dispatch('user/getAllUserList', payload)
-        .then(res => {
+        .then((res) => {
           this.list = res
           this.loading = false
-          this.optionsUuid = res.map(item => {
+          this.optionsUuid = res.map((item) => {
             return item.uuid
           })
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '加载失败'
+            message: err || '加载失败',
           })
         })
     },
     handleCheckAllChange(val) {
       this.selects = val ? this.optionsUuid : []
       this.isIndeterminate = false
-      //   this.$emit('output', this.selects)
     },
-    handleChange(value) {
-      console.log(value)
-      let checkedCount = value.length
+    handleChange() {
+      let checkedCount = this.selects.length
       this.checkAll = checkedCount === this.optionsUuid.length
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.optionsUuid.length
-    }
-  }
+    },
+  },
 }
 </script>
 

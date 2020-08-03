@@ -50,7 +50,7 @@
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
           <el-table-column label="操作">
             <template v-slot="scope">
-                <span v-if="row.auditStateForOperation==='UNDER_REVCIEW'" class="color-primary">审核中</span>
+                <span v-if="scope.row.auditStateForOperation==='UNDER_REVCIEW'" class="color-primary">审核中</span>
               <el-t-button v-else type="text" @click.stop="handleDelete(scope.$index)">删除</el-t-button>
             </template>
           </el-table-column>

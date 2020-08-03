@@ -94,7 +94,7 @@
     <el-form-item label="标签配置：">
       <div v-if="detail.auditAddMedia">
         <span class="color-primary font-exs" v-if="tags.length">{{matchFormat[detail.auditAddMedia[0].matchFormat]}}</span>
-        <span class="color-primary font-exs">未配置标签</span>
+        <span class="color-primary font-exs" v-else>未配置标签</span>
         <icon-tooltip>
           <div>
             <div class="font-exs color-info">包含任意：至少包含一个标签。</div>
