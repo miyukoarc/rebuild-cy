@@ -50,12 +50,14 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="最近一次阅读" align="left" prop="updatedAt"></el-table-column>
+                <el-table-column label="首次阅读" align="left" prop="createdAt"></el-table-column>
+                <el-table-column label="最近阅读" align="left" prop="updatedAt"></el-table-column>
                 <el-table-column label="阅读时长" align="left">
                     <template v-slot="{row}">
                         {{row.readTime}} 秒
                     </template>
                 </el-table-column>
+                <el-table-column label="阅读次数" align="left" prop="readCount"></el-table-column>
                 <!-- <el-table-column label="阅读时长" align="left" >
                     <span>{{Math.floor(Math.random()*10) +'min'}}</span>
                 </el-table-column> -->

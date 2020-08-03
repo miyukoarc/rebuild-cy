@@ -192,6 +192,7 @@ export default {
   },
   data() {
     return {
+      fileList: [],
       type: "",
       // userSelects: [],
       // tagSelects: [],
@@ -202,6 +203,7 @@ export default {
       form: {
         autoReplyTagType: "CONTAIN",
         autoReplyType: "CONTENT",
+        fileName: "",
         keyType: "CONTAIN",
         keyword: "",
         mediaId: "",
@@ -335,19 +337,12 @@ export default {
       //   });
     },
     handleConfirm() {
-      //   if (this.form.informType == 'USER') {
-      //     this.form.toUser = this.userSelects.map(item => {
-      //       return item.uuid
-      //     })
-      //   } else {
-      //     this.form.toRole = this.toRoles
-      //   }
-      //   this.form.setTag = this.tagSelects.reduce((sum, curr) => {
-      //     return sum.concat(curr)
-      //   }, [])
-      const payload = this.form;
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          if (this.form.autoReplyType != "FILE") {
+            this.form.fileName = "";
+          }
+          const payload = this.form;
           this.$store
             .dispatch("automatic/add", payload)
             .then(() => {
@@ -356,7 +351,7 @@ export default {
                 message: "新建成功",
               });
               this.handleCancel();
-              this.refresh();
+              this.initDataList();
             })
             .catch((err) => {
               this.$message({
@@ -390,6 +385,7 @@ export default {
     handleSetMessageFile(res, file) {
       this.messageFile = URL.createObjectURL(file.raw);
       this.form.mediaId = res.id;
+      this.form.fileName = res.name;
     },
     beforeUploadImage(file) {
       const isJPG = file.type === "image/jpeg";
@@ -461,16 +457,14 @@ export default {
     // 标签绑定事件
     handleChange() {},
     // 刷新
-    refresh() {
+    initDataList() {
       this.$store
-        .dispatch("sensitive/getSensitiveListAll")
-        .then(() => {
-          this.reload();
-        })
+        .dispatch("automatic/getListAll")
+        .then(() => {})
         .catch((err) => {
           this.$message({
             type: "error",
-            message: err,
+            message: err || "初始化失败",
           });
         });
     },

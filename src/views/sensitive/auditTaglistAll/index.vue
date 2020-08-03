@@ -343,7 +343,7 @@ export default {
   text-align: center;
 }
 
-.tag-container {
+.content-spacing .tag-container {
   display: flex;
 }
 </style>
