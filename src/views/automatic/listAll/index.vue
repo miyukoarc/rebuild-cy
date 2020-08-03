@@ -63,7 +63,7 @@
               <span v-else>--</span>
             </template>
           </el-table-column>
-          <el-table-column label="所属员工" align="left">
+          <el-table-column label="创建人" align="left">
             <template v-slot="{row}">
               <div v-if="Object.keys(row.creator).length">
                 <async-user-tag
@@ -85,8 +85,8 @@
                 type="text"
                 :popAuth="true"
                 size="mini"
-                @click.stop="handleDetail(scope.row)"
-              >详情</el-t-button>
+                @click.stop="handleEdit(scope.row)"
+              >编辑</el-t-button>
               <el-t-button
                 type="text"
                 :popAuth="true"
@@ -176,7 +176,7 @@ export default {
     doExport(val) {
       console.log(val);
     },
-     /**
+    /**
      * 初始化表格信息
      */
     initDataList(payload) {
@@ -219,7 +219,7 @@ export default {
           });
         });
     },
-   
+
     handleClickReplySwitch() {
       let payload = {
         flag: this.isReplySwitch,
@@ -230,13 +230,19 @@ export default {
         .catch((err) => {});
     },
 
-    handleDetail(row) {
+    handleEdit(row) {
       const payload = row.uuid;
-      console.log(row,'row')
-      this.$refs["formDialog"].event = "DetailTemplate";
-      this.$refs["formDialog"].eventType = "detail";
+      console.log(row, "row");
+      this.$refs["formDialog"].event = "EditTemplate";
+      this.$refs["formDialog"].eventType = "edit";
       this.$refs["formDialog"].dialogVisible = true;
-      this.$refs["formDialog"].transfer = row;
+      this.$store
+        .dispatch("automatic/automaticDetail", payload)
+        .then((res) => {
+          this.$refs["formDialog"].transfer = res;
+        })
+        .catch((err) => {});
+      // this.$refs["formDialog"].transfer = row;
       // this.$router.push({
       //   path: "/user/detail",
       //   query: { uuid: payload },
@@ -307,38 +313,38 @@ export default {
         })
         .catch((err) => {});
     },
-    handleEdit(index) {
-      let {
-        uuid,
-        type,
-        informType,
-        tagType,
-        sensitiveSetTag,
-        toUser,
-        toRole,
-        word,
-      } = this.listAll[index];
-      sensitiveSetTag = JSON.parse(JSON.stringify(sensitiveSetTag));
-      toUser = JSON.parse(JSON.stringify(toUser));
-      toRole = JSON.parse(JSON.stringify(toRole));
+    // handleEdit(index) {
+    //   let {
+    //     uuid,
+    //     type,
+    //     informType,
+    //     tagType,
+    //     sensitiveSetTag,
+    //     toUser,
+    //     toRole,
+    //     word,
+    //   } = this.listAll[index];
+    //   sensitiveSetTag = JSON.parse(JSON.stringify(sensitiveSetTag));
+    //   toUser = JSON.parse(JSON.stringify(toUser));
+    //   toRole = JSON.parse(JSON.stringify(toRole));
 
-      const transfer = {
-        uuid,
-        type,
-        informType,
-        tagType,
-        sensitiveSetTag,
-        toUser,
-        toRole,
-        word,
-      };
-      const payload = this.listAll[index];
-      this.$store.commit("sensitive/SAVE_CURRENTWORD", payload);
-      this.$refs["formDialog"].event = "EditTemplate";
-      this.$refs["formDialog"].eventType = "edit";
-      this.$refs["formDialog"].dialogVisible = true;
-      this.$refs["formDialog"].transfer = transfer;
-    },
+    //   const transfer = {
+    //     uuid,
+    //     type,
+    //     informType,
+    //     tagType,
+    //     sensitiveSetTag,
+    //     toUser,
+    //     toRole,
+    //     word,
+    //   };
+    //   const payload = this.listAll[index];
+    //   this.$store.commit("sensitive/SAVE_CURRENTWORD", payload);
+    //   this.$refs["formDialog"].event = "EditTemplate";
+    //   this.$refs["formDialog"].eventType = "edit";
+    //   this.$refs["formDialog"].dialogVisible = true;
+    //   this.$refs["formDialog"].transfer = transfer;
+    // },
     handleBatchChange() {
       if (this.rowSelects.length) {
         let sensitiveUuid = this.rowSelects.map((item) => {

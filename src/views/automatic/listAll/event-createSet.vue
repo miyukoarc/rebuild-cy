@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-07-31 22:24:13
+ * @LastEditTime: 2020-08-03 20:29:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -21,7 +21,7 @@
     <el-form-item label="图片/文章/链接" v-show="isSetAuto == true">
       <div class="msg-textarea-box full-w">
         <div class="message-box-content">
-          <el-radio-group v-model="form.autoReplyType">
+          <el-radio-group v-model="form.autoReplyType" @change="changeAutoReplyType">
             <el-radio :label="'CONTENT'">文本</el-radio>
             <el-radio :label="'IMAGE'">图片</el-radio>
             <el-radio :label="'FILE'">文件</el-radio>
@@ -29,7 +29,7 @@
           </el-radio-group>
 
           <!-- 上传图片 -->
-          <section class="message-content display-flex" v-show="form.autoReplyType == 'IMAGE'">
+          <section class="message-content display-flex" v-if="form.autoReplyType == 'IMAGE'">
             <div class="img-warp">
               <el-upload
                 class="avatar-uploader"
@@ -71,7 +71,7 @@
           </section>-->
 
           <!-- 上传文件 -->
-          <section class="message-content display-flex" v-show="form.autoReplyType == 'FILE'">
+          <section class="message-content display-flex" v-if="form.autoReplyType == 'FILE'">
             <div class="img-warp">
               <el-upload
                 action="/api/upload"
@@ -83,12 +83,12 @@
                 :show-file-list="true"
                 :file-list="fileList"
               >
-                <el-button size="small" type="primary" v-show="!messageFile">点击上传</el-button>
+                <el-button size="small" type="primary" v-show="fileList.length<=0">点击上传</el-button>
               </el-upload>
             </div>
           </section>
 
-          <div class="message-content" v-show="form.autoReplyType == 'ARTICLE'">
+          <div class="message-content" v-if="form.autoReplyType == 'ARTICLE'">
             <el-select
               :popper-append-to-body="false"
               v-model="form.mediaId"
@@ -235,12 +235,12 @@ export default {
         autoReplyType: "CONTENT",
         mediaId: "",
         reply: "",
+        fileName: "",
       },
       fileList: [],
       messageImage: "",
       messageVideo: "",
       messageFile: "",
-      mediaId: "",
       welcomecontentT: {},
       rules: {
         rule: [{ required: true, message: "请输入规则名称", trigger: "blur" }],
@@ -291,9 +291,12 @@ export default {
         });
     },
     handleConfirm() {
-      const payload = this.form;
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          if (this.form.autoReplyType != "FILE") {
+            this.form.fileName = "";
+          }
+          const payload = this.form;
           this.$store
             .dispatch("automatic/automaticAddDefault", payload)
             .then(() => {
@@ -320,6 +323,9 @@ export default {
         }
       });
     },
+    changeAutoReplyType(val) {
+      this.form.mediaId = "";
+    },
     handleChangeRepeatTime(val) {
       let payload = { flag: this.repeat, interval: this.repeatTime };
       this.$store
@@ -337,10 +343,28 @@ export default {
     setAutoRepaly() {
       this.isSetAuto = true;
       this.$nextTick(() => {
+        if (this.automaticDefaultDetail.autoReplyType == "FILE") {
+          this.fileList = [];
+          if (this.automaticDefaultDetail.mediaUrl) {
+            this.fileList.push({
+              name: this.automaticDefaultDetail.fileName,
+              url: this.automaticDefaultDetail.mediaUrl,
+            });
+          }
+        }
+        if (this.automaticDefaultDetail.autoReplyType == "IMAGE") {
+          this.messageImage = this.automaticDefaultDetail.mediaUrl;
+        }
+        if (this.automaticDefaultDetail.autoReplyType == "ARTICLE") {
+          this.form.mediaId = Number(this.automaticDefaultDetail.mediaId);
+          this.handleChoseLink(this.form.mediaId);
+        } else {
+          this.form.mediaId = this.automaticDefaultDetail.mediaId;
+        }
         this.form.autoReplyType = this.automaticDefaultDetail.autoReplyType
           ? this.automaticDefaultDetail.autoReplyType
           : "CONTENT";
-        this.form.mediaId = this.automaticDefaultDetail.mediaId;
+
         this.form.reply = this.automaticDefaultDetail.replyWord;
       });
     },
@@ -353,6 +377,7 @@ export default {
       console.log(file);
       this.messageFile = URL.createObjectURL(file.raw);
       this.form.mediaId = res.id;
+      this.form.fileName = res.name;
     },
     beforeUploadImage(file) {
       const isJPG = file.type === "image/jpeg";

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-17 23:18:57
- * @LastEditTime: 2020-08-03 10:24:43
+ * @LastEditTime: 2020-08-03 16:10:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\listAll\dialog.vue
@@ -75,7 +75,7 @@ export default {
       }
 
       if (this.eventType === "edit") {
-        return "编辑敏感词";
+        return "编辑自动回复";
       }
       if (this.eventType === "detail") {
         return "详情";
