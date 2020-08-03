@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-03 10:13:30
- * @LastEditTime: 2020-08-03 14:35:45
+ * @LastEditTime: 2020-08-03 20:28:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\listAll\event-detail.vue
@@ -9,28 +9,37 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" label-width="120px" label-position="left">
     <el-form-item label="规则名称" prop="rule" maxlength="15" show-word-limit>
-      <el-input v-model.trim="form.rule" placeholder="请输入规则名称"></el-input>
+      <!-- <el-input v-model.trim="form.rule" placeholder="请输入规则名称"></el-input> -->
+      <span>{{form.rule}}</span>
     </el-form-item>
 
     <el-form-item label="关键词" prop="keyWord">
-      <el-input v-model.trim="form.keyword">
-        <el-select v-model="form.keyType" slot="prepend" placeholder="请选择" style="width:100px">
+      <span>
+        <el-select
+          v-model="form.keyType"
+          slot="prepend"
+          placeholder="请选择"
+          style="width:100px"
+          disabled
+        >
           <el-option label="包含" value="CONTAIN"></el-option>
           <el-option label="完全匹配" value="COMPLETE"></el-option>
         </el-select>
-      </el-input>
+        {{form.keyword}}
+      </span>
     </el-form-item>
 
     <el-form-item label="文字消息">
       <div class="full-w">
-        <el-input v-model="form.reply" type="textarea" :rows="6" placeholder="请输入文字消息"></el-input>
+        <!-- <el-input v-model="form.reply" type="textarea" :rows="6" placeholder="请输入文字消息"></el-input> -->
+        <span>{{form.reply}}</span>
       </div>
     </el-form-item>
 
     <el-form-item label="图片/文章/链接">
       <div class="msg-textarea-box full-w">
         <div class="message-box-content">
-          <el-radio-group v-model="form.autoReplyType">
+          <el-radio-group v-model="form.autoReplyType" @change="changeAutoReplyType">
             <el-radio :label="'IMAGE'">图片</el-radio>
             <el-radio :label="'FILE'">文件</el-radio>
             <el-radio :label="'ARTICLE'">文章</el-radio>
@@ -91,7 +100,7 @@
                 :show-file-list="true"
                 :file-list="fileList"
               >
-                <el-button size="small" type="primary" v-show="!messageFile">点击上传</el-button>
+                <el-button size="small" type="primary" v-show="messageFile == ''">点击上传</el-button>
               </el-upload>
             </div>
           </section>
@@ -187,7 +196,7 @@ export default {
   },
   data() {
     return {
-      fileList:[],
+      fileList: [],
       type: "",
       // userSelects: [],
       // tagSelects: [],
@@ -199,7 +208,7 @@ export default {
         autoReplyTagType: "CONTAIN",
         autoReplyType: "CONTENT",
         keyType: "CONTAIN",
-        fileName:'',
+        fileName: "",
         keyword: "",
         mediaId: "",
         reply: "",
@@ -234,21 +243,33 @@ export default {
     };
   },
   watch: {
-     transfer:{
-          handler(newVal,oldVal){
-              console.log(newVal,'3333')
-         this.form.autoReplyTagType= newVal.autoReplyTagType;
-         this.form.autoReplyType=newVal.autoReplyType;
-        //  this.form.keyType= ;
-         this.form.fileName=newVal.fileName;
-         this.form.keyword= newVal.keyword;
-         this.form.mediaId= newVal.mediaId;
-         this.form.reply= newVal.reply;
-         this.form.rule= newVal.ruleWord;
-         this.form.tagIdList= newVal.autoReplyTags;
+    transfer: {
+      handler(newVal, oldVal) {
+        console.log(newVal, "3333");
+        this.form.autoReplyTagType = newVal.autoReplyTagType;
+        this.form.autoReplyType = newVal.autoReplyType;
+        this.form.keyType = newVal.keyType;
+        this.form.fileName = newVal.fileName;
+        this.form.keyword = newVal.keyWord;
+        this.form.mediaId = newVal.mediaId;
+        this.form.reply = newVal.replyWord;
+        this.form.rule = newVal.ruleWord;
+        let tagLists = [];
+        if (newVal.autoReplyTags != "{}" && newVal.autoReplyTags.length > 0) {
+          newVal.autoReplyTags.map((item) => {
+            item.tags.map((tag) => {
+              tagLists.push(tag.uuid);
+            });
+          });
+        }
+        this.fileList = [];
+        if (newVal.fileName && newVal.mediaUrl) {
+          this.fileList.push({ name: newVal.fileName, url: newVal.mediaUrl });
+        }
+        this.form.tagIdList = tagLists;
       },
-          immediate:true
-      }
+      immediate: true,
+    },
     // "form.reply": {
     //   handler(newVal, oldVal) {
     //     if (newVal.indexOf('<span class="nickName">客户昵称</span>') > -1) {
@@ -351,9 +372,13 @@ export default {
       //   this.form.setTag = this.tagSelects.reduce((sum, curr) => {
       //     return sum.concat(curr)
       //   }, [])
-      const payload = this.form;
+
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          if (this.form.autoReplyType != "FILE") {
+            this.form.fileName = "";
+          }
+          const payload = this.form;
           this.$store
             .dispatch("automatic/add", payload)
             .then(() => {
@@ -378,11 +403,8 @@ export default {
         }
       });
     },
-    // 插入 客户名称
-    insertionMemberName(memberNick) {
-      this.insertName = false;
-      this.form.reply =
-        this.form.reply + `<span class="nickName">${memberNick}</span>&#8203;`;
+    changeAutoReplyType(val) {
+      this.form.mediaId = "";
     },
     // 回复内容 上传
     handleSetMessageImage(res, file) {
@@ -430,7 +452,25 @@ export default {
       return isLt50M;
     },
     beforeRemoveFile(file) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+      this.$confirm(`确定移除 ${file.name}？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.fileList = [];
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+      // this.$confirm(`确定移除 ${file.name}？`);
     },
     handleClear() {
       this.form.mediaId = "";
