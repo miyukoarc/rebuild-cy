@@ -5,7 +5,8 @@ import {
     batchAdd,
     allocation,
     deletePotentialCustomer,
-    batchAddTask
+    batchAddTask,
+    potentialCustomerUpdate
 } from '@/api/potentialCustomer'
 
 const state = {
@@ -105,6 +106,26 @@ const actions = {
             getListMy(payload).then((res) => {
                 commit('SAVE_LISTMY', res.items)
                 commit('SET_LISTMYPAGE', res)
+                commit('TOGGLE_LOADING', false)
+                resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+                console.error(err)
+                reject(err)
+            })
+        })
+    },
+    /**
+     * 编辑潜在客户
+     * @param {*} param0 
+     * @param {object} payload 
+     */
+    potentialCustomerUpdate({
+        commit
+    }, payload) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            potentialCustomerUpdate(payload).then((res) => {
                 commit('TOGGLE_LOADING', false)
                 resolve()
             }).catch(err => {

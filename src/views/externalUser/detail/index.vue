@@ -52,7 +52,7 @@
                 >
                   <span class="group-name">{{key}}：</span>
                   <el-tag
-                    type="primary"
+                    type="info"
                     size="mini"
                     style="margin-right:5px;margin-bottom:5px"
                     v-for="item in companyTags"
@@ -120,6 +120,13 @@
                   </div>
                 </template>
               </el-table-column>
+
+              <el-table-column label="来源" align="left">
+                <template v-slot="scope">
+                  <span>{{scope.row.addWay?externalUserAddwayType[scope.row.addWay]:'--'}}</span>
+                </template>
+              </el-table-column>
+
               <el-table-column label="添加渠道" align="left">
                 <template v-slot="scope">
                   <span
@@ -134,18 +141,16 @@
               </el-table-column>
               <el-table-column label="个人标签" align="left">
                 <template v-slot="scope">
-                  <div>
-                    <div v-if="scope.row.individualTags">
-                      <el-tag
-                        size="mini"
-                        type="primary"
-                        v-for="(item,index) in scope.row.individualTags"
-                        :key="index"
-                        style="margin-right:3px;"
-                      >{{ item.tagName }}</el-tag>
-                    </div>
-                    <span v-else>--</span>
+                  <div v-if="scope.row.individualTags !=null">
+                    <el-tag
+                      size="mini"
+                      type="primary"
+                      v-for="(item,index) in scope.row.individualTags"
+                      :key="index"
+                      style="margin-right:3px;"
+                    >{{ item.tagName }}</el-tag>
                   </div>
+                  <span v-else>--</span>
                 </template>
               </el-table-column>
               <el-table-column label="最近联系时间" align="left">
@@ -176,33 +181,33 @@
             <div
               v-if="externalUserDetail.externalUserDetailGroupChatsList && limitedListGroup.length>0"
             >
-              <transition-group name="fade">
-                <div
-                  v-for="(item,index) in limitedListGroup"
-                  :key="index"
-                  class="has-group flex-between-alinecenter"
-                >
-                  <div class="group-list flex-between-alinecenter">
-                    <div class="group-list-left flex-column-center-alinecenter">
-                      <svg-icon icon-class="groupChat" class="svg-icon" />
-                      <p style="margin:0px;">群聊</p>
-                    </div>
-                    <div class="group-item-info">
-                      <p
-                        style="margin:0px;"
-                      >{{ item.name }} {{item.lastGroupChatTime?item.lastGroupChatTime:''}}</p>
-                      <div class="group-item-content display-flex align-items-center">
-                        <span>群主：</span>
-                        <!-- <img :src="defaultAvatar" alt /> -->
-                        <strong>{{ item.owner?item.owner:'--' }}</strong>
-                        <i>|</i>
-                        <span>共 {{ item.number }} 位成员</span>
-                      </div>
+              <!-- <transition-group name="fade"> -->
+              <div
+                v-for="(item,index) in limitedListGroup"
+                :key="index"
+                class="has-group flex-between-alinecenter"
+              >
+                <div class="group-list flex-between-alinecenter">
+                  <div class="group-list-left flex-column-center-alinecenter">
+                    <svg-icon icon-class="groupChat" class="svg-icon" />
+                    <p style="margin:0px;">群聊</p>
+                  </div>
+                  <div class="group-item-info">
+                    <p
+                      style="margin:0px;"
+                    >{{ item.name }} {{item.lastGroupChatTime?item.lastGroupChatTime:''}}</p>
+                    <div class="group-item-content display-flex align-items-center">
+                      <span>群主：</span>
+                      <!-- <img :src="defaultAvatar" alt /> -->
+                      <strong>{{ item.owner?item.owner:'--' }}</strong>
+                      <i>|</i>
+                      <span>共 {{ item.number }} 位成员</span>
                     </div>
                   </div>
-                  <span class="check-chatting-detail" @click="handleGroupRouter(item)">查看</span>
                 </div>
-              </transition-group>
+                <span class="check-chatting-detail" @click="handleGroupRouter(item)">查看</span>
+              </div>
+              <!-- </transition-group> -->
               <div class="open-all" @click="unlimited">
                 <span
                   v-if="limited"
@@ -306,7 +311,7 @@ export default {
         microBlog: "微博",
         address: "地址",
         email: "邮箱",
-        createtime: "时间"
+        createtime: "时间",
       },
       currentIndex: "",
       currentInput: "",
@@ -317,7 +322,7 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
@@ -325,8 +330,8 @@ export default {
         size: 10,
         uuid: "",
         startTime: "",
-        endTime: ""
-      }
+        endTime: "",
+      },
     };
   },
 
@@ -343,14 +348,15 @@ export default {
   },
   computed: {
     ...mapState({
-      loading: state => state.externalUser.loading,
-      listGroup: state => state.externalUser.listGroup,
-      externalUserDetail: state => state.externalUser.externalUserDetail,
-      externalUserTrendsListAllPage: state =>
+      loading: (state) => state.externalUser.loading,
+      listGroup: (state) => state.externalUser.listGroup,
+      externalUserDetail: (state) => state.externalUser.externalUserDetail,
+      externalUserTrendsListAllPage: (state) =>
         state.externalUserTrends.externalUserTrendsListAllPage,
-      externalUserTrendsListAll: state =>
+      externalUserTrendsListAll: (state) =>
         state.externalUserTrends.externalUserTrendsListAll,
-      permissionMap: state => state.permission.permissionMap
+      permissionMap: (state) => state.permission.permissionMap,
+      externalUserAddwayType: (state) => state.enum.externalUserAddwayType,
     }),
     externalUserTrends() {
       return this.externalUserDetail?.externalUserTrends?.items;
@@ -373,7 +379,7 @@ export default {
       } else {
         return this.externalUserDetail.externalUserDetailGroupChatsList;
       }
-    }
+    },
   },
   created() {
     const uuid = this.$route.params.uuid;
@@ -397,10 +403,10 @@ export default {
       this.$store
         .dispatch("externalUser/getExternalUserDetail", payload)
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: err || "初始化失败"
+            message: err || "初始化失败",
           });
         });
     },
@@ -413,11 +419,11 @@ export default {
             this.externalUserTrendsListAllPage.pageNumber + 1;
           this.pageConfig.total = this.externalUserTrendsListAllPage.total;
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           this.$message({
             type: "error",
-            message: err || "初始化失败"
+            message: err || "初始化失败",
           });
         });
     },
@@ -461,11 +467,11 @@ export default {
       //   .externalUserId;
       const query = {
         uuid: this.query.uuid,
-        userId
+        userId,
       };
       this.$router.push({
         path: "/message/singleListAll",
-        query
+        query,
       });
     },
     // 群
@@ -474,8 +480,8 @@ export default {
       this.$router.push({
         path: "/externalUser/groupDetail",
         query: {
-          chatId: item.groupId
-        }
+          chatId: item.groupId,
+        },
       });
     },
     mouseEnter(value, key) {
@@ -487,7 +493,7 @@ export default {
           if (!isMobilePhone(this.inputValue)) {
             this.$message({
               message: "请输入正确的手机号",
-              type: "warning"
+              type: "warning",
             });
             return;
           }
@@ -499,29 +505,29 @@ export default {
               {
                 propertyUuid: value.propertyUuid,
                 sort: 0,
-                value: this.inputValue
-              }
-            ]
+                value: this.inputValue,
+              },
+            ],
           };
           this.$store
             .dispatch(
               "externalUser/propertyUpdateExternalUserProperty",
               payload
             )
-            .then(res => {
+            .then((res) => {
               this.currentInput = "";
               this.inputValue = "";
               this.$message({
                 type: "success",
-                message: "操作成功"
+                message: "操作成功",
               });
               this.initDetail(this.query.uuid);
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
               this.$message({
                 type: "error",
-                message: err
+                message: err,
               });
             });
         } else {
@@ -551,13 +557,13 @@ export default {
     },
     handleDeleteTrend(item) {
       const payload = {
-        uuid: item.uuid
+        uuid: item.uuid,
       };
 
       this.$confirm("是否删除当前动态", "Warning", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           await this.$store
@@ -565,19 +571,19 @@ export default {
             .then(() => {
               this.$message({
                 type: "success",
-                message: "操作成功"
+                message: "操作成功",
               });
               this.query.page = 0;
               this.initExternalUserTrendsListAll(this.query);
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: "error",
-                message: err
+                message: err,
               });
             });
         })
-        .catch(err => {});
+        .catch((err) => {});
     },
     handleScroll() {
       var scrollTop =
@@ -606,8 +612,8 @@ export default {
         console.log("0009999");
         this.initExternalUserTrendsListAll(this.query, "push");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

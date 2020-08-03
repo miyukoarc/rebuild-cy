@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-11 11:15:45
- * @LastEditTime: 2020-07-22 21:01:53
+ * @LastEditTime: 2020-07-30 16:33:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\contactWay\detail.vue
@@ -52,12 +52,13 @@
                             size="small"
                             @change="handleCheckedTagsChange(tagGroup,index)"
                           >
-                            <el-checkbox
+                            <el-checkbox-button
                               v-for="(tag,idx) in tagGroup.tagList"
                               :key="idx"
                               :label="tag.uuid"
                               border
-                            >{{ tag.tagName }}</el-checkbox>
+                              style="margin-bottom:5px;margin-right:5px"
+                            >{{ tag.tagName }}</el-checkbox-button>
                           </el-checkbox-group>
                         </div>
                       </el-col>

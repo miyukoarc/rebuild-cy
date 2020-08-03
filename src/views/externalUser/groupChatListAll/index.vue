@@ -54,130 +54,126 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
+        <customer-pagination
+          :pageConfig="pageConfig"
           @current-change="changePage"
-        />
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
-
-    <form-dialog ref="formDialog"></form-dialog>
   </div>
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from "./detail.vue";
-import ListHeader from "./header.vue";
-import FormDialog from "./dialog";
-import ToolBar from "./tool-bar";
-import { mapState, mapMutations, mapActions } from "vuex";
+import ListHeader from './header.vue'
+import { mapState, mapMutations, mapActions } from 'vuex'
+
+import ToolBar from '@/components/ToolBar'
+import CustomerPagination from '@/components/CustomerPagination'
 
 export default {
   components: {
     ListHeader,
-    UserDetail,
-    FormDialog,
-    ToolBar
-    // mHeadedr
+    ToolBar,
+    CustomerPagination,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
         page: 0,
         size: 10,
-        externalUuid: "",
-        userId: ""
-      }
-    };
+        externalUuid: '',
+        userId: '',
+      },
+    }
   },
   watch: {},
   computed: {
     ...mapState({
       //   roleList: state => state.role.roleList,
-      listOwner: state => state.externalUser.departmentList,
+      listOwner: (state) => state.externalUser.departmentList,
 
-      loading: state => state.externalUser.loading,
-      listGroup: state => state.externalUser.listGroup,
-      listGroupPage: state => state.externalUser.listGroupPage,
+      loading: (state) => state.externalUser.loading,
+      listGroup: (state) => state.externalUser.listGroup,
+      listGroupPage: (state) => state.externalUser.listGroupPage,
 
-      permissionMap: state => state.permission.permissionMap
-    })
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
-    this.initDataList(this.query);
-    this.initFilter();
+    this.initDataList(this.query)
+    this.initFilter()
   },
   mounted() {},
   beforeDestroy() {},
   methods: {
     doExport(val) {
-      console.log(val);
+      console.log(val)
     },
     initFilter() {
       this.$store
-        .dispatch("externalUser/getListOwner")
+        .dispatch('externalUser/getListOwner')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
     initDataList(payload) {
       this.$store
-        .dispatch("externalUser/getListGroup", payload)
+        .dispatch('externalUser/getListGroup', payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.listGroupPage.pageNumber + 1;
-          this.pageConfig.total = this.listGroupPage.total;
+          this.pageConfig.pageNumber = this.listGroupPage.pageNumber + 1
+          this.pageConfig.total = this.listGroupPage.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
     handleDetail(val) {
-      const chatId = this.listGroup[val].chatId;
+      const chatId = this.listGroup[val].chatId
       this.$router.push({
-        path: "/externalUser/groupDetail",
-        query: { chatId }
-      });
+        path: '/externalUser/groupDetail',
+        query: { chatId },
+      })
     },
     handleSearch(val) {
-      const { externalUuid, userId } = val;
+      const { externalUuid, userId } = val
       this.query.externalUuid = externalUuid
         ? externalUuid
-        : this.query.externalUuid;
-      this.query.userId = userId ? userId : this.query.userId;
-      this.initDataList(this.query);
+        : this.query.externalUuid
+      this.query.userId = userId ? userId : this.query.userId
+      this.query.page = 0
+      this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log("handleRefresh");
-      this.query = this.$options.data().query;
-      this.initDataList(this.query);
+
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
     },
     changePage(key) {
-      this.query.page = key - 1;
-      this.pageConfig.pageNumber = key - 1;
-      this.initDataList(this.query);
-    }
-  }
-};
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key - 1
+      this.initDataList(this.query)
+    },
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -188,17 +184,4 @@ export default {
   padding: 20px 0;
   text-align: center;
 }
-// .app-container {
-//   border-top: 1px solid #e9e9e9;
-//   background: white;
-//   .roles-table {
-//     margin-top: 30px;
-//   }
-//   .permission-tree {
-//     margin-bottom: 30px;
-//   }
-// }
-// header .el-header button {
-//   margin-right: 5px;
-// }
 </style>

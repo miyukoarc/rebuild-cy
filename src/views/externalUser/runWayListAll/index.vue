@@ -17,10 +17,11 @@
           row-key="uuid"
           stripe
           lazy
+          fit
           highlight-current-row
           header-row-class-name="el-table-header"
         >
-          <!-- <el-table-column type="selection"></el-table-column> -->
+
           <el-table-column label="流失客户" align="left">
             <template v-slot="scope">
               <div class="user-card">
@@ -55,9 +56,7 @@
                   {{item.name}}
                 </async-user-tag>
               </div>
-              <!-- <!-- <div v-if="Object.keys(row.toRole).length">
-                <role-drawer :roles="row.toRole"></role-drawer>
-              </div>-->
+
             </template>
           </el-table-column>
           <el-table-column label="标签" align="left">
@@ -69,10 +68,7 @@
           <el-table-column label="流失类型" align="left">
             <template v-slot="scope">{{scope.row.delFollow?'被客户删除':'主动删除客户'}}</template>
           </el-table-column>
-          <!-- <el-table-column label="渠道来源" align="left">
-            <template v-slot="scope">
-            </template>
-          </el-table-column>-->
+
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
               <el-button
@@ -80,52 +76,40 @@
                 size="mini"
                 @click.stop="handleDetail(scope.$index,scope.row)"
               >详情</el-button>
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />
+        <customer-pagination 
+        :pageConfig="pageConfig" 
+        @current-change="changePage" 
+        @size-change="changeSize">
+        </customer-pagination>
+
       </div>
     </el-card>
-
-    <form-dialog ref="formDialog"></form-dialog>
   </div>
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
-import FormDialog from "./dialog";
 import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 import AsyncUserTag from "@/components/AsyncUserTag";
 import TagsDrawerObj from "@/components/TagsDrawerObj";
 import UserTag from "@/components/UserTag";
+import CustomerPagination from '@/components/CustomerPagination'
 
 export default {
   name: "runWayListAll",
   components: {
     ListHeader,
-    UserDetail,
-    FormDialog,
     ToolBar,
     AsyncUserTag,
     TagsDrawerObj,
-    UserTag
-    // mHeadedr
+    UserTag,
+    CustomerPagination
   },
   data() {
     return {
@@ -210,7 +194,7 @@ export default {
 
     handleDetail(index, row) {
       this.$router.push({
-        path: `/externalUser/detail/${row.uuid}`,
+        path: `/externalUser/detail/${row.externalUser.uuid}`,
         query: { userId: row.user.userId }
       });
     },
@@ -238,8 +222,9 @@ export default {
       this.query.userUuid = userUuid ? userUuid : this.query.userUuid;
       this.query.startTime = startTime ? startTime : this.query.startTime;
       this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.query.page = 0
       // this.query.delFollow = delFollow ? delFollow : this.query.delFollow;
-      console.log(val, "handleSearch");
+    //   console.log(val, "handleSearch");
       this.initDataList(this.query);
     },
     handleRefresh() {
@@ -254,6 +239,10 @@ export default {
     },
     doExport(val) {
       console.log(val);
+    },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
     }
   }
 };

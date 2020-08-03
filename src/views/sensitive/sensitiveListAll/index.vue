@@ -24,12 +24,6 @@
             :auth="permissionMap['riskManagement']['riskManagement_add']"
             @click.stop="handleBatchChange"
           >设置通知人</el-t-button>
-          <!-- <el-t-button
-            type="primary"
-            :popAuth="true"
-            :auth="permissionMap['riskManagement']['riskManagement_add']"
-            @click.stop="handleCreate"
-          >设置适用敏感词</el-t-button>-->
         </div>
       </tool-bar>
     </el-card>
@@ -88,9 +82,6 @@
                 <div>{{row.tagType=='INSET'?'包含其一':'全部满足'}}</div>
                 <tags-drawer :tags="row.sensitiveSetTag"></tags-drawer>
               </div>
-              <!-- <div v-if="Object.keys(row.sensitiveSetTag).length>1"> -->
-              <!-- </div> -->
-              <!-- <div v-else>--</div> -->
             </template>
           </el-table-column>
 
@@ -147,11 +138,9 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from './detail.vue'
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import TagsDrawer from '@/components/TagsDrawer'
@@ -161,21 +150,19 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar,
     AsyncUserTag,
     AsyncUserDrawer,
     RoleDrawer,
-    TagsDrawer
-    // mHeadedr
+    TagsDrawer,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
@@ -183,27 +170,35 @@ export default {
         size: 10,
         startTime: '',
         endTime: '',
-        word: ''
+        word: '',
       },
-      rowSelects: []
+      rowSelects: [],
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      //   tagListAll: state => state.tag.tagListAll,
+      loading: (state) => state.sensitive.loading,
+      listAll: (state) => state.sensitive.sensitiveListAll,
+      page: (state) => state.sensitive.sensitivePage,
 
-      loading: state => state.sensitive.loading,
-      listAll: state => state.sensitive.sensitiveListAll,
-      page: state => state.sensitive.sensitivePage,
-
-      permissionMap: state => state.permission.permissionMap
-    })
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
     this.initDataList(this.query)
     this.initFilter()
   },
+  mounted(){
+      this.$bus.$on('handleRefresh',()=>{
+          this.initDataList(this.query)
+      })
+
+      this.$once('hook:beforeDestroy',()=>{
+          this.$bus.$off('handleRefresh')
+      })
+  },
+
   methods: {
     doExport(val) {
       console.log(val)
@@ -212,32 +207,23 @@ export default {
      * 初始化筛选信息
      */
     initFilter() {
-      //   this.$store
-      //     .dispatch('sensitive/getSensitiveListAll')
-      //     .then(() => {})
-      //     .catch(err => {
-      //       this.$message({
-      //         type: 'error',
-      //         message: '初始化失败'
-      //       })
-      //     })
       this.$store
         .dispatch('tag/getListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
 
       this.$store
         .dispatch('user/getUserListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -252,10 +238,10 @@ export default {
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -263,7 +249,7 @@ export default {
       const payload = this.userList[val].uuid
       this.$router.push({
         path: '/user/detail',
-        query: { uuid: payload }
+        query: { uuid: payload },
       })
     },
     handleSearch(val) {
@@ -294,7 +280,7 @@ export default {
       this.$confirm('是否删除当前敏感词', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(async () => {
           await this.$store
@@ -302,18 +288,18 @@ export default {
             .then(() => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               this.initDataList(this.query)
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: err
+                message: err,
               })
             })
         })
-        .catch(err => {})
+        .catch((err) => {})
     },
     handleEdit(index) {
       // let { toUser, type, uuid, word } = this.listAll[index]
@@ -330,7 +316,7 @@ export default {
         sensitiveSetTag,
         toUser,
         toRole,
-        word
+        word,
       } = this.listAll[index]
       sensitiveSetTag = JSON.parse(JSON.stringify(sensitiveSetTag))
       toUser = JSON.parse(JSON.stringify(toUser))
@@ -344,7 +330,7 @@ export default {
         sensitiveSetTag,
         toUser,
         toRole,
-        word
+        word,
       }
       const payload = this.listAll[index]
       this.$store.commit('sensitive/SAVE_CURRENTWORD', payload)
@@ -355,7 +341,7 @@ export default {
     },
     handleBatchChange() {
       if (this.rowSelects.length) {
-        let sensitiveUuid = this.rowSelects.map(item => {
+        let sensitiveUuid = this.rowSelects.map((item) => {
           return item.uuid
         })
         // sensitiveUuid = JSON.parse(JSON.stringify(sensitiveUuid))
@@ -367,14 +353,14 @@ export default {
       } else {
         this.$message({
           type: 'warning',
-          message: '请至少选择一项'
+          message: '请至少选择一项',
         })
       }
     },
     handleSelectionChange(val) {
       this.rowSelects = val
-    }
-  }
+    },
+  },
 }
 </script>
 

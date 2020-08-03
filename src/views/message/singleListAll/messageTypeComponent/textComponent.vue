@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-25 11:41:08
+ * @LastEditTime: 2020-07-28 16:01:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -12,17 +12,24 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
-        <div class="left">
-          <span>{{ item.msgContent }}</span>
+        <div style="margin-right:20px;margin-top:5px">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div class="right">
+            <span>{{ item.msgContent }}</span>
+          </div>
         </div>
       </div>
     </div>
     <div v-if="item.fromUser == toUserId" class="text-right">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
-        <div class="right">
-          <span>{{ item.msgContent }}</span>
+        <div style="margin-right:20px;margin-top:5px">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div class="right">
+            <span>{{ item.msgContent }}</span>
+          </div>
         </div>
+
         <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
@@ -47,7 +54,7 @@ export default {
   min-height: 35px;
   position: relative;
   display: table;
-  text-align: center;
+  // text-align: center;
   border-radius: 5px;
 }
 .left {
@@ -58,9 +65,9 @@ export default {
 }
 .right {
   /*使左右的对话框分开*/
-  max-width: 50%;
-  left: -20px;
-  top: 8px;
+  // max-width: 50%;
+  // left: -20px;
+  // top: 8px;
   background-color: #cce4fc;
 }
 .left > span,

@@ -27,7 +27,7 @@
               <span>同一个企业每个自然月内仅可针对一个客户/客户群发4条消息，超过限制的用户将会被忽略。</span>
             </el-form-item>
             <el-form-item label="选择群发账号：" prop="userUuid">
-              <el-select v-model="form.userUuid" placeholder="请选择" @change="changeUser">
+              <el-select v-model="form.userUuid" placeholder="请选择" filterable @change="changeUser">
                 <el-option
                   v-for="item in userListAll"
                   :key="item.uuid"
@@ -40,6 +40,8 @@
             <div class="run-way-list-all-header">
               <el-form-item label="客户标签：">
                 <div class="tag-border">
+
+                    <!-- <tag-multi-select v-model="query.tagIds"></tag-multi-select> -->
                   <el-select v-model="query.tagIds" @change="initDataList" size="mini" multiple>
                     <el-option-group
                       v-for="item in tagListSelect"
@@ -115,7 +117,8 @@
                           :on-success="handleSetMessageImage"
                           :before-upload="beforeUploadImage"
                         >
-                          <img v-if="messageImage" :src="messageImage" class="avatar" />
+                        <el-image fit="contain" class="avatar" v-if="messageImage" :src="messageImage"></el-image>
+                          <!-- <img v-if="messageImage" :src="messageImage" class="avatar" /> -->
                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                         <i
@@ -232,6 +235,7 @@
                 :disabled="isSendImmediately"
                 type="datetime"
                 placeholder="选择日期时间"
+                :default-time="['00:00:00', '23:59:59']"
               ></el-date-picker>
             </el-form-item>
 
@@ -248,10 +252,11 @@
 <script>
 import { mapState } from "vuex";
 import inputEdit from "@/components/inputEdit";
+import TagMultiSelect from '@/components/TagMultiSelect'
 import { getExternalUserListAll } from "@/api/externalUser";
 export default {
   inject: ["reload"],
-  components: { inputEdit },
+  components: { inputEdit,TagMultiSelect },
   data() {
     return {
       isSendImmediately: true,
@@ -416,7 +421,7 @@ export default {
                 message: "操作成功",
               });
               this.handleCancel();
-              this.refresh();
+              this.handleRefresh();
             })
             .catch((err) => {
               this.$message({
@@ -512,6 +517,9 @@ export default {
       this.form.text =
         this.form.text + `<span class="nickName">${memberNick}</span>&#8203;`;
     },
+    handleRefresh(){
+        this.$bus.$emit('handleRefresh')
+    }
   },
 };
 </script>

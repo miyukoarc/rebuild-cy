@@ -27,7 +27,7 @@
           lazy
           fit
           highlight-current-row
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="二维码" align="left">
@@ -100,16 +100,11 @@
             </template>
           </el-table-column>
         </el-table>
-
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
+        <customer-pagination
+          :pageConfig="pageConfig"
           @current-change="changePage"
-        />
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -118,88 +113,76 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from "./detail.vue";
-import ListHeader from "./header.vue";
-import FormDialog from "./dialog";
-import ToolBar from "./tool-bar";
-import { mapState, mapMutations, mapActions } from "vuex";
+import ListHeader from './header.vue'
+import FormDialog from './dialog'
+import ToolBar from '@/components/ToolBar'
+import CustomerPagination from '@/components/CustomerPagination'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
-    ToolBar
-    // mHeadedr
+    ToolBar,
+    CustomerPagination,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
         page: 0,
         size: 10,
-        remark: ""
-      }
-    };
+        remark: '',
+      },
+    }
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
+      tagListAll: (state) => state.tag.tagListAll,
 
-      loading: state => state.contactWay.loading,
-      listAll: state => state.contactWay.list,
-      page: state => state.contactWay.listPage,
-      permissionMap: state => state.permission.permissionMap
+      loading: (state) => state.contactWay.loading,
+      listAll: (state) => state.contactWay.list,
+      page: (state) => state.contactWay.listPage,
+      permissionMap: (state) => state.permission.permissionMap,
     }),
   },
   created() {
-    this.initDataList(this.query);
+    this.initDataList(this.query)
     // this.initFilter();
   },
   methods: {
     doExport(val) {
-      console.log(val);
+      console.log(val)
     },
     /**
      * 初始化筛选信息
      */
     initFilter() {
-      // this.$store
-      //   .dispatch('tag/getListAllTag')
-      //   .then(() => {})
-      //   .catch(err => {
-      //     this.$message({
-      //       type: 'error',
-      //       message: '初始化失败'
-      //     })
-      //   })
+      this.$store
+        .dispatch('tag/getListSelect')
+        .then(() => {})
+        .catch((err) => {
+          this.$message({
+            type: 'error',
+            message: err,
+          })
+        })
 
       this.$store
-        .dispatch("tag/getListSelect")
+        .dispatch('user/getUserListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: err
-          });
-        });
-
-      this.$store
-        .dispatch("user/getUserListSelect")
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: "error",
-            message: err
-          });
-        });
+            type: 'error',
+            message: err,
+          })
+        })
       // this.$store
       //   .dispatch('user/getAllUserList')
       //   .then(() => {})
@@ -215,117 +198,115 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch("contactWay/getList", payload)
+        .dispatch('contactWay/getList', payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1;
-          this.pageConfig.total = this.page.total;
-          console.log(this.pageConfig, "pageconfig");
+          this.pageConfig.pageNumber = this.page.pageNumber + 1
+          this.pageConfig.total = this.page.total
+          console.log(this.pageConfig, 'pageconfig')
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
     // 详情弹出框
     handleDetail(index, row) {
-      this.$refs["formDialog"].event = "DetailTemplate";
-      this.$refs["formDialog"].eventType = "detail";
-      this.$refs["formDialog"].dialogVisible = true;
-      this.$store.commit("contactWay/SAVE_CONTACTWAYDETAILROW", row);
-      // const payload = this.userList[val].uuid;
-      // this.$router.push({
-      //   path: "/user/detail",
-      //   query: { uuid: payload }
-      // });
+      this.$refs['formDialog'].event = 'DetailTemplate'
+      this.$refs['formDialog'].eventType = 'detail'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$store.commit('contactWay/SAVE_CONTACTWAYDETAILROW', row)
     },
     // 下载渠道码
     downLoad(row) {
-      console.log(row, "下载");
-      this.downloadIamge(row.qrCode, row.remark);
+      console.log(row, '下载')
+      this.downloadIamge(row.qrCode, row.remark)
     },
     downloadIamge(imgsrc, name) {
       // 下载图片地址和图片名
-      const image = new Image();
-      image.setAttribute("crossOrigin", "anonymous");
-      image.onload = function() {
-        const canvas = document.createElement("canvas");
-        canvas.width = image.width;
-        canvas.height = image.height;
-        const context = canvas.getContext("2d");
-        context.drawImage(image, 0, 0, image.width, image.height);
-        const url = canvas.toDataURL("image/png"); // 得到图片的base64编码数据
-        const a = document.createElement("a"); // 生成一个a元素
-        const event = new MouseEvent("click"); // 创建一个单击事件
-        a.download = name || "photo"; // 设置图片名称
-        a.href = url; // 将生成的URL设置为a.href属性
-        a.dispatchEvent(event); // 触发a的单击事件
-      };
-      image.src = imgsrc;
+      const image = new Image()
+      image.setAttribute('crossOrigin', 'anonymous')
+      image.onload = function () {
+        const canvas = document.createElement('canvas')
+        canvas.width = image.width
+        canvas.height = image.height
+        const context = canvas.getContext('2d')
+        context.drawImage(image, 0, 0, image.width, image.height)
+        const url = canvas.toDataURL('image/png') // 得到图片的base64编码数据
+        const a = document.createElement('a') // 生成一个a元素
+        const event = new MouseEvent('click') // 创建一个单击事件
+        a.download = name || 'photo' // 设置图片名称
+        a.href = url // 将生成的URL设置为a.href属性
+        a.dispatchEvent(event) // 触发a的单击事件
+      }
+      image.src = imgsrc
     },
     handleSearch(val) {
-      const { remark } = val;
-      this.query.remark = remark ? remark : this.query.remark;
-      console.log(val, "handleSearch");
-      this.initDataList(this.query);
+      const { remark } = val
+      this.query.remark = remark ? remark : this.query.remark
+      this.query.page = 0
+      this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log("handleRefresh");
-      this.query = this.$options.data().query;
-      this.initDataList(this.query);
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
     },
     changePage(key) {
-      this.query.page = key - 1;
-      this.pageConfig.pageNumber = key - 1;
-      this.initDataList(this.query);
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key - 1
+      this.initDataList(this.query)
     },
     // 新建渠道码
     newChannelCode() {
       this.$router.push({
         path: `/contactWay/detail`,
-      });
+      })
     },
     handleEdit(row) {
-      console.log(row, "row");
+
       this.$router.push({
         path: `/contactWay/detail`,
-        query: { uuid: row.uuid }
-      });
+        query: { uuid: row.uuid },
+      })
     },
     // 删除渠道码
     handleDelete(row) {
-      console.log("delChannel", row);
-      this.$confirm("删除后不可恢复, 确定删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+
+      this.$confirm('删除后不可恢复, 确定删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(async () => {
           const params = {
-            configId: row.configId
-          };
+            configId: row.configId,
+          }
           this.$store
-            .dispatch("contactWay/deleteContactWay", params)
+            .dispatch('contactWay/deleteContactWay', params)
             .then(() => {
               this.$message({
-                type: "success",
-                message: "删除成功!"
-              });
-              this.initDataList(this.query);
+                type: 'success',
+                message: '删除成功!',
+              })
+              this.initDataList(this.query)
             })
-            .catch(err => {});
+            .catch((err) => {})
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消"
-          });
-        });
+            type: 'info',
+            message: '已取消',
+          })
+        })
+    },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
     }
-  }
-};
+  },
+}
 </script>
 
 <style lang="scss" scoped>

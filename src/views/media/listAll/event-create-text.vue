@@ -16,12 +16,6 @@
           </el-t-button>
         </div>
       </el-form-item>
-      <!-- <el-form-item label>
-        <el-t-button size="mini" @click="handleAddContent">
-          <i class="el-icon-plus"></i>
-          添加内容
-        </el-t-button>
-      </el-form-item> -->
 
       <el-divider></el-divider>
       <h3>素材配置</h3>
@@ -34,15 +28,7 @@
       </el-form-item>
       <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>
 
-      <el-form-item label="引用条例">
-        <!-- <div>
-          <el-radio v-model="matchFormat" label="CONTAINS_ANY">包含其一</el-radio>
-          <el-radio v-model="matchFormat" label="PERFECT_MATCH ">完全匹配</el-radio>
-        </div> -->
-        <!-- <el-select v-model="select"> -->
-
-        <!-- </el-select> -->
-      </el-form-item>
+      <el-form-item label="引用条例"></el-form-item>
 
       <div class="text-align-center">
         <el-button size="small" @click="handleCancel">取消</el-button>
@@ -57,13 +43,13 @@ import { mapState } from 'vuex'
 import TagSelect from '@/components/TagSelect'
 export default {
   components: {
-    TagSelect
+    TagSelect,
   },
   props: {
     transfer: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -72,7 +58,7 @@ export default {
       form: {},
       type: 'TEXT',
       groupUuid: '',
-      matchFormat: 'CONTAINS_ANY'
+      matchFormat: 'CONTAINS_ANY',
     }
   },
   watch: {
@@ -82,13 +68,14 @@ export default {
         const { uuid } = newVal
         this.groupUuid = uuid
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      tagListSelect: state => state.tag.tagListSelect
-    })
+      tagListSelect: (state) => state.tag.tagListSelect,
+      auditSetting: (state) => state.sensitive.auditSetting,
+    }),
   },
   created() {
     this.initData()
@@ -99,10 +86,10 @@ export default {
       this.$store
         .dispatch('tag/getListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
     },
@@ -117,36 +104,40 @@ export default {
       const content = this.content[0]
       const groupUuid = this.groupUuid
       const type = this.type
-      const tagUuids = this.tagSelects.reduce((sum,curr)=>{
+      const tagUuids = this.tagSelects
+        .reduce((sum, curr) => {
           return sum.concat(curr)
-      },[])
+        }, [])
+        .join(',')
       const matchFormat = this.matchFormat
       const data = { tagUuids, matchFormat }
-      const params = { groupUuid, type, content }
+      const params = { groupUuid, type, content, ...data }
 
-      this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate((valid) => {
         if (valid) {
-          //   console.log(payload)
           this.$store
-            .dispatch('media/addMediaIsAudit', { data, params })
+            .dispatch('media/addMediaIsAudit', { params })
             .then(() => {
+              const message = this.auditSetting['media']
+                ? '已提交审核'
+                : '已完成'
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: message,
               })
               this.handleCancel()
-              this.refresh()
+              this.handleRefresh()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: '操作失败'
+                message: '操作失败',
               })
             })
         } else {
           this.$message({
             type: 'error',
-            message: '请检查输入'
+            message: '请检查输入',
           })
         }
       })
@@ -154,20 +145,10 @@ export default {
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
     },
-    refresh() {
-      this.$store
-        .dispatch('media/getMediaGroupListAll')
-        .then(() => {
-          //   this.reload();
-        })
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: err
-          })
-        })
+    handleRefresh(){
+        this.$bus.$emit('handleRefresh')
     }
-  }
+  },
 }
 </script>
 

@@ -118,23 +118,15 @@
                 size="mini"
                 @click.stop="handleDelete(scope.row)"
               >删除</el-t-button>
-              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
+        <customer-pagination
+          :pageConfig="pageConfig"
           @current-change="changePage"
-        />
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -143,143 +135,138 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from "./detail.vue";
-import ListHeader from "./header.vue";
-
-import AsyncUserTag from "@/components/AsyncUserTag";
-import TagsDrawer from "@/components/TagsDrawer";
-
-import FormDialog from "./dialog";
-import ToolBar from "./tool-bar";
-import { mapState, mapMutations, mapActions } from "vuex";
-import { truncate } from "fs";
+import ListHeader from './header.vue'
+import AsyncUserTag from '@/components/AsyncUserTag'
+import TagsDrawer from '@/components/TagsDrawer'
+import FormDialog from './dialog'
+import ToolBar from '@/components/ToolBar'
+import CustomerPagination from '@/components/CustomerPagination'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
     ToolBar,
     TagsDrawer,
-    AsyncUserTag
-    // mHeadedr
+    AsyncUserTag,
+    CustomerPagination,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
         page: 0,
         size: 10,
-        name: "",
-        belongUuid: "",
-        creatorUuid: "",
-        startTime: "",
-        endTime: "",
-        flag: "",
-        min: "",
-        max: ""
+        name: '',
+        belongUuid: '',
+        creatorUuid: '',
+        startTime: '',
+        endTime: '',
+        flag: '',
+        min: '',
+        max: '',
       },
 
-      selects: []
-    };
+      selects: [],
+    }
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      loading: state => state.potentialCustomer.loading,
-      listAll: state => state.potentialCustomer.listAll,
-      page: state => state.potentialCustomer.listAllPage,
-      permissionMap: state => state.permission.permissionMap
-    })
+      tagListAll: (state) => state.tag.tagListAll,
+      loading: (state) => state.potentialCustomer.loading,
+      listAll: (state) => state.potentialCustomer.listAll,
+      page: (state) => state.potentialCustomer.listAllPage,
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
-    this.initDataList(this.query);
-    this.initFilter();
+    this.initDataList(this.query)
+    this.initFilter()
   },
   mounted() {
-    this.$bus.$on("handleRefresh", () => {
-      this.initDataList(this.query);
-    });
-  },
-  beforeDestroy() {
-    this.$bus.$off("handleRefresh");
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
   },
   methods: {
     doExport(val) {
-      console.log(val);
+      console.log(val)
     },
     /**
      * 初始化筛选信息
      */
     initFilter() {
       this.$store
-        .dispatch("tag/getListSelect")
+        .dispatch('tag/getListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
 
       this.$store
-        .dispatch("department/getDepartmentListAll")
+        .dispatch('department/getDepartmentListAll')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: err || "初始化失败"
-          });
-        });
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
 
       this.$store
-        .dispatch("user/getUserListSelect")
+        .dispatch('user/getUserListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch("potentialCustomer/getList", payload)
+        .dispatch('potentialCustomer/getList', payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1;
-          this.pageConfig.total = this.page.total;
+          this.pageConfig.pageNumber = this.page.pageNumber + 1
+          this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
     handleDetail(val) {
-      const payload = this.userList[val].uuid;
+      const payload = this.userList[val].uuid
       this.$router.push({
-        path: "/user/detail",
-        query: { uuid: payload }
-      });
+        path: '/user/detail',
+        query: { uuid: payload },
+      })
     },
     handleSearch(val) {
       if (val.max < val.min) {
-        let tmp;
-        tmp = val.max;
-        val.max = val.min;
-        val.min = tmp;
+        let tmp
+        tmp = val.max
+        val.max = val.min
+        val.min = tmp
       }
       const {
         belongUuid,
@@ -289,128 +276,126 @@ export default {
         max,
         min,
         name,
-        startTime
-      } = val;
+        startTime,
+      } = val
       if (val.flag == 2) {
-        this.query.flag = true;
-        this.query.min = min;
-        this.query.max = max;
+        this.query.flag = true
+        this.query.min = min
+        this.query.max = max
       } else if (val.flag == 1) {
-        this.query.flag = "";
-        this.query.min = "";
-        this.query.max = "";
+        this.query.flag = ''
+        this.query.min = ''
+        this.query.max = ''
       } else {
-        this.query.flag = false;
-        this.query.min = 0;
-        this.query.max = 0;
+        this.query.flag = false
+        this.query.min = 0
+        this.query.max = 0
       }
-      this.query.name = name ? name : "";
-      this.query.belongUuid = belongUuid ? belongUuid : "";
-      this.query.creatorUuid = creatorUuid ? creatorUuid : "";
-      this.query.endTime = endTime ? endTime : "";
-      this.query.startTime = startTime ? startTime : "";
-      console.log(this.query, "query");
-      this.initDataList(this.query);
+      this.query.name = name ? name : ''
+      this.query.belongUuid = belongUuid ? belongUuid : ''
+      this.query.creatorUuid = creatorUuid ? creatorUuid : ''
+      this.query.endTime = endTime ? endTime : ''
+      this.query.startTime = startTime ? startTime : ''
+      this.query.page = 0
+      this.initDataList(this.query)
     },
     sortNumber(max, min) {
-      return max - min;
+      return max - min
     },
     handleRefresh() {
-      console.log("handleRefresh");
-      this.query = this.$options.data().query;
-      this.initDataList(this.query);
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
     },
     changePage(key) {
-      this.query.page = key - 1;
-      this.pageConfig.pageNumber = key - 1;
-      this.initDataList(this.query);
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key - 1
+      this.initDataList(this.query)
     },
     handleCreate() {
-      this.$refs["formDialog"].event = "CreateTemplate";
-      this.$refs["formDialog"].eventType = "create";
-      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs['formDialog'].event = 'CreateTemplate'
+      this.$refs['formDialog'].eventType = 'create'
+      this.$refs['formDialog'].dialogVisible = true
     },
     handleDistribute() {
-      const uuid = this.selects.map(item => {
-        return item.uuid;
-      });
+      const uuid = this.selects.map((item) => {
+        return item.uuid
+      })
 
-      const payload = { uuid };
+      const payload = { uuid }
       if (this.selects.length) {
-        this.$refs["formDialog"].event = "DistributeTemplate";
-        this.$refs["formDialog"].eventType = "distribute";
-        this.$refs["formDialog"].dialogVisible = true;
-        this.$refs["formDialog"].transfer = payload;
+        this.$refs['formDialog'].event = 'DistributeTemplate'
+        this.$refs['formDialog'].eventType = 'distribute'
+        this.$refs['formDialog'].dialogVisible = true
+        this.$refs['formDialog'].transfer = payload
       } else {
         this.$message({
-          type: "warning",
-          message: "请至少选择一个客户"
-        });
+          type: 'warning',
+          message: '请至少选择一个客户',
+        })
       }
     },
     handleAllocation(row) {
-      row.uuid = [row.uuid];
-      this.$refs.multipleTable.clearSelection();
-      this.handleSelectionChange([row]);
-      this.selects.forEach(row => {
-        this.$refs.multipleTable.toggleRowSelection(row);
-      });
-      this.$refs["formDialog"].event = "DistributeTemplate";
-      this.$refs["formDialog"].eventType = "distribute";
-      this.$refs["formDialog"].dialogVisible = true;
-      this.$refs["formDialog"].transfer = row;
+      row.uuid = [row.uuid]
+      this.$refs.multipleTable.clearSelection()
+      this.handleSelectionChange([row])
+      this.selects.forEach((row) => {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      })
+      this.$refs['formDialog'].event = 'DistributeTemplate'
+      this.$refs['formDialog'].eventType = 'distribute'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = row
     },
     handleEdit(row) {
-      const { belong, uuid, mobile } = row;
-      let selectedTag = [];
-      row.potentialCustomerTags.map(item => {
-        item.tags.map(tag => {
-          selectedTag.push(tag.tagId);
-        });
-      });
-      const payload = { belong, uuid, selectedTag, mobile };
-      this.$refs["formDialog"].event = "EditTemplate";
-      this.$refs["formDialog"].eventType = "edit";
-      this.$refs["formDialog"].dialogVisible = true;
-      this.$refs["formDialog"].transfer = payload;
+      const { belong, uuid, mobile, name } = row
+      let selectedTag = []
+      row.potentialCustomerTags.map((item) => {
+        item.tags.map((tag) => {
+          selectedTag.push(tag.tagId)
+        })
+      })
+      const payload = { belong, uuid, selectedTag, mobile, name }
+      this.$refs['formDialog'].event = 'EditTemplate'
+      this.$refs['formDialog'].eventType = 'edit'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = payload
     },
     handleDelete(row) {
-      const { uuid } = row;
-      const payload = { uuid: [uuid] };
-      this.$confirm("是否删除当前客户", "删除潜在客户", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      const { uuid } = row
+      const payload = { uuid: [uuid] }
+      this.$confirm('是否删除当前客户', '删除潜在客户', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(async () => {
           await this.$store
-            .dispatch("potentialCustomer/deletePotentialCustomer", payload)
+            .dispatch('potentialCustomer/deletePotentialCustomer', payload)
             .then(() => {
               this.$message({
-                type: "success",
-                message: "操作成功"
-              });
-              this.initDataList();
+                type: 'success',
+                message: '操作成功',
+              })
+              this.initDataList()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
-                type: "error",
-                message: err
-              });
-            });
+                type: 'error',
+                message: err,
+              })
+            })
         })
-        .catch(err => {});
+        .catch((err) => {})
     },
     handleSelectionChange(val) {
-      console.log(val, "9999");
-      // const arr = val;
-      this.selects = val;
-      // this.selects = arr.map(item => {
-      //   return item.uuid;
-      // });
-    }
-  }
-};
+      this.selects = val
+    },
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

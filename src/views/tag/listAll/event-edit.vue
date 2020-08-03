@@ -39,13 +39,11 @@
         <el-button size="small" type="text" @click="handleAddTag">添加标签</el-button>
       </el-form-item>
 
-      <!-- <el-form-item   label> -->
       <div style="text-align:center;">
         <el-t-button size="small" @click="handleCancel">取消</el-t-button>
         <el-t-button size="small" type="primary" @click="handleConfirm">确定</el-t-button>
       </div>
 
-      <!-- </el-form-item> -->
     </el-form>
   </div>
 </template>
@@ -59,26 +57,36 @@ export default {
       form: {
         groupId: '',
         groupName: '',
-        tagList: []
+        tagList: [],
       },
       deleteFlagTag: false,
       rules: {
         groupName: [
           { required: true, message: '请输入标签组名称', trigger: 'blur' },
-          { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
+          {
+            min: 1,
+            max: 15,
+            message: '长度在 1 到 15 个字符',
+            trigger: 'blur',
+          },
         ],
         tagName: [
           { required: true, message: '请输入标签名称', trigger: 'blur' },
-          { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
-        ]
-      }
+          {
+            min: 1,
+            max: 15,
+            message: '长度在 1 到 15 个字符',
+            trigger: 'blur',
+          },
+        ],
+      },
     }
   },
   computed: {
     ...mapState({
-      currentGroup: state => state.tag.currentGroup,
-      auditSetting: state => state.sensitive.auditSetting
-    })
+      currentGroup: (state) => state.tag.currentGroup,
+      auditSetting: (state) => state.sensitive.auditSetting,
+    }),
   },
   watch: {
     currentGroup: {
@@ -89,7 +97,7 @@ export default {
         this.$set(
           this.form,
           'tagList',
-          newVal.tags.map(item => {
+          newVal.tags.map((item) => {
             return { ...item }
           })
         )
@@ -97,48 +105,60 @@ export default {
         //   console.log()
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     handleAddTag() {
       this.form.tagList.push({
-        tagName: ''
+        tagName: '',
       })
     },
     handleCancel() {
       this.closeDialog()
     },
     handleConfirm() {
+      const deleteFlag = this.form.tagList.every((item) => {
+        return item.deleted === true
+      })
+      if (!deleteFlag) {
+        this.doConfirm()
+      } else {
+        this.$confirm('删除所有标签将删除标签组，是否删除标签组？', 'Warning', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+          .then(async () => {
+            await this.doConfirm()
+          })
+          .catch((err) => {})
+      }
+    },
+    doConfirm() {
       const form = JSON.parse(JSON.stringify(this.form))
-    //   Reflect.deleteProperty(form, 'sort')
+
       const payload = form
 
       this.$store
-        .dispatch('tag/updateTagIsAudit',payload)
+        .dispatch('tag/updateTagIsAudit', payload)
         .then(() => {
+          const message = this.auditSetting['tag'] ? '已提交审核' : '已完成'
           this.$message({
             type: 'success',
-            message: '操作成功'
+            message: message,
           })
-          this.reload()
+          this.handleFresh()
           this.closeDialog()
-          //   this.handleFresh()
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '操作失败'
+            message: '操作失败',
           })
         })
     },
-    handleEdit() {
-      console.log(this.form)
-      
-    },
     handleDelete(index, item) {
-      //   this.form.tagList.splice(index, 1)
-      // console.log(item)
       let payload = null
       if (item.hasOwnProperty('deleted')) {
         //原有删除
@@ -149,9 +169,6 @@ export default {
         // alert('新增删除')
         this.form.tagList.splice(index, 1)
       }
-      //   this.deleteFlagTag = true
-      // this.form.
-      console.log(this.form, item)
     },
     closeDialog() {
       this.$parent.$parent.dialogVisible = false
@@ -160,18 +177,18 @@ export default {
       this.$confirm('是否删除当前标签组', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
           const groupId = this.form.groupId
           const groupName = this.form.groupName
-          const tagIds = this.form.tagList.map(item => {
+          const tagIds = this.form.tagList.map((item) => {
             return item.tagId
           })
           const payload = {
             groupId,
             groupName,
-            tagIds
+            tagIds,
           }
 
           this.closeDialog()
@@ -179,30 +196,28 @@ export default {
           this.$store
             .dispatch('tag/deleteTagIsAudit', payload)
             .then(() => {
-              const message = this.auditSetting['tag']
-                ? '已提交审核'
-                : '已完成'
+              const message = this.auditSetting['tag'] ? '已提交审核' : '已完成'
               this.$message({
                 type: 'success',
-                message: message
+                message: message,
               })
 
-              this.reload()
+              this.handleFresh()
               //   this.handleFresh()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: '操作失败'
+                message: '操作失败',
               })
             })
 
           this.form = this.$options.data().form
         })
-        .catch(err => {})
+        .catch((err) => {})
     },
     handleFresh() {
-      this.$bus.$emit('handleRequset')
+      this.$bus.$emit('handleRequest')
     },
     checkState(item) {
       if (item.hasOwnProperty('deleted')) {
@@ -212,8 +227,8 @@ export default {
           return true
         }
       } else return true
-    }
-  }
+    },
+  },
 }
 </script>
 

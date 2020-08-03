@@ -23,7 +23,7 @@
           header-row-class-name="el-table-header"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column :selectable="selectable" type="selection" width="55"></el-table-column>
           <el-table-column label="创建人">
             <template v-slot="scope">
               <div>{{scope.row.creator.name}}</div>
@@ -33,16 +33,22 @@
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
           <el-table-column label="操作">
             <template v-slot="{row}">
-              <!-- <el-t-button type="text" @click.stop="handleEdit(scope.$index)">编辑</el-t-button> -->
-              <el-t-button type="text" @click.stop="handleDelete(row.uuid)">删除</el-t-button>
+              <span v-if="row.auditStateForOperation==='UNDER_REVCIEW'" class="color-primary"></span>
+              <el-t-button v-else type="text" @click.stop="handleDelete(row.uuid)">删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>
 
-        <card-grid v-else ref="cardGrid" v-model="selects" :options="listAll" @handleDelete="handleDelete"></card-grid>
+        <card-grid
+          v-else
+          ref="cardGrid"
+          v-model="selects"
+          :options="listAll"
+          @handleDelete="handleDelete"
+        ></card-grid>
       </keep-alive>
     </div>
-     <dialog-transfer
+    <dialog-transfer
       ref="dialogTransfer"
       :options="groupListAll"
       v-model="groupUuid"
@@ -60,35 +66,36 @@ export default {
   components: {
     BoardHeader,
     CardGrid,
-    DialogTransfer
+    DialogTransfer,
   },
   data() {
     return {
-        selects: [],
-        groupUuid: 0,
-        mode: 'list'
+      selects: [],
+      groupUuid: 0,
+      mode: 'list',
     }
   },
-  watch:{
-      //取消头部全选
-      selects:{
-          handler(newVal,oldVal){
-              if(newVal.length!==this.listAll.length){
-                  this.$nextTick(()=>{
-                      this.$refs['boardHeader'].checked = false
-                  })
-              }
-          },immediate:true
-      }
+  watch: {
+    //取消头部全选
+    selects: {
+      handler(newVal, oldVal) {
+        if (newVal.length !== this.listAll.length) {
+          this.$nextTick(() => {
+            this.$refs['boardHeader'].checked = false
+          })
+        }
+      },
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      loading: state => state.media.loading,
-      permissionMap: state => state.permission.permissionMap,
-      listAll: state => state.media.textListAll,
-      mediaType: state => state.enum.mediaType,
-      groupListAll: state => state.media.mediaGroupListAll
-    })
+      loading: (state) => state.media.loading,
+      permissionMap: (state) => state.permission.permissionMap,
+      listAll: (state) => state.media.textListAll,
+      mediaType: (state) => state.enum.mediaType,
+      groupListAll: (state) => state.media.mediaGroupListAll,
+    }),
   },
   methods: {
     handleEdit(val) {},
@@ -102,7 +109,7 @@ export default {
       this.$emit('handleDelete', arr)
     },
     handleSelectionChange(val) {
-      this.selects = val.map(item => {
+      this.selects = val.map((item) => {
         return item.uuid
       })
     },
@@ -130,7 +137,7 @@ export default {
       } else {
         this.$message({
           type: 'warning',
-          message: '请至少勾选一项！'
+          message: '请至少勾选一项！',
         })
       }
     },
@@ -141,7 +148,7 @@ export default {
       } else {
         this.$message({
           type: 'warning',
-          message: '请至少选择一项！'
+          message: '请至少选择一项！',
         })
       }
     },
@@ -154,8 +161,11 @@ export default {
     },
     handleAddMedia() {
       this.$emit('handleCreateText')
-    }
-  }
+    },
+    selectable(row, index) {
+      return row.auditStateForOperation !== 'UNDER_REVCIEW'
+    },
+  },
 }
 </script>
 

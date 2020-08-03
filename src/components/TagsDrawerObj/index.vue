@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-09 17:59:52
- * @LastEditTime: 2020-07-17 11:38:40
+ * @LastEditTime: 2020-07-29 19:21:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\TagDrawerObj\index.vue
@@ -9,11 +9,10 @@
 <template>
   <div>
     <div class="drawer-container" v-if="JSON.stringify(alterGroups) != '{}'">
-      <transition-group name="fade">
-        <div class="drawer-item" v-for="(group,key,index) in alterGroups" :key="index">
+        <div class="drawer-item" v-for="(group,key) in alterGroups" :key="key">
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="8">
-              <div class="font-es group-name">{{key}}：</div>
+              <div class="font-exs color-info group-name">{{key}}：</div>
             </el-col>
             <el-col :span="16">
               <div class="tags-container">
@@ -28,7 +27,6 @@
             </el-col>
           </el-row>
         </div>
-      </transition-group>
       <div class="text-align-center" v-if="total>2">
         <el-button type="text" size="mini" @click="curly=!curly">
           <span>{{curly?'展开':'收起'}}</span>

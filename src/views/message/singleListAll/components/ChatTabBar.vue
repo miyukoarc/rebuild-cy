@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-15 11:38:19
- * @LastEditTime: 2020-07-23 11:53:46
+ * @LastEditTime: 2020-07-29 17:43:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\components\ChatTabBar.vue
@@ -71,7 +71,7 @@ export default {
         },
         {
           label: "视频语音通话",
-          name: "voiceVideo"
+          name: "meeting_voice_call"
         }
       ]
     };

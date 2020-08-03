@@ -12,7 +12,7 @@
       <el-input v-model.trim="query.externalUuid" clearable></el-input>
     </el-form-item>
     <el-form-item label="全部群主：">
-      <el-select v-model="query.userId" clearable @change="handleChangeSecond">
+      <el-select v-model="query.userId" clearable filterable>
         <el-option
           v-for="item in listOwner"
           :key="item.userId"
@@ -21,16 +21,6 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <!-- <el-form-item label="员工角色">
-      <el-select v-model="query.roleUuid" @change="handleChangeThird">
-        <el-option
-          v-for="item in roleList"
-          :key="item.uuid"
-          :label="item.name"
-          :value="item.uuid"
-        ></el-option>
-      </el-select>
-    </el-form-item>-->
 
     <div>
       <el-form-item label=" ">
@@ -59,15 +49,12 @@ export default {
   },
   methods: {
     handleChangeFirst(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {

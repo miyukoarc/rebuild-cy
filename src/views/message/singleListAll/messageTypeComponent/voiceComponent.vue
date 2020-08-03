@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-07-25 15:03:24
+ * @LastEditTime: 2020-07-28 16:38:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -13,6 +13,7 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="user-select">
             <div
               class="audio-left display-flex align-items-center"
@@ -33,6 +34,7 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="user-select">
             <div
               class="audio-right display-flex align-items-center"
@@ -105,16 +107,36 @@ export default {
       var amr = new BenzAMRRecorder();
       amr.initWithUrl(url).then(() => {
         // amr.isPlaying() 返回音频的播放状态 是否正在播放 返回boolean类型
-        if (amr.isPlaying()) {
-          that.isPlayAudio = false;
-          amr.stop();
-        } else {
+        console.log(amr.isPlaying(), "rrrr");
+        if (!amr.isPlaying()) {
+          console.log("2");
           amr.play();
           that.isPlayAudio = true;
+          console.log(amr.isPlaying(), "play");
+        } else {
+          console.log("1");
+          that.isPlayAudio = false;
+          amr.stop();
         }
+        console.log(that.isPlayAudio,'4444',amr.isPlaying())
+      });
+      // amr.onIsPlaying(()=>{
+      //   console.log('3')
+      // })
+      amr.onPlay(function () {
+        console.log("开始播放");
+        // amr.stop();
+        console.log(that.isPlayAudio,'5555')
+        // this.isPlayAudio = true;
+        // amr.play();
+      });
+      amr.onStop(function () {
+        console.log("停止播放");
+        console.log(that.isPlayAudio,'66666')
+        // this.isPlayAudio = false;
       });
       amr.onEnded(() => {
-        this.isPlayAudio = false;
+        that.isPlayAudio = false;
       });
     },
   },

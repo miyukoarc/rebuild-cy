@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-25 17:43:01
+ * @LastEditTime: 2020-07-30 16:24:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -13,14 +13,15 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="card-warp">
             <div class="card-top">
               <div class="card--top-left display-flex justify-content-space-between">
                 <div class="display-flex flex-direction-column justify-content-space-between">
-                  <p>腾讯</p>
-                  <p class="name">陆浩然</p>
+                  <p>{{item.messageMedias[0].corpName}}</p>
+                  <p class="name">{{item.messageMedias[0].corpUserName}}</p>
                 </div>
-                <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" alt />
+                <img :src="item.messageMedias[0].corpUserAvatar" alt />
               </div>
             </div>
             <div class="line"></div>
@@ -30,18 +31,19 @@
       </div>
     </div>
 
-    <div v-if="item.fromUser == fromUserId" class="right-warp">
+    <div v-if="item.fromUser == toUserId" class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="card-warp">
             <div class="card-top">
               <div class="card--top-left display-flex justify-content-space-between">
                 <div class="display-flex flex-direction-column justify-content-space-between">
                   <p>腾讯</p>
-                  <p class="name">陆浩然</p>
+                  <p class="name">{{item.messageMedias[0].corpUserName}}</p>
                 </div>
-                <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" alt />
+                <img :src="item.messageMedias[0].corpUserAvatar" alt />
               </div>
             </div>
             <div class="line"></div>
@@ -79,6 +81,7 @@ export default {
       max-width: 50%;
       margin-left: 20px;
       margin-top: 5px;
+      
       .card-warp {
         width: 238px;
         border: 1px solid #eee;

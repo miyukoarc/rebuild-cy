@@ -1,29 +1,31 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="群发状态：">
-      <el-select v-model="query.value1" placeholder="请选择">
+      <el-select v-model="query.value1" placeholder="请选择" disabled>
         <el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="群发类型：">
-      <el-select v-model="query.value2" placeholder="请选择">
+      <el-select v-model="query.value2" placeholder="请选择" disabled>
         <el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="创建员工：">
-      <el-select v-model="query.value3" placeholder="请选择">
+      <el-select v-model="query.value3" placeholder="请选择" disabled>
         <el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
     </el-form-item>
 
     <el-form-item label="发送时间">
       <el-date-picker
+      disabled
         v-model="query.value4"
         type="daterange"
         :value-format="'yyyy-MM-dd HH-mm-ss'"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+        :default-time="['00:00:00', '23:59:59']"
       ></el-date-picker>
     </el-form-item>
 

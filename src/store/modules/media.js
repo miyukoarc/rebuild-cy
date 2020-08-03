@@ -201,7 +201,6 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getArticleListSelect().then(res => {
-        console.log(res, 'resddddd')
         commit('SAVE_ARTICLELISTSELECT', res.items)
         commit('TOGGLE_LOADING', false)
         resolve()
@@ -350,7 +349,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getArticleDetail(payload).then(res => {
         commit('SAVE_ARTICLEDETAIL', res)
-        resolve()
+        resolve(res)
       }).catch(err => {
         reject(err)
       })

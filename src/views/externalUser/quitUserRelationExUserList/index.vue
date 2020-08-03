@@ -82,22 +82,16 @@
                 size="mini"
                 @click.stop="handleDetail(scope.row)"
               >详情</el-t-button>
-              <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
-              <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
-              <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
 
-        <!-- <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
+
+        <customer-pagination
+          :pageConfig="pageConfig"
           @current-change="changePage"
-        />-->
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -106,178 +100,167 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from "./detail.vue";
-import ListHeader from "./header.vue";
-import FormDialog from "./dialog";
-import ToolBar from "./tool-bar";
-
-import { mapState, mapMutations, mapActions } from "vuex";
+import ListHeader from './header.vue'
+import FormDialog from './dialog'
+import ToolBar from './tool-bar'
+import CustomerPagination from '@/components/CustomerPagination'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-  name: "runWayListAll",
+  name: 'runWayListAll',
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
-    ToolBar
-    // mHeadedr
+    ToolBar,
+    CustomerPagination,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
         page: 0,
         size: 10,
-        status: "",
-        name: "",
-        startTime: "",
-        endTime: ""
+        status: '',
+        name: '',
+        startTime: '',
+        endTime: '',
       },
       // 选择勾选
-      selectedAllData: []
-    };
+      selectedAllData: [],
+    }
   },
   watch: {},
   computed: {
     ...mapState({
-      //   tagListAll: state => state.tag.tagListAll,
-      loading: state => state.externalUser.loading,
-      quitUserRelationExUserListUserStatus: state =>
+
+      loading: (state) => state.externalUser.loading,
+      quitUserRelationExUserListUserStatus: (state) =>
         state.enum.quitUserRelationExUserListUserStatus,
-      quitUserRelationExUserList: state =>
+      quitUserRelationExUserList: (state) =>
         state.externalUser.quitUserRelationExUserList,
-      quitListPage: state => state.externalUser.quitListPage,
-      permissionMap: state => state.permission.permissionMap
-    })
+      quitListPage: (state) => state.externalUser.quitListPage,
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
-    this.initDataList(this.query);
-    this.initFilter();
+    this.initDataList(this.query)
+    this.initFilter()
   },
   mounted() {
-    this.$bus.$on("handleRefresh", () => {
-      this.initDataList(this.query);
-    });
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
+
+    this.$once('hook:beforeDestroy',()=>{
+        this.$bus.$off('handleRefresh')
+    })
   },
   methods: {
     doExport(val) {
-      console.log(val);
+      console.log(val)
     },
     /**
      * 初始化筛选信息
      */
     initFilter() {
-      // this.$store
-      //   .dispatch("tag/getListSelect")
-      //   .then(() => {})
-      //   .catch(err => {
-      //     this.$message({
-      //       type: "error",
-      //       message: err || "初始化失败"
-      //     });
-      //   });
-      this.$store
-        .dispatch("department/getDepartmentListAll")
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: "error",
-            message: err || "初始化失败"
-          });
-        });
 
-      // this.$store
-      //   .dispatch("user/getUserListSelect")
-      //   .then(() => {})
-      //   .catch(err => {
-      //     this.$message({
-      //       type: "error",
-      //       message: "初始化失败"
-      //     });
-      //   });
+      this.$store
+        .dispatch('department/getDepartmentListAll')
+        .then(() => {})
+        .catch((err) => {
+          this.$message({
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
+
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch("externalUser/getQuitUserRelationExUserList", payload)
+        .dispatch('externalUser/getQuitUserRelationExUserList', payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.quitListPage.pageNumber + 1;
-          this.pageConfig.total = this.quitListPage.total;
+          this.pageConfig.pageNumber = this.quitListPage.pageNumber + 1
+          this.pageConfig.total = this.quitListPage.total
         })
-        .catch(err => {
-          console.error(err);
+        .catch((err) => {
+          console.error(err)
           this.$message({
-            type: "error",
-            message: err || "初始化失败"
-          });
-        });
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
     },
     handleSearch(val) {
-      const { name, status, startTime, endTime } = val;
-      this.query.name = name ? name : this.query.name;
-      this.query.status = status ? status : this.query.status;
-      this.query.startTime = startTime ? startTime : this.query.startTime;
-      this.query.endTime = endTime ? endTime : this.query.endTime;
-      this.initDataList(this.query);
+      const { name, status, startTime, endTime } = val
+      this.query.name = name ? name : this.query.name
+      this.query.status = status ? status : this.query.status
+      this.query.startTime = startTime ? startTime : this.query.startTime
+      this.query.endTime = endTime ? endTime : this.query.endTime
+      this.query.page = 0
+      this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log("handleRefresh");
-      this.query = this.$options.data().query;
-      this.initDataList(this.query);
+      console.log('handleRefresh')
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
     },
     handleDetail(row) {
-      console.log(row, "row");
-      const uuid = row.uuid;
+      console.log(row, 'row')
+      const uuid = row.uuid
       this.$router.push({
-        path: "/user/detail/" + uuid
+        path: '/user/detail/' + uuid,
         // query: { uuid: payload }
-      });
+      })
     },
     handleDistribute() {
       if (this.selectedAllData.length) {
-        this.$refs["formDialog"].event = "DistributeTemplate";
-        this.$refs["formDialog"].eventType = "distribute";
-        this.$refs["formDialog"].dialogVisible = true;
-        this.$refs["formDialog"].selectedAllData = this.selectedAllData;
+        this.$refs['formDialog'].event = 'DistributeTemplate'
+        this.$refs['formDialog'].eventType = 'distribute'
+        this.$refs['formDialog'].dialogVisible = true
+        this.$refs['formDialog'].selectedAllData = this.selectedAllData
       } else {
         this.$message({
-          type: "warning",
-          message: "请至少选择一个客户"
-        });
+          type: 'warning',
+          message: '请至少选择一个客户',
+        })
       }
     },
     handleDistributeSingle(row) {
-      this.$refs.multipleTable.clearSelection();
-      this.handleSelectionChange([row]);
-      this.selectedAllData.forEach(row => {
-        this.$refs.multipleTable.toggleRowSelection(row);
-      });
-      const payload = {};
-      this.$refs["formDialog"].event = "DistributeTemplate";
-      this.$refs["formDialog"].eventType = "distribute";
-      this.$refs["formDialog"].dialogVisible = true;
-      this.$refs["formDialog"].transfer = payload;
-      this.$store.commit("externalUser/SAVE_QUITUSERCURRENTROW", row);
+      this.$refs.multipleTable.clearSelection()
+      this.handleSelectionChange([row])
+      this.selectedAllData.forEach((row) => {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      })
+      const payload = {}
+      this.$refs['formDialog'].event = 'DistributeTemplate'
+      this.$refs['formDialog'].eventType = 'distribute'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = payload
+      this.$store.commit('externalUser/SAVE_QUITUSERCURRENTROW', row)
     },
     changePage(key) {
-      this.query.page = key - 1;
-      this.pageConfig.pageNumber = key - 1;
-      this.initDataList(this.query);
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key - 1
+      this.initDataList(this.query)
     },
     handleSelectionChange(val) {
-      this.selectedAllData = val;
-    }
-  }
-};
+      this.selectedAllData = val
+    },
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

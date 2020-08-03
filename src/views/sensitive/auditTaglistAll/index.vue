@@ -47,8 +47,23 @@
           <el-table-column align="left" label="提交时间" prop="createdAt" sortable></el-table-column>
 
           <el-table-column align="left" label="添加/删除的标签内容">
-            <template v-slot="scoped">
-              <div>{{scoped.row.tagContent}}</div>
+            <template v-slot="{row}">
+              <div class="tag-container">
+                <div style="width:60px;">{{tagOperationType[row.tagOperationType]}}</div>&emsp;&emsp;
+                <div v-if="row.tagOperationType==='DELETE_TAG_GROUP'">
+                    <span class="font-exs color-info">{{row.tagChangeContent[0].groupName}}</span>
+                  <!-- <el-tag v-for="tag in row.tagChangeContent" :key="tag.tagId" size="mini">{{tag.tagName}}</el-tag> -->
+                  <!-- <el-tag size="mini" v-if="row.tagChangeContent.length>1">...</el-tag> -->
+                </div>
+
+                <div v-if="row.tagOperationType==='ADD_TAG'">
+                    <span class="font-exs color-info">{{row.tagChangeContent[0].groupName}}</span>
+                </div>
+
+                <div v-if="row.tagOperationType==='UPDATE_TAG'">
+                    
+                </div>
+              </div>
             </template>
           </el-table-column>
 
@@ -97,21 +112,21 @@
 <script>
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {
     ListHeader,
     FormDialog,
-    ToolBar
+    ToolBar,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
@@ -120,25 +135,26 @@ export default {
         auditConfirmation: '',
         auditType: 'TAG',
         handlerId: '',
-        submitterId: ''
+        submitterId: '',
       },
 
       sortConfig: { prop: 'auditState', order: 'ascending' },
 
-      selects: []
+      selects: [],
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      auditStateEnum: state => state.enum.auditState,
+      auditStateEnum: (state) => state.enum.auditState,
       //   tagListAll: state => state.tag.tagListAll,
-      permissionMap: state => state.permission.permissionMap,
+      permissionMap: (state) => state.permission.permissionMap,
 
-      loading: state => state.sensitive.loading,
-      listAll: state => state.sensitive.auditTaglist,
-      page: state => state.sensitive.auditTagPage
-    })
+      loading: (state) => state.sensitive.loading,
+      listAll: (state) => state.sensitive.auditTaglist,
+      page: (state) => state.sensitive.auditTagPage,
+      tagOperationType: state => state.enum.tagOperationType
+    }),
   },
   created() {
     this.initDataList(this.query)
@@ -163,10 +179,10 @@ export default {
       this.$store
         .dispatch('user/getUserListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -181,10 +197,10 @@ export default {
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -192,7 +208,7 @@ export default {
       const payload = this.userList[val].uuid
       this.$router.push({
         path: '/user/detail',
-        query: { uuid: payload }
+        query: { uuid: payload },
       })
     },
     handleSearch(val) {
@@ -204,11 +220,11 @@ export default {
       this.query.submitterId = submitterId
         ? submitterId
         : this.query.submitterId
-      console.log(val, 'handleSearch')
+      this.query.page = 0
       this.initDataList(this.query)
     },
-    handleRefresh() {//重置
-      console.log('handleRefresh')
+    handleRefresh() {
+      //重置
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },
@@ -218,7 +234,7 @@ export default {
       this.initDataList(this.query)
     },
     handleSelectionChange(val) {
-      this.selects = val.map(item => {
+      this.selects = val.map((item) => {
         return item.uuid
       })
     },
@@ -226,23 +242,30 @@ export default {
      * 批量审批
      */
     handleBatch(action) {
-      let uuids = this.selects
-      let payload = null
-      if (action === 'reject') {
-        uuids = this.selects
-        payload = {
-          auditConfirmation: 'AUDIT_FAILED',
-          uuids
+      if (this.selects.length) {
+        let uuids = this.selects
+        let payload = null
+        if (action === 'reject') {
+          uuids = this.selects
+          payload = {
+            auditConfirmation: 'AUDIT_FAILED',
+            uuids,
+          }
+        } else {
+          uuids = this.selects
+          payload = {
+            auditConfirmation: 'APPROVED',
+            uuids,
+          }
         }
-      } else {
-        uuids = this.selects
-        payload = {
-          auditConfirmation: 'APPROVED',
-          uuids
-        }
-      }
 
-      this.batchAudit(payload)
+        this.batchAudit(payload)
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请至少选择一项',
+        })
+      }
     },
     batchAudit(payload) {
       this.$store
@@ -254,19 +277,18 @@ export default {
             duration: 1000,
             onClose: () => {
               this.initDataList(this.query)
-            }
+            },
           })
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
 
     handleAudit(uuid) {
-      console.log(uuid)
       this.$refs['formDialog'].event = 'AuditTemplate'
       this.$refs['formDialog'].eventType = 'audit'
       this.$refs['formDialog'].transfer = { uuid }
@@ -274,8 +296,8 @@ export default {
     },
     selectable(row, index) {
       let flag = false
-      row.auditUsers.forEach(item => {
-        item.userList.forEach(user => {
+      row.auditUsers.forEach((item) => {
+        item.userList.forEach((user) => {
           if (user.uuid === this.currentUserUuid) {
             //   console.log(user.auditState)
             if (
@@ -299,8 +321,12 @@ export default {
       if (a.auditState === b.auditState) {
         return 0
       }
-    }
-  }
+    },
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
+  },
 }
 </script>
 
@@ -317,17 +343,7 @@ export default {
   text-align: center;
 }
 
-// .app-container {
-//   border-top: 1px solid #e9e9e9;
-//   background: white;
-//   .roles-table {
-//     margin-top: 30px;
-//   }
-//   .permission-tree {
-//     margin-bottom: 30px;
-//   }
-// }
-// header .el-header button {
-//   margin-right: 5px;
-// }
+.content-spacing .tag-container {
+  display: flex;
+}
 </style>

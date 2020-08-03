@@ -17,23 +17,17 @@
 </template>
 
 <script>
-import CreateTemplate from "./event-create.vue";
-import EditTemplate from "./event-edit.vue";
-import DistributeTemplate from "./event-distribute";
 import addBatchSendTaskTemplate from "./component/addBatchSendTask";
 
 import { mapState } from "vuex";
 export default {
   components: {
-    CreateTemplate,
-    EditTemplate,
-    DistributeTemplate,
     addBatchSendTaskTemplate
   },
   data() {
     return {
       dialogVisible: false,
-      event: "DistributeTemplate",
+      event: "",
       eventType: "",
       dialogWidth: "600px"
     };

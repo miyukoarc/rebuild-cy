@@ -24,7 +24,7 @@
     </el-form-item>-->
 
     <el-form-item label="审批人：">
-      <el-select v-model="query.handlerId" clearable @change="handleChangeThird">
+      <el-select v-model="query.handlerId" clearable filterable>
         <el-option
           v-for="item in userListSelect"
           :key="item.uuid"
@@ -35,7 +35,7 @@
     </el-form-item>
 
     <el-form-item label="审批状态：">
-      <el-select v-model="query.auditConfirmation" clearable @change="handleChangeThird">
+      <el-select v-model="query.auditConfirmation" clearable>
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -46,7 +46,7 @@
     </el-form-item>
 
     <el-form-item label="提起人：">
-      <el-select v-model="query.submitterId" clearable @change="handleChangeThird">
+      <el-select v-model="query.submitterId" clearable filterable>
         <el-option
           v-for="item in userListSelect"
           :key="item.uuid"
@@ -109,9 +109,25 @@ export default {
       //   departments: state => state.department.departments
     })
   },
+  created(){
+      this.initFilter()
+  },
   methods: {
+          /**
+     * 初始化筛选信息
+     */
+    initFilter() {
+      this.$store
+        .dispatch('user/getUserListSelect')
+        .then(() => {})
+        .catch((err) => {
+          this.$message({
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
+    },
     handleChangeFirst(val) {
-      console.log(val);
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {

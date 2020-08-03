@@ -34,7 +34,7 @@
           lazy
           highlight-current-row
           @selection-change="handleSelectionChange"
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <el-table-column type="selection"></el-table-column>
           <el-table-column prop="name" label="员工姓名" align="left"></el-table-column>
@@ -123,142 +123,138 @@
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from "./detail.vue";
-import ListHeader from "./header.vue";
-import FormDialog from "./dialog";
-import ToolBar from "./tool-bar";
-import { mapState, mapMutations, mapActions } from "vuex";
+import ListHeader from './header.vue'
+import FormDialog from './dialog'
+import ToolBar from '@/components/ToolBar'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {
     ListHeader,
-    UserDetail,
     FormDialog,
-    ToolBar
-    // mHeadedr
+    ToolBar,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 1,
-        pageSize: 20
+        pageSize: 20,
       },
 
       query: {
         page: 0,
         size: 20,
-        userName: "",
-        departmentsUuid: "",
-        roleUuid: "",
+        userName: '',
+        departmentsUuid: '',
+        roleUuid: '',
 
         isFollowUser: null,
         isMessageUser: null,
-        visible: null
+        visible: null,
       },
 
-      checkedUserList: []
-    };
+      checkedUserList: [],
+    }
   },
   watch: {},
   computed: {
     ...mapState({
-      loading: state => state.user.loading,
-      userList: state => state.user.userList,
-      userPage: state => state.user.userPage,
+      loading: (state) => state.user.loading,
+      userList: (state) => state.user.userList,
+      userPage: (state) => state.user.userPage,
 
-      permissionMap: state => state.permission.permissionMap
-    })
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
-    this.$store.dispatch("role/getRoleListSelect");
-    this.$store.dispatch("department/getDepartmentListSelect");
+    this.$store.dispatch('role/getRoleListSelect')
+    this.$store.dispatch('department/getDepartmentListSelect')
 
-    this.initDataList(this.query);
+    this.initDataList(this.query)
   },
   mounted() {
-    this.$bus.$on("handleRefresh", () => {
-      this.initDataList(this.query);
-    });
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
   },
   beforeDestroy() {
-    this.$bus.$off("handleRefresh");
+    this.$bus.$off('handleRefresh')
   },
   methods: {
     handleSelectionChange(val) {
-      this.checkedUserList = val;
+      this.checkedUserList = val
     },
     doExport(val) {
       if (this.checkedUserList.length == 0) {
-        console.log("请求接口导出全部");
+        console.log('请求接口导出全部')
       } else {
         let header = [
-          "员工姓名",
-          "部门",
-          "角色",
-          "会话存档授权",
-          "允许登陆",
-          "通讯录授权"
-        ];
-        let data = [];
+          '员工姓名',
+          '部门',
+          '角色',
+          '会话存档授权',
+          '允许登陆',
+          '通讯录授权',
+        ]
+        let data = []
 
-        this.checkedUserList.map(obj => {
+        this.checkedUserList.map((obj) => {
           data.push([
             obj.name,
             obj.departments[obj.departments.length - 1].name,
             obj.role.name,
-            obj.isMessageUser ? "已授权" : "未授权",
-            obj.visible ? "允许" : "禁止",
-            obj.isFollowUser ? "已授权" : "未授权"
-          ]);
-        });
+            obj.isMessageUser ? '已授权' : '未授权',
+            obj.visible ? '允许' : '禁止',
+            obj.isFollowUser ? '已授权' : '未授权',
+          ])
+        })
 
-        import("@/vendor/Export2Excel").then(excel => {
+        import('@/vendor/Export2Excel').then((excel) => {
           excel.export_json_to_excel({
             header, //表头 必填
             data, //具体数据 必填
-            filename: "excel-list", //非必填
+            filename: 'excel-list', //非必填
             autoWidth: true, //非必填
-            bookType: "xlsx" //非必填
-          });
-        });
+            bookType: 'xlsx', //非必填
+          })
+        })
       }
     },
     handleUpdate() {
-      this.initDataList(this.query);
+      this.initDataList(this.query)
     },
 
     // 分配角色
     handleDistributeRole(index) {
-      const payload = this.userList[index];
-      this.$store.commit("user/SAVE_CURRENTROW", payload);
-      this.$refs["formDialog"].event = "DistributeRoleTemplate";
-      this.$refs["formDialog"].eventType = "distributeRole";
-      this.$refs["formDialog"].dialogVisible = true;
+      const payload = this.userList[index]
+      this.$store.commit('user/SAVE_CURRENTROW', payload)
+      this.$refs['formDialog'].event = 'DistributeRoleTemplate'
+      this.$refs['formDialog'].eventType = 'distributeRole'
+      this.$refs['formDialog'].dialogVisible = true
     },
 
     // 分配部门
     handleDistributeDepartment(index) {
-      const payload = this.userList[index];
-      this.$store.commit("user/SAVE_CURRENTROW", payload);
-      this.$refs["formDialog"].event = "DistributeTemplate";
-      this.$refs["formDialog"].eventType = "distribute";
-      this.$refs["formDialog"].dialogVisible = true;
+      const payload = this.userList[index]
+      this.$store.commit('user/SAVE_CURRENTROW', payload)
+      this.$refs['formDialog'].event = 'DistributeTemplate'
+      this.$refs['formDialog'].eventType = 'distribute'
+      this.$refs['formDialog'].dialogVisible = true
     },
 
     // 批量分配角色
     actionRole() {
       if (this.checkedUserList.length) {
-        this.$store.commit("user/SAVE_CURRENTROWS", this.checkedUserList);
-        this.$refs["formDialog"].event = "DistributeRoleTemplate";
-        this.$refs["formDialog"].eventType = "distributeRole";
-        this.$refs["formDialog"].dialogVisible = true;
+        this.$store.commit('user/SAVE_CURRENTROWS', this.checkedUserList)
+        this.$refs['formDialog'].event = 'DistributeRoleTemplate'
+        this.$refs['formDialog'].eventType = 'distributeRole'
+        this.$refs['formDialog'].dialogVisible = true
       } else {
         this.$message({
-          type: "error",
-          message: "请选择至少一项"
-        });
+          type: 'error',
+          message: '请选择至少一项',
+        })
       }
     },
 
@@ -266,48 +262,48 @@ export default {
     actionDepartment() {
       if (!this.$refs.listHeader.query.departmentsUuid) {
         this.$message({
-          type: "error",
-          message: "请先选择部门"
-        });
+          type: 'error',
+          message: '请先选择部门',
+        })
       } else if (this.checkedUserList.length) {
-        this.$store.commit("user/SAVE_CURRENTROWS", this.checkedUserList);
-        this.$refs["formDialog"].event = "DistributeTemplate";
-        this.$refs["formDialog"].eventType = "distribute";
-        this.$refs["formDialog"].dialogVisible = true;
+        this.$store.commit('user/SAVE_CURRENTROWS', this.checkedUserList)
+        this.$refs['formDialog'].event = 'DistributeTemplate'
+        this.$refs['formDialog'].eventType = 'distribute'
+        this.$refs['formDialog'].dialogVisible = true
       } else {
         this.$message({
-          type: "error",
-          message: "请选择至少一项"
-        });
+          type: 'error',
+          message: '请选择至少一项',
+        })
       }
     },
     sortChange(val) {
-      this.initDataList();
+      this.initDataList()
     },
     pageChange() {
-      this.initDataList();
+      this.initDataList()
     },
     initDataList(payload) {
       this.$store
-        .dispatch("user/getUserList", payload)
+        .dispatch('user/getUserList', payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.userPage.pageNumber + 1;
-          this.pageConfig.total = this.userPage.total;
+          this.pageConfig.pageNumber = this.userPage.pageNumber + 1
+          this.pageConfig.total = this.userPage.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
     handleDetail(val) {
-      const uuid = this.userList[val].uuid;
+      const uuid = this.userList[val].uuid
       this.$router.push({
-        path: "/user/detail/" + uuid
+        path: '/user/detail/' + uuid,
         // query: { uuid: payload }
-      });
+      })
     },
     handleSearch(val) {
       const {
@@ -316,33 +312,37 @@ export default {
         roleUuid,
         isFollowUser,
         isMessageUser,
-        visible
-      } = val;
-      this.query.userName = userName ? userName : userName;
+        visible,
+      } = val
+      this.query.userName = userName ? userName : userName
       this.query.departmentsUuid = departmentsUuid
         ? departmentsUuid
-        : departmentsUuid;
-      this.query.roleUuid = roleUuid ? roleUuid : roleUuid;
+        : departmentsUuid
+      this.query.roleUuid = roleUuid ? roleUuid : roleUuid
 
-      this.query.isFollowUser = isFollowUser ? isFollowUser : isFollowUser;
-      this.query.isMessageUser = isMessageUser ? isMessageUser : isMessageUser;
-      this.query.visible = visible ? visible : visible;
-      console.log(val, "handleSearch");
-      this.initDataList(this.query);
+      this.query.isFollowUser = isFollowUser ? isFollowUser : isFollowUser
+      this.query.isMessageUser = isMessageUser ? isMessageUser : isMessageUser
+      this.query.visible = visible ? visible : visible
+      this.query.page = 0
+      this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log("handleRefresh");
-      this.query = this.$options.data().query;
-      this.initDataList(this.query);
+      console.log('handleRefresh')
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
     },
     changePage(key) {
-      console.log(this.query);
-      this.query.page = key - 1;
-      this.pageConfig.pageNumber = key;
-      this.initDataList(this.query);
+      console.log(this.query)
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key
+      this.initDataList(this.query)
+    },
+    changeSize(val){
+        this.query.size = val
+        this.initDataList(this.query)
     }
-  }
-};
+  },
+}
 </script>
 
 <style lang="scss" scoped>

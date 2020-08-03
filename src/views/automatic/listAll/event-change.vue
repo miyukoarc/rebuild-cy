@@ -13,7 +13,7 @@
         <div class="role-container mb-20" v-if="form.informType=='ROLE'">
           <el-select v-model="roleSelects" multiple>
             <el-option
-              v-for="item in listSelect"
+              v-for="item in roleListSelect"
               :key="item.uuid"
               :label="item.name"
               :value="item.uuid"
@@ -74,11 +74,14 @@ export default {
   computed: {
     ...mapState({
       departmentList: state => state.department.departmentList,
-      listSelect: state => state.role.listSelect
+      roleListSelect: state => state.role.roleListSelect
     })
   },
   created() {
     this.initFilter()
+  },
+  mounted(){
+    console.log(this.$store.state.role)  
   },
   methods: {
     initFilter() {

@@ -8,11 +8,13 @@
         <el-col class="tags" :span="16">
           <div v-for="(tag,index) in group.tagList" :key="tag.uuid" class="tag-container">
             <el-tag
-              size="mini"
-              :type="alterType(groupIndex,index,tag.uuid)"
+              size="small"
+              :class="alterType(groupIndex,index,tag.uuid)"
               style="margin-right:3px;"
               @click="handleToggle(groupIndex,tag,index)"
-            >{{tag.tagName}}-{{tag.uuid}}</el-tag>
+            >
+              <span class="color-info font-es">{{tag.tagName}}</span>
+            </el-tag>
           </div>
         </el-col>
       </el-row>
@@ -31,47 +33,49 @@
 
 <script>
 export default {
-  name: 'TagSelectFix',
+  name: "TagSelectFix",
   props: {
     value: {
       type: Array,
       default: () => {
-        return []
-      }
-    }
+        return [];
+      },
+    },
   },
   model: {
-    props: 'value',
-    event: 'change'
+    props: "value",
+    event: "change",
   },
   data() {
     return {
       originArr: [], //rawdata 负责渲染
       fullArr: [], //全选状态
       curly: false, //折叠状态
-      stateArr: [] //响应式状态
-    }
+      stateArr: [], //响应式状态
+    };
   },
   computed: {
     alterArr() {
-      return this.curly ? this.originArr.slice(0, 2) : this.originArr
-    }
+      return this.curly ? this.originArr.slice(0, 2) : this.originArr;
+    },
   },
   watch: {
     value: {
       handler(newVal, oldVal) {
-        this.stateArr = this.$options.data().stateArr
+        this.stateArr = this.$options.data().stateArr;
         this.fullArr.forEach((row, rowIndex) => {
-          this.stateArr.push([])
+          this.stateArr.push([]);
           row.forEach((col, colIndex) => {
             if (newVal.includes(col)) {
-              this.stateArr[rowIndex].push(col)
+              this.stateArr[rowIndex].push(col);
             }
-          })
-        })
-      }
+          });
+        });
+
+        this.$emit("select-change", "select-change");
+      },
       //   immediate: true
-    }
+    },
   },
   created() {
     this.initData()
@@ -80,15 +84,14 @@ export default {
           row.forEach((col, colIndex) => {
             if (this.value.includes(col)) {
               //   console.log(rowIndex, colIndex)
-              this.stateArr[rowIndex].push(col)
+              this.stateArr[rowIndex].push(col);
             }
-          })
-        })
-        console.log('筛选项初始化成功')
+          });
+        });
       })
-      .catch(err => {
-        console.error(err)
-      })
+      .catch((err) => {
+        console.error(err);
+      });
   },
   updated() {
     // console.log(this.value, this.fullArr)
@@ -97,62 +100,64 @@ export default {
     initData() {
       return new Promise((resolve, reject) => {
         this.$store
-          .dispatch('tag/getListSelect')
-          .then(res => {
-            this.originArr = res
-            res.forEach(item => {
-              let temp = item.tagList.map(tag => {
-                return tag.uuid
-              })
-              this.fullArr.push(temp)
-              this.stateArr.push([])
-            })
-            this.curly = res.length > 2 && true
+          .dispatch("tag/getListSelect")
+          .then((res) => {
+            this.originArr = res;
+            res.forEach((item) => {
+              let temp = item.tagList.map((tag) => {
+                return tag.uuid;
+              });
+              this.fullArr.push(temp);
+              this.stateArr.push([]);
+            });
+            this.curly = res.length > 2 && true;
 
-            resolve()
+            resolve();
           })
-          .catch(err => {
-            console.error(err)
-            reject(err)
-          })
-      })
+          .catch((err) => {
+            console.error(err);
+            reject(err);
+          });
+      });
     },
     alterType(groupId, index, uuid) {
       if (this.stateArr.length) {
-        return this.stateArr[groupId].includes(uuid) ? 'primary' : 'info'
+        return this.stateArr[groupId].includes(uuid)
+          ? "selected"
+          : " unselected";
       } else {
-        return 'info'
+        return "unselected";
       }
     },
     handleToggle(groupIndex, tag, index) {
-      const temp = this.stateArr[groupIndex]
+      const temp = this.stateArr[groupIndex];
 
-      const multiTemp = this.stateArr
+      const multiTemp = this.stateArr;
 
       if (temp.includes(tag.uuid)) {
         temp.splice(
-          temp.findIndex(item => {
-            return item == tag.uuid
+          temp.findIndex((item) => {
+            return item == tag.uuid;
           }),
           1
-        )
+        );
 
-        multiTemp.splice(groupIndex, 1, temp)
+        multiTemp.splice(groupIndex, 1, temp);
       } else {
-        temp.push(tag.uuid)
+        temp.push(tag.uuid);
 
-        multiTemp.splice(groupIndex, 1, temp)
+        multiTemp.splice(groupIndex, 1, temp);
       }
 
       const output = multiTemp.reduce((sum, curr) => {
-        return sum.concat(curr)
-      }, [])
-      console.log(output)
+        return sum.concat(curr);
+      }, []);
+      console.log(output);
 
-      this.$emit('change', output)
-    }
-  }
-}
+      this.$emit("change", output);
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -168,6 +173,7 @@ export default {
       .tag-container {
         cursor: pointer;
         display: inline-block;
+        margin-bottom: 3px;
         .tag {
           height: 20px;
           padding: 0 5px;
@@ -180,6 +186,45 @@ export default {
           white-space: nowrap;
         }
       }
+    }
+  }
+  .unselected {
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #dcdfe6;
+    color: #606266;
+    -webkit-appearance: none;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    -webkit-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    padding: 12px 20px;
+    font-size: 14px;
+    line-height: 0px;
+    border-radius: 0;
+  }
+  .selected {
+    cursor: pointer;
+    background: #409eff;
+    border-color: #409eff;
+    color: #fff;
+    -webkit-appearance: none;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    -webkit-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    padding: 12px 20px;
+    font-size: 14px;
+    line-height: 0px;
+    border-radius: 0;
+    .color-info {
+      color: #fff;
     }
   }
 }

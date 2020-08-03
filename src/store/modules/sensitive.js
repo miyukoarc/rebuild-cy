@@ -29,6 +29,69 @@ function buildAuditSetting(arr) {
 
   return temp
 }
+
+function regFilter(str) {
+  if (str !== null) {
+    if (str.includes('span')) {
+      const reg = new RegExp("<\s*div[^>]*>(.*?)<\s*/\s*div>", "g")
+      let temp = ''
+      temp = str.split(reg).find(item => {
+        return !item.includes('span') && item !== ''
+      })
+      if (temp) {
+
+        return temp
+      } else {
+        return '--'
+      }
+    } else {
+
+      return str
+    }
+  } else {
+    return '--'
+  }
+}
+
+function myFilter(arr1, arr2) {
+  let arr1Temp = []
+  let arr2Temp = []
+  let temp = [] //交集
+  arr1.forEach(item1 => {
+    arr2.forEach(item2 => {
+      if (item1 === item2) {
+        temp.push(item1)
+      }
+    })
+  })
+
+  console.log(temp)
+
+  arr1.forEach(item => {
+    if (!temp.find(unit => {
+        return unit.uuid === item.uuid
+      })) {
+      arr1Temp.push(item)
+    }
+  })
+
+  arr2.forEach(item => {
+    if (!temp.find(unit => {
+        return unit.uuid === item.uuid
+      })) {
+
+      arr2Temp.push(item)
+    }
+  })
+
+
+  return [
+    [...arr1Temp],
+    [...arr2Temp]
+  ]
+}
+
+
 const state = {
   /**
    * public state
@@ -322,11 +385,16 @@ const actions = {
     return new Promise((resolve, reject) => {
       getAuditTaglistAll(payload).then(res => {
         const accessed = res.items.map(item => {
-            return {
-              ...item,
-              auditUsers: JSON.parse(item.auditUsers)
-            }
-          })
+        //   const temp = myFilter(JSON.parse(item.tagBeforeChangeContent),
+        //     JSON.parse(item.tagChangeContent))
+        //     console.log(temp)
+          return {
+            ...item,
+            auditUsers: JSON.parse(item.auditUsers),
+            tagBeforeChangeContent: JSON.parse(item.tagBeforeChangeContent),
+            tagChangeContent: JSON.parse(item.tagChangeContent),
+          }
+        })
         commit('SAVE_TAGLIST', accessed)
         commit('SET_TAGPAGE', res)
         commit('TOGGLE_LOADING', false)
@@ -417,7 +485,14 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getAuditBatchSendTaklistAll(payload).then(res => {
-        commit('SAVE_BATCHSENDLIST', res.items)
+        const accessed = res.items.map(item => {
+          return {
+            ...item,
+            auditUsers: JSON.parse(item.auditUsers),
+            textContent: regFilter(item.textContent)
+          }
+        })
+        commit('SAVE_BATCHSENDLIST', accessed)
         commit('SET_BATCHSENDPAGE', res)
         commit('TOGGLE_LOADING', false)
         resolve()
@@ -521,8 +596,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       auditPropertylistAll(payload).then(res => {
         const accessed = buildAuditSetting(res.items)
-        const alter = res.items.map(item=>{
-            return {...item,auditUsers:JSON.parse(item.auditUsers)}
+        const alter = res.items.map(item => {
+          return {
+            ...item,
+            auditUsers: JSON.parse(item.auditUsers)
+          }
         })
         commit('TOGGLE_LOADING', false)
         commit('SAVE_PROPERLIST', alter)

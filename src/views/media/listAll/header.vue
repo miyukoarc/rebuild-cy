@@ -25,9 +25,9 @@
       ></el-date-picker>
     </el-form-item>
 
-    <el-form-item label="关键字：">
+    <!-- <el-form-item label="关键字：">
       <el-input v-model.trim="query.fileName" clearable placeholder="请输入关键字"></el-input>
-    </el-form-item>
+    </el-form-item> -->
 
     <div class="handle-warp">
       <el-form-item label=" ">
@@ -90,10 +90,10 @@ export default {
         })
     },
     handleSelectedTime(val) {
-      console.log(val)
+    //   console.log(val)
       this.query.startTime = this.value[0]
       this.query.endTime = this.value[1]
-      this.$emit('handleSearch', this.query)
+    //   this.$emit('handleSearch', this.query)
     },
     handleChangeSecond(val) {
       if (this.timer) {

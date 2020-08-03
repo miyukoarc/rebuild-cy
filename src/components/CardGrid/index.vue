@@ -50,13 +50,17 @@
             <div class="info-container">
               <div class="creator">
                 <span class="font-exs color-info" v-if="item.creator">{{item.creator.name}}</span>
-                <span class="font-exs color-info">{{item.createdAt}}</span>
+                <span class="font-exs color-info">{{item.updateAt}}</span>
               </div>
               <div class="operator">
                 <el-checkbox :key="item.uuid" :label="item.uuid">{{item.uuid?'':''}}</el-checkbox>
                 <el-t-button type="text" @click="handleViewTags(item.toTags)">适用标签</el-t-button>
                 <div class="operator-icon">
-                  <el-t-button type="text" @click="handleDelete(item.uuid)">
+                  <span
+                    class="color-primary font-exs"
+                    v-if="item.auditStateForOperation==='UNDER_REVCIEW'"
+                  >审核中</span>
+                  <el-t-button v-else type="text" @click="handleDelete(item.uuid)">
                     <i class="el-icon-delete"></i>
                   </el-t-button>
                 </div>
@@ -96,7 +100,6 @@
           </div>
         </div>
         <div v-else class="text-align-center" style="line-height:30px;">
-            
           <span class="font-exs color-info">未设置</span>
         </div>
       </div>
@@ -109,25 +112,25 @@ import VideoCover from './video-cover'
 export default {
   name: 'CardGrid',
   components: {
-    VideoCover
+    VideoCover,
   },
   props: {
     value: {
       type: Array,
       default: () => {
         return []
-      }
+      },
     },
     options: {
       type: Array,
       default: () => {
         return []
-      }
-    }
+      },
+    },
   },
   model: {
     prop: 'value',
-    event: 'change'
+    event: 'change',
   },
   data() {
     return {
@@ -140,7 +143,7 @@ export default {
       view: 'video', //video//image
       videoUrl: '',
       imageUrl: '',
-      shownTags: []
+      shownTags: [],
     }
   },
   watch: {
@@ -152,9 +155,9 @@ export default {
         //   })
         // }
         this.checked = newVal
-      }
+      },
       //   immediate: true
-    }
+    },
   },
   computed: {
     listAll() {
@@ -162,7 +165,7 @@ export default {
     },
     alterValue() {
       return this.value
-    }
+    },
   },
   mounted() {},
   methods: {
@@ -176,7 +179,6 @@ export default {
       this.$emit('change', val)
     },
     handleViewVideo(val) {
-
       this.videoUrl = val
       this.view = 'video'
       //   this.width = this.videoWidth
@@ -193,7 +195,7 @@ export default {
       if (Object.keys(list).length) {
         return list.reduce((groups, item) => {
           let groupFound = groups.find(
-            foundItem => item.groupId === foundItem.groupId
+            (foundItem) => item.groupId === foundItem.groupId
           )
           if (groupFound) {
             groupFound.tags.push(item)
@@ -201,7 +203,7 @@ export default {
             let newGroup = {
               groupId: item.groupId,
               groupName: item.groupName,
-              tags: [item]
+              tags: [item],
             }
 
             groups.push(newGroup)
@@ -225,10 +227,10 @@ export default {
         this.checked = []
       } else if (this.checked.length < this.listAll.length) {
         this.checked = []
-        arr = this.listAll.map(item => {
+        arr = this.listAll.map((item) => {
           return item.uuid
         })
-        arr.forEach(item => {
+        arr.forEach((item) => {
           this.checked.push(item)
         })
       } else {
@@ -246,8 +248,8 @@ export default {
     },
     onCanplay(e) {
       this.width = 640 + 'px'
-    }
-  }
+    },
+  },
 }
 </script>
 

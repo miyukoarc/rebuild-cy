@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-25 17:44:32
- * @LastEditTime: 2020-07-25 18:18:24
+ * @LastEditTime: 2020-07-29 15:13:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\chatrecordComponent.vue
@@ -13,13 +13,18 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
-          <div class="chat-record-title">{{item.fromName}}和{{item.toName}}的聊天记录</div>
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div class="chat-record-title">{{item.title}}的聊天记录</div>
           <ul>
-            <li>{{item.fromName}}：44333333</li>
-            <li>{{item.toName}}：44333333</li>
+            <li v-for="(msg,index) in item.messageMedias" class="display-flex">
+              <span>：</span>
+              <p
+                class="text-over-2"
+              >{{ msg.msgType =='text' ? msg.content:msg.fileName + chatContentType[msg.msgType]}}</p>
+            </li>
           </ul>
           <div class="line"></div>
-          <div v-show="item" class="show-more">查看更多</div>
+          <div v-show="item" class="show-more" @click="handleClickViewMore(item)">查看更多</div>
         </div>
       </div>
     </div>
@@ -27,13 +32,18 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
-          <div class="chat-record-title">{{item.fromName}}和{{item.toName}}的聊天记录</div>
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div class="chat-record-title">{{item.title}}的聊天记录</div>
           <ul>
-            <li>{{item.fromName}}：44333333</li>
-            <li>{{item.toName}}：44333333</li>
+            <li v-for="(msg,index) in item.messageMedias" class="display-flex">
+              <span>：</span>
+              <p
+                class="text-over-2"
+              >{{ msg.msgType =='text' ? msg.content:msg.fileName + chatContentType[msg.msgType]}}</p>
+            </li>
           </ul>
           <div class="line"></div>
-          <div v-show="item" class="show-more">查看更多</div>
+          <div v-show="item" class="show-more"  @click="handleClickViewMore(item)">查看更多</div>
         </div>
         <el-avatar :src="item.fromAvatar" />
       </div>
@@ -42,6 +52,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from "vuex";
+
 export default {
   name: "TextComponent",
   props: {
@@ -49,7 +61,17 @@ export default {
     toUserId: String,
     fromUserId: String,
   },
+  computed: {
+    ...mapState({
+      chatContentType: (state) => state.enum.chatContentType,
+    }),
+  },
   mounted() {},
+  methods: {
+    handleClickViewMore(item) {
+      this.$emit('handleClickViewMore',item)
+    },
+  },
 };
 </script>
 
@@ -78,9 +100,16 @@ export default {
       ul {
         margin-bottom: 5px;
         li {
+          width: 260px;
           color: #b2b2b2;
           font-size: 13px;
           line-height: 16px;
+          p {
+            max-height: 32px;
+            width: 200px;
+            font-size: 13px;
+            line-height: 16px;
+          }
         }
       }
       .line {
@@ -115,6 +144,7 @@ export default {
       ul {
         margin-bottom: 5px;
         li {
+          width: 260px;
           color: #b2b2b2;
           font-size: 13px;
           line-height: 16px;

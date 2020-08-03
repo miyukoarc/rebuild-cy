@@ -5,7 +5,7 @@
     </el-form-item>
 
     <el-form-item label="客户状态：">
-      <el-select v-model="query.status" @change="handleSelectedChange">
+      <el-select v-model="query.status">
         <el-option
           v-for="(item,index) in contractWay"
           :key="index"
@@ -38,72 +38,55 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
       contractWay: [
         {
-          type: "待分配",
-          id: "ALLOCATE"
+          type: '待分配',
+          id: 'ALLOCATE',
         },
         {
-          type: "等待分配审核",
-          id: "2"
+          type: '等待分配审核',
+          id: '2',
         },
         {
-          type: "已分配",
-          id: "ALLOCATED"
-        }
+          type: '已分配',
+          id: 'ALLOCATED',
+        },
       ],
       value: [],
       query: {
-        name: "",
-        status: "",
-        startTime: "",
-        endTime: ""
+        name: '',
+        status: '',
+        startTime: '',
+        endTime: '',
         // roleUuid: ''
-      }
-    };
+      },
+    }
   },
   computed: {
     ...mapState({
       // tagListAll: state => state.tag.tagListAll,
       // userListAll: state => state.user.userListAll
       //   departments: state => state.department.departments
-    })
+    }),
   },
   methods: {
     handleSelectedTime(val) {
-      console.log(val);
-      this.query.startTime = this.value[0];
-      this.query.endTime = this.value[1];
-      this.$emit("handleSearch", this.query);
-    },
-    handleChangeFirst(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
-    },
-    handleSelectedChange(val) {
-      this.$emit("handleSearch", this.query);
-    },
-    handleChangeSecond(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
-    },
-    handleChangeThird(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
+      this.query.startTime = this.value[0]
+      this.query.endTime = this.value[1]
     },
     handleSearch() {
-      this.$emit("handleSearch", this.query);
+      this.$emit('handleSearch', this.query)
     },
     handleRefresh() {
-      this.$emit("handleRefresh");
-      this.query = this.$options.data().query;
-    }
-  }
-};
+      this.$emit('handleRefresh')
+      this.query = this.$options.data().query
+    },
+  },
+}
 </script>
 
 <style>

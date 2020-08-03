@@ -37,7 +37,8 @@
         <el-radio v-model="form.tagType" label="UNIONSET">完全匹配</el-radio>
       </div>
     </el-form-item>
-    <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>
+    <tag-multi-select v-model="form.setTag"></tag-multi-select>
+    <!-- <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select> -->
 
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
@@ -51,6 +52,7 @@ import { mapState } from 'vuex'
 import ComplexSelect from '@/components/ComplexSelect'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import TagSelect from '@/components/TagSelect'
+import TagMultiSelect from '@/components/TagMultiSelect'
 
 export default {
   inject: ['reload'],
@@ -65,7 +67,8 @@ export default {
   components: {
     AsyncUserTag,
     ComplexSelect,
-    TagSelect
+    TagSelect,
+    TagMultiSelect
   },
   data() {
     return {
@@ -125,38 +128,8 @@ export default {
         this.$set(this.form, 'informType', informType)
         this.$set(this.form, 'tagType', tagType)
         this.$set(this.form, 'word', word)
-        console.log(sensitiveSetTag)
+        this.$set(this.form,'setTag',sensitiveSetTag.map(item=>{return item.uuid}))
 
-        // let indexTemp = []
-
-        this.indexTemp = sensitiveSetTag.reduce((sum, curr) => {
-          return sum.concat(
-            curr.tags.map(item => {
-              return item.uuid
-            })
-          )
-        }, [])
-
-        //回显
-        // setTimeout(() => {
-          this.tagListMap.forEach((row, rowIndex) => {
-            this.tagSelects.push([])
-
-            row.forEach((col, colIndex) => {
-              if (this.indexTemp.includes(this.tagListMap[rowIndex][colIndex])) {
-
-                  let temp = this.tagSelects[rowIndex]
-                  temp.push(this.tagListMap[rowIndex][colIndex])
-                  this.tagSelects.splice(rowIndex,1,temp)
-                  
-
-
-                // let temp = this.tagSelects[rowIndex].splice(0,1,this.tagListMap[rowIndex][colIndex])
-                console.log(this.tagListMap[rowIndex][colIndex])
-              }
-            })
-          })
-        // },1000)
       },
       immediate: true
     }
@@ -244,7 +217,7 @@ export default {
                   message: '操作成功'
                 })
                 this.handleCancel()
-                this.refresh()
+                this.handleRefresh()
               })
               .catch(err => {
                 this.$message({
@@ -265,18 +238,8 @@ export default {
     },
     handleChange() {},
     handleCloseTag() {},
-    refresh() {
-      this.$store
-        .dispatch('sensitive/getSensitiveListAll')
-        .then(() => {
-          this.reload()
-        })
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: err
-          })
-        })
+    handleRefresh(){
+        this.$bus.$emit('handleRefrensh')
     },
     handleClose(tag) {
       this.form.words.splice(this.form.words.indexOf(tag), 1)

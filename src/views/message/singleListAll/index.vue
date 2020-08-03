@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-25 18:35:18
+ * @LastEditTime: 2020-07-31 14:57:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -130,13 +130,20 @@
                           :item="list"
                           :to-user-id="query.toUserId"
                           :from-user-id="query.fromUserId"
+                          @handleClickViewMore="handleClickViewMore"
                         />
                       </div>
                     </div>
                     <div v-show="singleListAllData.length<=0" class="no-chat-data">暂无数据</div>
                   </el-tab-pane>
                 </el-tabs>
-                <el-pagination
+                <customer-pagination
+                v-show=" singleListAllData.length>0"
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
+                <!-- <el-pagination
                   v-show=" singleListAllData.length>0"
                   background
                   class="pager"
@@ -145,7 +152,7 @@
                   :current-page.sync="pageConfig.page"
                   :page-size="pageConfig.size"
                   @current-change="changePage"
-                />
+                /> -->
                 <div class="search-form" style="margin-top:5px">
                   <chat-search @handleSearch="handleSearch" @handleRefresh="handleRefresh"></chat-search>
                 </div>
@@ -155,18 +162,20 @@
         </div>
       </div>
     </el-card>
+    <form-dialog ref="formDialog"></form-dialog>
   </section>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-
+import FormDialog from "./dialog";
 import ChatSideBar from "./components/ChatSideBar.vue";
 
 import ChatInformation from "./components/ChatInformation.vue";
 import ChatTabBar from "./components/ChatTabBar.vue";
 
 import ChatSearch from "./components/ChatSearch.vue";
+import CustomerPagination from '@/components/CustomerPagination'
 
 import textComponent from "./messageTypeComponent/textComponent.vue";
 import imageComponent from "./messageTypeComponent/imageComponent.vue";
@@ -178,12 +187,17 @@ import cardComponent from "./messageTypeComponent/cardComponent.vue";
 import linkComponent from "./messageTypeComponent/linkComponent.vue";
 import weappComponent from "./messageTypeComponent/weappComponent.vue";
 import fileComponent from "./messageTypeComponent/fileComponent.vue";
+// import revokeComponent from "./messageTypeComponent/revokeComponent.vue";
+import docmsgComponent from "./messageTypeComponent/docmsgComponent.vue";
 import chatrecordComponent from "./messageTypeComponent/chatrecordComponent.vue";
+import locationComponent from "./messageTypeComponent/locationComponent.vue";
 import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_callComponent.vue";
 
 export default {
   name: "ListSingleAll",
   components: {
+    CustomerPagination,
+    FormDialog,
     ChatSideBar,
     ChatTabBar,
     ChatInformation,
@@ -195,14 +209,18 @@ export default {
     videoComponent,
     agreeComponent,
     cardComponent,
+    linkComponent,
     weappComponent,
     fileComponent,
+    // revokeComponent,
+    docmsgComponent,
     chatrecordComponent,
+    locationComponent,
     meeting_voice_callComponent,
   },
   data() {
     return {
-      currentView: "chatrecordComponent",
+      currentView: "locationComponent",
       pageConfig: {
         total: 0,
         pageNumber: 0,
@@ -274,7 +292,7 @@ export default {
         },
         {
           label: "视频语音通话",
-          name: "voiceVideo",
+          name: "meeting_voice_call",
         },
       ],
     };
@@ -335,6 +353,13 @@ export default {
     handleClickSearch() {
       console.log("搜索s");
     },
+    handleClickViewMore(val) {
+      console.log(val, "val====");
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].event = "showMoreTemplate";
+      this.$refs["formDialog"].eventType = "showMore";
+      this.$refs["formDialog"].transfer = val;
+    },
     handleClickSideBarTab(e) {
       console.log(e.label, "点击侧边栏tab切换");
       this.activeIdx = 0;
@@ -380,29 +405,75 @@ export default {
       }
     },
     handleSidebarItem(item, index, tab) {
-      console.log(item, "点击侧边栏用户", index, tab);
-      this.activeIdx = index;
-      this.currnetMember = item;
-      this.query.toUserId = item._id;
-      this.getsinglelist(this.query);
+      let payload = {
+        type: "externalUser",
+        uuid: this.$route.query.uuid,
+      };
+      this.$store
+        .dispatch("message/getMessageSingleLastListAll", payload)
+        .then((res) => {
+          if (res) {
+            if (tab.label == "全部") {
+              this.chatSideData = res.allMessageList;
+            }
+            if (tab.label == "单聊") {
+              this.chatSideData = res.singleMessageList;
+            }
+            if (tab.label == "群聊") {
+              this.chatSideData = res.groupMessageList;
+            }
+            console.log(item, "点击侧边栏用户", index, tab);
+            this.activeIdx = index;
+            this.currnetMember = item;
+            this.query.toUserId = item._id;
+            // let payload = {
+            //   type: "externalUser",
+            //   uuid: this.$route.query.uuid,
+            // };
+            // this.initDataList(payload);
+            this.getsinglelist(this.query);
+          }
+        })
+        .catch((err) => {});
     },
+
     handleClickChatType() {
       console.log("点击右侧类型", this.chatActiveName);
       if (this.chatSideData.length > 0) {
         console.log("有");
-        this.query.msgType = this.chatActiveName;
-        this.query.page = 0;
-        this.getsinglelist(this.query);
+        let payload = {
+          type: "externalUser",
+          uuid: this.$route.query.uuid,
+        };
+        this.$store
+          .dispatch("message/getMessageSingleLastListAll", payload)
+          .then((res) => {
+            if (res) {
+              console.log('3233')
+              if (this.sideTabActiveName == "1") {
+                this.chatSideData = res.allMessageList;
+              }
+              if (this.sideTabActiveName == "2") {
+                this.chatSideData = res.singleMessageList;
+              }
+              if (this.sideTabActiveName == "3") {
+                this.chatSideData = res.groupMessageList;
+              }
+              // this.currnetMember = item;
+              this.query.msgType = this.chatActiveName;
+              this.query.page = 0;
+              this.getsinglelist(this.query);
+            }
+          })
+          .catch((err) => {});
       }
     },
 
     handleSearch(val) {
       const { content, startTime, endTime } = val;
-      this.query.content = content ? content : '';
-      this.query.startTime = startTime
-        ? startTime
-        : '';
-      this.query.endTime = endTime ? endTime : '';
+      this.query.content = content ? content : "";
+      this.query.startTime = startTime ? startTime : "";
+      this.query.endTime = endTime ? endTime : "";
       console.log(val, "点击搜索");
       this.getsinglelist(this.query);
     },
@@ -417,6 +488,10 @@ export default {
         keyword: "",
         planStatu: null,
       };
+    },
+    changeSize(val) {
+      this.query.size = val
+     this.getsinglelist(this.query);
     },
     changePage(page) {
       console.log(page, "点击分页");
@@ -545,6 +620,7 @@ export default {
     }
   }
 }
+
 .pager {
   // margin: 20px 0 0 0;
   text-align: center;
@@ -575,7 +651,7 @@ export default {
       background-color: #fff;
       // padding: 0 20px;
     }
-    .el-tabs__nav-scroll{
+    .el-tabs__nav-scroll {
       margin: 0 20px;
     }
     .el-tabs__content {
@@ -597,5 +673,14 @@ export default {
 .chat-side-bar-content /deep/.el-tabs__nav-wrap::after {
   // position: static !important;
   height: 1px;
+}
+.revoke-content {
+  width: 140px;
+  font-size: 13px;
+  background-color: #d7d7d7;
+  color: #fff;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
 }
 </style>

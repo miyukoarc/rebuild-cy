@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog :title="genTitle()" :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body width="600px" center :close-on-click-modal="false">
+        <el-dialog :title="genTitle()" destroy-on-close :visible.sync="dialogVisible" :modal-append-to-body="false" append-to-body width="600px" center :close-on-click-modal="false">
             <div>
                 <component :is="event" :transfer="transfer"/>
             </div>

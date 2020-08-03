@@ -1,6 +1,6 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
-    <el-form-item label="敏感词行为：">
+    <el-form-item label="敏感词：">
       <el-input v-model.trim="query.word" clearable></el-input>
     </el-form-item>
 
@@ -21,6 +21,7 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         @change="handleChangeFirst"
+        :default-time="['00:00:00', '23:59:59']"
       ></el-date-picker>
     </el-form-item>
 
@@ -56,44 +57,40 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
       value: [],
       query: {
-        startTime: "",
-        endTime: "",
-        word: ""
-      }
-    };
+        startTime: '',
+        endTime: '',
+        word: '',
+      },
+    }
   },
   computed: {},
   methods: {
     handleChangeFirst(val) {
-      console.log(val);
-      this.query.startTime = this.value[0];
-      this.query.endTime = this.value[1];
-      this.$emit("handleSearch", this.query);
+      this.query.startTime = this.value[0]
+      this.query.endTime = this.value[1]
     },
     handleChangeSecond(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
+      this.$emit('handleSearch', this.query)
     },
     handleChangeThird(val) {
-      console.log(val);
-      this.$emit("handleSearch", this.query);
+      this.$emit('handleSearch', this.query)
     },
     handleSearch() {
-      this.$emit("handleSearch", this.query);
+      this.$emit('handleSearch', this.query)
     },
     handleRefresh() {
-      this.$emit("handleRefresh");
-      this.value = this.$options.data().value;
-      this.query = this.$options.data().query;
-    }
-  }
-};
+      this.$emit('handleRefresh')
+      this.value = this.$options.data().value
+      this.query = this.$options.data().query
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

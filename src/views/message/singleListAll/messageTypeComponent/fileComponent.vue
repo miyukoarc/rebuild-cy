@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:48:28
- * @LastEditTime: 2020-07-25 16:32:10
+ * @LastEditTime: 2020-07-30 17:40:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\fileComponent.vue
@@ -13,7 +13,11 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
-          <div class="file-warp">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div
+            class="file-warp"
+            @dblclick="handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt,item.revokeType)"
+          >
             <div class="file-bg flex-between-alinecenter">
               <div>
                 <div
@@ -25,12 +29,12 @@
 
               <svg-icon :icon-class="item.messageMedias[0].fileExt | classFilter" class="excel" />
             </div>
-            <div
+            <!-- <div
               class="down-load"
               @click=" handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
             >
               <el-icon class="download-icon el-icon-download" />
-            </div>
+            </div>-->
           </div>
         </div>
       </div>
@@ -39,7 +43,11 @@
       <p>{{ item.msgTime }}</p>
       <div class="right-warp display-flex justify-content-flex-end">
         <div class="right">
-          <div class="file-warp">
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div
+            class="file-warp"
+            @dblclick="handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
+          >
             <div class="file-bg flex-between-alinecenter">
               <div>
                 <div
@@ -51,9 +59,9 @@
 
               <svg-icon :icon-class="item.messageMedias[0].fileExt | classFilter" class="excel" />
             </div>
-            <a :href="item.messageMedias[0].file" download>
+            <!-- <a :href="item.messageMedias[0].file" download>
               <el-icon class="download-icon el-icon-download" />
-            </a>
+            </a>-->
           </div>
         </div>
         <el-avatar :src="item.fromAvatar" />
@@ -93,45 +101,47 @@ export default {
   },
   methods: {
     async handleDownload(url, fileName, mime) {
-      // 下载附件
-      await downloadFile(url)
-        .then((res) => {
-          const blob = new Blob([res.data], { type: mime });
-          // 注: mime类型必须整正确, 否则下载的文件会损坏
-          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            // 兼容IE
-            window.navigator.msSaveOrOpenBlob(blob, element.original_name);
-          } else {
-            const downloadElement = document.createElement("a");
-            downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
-            downloadElement.download = fileName;
-            downloadElement.click();
-            window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      
+        // 下载附件
+        await downloadFile(url)
+          .then((res) => {
+            const blob = new Blob([res.data], { type: mime });
+            // 注: mime类型必须整正确, 否则下载的文件会损坏
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+              // 兼容IE
+              window.navigator.msSaveOrOpenBlob(blob, element.original_name);
+            } else {
+              const downloadElement = document.createElement("a");
+              downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
+              downloadElement.download = fileName;
+              downloadElement.click();
+              window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
 
-      // axios
-      //   .get(url, { responseType: "blob" })
-      //   .then(res => {
-      //     let blob = new Blob([res.data], { type: mime });
-      //     // 注: mime类型必须整正确, 否则下载的文件会损坏
-      //     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      //       // 兼容IE
-      //       window.navigator.msSaveOrOpenBlob(blob, element.original_name);
-      //     } else {
-      //       let downloadElement = document.createElement("a");
-      //       downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
-      //       downloadElement.download = fileName;
-      //       downloadElement.click();
-      //       window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.error(error);
-      //   });
+        // axios
+        //   .get(url, { responseType: "blob" })
+        //   .then(res => {
+        //     let blob = new Blob([res.data], { type: mime });
+        //     // 注: mime类型必须整正确, 否则下载的文件会损坏
+        //     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        //       // 兼容IE
+        //       window.navigator.msSaveOrOpenBlob(blob, element.original_name);
+        //     } else {
+        //       let downloadElement = document.createElement("a");
+        //       downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
+        //       downloadElement.download = fileName;
+        //       downloadElement.click();
+        //       window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
+        //     }
+        //   })
+        //   .catch(error => {
+        //     console.error(error);
+        //   });
+      
     },
     getFileSize(fileByte) {
       var fileSizeByte = fileByte;
@@ -173,6 +183,7 @@ export default {
     max-width: 50%;
     margin-top: 5px;
     .file-warp {
+      cursor: pointer;
       margin-left: 20px;
       position: relative;
       width: 260px;
@@ -184,6 +195,7 @@ export default {
     max-width: 50%;
     top: 5px;
     .file-warp {
+      cursor: pointer;
       margin-right: 20px;
       position: relative;
       width: 260px;

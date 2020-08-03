@@ -104,7 +104,7 @@ export default {
     AuditorDrawer,
     RoleDrawer,
     TagsDrawer,
-    AuditUser
+    AuditUser,
     // mHeadedr
   },
   data() {
@@ -112,12 +112,12 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
         page: 0,
-        size: 10
+        size: 10,
         // startTime: '',
         // endTime: '',
         // word: ''
@@ -125,7 +125,7 @@ export default {
 
       form: {},
 
-      rowSelects: []
+      rowSelects: [],
     }
   },
   watch: {},
@@ -133,12 +133,12 @@ export default {
     ...mapState({
       //   tagListAll: state => state.tag.tagListAll,
 
-      loading: state => state.sensitive.loading,
-      listAll: state => state.sensitive.propertyListAll,
-      page: state => state.sensitive.propertyPage,
-      corpInfo: state => state.auth.corpInfo,
-      permissionMap: state => state.permission.permissionMap
-    })
+      loading: (state) => state.sensitive.loading,
+      listAll: (state) => state.sensitive.propertyListAll,
+      page: (state) => state.sensitive.propertyPage,
+      corpInfo: (state) => state.auth.corpInfo,
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
     this.initDataList(this.query)
@@ -161,16 +161,16 @@ export default {
         .dispatch('sensitive/auditPropertylistAll', payload)
         .then(() => {
           //初始化分页
-          this.listAll.forEach(item => {
+          this.listAll.forEach((item) => {
             this.$set(this.form, item.moduleName, item.openState)
           })
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -182,31 +182,48 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         }
       )
         .then(async () => {
-          const payload = {
-            openState: !openState,
-            uuid
-          }
-          this.$store
-            .dispatch('sensitive/setAuditCloseOrOpen', payload)
-            .then(() => {
-              this.initDataList()
-            })
-            .catch(err => {
-              this.$message({
-                type: 'error',
-                message: err
+          //是否未设置审批人
+          const emptyFlag = !!val.auditUsers.length
+
+        //   console.log(emptyFlag,val.auditUsers)
+
+          if (emptyFlag) {
+            const payload = {
+              openState: !openState,
+              uuid,
+            }
+            this.$store
+              .dispatch('sensitive/setAuditCloseOrOpen', payload)
+              .then(() => {
+                this.initDataList()
               })
+              .catch((err) => {
+                this.$message({
+                  type: 'error',
+                  message: err,
+                })
+              })
+          } else {
+            this.$confirm('请先设置审批流程', 'warning', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
             })
+              .then(async () => {})
+              .catch((err) => {
+                console.error(err)
+              })
+          }
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err)
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
@@ -228,8 +245,8 @@ export default {
     //parseJSON
     parse(str) {
       return JSON.parse(str)[0]?.userList || []
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -40,7 +40,8 @@
           <el-table-column type="selection" :selectable="selectable"></el-table-column>
           <el-table-column width="85" align="left" label="提交人">
             <template v-slot="{row}">
-              <div>{{row.submitOperator.name}}</div>
+              <div v-if="row.mediaOperationType==='UPDATE_ARTICLE'">{{row.approvedOperator.name}}</div>
+              <div v-else>{{row.submitOperator.name}}</div>
             </template>
           </el-table-column>
 
@@ -102,7 +103,7 @@
                 <div
                   class="font-no-wrap"
                   v-if="row.toMedis[0].type==='TEXT'"
-                >{{row.toMedis[0].textContents}}</div>
+                >{{row.toMedis[0].content}}</div>
                 <div v-if="row.toMedis[0].type==='ARTICLE'">《{{row.toMedis[0].title}}》</div>
                 <div v-if="row.toMedis[0].type==='FILE'">{{row.toMedis[0].fileName}}</div>
               </div>
@@ -112,6 +113,7 @@
           <el-table-column align="left" label="新增/删除">
             <template v-slot="{row}">
               <div>
+                <span class="color-primary" v-if="row.mediaOperationType==='UPDATE_ARTICLE'">修改</span>
                 <span class="color-success" v-if="row.mediaOperationType==='ADD_MEDIA'">新增</span>
                 <span class="color-danger" v-if="row.mediaOperationType==='DELETE_MEDIA'">删除</span>
               </div>
@@ -144,16 +146,11 @@
           </el-table-column>
         </el-table>
 
-        <!-- <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
+        <customer-pagination
+          :pageConfig="pageConfig"
           @current-change="changePage"
-        /> -->
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage"></customer-pagination>
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -177,11 +174,10 @@
 <script>
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import VideoCover from '@/components/VideoCover'
 import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import media from '../../../store/modules/media'
 
 export default {
   components: {
@@ -189,7 +185,7 @@ export default {
     FormDialog,
     ToolBar,
     VideoCover,
-    CustomerPagination
+    CustomerPagination,
   },
   data() {
     return {
@@ -201,7 +197,7 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
       sortConfig: { prop: 'auditState', order: 'ascending' },
 
@@ -211,26 +207,26 @@ export default {
         auditConfirmation: '',
         auditType: 'MEDIA',
         handlerId: '',
-        submitterId: ''
+        submitterId: '',
       },
 
-      selects: []
+      selects: [],
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      auditStateEnum: state => state.enum.auditState,
+      auditStateEnum: (state) => state.enum.auditState,
       //   tagListAll: state => state.tag.tagListAll,
-      permissionMap: state => state.permission.permissionMap,
-      auditState: state => state.emnu.auditState,
-      mediaType: state => state.enum.mediaType,
+      permissionMap: (state) => state.permission.permissionMap,
+      auditState: (state) => state.emnu.auditState,
+      mediaType: (state) => state.enum.mediaType,
 
-      loading: state => state.sensitive.loading,
-      listAll: state => state.sensitive.auditMediaList,
-      page: state => state.sensitive.auditMediaPage,
-      currentUserUuid: state => state.user.uuid
-    })
+      loading: (state) => state.sensitive.loading,
+      listAll: (state) => state.sensitive.auditMediaList,
+      page: (state) => state.sensitive.auditMediaPage,
+      currentUserUuid: (state) => state.user.uuid,
+    }),
   },
   created() {
     this.initDataList(this.query)
@@ -256,10 +252,10 @@ export default {
       this.$store
         .dispatch('user/getUserListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -274,19 +270,12 @@ export default {
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
-    },
-    handleDetail(val) {
-      const payload = this.userList[val].uuid
-      this.$router.push({
-        path: '/user/detail',
-        query: { uuid: payload }
-      })
     },
     handleSearch(val) {
       const { auditConfirmation, handlerId, submitterId } = val
@@ -297,6 +286,7 @@ export default {
       this.query.submitterId = submitterId
         ? submitterId
         : this.query.submitterId
+      this.query.page = 0
       this.initDataList(this.query)
     },
     handleRefresh() {
@@ -304,80 +294,15 @@ export default {
       this.initDataList(this.query)
     },
     changePage(key) {
-        console.log(key)
+      console.log(key)
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
     },
     handleSelectionChange(val) {
-      this.selects = val.map(item => {
+      this.selects = val.map((item) => {
         return item.uuid
       })
-    },
-    /**
-     * 批量审批
-     */
-    handleBatchConfrim() {
-      const uuids = this.selects
-      const payload = {
-        auditConfirmation: 'APPROVED',
-        uuids
-      }
-      if (this.selects.length) {
-        this.$store
-          .dispatch('audit/batchAuditTagConfirmation', payload)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '操作成功',
-              onClose: () => {
-                this.initData()
-              }
-            })
-          })
-          .catch(err => {
-            this.$message({
-              type: 'error',
-              message: '操作失败'
-            })
-          })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '请选择至少一项'
-        })
-      }
-    },
-    handleBatchReject() {
-      const uuids = this.selects
-      const payload = {
-        auditConfirmation: 'AUDIT_FAILED',
-        uuids
-      }
-      if (this.selects.length) {
-        this.$store
-          .dispatch('audit/batchAuditTagConfirmation', payload)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '操作成功',
-              onClose: () => {
-                this.initData()
-              }
-            })
-          })
-          .catch(err => {
-            this.$message({
-              type: 'error',
-              message: '操作失败'
-            })
-          })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '请选择至少一项'
-        })
-      }
     },
     handleView(type, str) {
       const mediaId = str[0].localId
@@ -413,8 +338,8 @@ export default {
     },
     selectable(row, index) {
       let flag = false
-      row.auditUsers.forEach(item => {
-        item.userList.forEach(user => {
+      row.auditUsers.forEach((item) => {
+        item.userList.forEach((user) => {
           if (user.uuid === this.currentUserUuid) {
             //   console.log(user.auditState)
             if (
@@ -429,23 +354,30 @@ export default {
       return row.auditState === 'TO_BE_REVIEWED' && !flag
     },
     handleBatch(action) {
-      let uuids = this.selects
-      let payload = null
-      if (action === 'reject') {
-        uuids = this.selects
-        payload = {
-          auditConfirmation: 'AUDIT_FAILED',
-          uuids
+      if (this.selects.length) {
+        let uuids = this.selects
+        let payload = null
+        if (action === 'reject') {
+          uuids = this.selects
+          payload = {
+            auditConfirmation: 'AUDIT_FAILED',
+            uuids,
+          }
+        } else {
+          uuids = this.selects
+          payload = {
+            auditConfirmation: 'APPROVED',
+            uuids,
+          }
         }
-      } else {
-        uuids = this.selects
-        payload = {
-          auditConfirmation: 'APPROVED',
-          uuids
-        }
-      }
 
-      this.batchAudit(payload)
+        this.batchAudit(payload)
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请至少选择一项',
+        })
+      }
     },
     batchAudit(payload) {
       this.$store
@@ -457,13 +389,13 @@ export default {
             duration: 1000,
             onClose: () => {
               this.initDataList(this.query)
-            }
+            },
           })
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
@@ -477,8 +409,12 @@ export default {
       if (a.auditState === b.auditState) {
         return 0
       }
-    }
-  }
+    },
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
+  },
 }
 </script>
 
