@@ -2,6 +2,8 @@
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
 
+const Timestamp = new Date().getTime(); //时间戳，解决缓存问题
+
 function resolve(dir) {
     return path.join(__dirname, dir)
 }
@@ -123,6 +125,10 @@ module.exports = {
             alias: {
                 '@': resolve('src')
             }
+        },
+        output: { // 输出重构  打包编译后的 文件名称  【模块名称.版本号.时间戳】
+            filename: `js/[name].${Timestamp}.js`,
+            chunkFilename: `js/[name].${Timestamp}.js`
         },
         devtool: 'source-map'
     },
