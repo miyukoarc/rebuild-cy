@@ -141,7 +141,7 @@
               </el-table-column>
               <el-table-column label="个人标签" align="left">
                 <template v-slot="scope">
-                  <div v-if="scope.row.individualTags.length>0">
+                  <div v-if="scope.row.individualTags !=null">
                     <el-tag
                       size="mini"
                       type="primary"

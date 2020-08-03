@@ -26,18 +26,6 @@
             :auth="permissionMap['riskManagement']['riskManagement_add']"
             @click.stop="handleCreate"
           >新建回复</el-t-button>
-          <!-- <el-t-button
-            type="primary"
-            :popAuth="true"
-            :auth="permissionMap['riskManagement']['riskManagement_add']"
-            @click.stop="handleBatchChange"
-          >设置通知人</el-t-button>-->
-          <!-- <el-t-button
-            type="primary"
-            :popAuth="true"
-            :auth="permissionMap['riskManagement']['riskManagement_add']"
-            @click.stop="handleCreate"
-          >设置适用敏感词</el-t-button>-->
         </div>
       </tool-bar>
     </el-card>
@@ -54,7 +42,6 @@
           highlight-current-row
           header-row-class-name="el-table-header"
         >
-          <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="规则名称" align="left" prop="ruleWord"></el-table-column>
           <el-table-column label="关键词" align="left" prop="keyWord"></el-table-column>
           <el-table-column label="回复内容" align="left" prop="replyWord">
@@ -67,8 +54,6 @@
               </div>
             </template>
           </el-table-column>
-          <!-- <el-table-column label="适用标签" align="left">--</el-table-column>
-          <el-table-column label="创建人" align="left">--</el-table-column>-->
           <el-table-column label="企业标签" align="left">
             <template v-slot="{row}">
               <div v-if="row.autoReplyTags.length>0">
@@ -99,9 +84,14 @@
               <el-t-button
                 type="text"
                 :popAuth="true"
-                :auth="permissionMap['riskManagement']['riskManagement_delete']"
                 size="mini"
-                @click.stop="handleDelete(scope.$index)"
+                @click.stop="handleDetail(scope.row)"
+              >详情</el-t-button>
+              <el-t-button
+                type="text"
+                :popAuth="true"
+                size="mini"
+                @click.stop="handleDelete(scope.row)"
               >删除</el-t-button>
             </template>
           </el-table-column>
@@ -170,8 +160,6 @@ export default {
   watch: {},
   computed: {
     ...mapState({
-      //   tagListAll: state => state.tag.tagListAll,
-
       loading: (state) => state.automatic.loading,
       listAll: (state) => state.automatic.listAll,
       page: (state) => state.automatic.page,
@@ -188,19 +176,29 @@ export default {
     doExport(val) {
       console.log(val);
     },
+     /**
+     * 初始化表格信息
+     */
+    initDataList(payload) {
+      this.$store
+        .dispatch("automatic/getListAll", payload)
+        .then(() => {
+          //初始化分页
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
+          this.isReplySwitch = this.replySwitch;
+        })
+        .catch((err) => {
+          this.$message({
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
+    },
     /**
      * 初始化筛选信息
      */
     initFilter() {
-      //   this.$store
-      //     .dispatch('sensitive/getSensitiveListAll')
-      //     .then(() => {})
-      //     .catch(err => {
-      //       this.$message({
-      //         type: 'error',
-      //         message: '初始化失败'
-      //       })
-      //     })
       this.$store
         .dispatch("tag/getListSelect")
         .then(() => {})
@@ -221,25 +219,7 @@ export default {
           });
         });
     },
-    /**
-     * 初始化表格信息
-     */
-    initDataList(payload) {
-      this.$store
-        .dispatch("automatic/getListAll", payload)
-        .then(() => {
-          //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1;
-          this.pageConfig.total = this.page.total;
-          this.isReplySwitch = this.replySwitch;
-        })
-        .catch((err) => {
-          this.$message({
-            type: "error",
-            message: err || "初始化失败",
-          });
-        });
-    },
+   
     handleClickReplySwitch() {
       let payload = {
         flag: this.isReplySwitch,
@@ -250,12 +230,17 @@ export default {
         .catch((err) => {});
     },
 
-    handleDetail(val) {
-      const payload = this.userList[val].uuid;
-      this.$router.push({
-        path: "/user/detail",
-        query: { uuid: payload },
-      });
+    handleDetail(row) {
+      const payload = row.uuid;
+      console.log(row,'row')
+      this.$refs["formDialog"].event = "DetailTemplate";
+      this.$refs["formDialog"].eventType = "detail";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = row;
+      // this.$router.push({
+      //   path: "/user/detail",
+      //   query: { uuid: payload },
+      // });
     },
     handleSearch(val) {
       const {
@@ -297,7 +282,7 @@ export default {
       this.$refs["formDialog"].dialogVisible = true;
     },
     handleDelete(index) {
-      const payload = { uuid: this.listAll[index].uuid };
+      const payload = { uuid: row.uuid };
       this.$confirm("是否删除当前自动回复", "Warning", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

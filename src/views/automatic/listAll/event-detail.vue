@@ -1,28 +1,36 @@
 <!--
  * @Author: your name
- * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-07-31 22:24:13
+ * @Date: 2020-08-03 10:13:30
+ * @LastEditTime: 2020-08-03 14:35:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
+ * @FilePath: \rebuild-cy\src\views\automatic\listAll\event-detail.vue
 --> 
 <template>
   <el-form :model="form" ref="form" :rules="rules" label-width="120px" label-position="left">
-    <el-form-item label="默认回复">
-      <span class="color-primary mr-10 set-auto-replay" @click="setAutoRepaly">配置</span>
-      <span>当未匹配到关键词，小助理将发送次条消息内容</span>
+    <el-form-item label="规则名称" prop="rule" maxlength="15" show-word-limit>
+      <el-input v-model.trim="form.rule" placeholder="请输入规则名称"></el-input>
     </el-form-item>
-    <el-form-item label="文字消息" v-show="isSetAuto == true">
+
+    <el-form-item label="关键词" prop="keyWord">
+      <el-input v-model.trim="form.keyword">
+        <el-select v-model="form.keyType" slot="prepend" placeholder="请选择" style="width:100px">
+          <el-option label="包含" value="CONTAIN"></el-option>
+          <el-option label="完全匹配" value="COMPLETE"></el-option>
+        </el-select>
+      </el-input>
+    </el-form-item>
+
+    <el-form-item label="文字消息">
       <div class="full-w">
         <el-input v-model="form.reply" type="textarea" :rows="6" placeholder="请输入文字消息"></el-input>
       </div>
     </el-form-item>
 
-    <el-form-item label="图片/文章/链接" v-show="isSetAuto == true">
+    <el-form-item label="图片/文章/链接">
       <div class="msg-textarea-box full-w">
         <div class="message-box-content">
           <el-radio-group v-model="form.autoReplyType">
-            <el-radio :label="'CONTENT'">文本</el-radio>
             <el-radio :label="'IMAGE'">图片</el-radio>
             <el-radio :label="'FILE'">文件</el-radio>
             <el-radio :label="'ARTICLE'">文章</el-radio>
@@ -137,34 +145,17 @@
       </div>
     </el-form-item>
 
-    <el-form-item label="重复回复" v-show="isSetAuto == false">
-      <div class="flex-alinecenter">
-        <span class="font-es mr-15">{{repeat?'开启':'关闭'}}</span>
-        <el-switch v-model="repeat" @change="handleChangeRepeatTime"></el-switch>
-      </div>
+    <el-form-item label="配置标签">
+      <el-radio-group v-model="form.autoReplyTagType">
+        <el-radio label="CONTAIN">包含其一</el-radio>
+        <el-radio label="COMPLETE">完全匹配</el-radio>
+      </el-radio-group>
     </el-form-item>
-    <el-form-item v-show="isSetAuto == false">
-      <div class="flex-alinecenter">
-        <span class="mr-10">同一内容在</span>
-        <el-select
-          v-model="repeatTime"
-          placeholder="请选择"
-          style="width:100px"
-          :disabled="!repeat"
-          @change="handleChangeRepeatTime"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-        <span class="ml-10">内对同一客户不再重复回复</span>
-      </div>
+    <el-form-item label=" ">
+      <tag-multi-select v-model="form.tagIdList" @select-change="handleChange"></tag-multi-select>
     </el-form-item>
 
-    <div class="text-align-center" v-show="isSetAuto == true">
+    <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
       <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
     </div>
@@ -188,60 +179,44 @@ export default {
     inputEdit,
     TagMultiSelect,
   },
+  props: {
+    transfer: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
-      repeat: false,
-      isSetAuto: false,
-      value1: false,
-      repeatTime: "30",
-      options: [
-        {
-          value: "30",
-          label: "30分钟",
-        },
-        {
-          value: "60",
-          label: "60分钟",
-        },
-        {
-          value: "90",
-          label: "90分钟",
-        },
-        {
-          value: "120",
-          label: "2小时",
-        },
-        {
-          value: "180",
-          label: "3小时",
-        },
-        {
-          value: "240",
-          label: "4小时",
-        },
-        {
-          value: "300",
-          label: "5小时",
-        },
-        {
-          value: "360",
-          label: "6小时",
-        },
-      ],
-      // type: "",
+      fileList:[],
+      type: "",
+      // userSelects: [],
+      // tagSelects: [],
+      // inputVisible: false,
+      // inputValue: "",
 
       // 回复内容
       form: {
+        autoReplyTagType: "CONTAIN",
         autoReplyType: "CONTENT",
+        keyType: "CONTAIN",
+        fileName:'',
+        keyword: "",
         mediaId: "",
         reply: "",
+        rule: "",
+        tagIdList: [],
       },
-      fileList: [],
+
+      insertName: true,
       messageImage: "",
       messageVideo: "",
       messageFile: "",
       mediaId: "",
       welcomecontentT: {},
+
+      memberNick: "客户昵称",
+      // toUserTags: [],
+      // toRoles: [],
       rules: {
         rule: [{ required: true, message: "请输入规则名称", trigger: "blur" }],
         keyword: [
@@ -258,27 +233,72 @@ export default {
       selectTags: [],
     };
   },
-  watch: {},
+  watch: {
+     transfer:{
+          handler(newVal,oldVal){
+              console.log(newVal,'3333')
+         this.form.autoReplyTagType= newVal.autoReplyTagType;
+         this.form.autoReplyType=newVal.autoReplyType;
+        //  this.form.keyType= ;
+         this.form.fileName=newVal.fileName;
+         this.form.keyword= newVal.keyword;
+         this.form.mediaId= newVal.mediaId;
+         this.form.reply= newVal.reply;
+         this.form.rule= newVal.ruleWord;
+         this.form.tagIdList= newVal.autoReplyTags;
+      },
+          immediate:true
+      }
+    // "form.reply": {
+    //   handler(newVal, oldVal) {
+    //     if (newVal.indexOf('<span class="nickName">客户昵称</span>') > -1) {
+    //       this.insertName = false;
+    //     } else {
+    //       this.insertName = true;
+    //     }
+    //   },
+    //   immediate: true,
+    // },
+    // "form.informType": {
+    //   handler(newVal, oldVal) {
+    //     if (newVal == "ROLE") {
+    //       this.$set(this.form, "toRole", []);
+    //       this.$delete(this.form, "toUser");
+    //     }
+    //     if (newVal == "USER") {
+    //       this.$set(this.form, "toUser", []);
+    //       this.$delete(this.form, "toRole");
+    //     }
+    //   },
+    //   immediate: true,
+    // },
+    // toUser: {
+    //   handler(newValue, oldVal) {
+    //     this.toUserTags = this.userListSelect.filter(item => {
+    //       return newValue.some(key => {
+    //         return item.userId === key
+    //       })
+    //     })
+    //   },
+    //   deep: true
+    // },
+    // toUserTags: {
+    //   handler(newValue, oldVal) {},
+    //   deep: true,
+    // },
+  },
   computed: {
     ...mapState({
       articleListSelect: (state) => state.media.articleListSelect,
-      automaticDefaultDetail: (state) => state.automatic.automaticDefaultDetail,
     }),
     toUser() {
       return this.form.toUser;
     },
   },
   mounted() {
-    this.initData();
     this.initFilter();
   },
   methods: {
-    initData() {
-      this.$store
-        .dispatch("automatic/automaticDefaultDetail")
-        .then(() => {})
-        .catch((err) => {});
-    },
     initFilter() {
       this.$store
         .dispatch("media/getArticleListSelect")
@@ -289,22 +309,60 @@ export default {
             message: "初始化失败",
           });
         });
+
+      // this.$store
+      //   .dispatch("role/getRoleListSelect")
+      //   .then(() => {})
+      //   .catch((err) => {
+      //     this.$message({
+      //       type: "error",
+      //       message: err || "初始化失败",
+      //     });
+      //   });
+
+      // this.$store
+      //   .dispatch("department/getDepartmentListAll")
+      //   .then(() => {})
+      //   .catch((err) => {
+      //     this.$message({
+      //       type: "error",
+      //       message: err || "初始化失败",
+      //     });
+      //   });
+
+      // this.$store
+      //   .dispatch("tag/getListSelect")
+      //   .then(() => {})
+      //   .catch((err) => {
+      //     this.$message({
+      //       type: "error",
+      //       message: err || "初始化失败",
+      //     });
+      //   });
     },
     handleConfirm() {
+      //   if (this.form.informType == 'USER') {
+      //     this.form.toUser = this.userSelects.map(item => {
+      //       return item.uuid
+      //     })
+      //   } else {
+      //     this.form.toRole = this.toRoles
+      //   }
+      //   this.form.setTag = this.tagSelects.reduce((sum, curr) => {
+      //     return sum.concat(curr)
+      //   }, [])
       const payload = this.form;
       this.$refs["form"].validate((valid) => {
         if (valid) {
           this.$store
-            .dispatch("automatic/automaticAddDefault", payload)
+            .dispatch("automatic/add", payload)
             .then(() => {
               this.$message({
                 type: "success",
                 message: "新建成功",
               });
-              this.isSetAuto = false;
-              this.initData();
-              // this.handleCancel();
-              // this.refresh();
+              this.handleCancel();
+              this.refresh();
             })
             .catch((err) => {
               this.$message({
@@ -320,37 +378,22 @@ export default {
         }
       });
     },
-    handleChangeRepeatTime(val) {
-      let payload = { flag: this.repeat, interval: this.repeatTime };
-      this.$store
-        .dispatch("automatic/automaticSwitchReplyInterval", payload)
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "修改成功",
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    setAutoRepaly() {
-      this.isSetAuto = true;
-      this.$nextTick(() => {
-        this.form.autoReplyType = this.automaticDefaultDetail.autoReplyType
-          ? this.automaticDefaultDetail.autoReplyType
-          : "CONTENT";
-        this.form.mediaId = this.automaticDefaultDetail.mediaId;
-        this.form.reply = this.automaticDefaultDetail.replyWord;
-      });
+    // 插入 客户名称
+    insertionMemberName(memberNick) {
+      this.insertName = false;
+      this.form.reply =
+        this.form.reply + `<span class="nickName">${memberNick}</span>&#8203;`;
     },
     // 回复内容 上传
     handleSetMessageImage(res, file) {
       this.messageImage = URL.createObjectURL(file.raw);
       this.form.mediaId = res.id;
     },
+    // handleSetMessageVideo(res, file) {
+    //   this.messageVideo = URL.createObjectURL(file.raw);
+    //   this.form.mediaId = res.id;
+    // },
     handleSetMessageFile(res, file) {
-      console.log(file);
       this.messageFile = URL.createObjectURL(file.raw);
       this.form.mediaId = res.id;
     },
@@ -387,7 +430,6 @@ export default {
       return isLt50M;
     },
     beforeRemoveFile(file) {
-      this.messageFile = "";
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     handleClear() {
@@ -418,35 +460,17 @@ export default {
         this.form.mediaId = this.welcomecontentT.uuid;
       }
     },
-    // 取消配置默认自动回复
+    // 关闭弹框
     handleCancel() {
-      this.isSetAuto = false;
-      // this.$parent.$parent.dialogVisible = false;
+      this.$parent.$parent.dialogVisible = false;
     },
     // 标签绑定事件
     handleChange() {},
-    // 刷新
-    refresh() {
-      this.$store
-        .dispatch("sensitive/getSensitiveListAll")
-        .then(() => {
-          this.reload();
-        })
-        .catch((err) => {
-          this.$message({
-            type: "error",
-            message: err,
-          });
-        });
-    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.set-auto-replay {
-  cursor: pointer;
-}
 .msg-textarea-box {
   // width: 48%;
   background: #fbfbfb;
@@ -492,14 +516,7 @@ export default {
     padding: 6px 15px;
   }
 }
-.message-content {
-  .el-select-dropdown {
-    .el-select-dropdown__item {
-      height: auto;
-      line-height: 1px;
-    }
-  }
-}
+
 .option-warp {
   img.option-img {
     width: 46px;
@@ -542,7 +559,6 @@ export default {
     }
   }
 }
-
 // .contact-way-detail {
 .message-content {
   margin: 20px 0;
