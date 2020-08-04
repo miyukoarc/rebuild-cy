@@ -62,7 +62,7 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
+        <!-- <el-pagination
           background
           class="pager"
           layout="total,prev, pager, next,jumper"
@@ -70,7 +70,8 @@
           :current-page.sync="pageConfig.pageNumber"
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
-        />
+        /> -->
+         <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
       </div>
     </el-card>
 
@@ -82,6 +83,7 @@
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from '@/components/ToolBar'
+import CustomerPagination from '@/components/CustomerPagination'
 import { mapState } from 'vuex'
 import { cancelBatchAddTask } from '@/api/potentialCustomer'
 
@@ -90,13 +92,14 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar,
+    CustomerPagination
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 1,
-        pageSize: 20,
+        pageSize: 10,
       },
 
       query: {
@@ -236,6 +239,10 @@ export default {
       console.log(this.query)
       this.query.page = key - 1
       this.pageConfig.pageNumber = key
+      this.initDataList(this.query)
+    },
+    changeSize(val) {
+      this.query.size = val
       this.initDataList(this.query)
     },
   },

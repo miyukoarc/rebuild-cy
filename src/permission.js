@@ -62,11 +62,11 @@ router.beforeEach(async(to, from, next) => {
                     let accessed
 
                     await store.dispatch('user/getMyInfo').then(async(res) => {
-
                         const name = res.name
-
-                        window.watermark = new Watermark(name)
-                        window.watermark.create()
+                        if (name) {
+                            window.watermark = new Watermark(name)
+                            window.watermark.create()
+                        }
 
                     }).catch(err => {
                         Message({
