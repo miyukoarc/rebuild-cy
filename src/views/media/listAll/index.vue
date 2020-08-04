@@ -238,7 +238,7 @@ export default {
     },
     initMediaList(payload) {
       this.$store
-        .dispatch('media/getMediaListAll',  {...payload,matchFormat:'CONTAINS_ANY',tagUuids:'91,92,93'})
+        .dispatch('media/getMediaListAll',  payload)
         .then(() => {})
         .catch((err) => {
           this.$message({
