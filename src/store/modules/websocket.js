@@ -61,7 +61,7 @@ const actions = {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
                         }
-                        //显不处理，以后再说！！！！！！！！！！！！！！！
+                        // 显不处理，以后再说！！！！！！！！！！！！！！！
                     })
                     $ipcRenderer.on('reply-inputEnter', (event, arg) => {
                         console.log('reply-inputEnter', arg)
@@ -132,6 +132,7 @@ const actions = {
                 }
                 else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
+                        console.log('onReady')
                         dispatch('sendChaoyingMessage', data)
                     }
                 }
@@ -183,7 +184,33 @@ const actions = {
         console.log("sendMessage1:", list)
         console.log("sendMessage2:", state.batchSendTaskDetail)
 
-        if (state.batchSendTaskDetail.media.type == 'IMAGE') {
+        if (state.batchSendTaskDetail.tempMediaType == 'IMAGE') {
+            state.sendMsgContent = {
+                msgtype: "image",
+                image:
+                {
+                    mediaid: state.batchSendTaskDetail.tempMediaWx,
+                }
+            }
+            console.log('nmsl')
+            console.log(state.sendMsgContent)
+        } else if (state.batchSendTaskDetail.tempMediaType == 'VIDEO') {
+            state.sendMsgContent = {
+                msgtype: "video",
+                image:
+                {
+                    mediaid: state.batchSendTaskDetail.tempMediaWx,
+                }
+            }
+        } else if (state.batchSendTaskDetail.tempMediaType == 'FILE') {
+            state.sendMsgContent = {
+                msgtype: "file",
+                image:
+                {
+                    mediaid: state.batchSendTaskDetail.tempMediaWx,
+                }
+            }
+        } else if (state.batchSendTaskDetail.media.type == 'IMAGE') {
             state.sendMsgContent = {
                 msgtype: "image",
                 image:
@@ -233,6 +260,7 @@ const actions = {
     },
 
     sendChaoyingMessage({ state }, obj) {
+        console.log('sendChaoyingMessage')
         if (state.batchSendTaskDetail.media.type == 'ARTICLE' && state.sendMsgContent) {
             state.sendMsgContent.news.link = state.articleLink;
         }
