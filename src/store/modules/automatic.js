@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-17 23:18:57
- * @LastEditTime: 2020-08-03 15:37:42
+ * @LastEditTime: 2020-08-03 21:09:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\automatic.js
@@ -139,6 +139,27 @@ const actions = {
             })
         })
     },
+
+    /**
+     * 自动回复开关
+     * @param {*} payload 
+     */
+    automaticSwitchReply({
+        commit
+    }, payload) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            automaticSwitchReply(payload).then(res => {
+                resolve()
+            }).catch(err => {
+                reject(err)
+            }).finally(() => {
+                commit('TOGGLE_LOADING', false)
+            })
+        })
+    },
+
+
     /**
      * 添加默认自动回复
      * @param {*} param0 

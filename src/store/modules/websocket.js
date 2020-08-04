@@ -166,6 +166,7 @@ const actions = {
     },
     getDetail({ state, dispatch }, data) {
         getDetail(data.properties.batchSendTaskUuid).then(res => {
+            console.log("getDetail：", res)
             state.batchSendTaskDetail = res
             dispatch('getListBatchSendTaskResult', data)
         })
@@ -178,7 +179,10 @@ const actions = {
             dispatch('sendMessage', res.items)
         })
     },
-    sendMessage({ dispatch }, list) {
+    sendMessage({ state, dispatch }, list) {
+        console.log("sendMessage1:", list)
+        console.log("sendMessage2:", state.batchSendTaskDetail)
+
         if (state.batchSendTaskDetail.media.type == 'IMAGE') {
             state.sendMsgContent = {
                 msgtype: "image",
