@@ -44,23 +44,23 @@
     <el-form-item label="文字内容：">
       <article-board v-if="detail.mediaUuid" :uuid="detail.mediaUuid"></article-board>
       <el-image
-          v-if="detail.tempMediaType==='IMAGE'"
-          fit="contain"
-          :src="`/api/public/file/${detail.tempMediaKey}`"
-        ></el-image>
-        <video
-          controls
-          style="width:400px;height:300px"
-          v-if="detail.tempMediaType==='VIDEO'"
-          :src="`/api/public/file/${detail.tempMediaKey}`"
-        ></video>
-        <div class="file-container" v-if="detail.tempMediaType==='FILE'">
-          <el-button size="small" @click="handleDownload">
-            <i class="el-icon-document"></i>
-            下载文件&emsp;
-            <i class="el-icon-download"></i>
-          </el-button>
-        </div>
+        v-if="detail.tempMediaType==='IMAGE'"
+        fit="contain"
+        :src="`/api/public/file/${detail.tempMediaKey}`"
+      ></el-image>
+      <video
+        controls
+        style="width:400px;height:300px"
+        v-if="detail.tempMediaType==='VIDEO'"
+        :src="`/api/public/file/${detail.tempMediaKey}`"
+      ></video>
+      <div class="file-container" v-if="detail.tempMediaType==='FILE'">
+        <el-button size="small" @click="handleDownload">
+          <i class="el-icon-document"></i>
+          下载文件&emsp;
+          <i class="el-icon-download"></i>
+        </el-button>
+      </div>
     </el-form-item>
 
     <el-form-item label="标签配置：">
@@ -282,7 +282,6 @@ export default {
         }
       }
 
-
       this.$store
         .dispatch('audit/batchAuditBatchTaskConfirmation', payload)
         .then(() => {
@@ -305,9 +304,10 @@ export default {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'error',
+          }).finally(() => {
+            this.handleRefresh()
+            this.handleCancel()
           })
-            .then(() => {})
-            .catch((err) => {})
         })
     },
     handleRefresh() {

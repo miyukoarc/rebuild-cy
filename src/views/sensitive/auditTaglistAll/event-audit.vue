@@ -278,10 +278,15 @@ export default {
           })
         })
         .catch((err) => {
-          this.$message({
+          this.$confirm(err, '错误', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
             type: 'error',
-            message: err,
           })
+            .finally(()=>{
+                this.handleRefresh()
+                this.handleCancel()
+            })
         })
     },
     handleRefresh() {
