@@ -183,6 +183,15 @@ export default {
   created() {
     this.initDataList(this.query)
   },
+  mounted(){
+      this.$bus.$on('handleRefresh',()=>{
+          this.initDataList(this.query)
+      })
+
+      this.$once('hook:beforeDestroy',()=>{
+          this.$bus.$off('handleRefresh')
+      })
+  },
   methods: {
     doExport(val) {
       console.log(val)

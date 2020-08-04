@@ -282,9 +282,9 @@ export default {
         }
       }
 
-      console.log(payload)
+
       this.$store
-        .dispatch('audit/batchAuditMediaConfirmation', payload)
+        .dispatch('audit/batchAuditBatchTaskConfirmation', payload)
         .then(() => {
           this.$message({
             type: 'success',
