@@ -16,7 +16,7 @@
       <el-date-picker
         v-model="datePicker"
         type="daterange"
-        :value-format="'yyyy-MM-dd HH-mm-ss'"
+        :value-format="'yyyy-MM-dd HH:mm:ss'"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
@@ -57,20 +57,20 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       datePicker: [],
       query: {
-        name: '',
-        tagIds: '',
-        userId: '',
-        startTime: '',
-        endTime: '',
+        name: "",
+        tagIds: "",
+        userId: "",
+        startTime: "",
+        endTime: "",
         // roleUuid: ''
       },
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -82,22 +82,23 @@ export default {
   methods: {
     handleChangeTime(val) {
       if (val) {
-        this.query.startTime = val[0]
-        this.query.endTime = val[1]
+        this.query.startTime = val[0];
+        this.query.endTime = val[1];
       } else {
-        this.query.startTime = ''
-        this.query.endTime = ''
+        this.query.startTime = "";
+        this.query.endTime = "";
       }
     },
     handleSearch() {
-      this.$emit('handleSearch', this.query)
+      this.$emit("handleSearch", this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query
-      this.$emit('handleRefresh')
+      this.query = this.$options.data().query;
+      this.datePicker = [];
+      this.$emit("handleRefresh");
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
