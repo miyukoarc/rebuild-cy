@@ -44,7 +44,7 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
         }
     }
 
-// 21days 
+    // 21days 
     // before: require('./mock/mock-server.js')
 } : {
     port: 80,

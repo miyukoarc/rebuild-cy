@@ -59,17 +59,15 @@ function myFilter(arr1, arr2) {
   let temp = [] //交集
   arr1.forEach(item1 => {
     arr2.forEach(item2 => {
-      if (item1 === item2) {
+      if (item1.tagId === item2.tagId) {
         temp.push(item1)
       }
     })
   })
 
-  console.log(temp)
-
   arr1.forEach(item => {
     if (!temp.find(unit => {
-        return unit.uuid === item.uuid
+        return unit.tagId === item.tagId
       })) {
       arr1Temp.push(item)
     }
@@ -77,7 +75,7 @@ function myFilter(arr1, arr2) {
 
   arr2.forEach(item => {
     if (!temp.find(unit => {
-        return unit.uuid === item.uuid
+        return unit.tagId === item.tagId
       })) {
 
       arr2Temp.push(item)
@@ -87,7 +85,8 @@ function myFilter(arr1, arr2) {
 
   return [
     [...arr1Temp],
-    [...arr2Temp]
+    [...arr2Temp],
+    [...temp]
   ]
 }
 
@@ -385,14 +384,15 @@ const actions = {
     return new Promise((resolve, reject) => {
       getAuditTaglistAll(payload).then(res => {
         const accessed = res.items.map(item => {
-        //   const temp = myFilter(JSON.parse(item.tagBeforeChangeContent),
-        //     JSON.parse(item.tagChangeContent))
-        //     console.log(temp)
+          const arr1 = JSON.parse(item.tagBeforeChangeContent)||[]
+          const arr2 = JSON.parse(item.tagChangeContent)||[]
+          const temp = myFilter(arr1, arr2)
+        //   console.log(temp)
           return {
             ...item,
             auditUsers: JSON.parse(item.auditUsers),
-            tagBeforeChangeContent: JSON.parse(item.tagBeforeChangeContent),
-            tagChangeContent: JSON.parse(item.tagChangeContent),
+            tagBeforeChangeContent: temp[0],
+            tagChangeContent: temp[1],
           }
         })
         commit('SAVE_TAGLIST', accessed)

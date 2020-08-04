@@ -31,10 +31,34 @@
       </div>
     </el-form-item>
 
-    <el-form-item label="权限：">
+    <!-- <el-form-item label="权限：">
       <div class v-for="item in permissionList" :key="item.module">
         <span class="font-es font-weight-700">{{permissionEnum[item.module]}}：</span>
         <span v-text="format(item.permissions)"></span>
+      </div>
+    </el-form-item>-->
+    <el-form-item label="动作：" v-if="detail.tagChangeContent">
+      <div v-if="detail.tagChangeContent.length===0">
+        <span class="font-exs color-info">删除标签</span>
+        <el-tag size="mini" v-for="tag in detail.tagBeforeChangeContent" :key="tag.tagId">{{tag.tagName}}</el-tag>
+      </div>
+      <div v-else>
+        <div>
+          <span class="font-exs color-info">修改前</span>
+          <el-tag
+            size="mini"
+            v-for="tag in detail.tagChangeContent"
+            :key="tag.tagId"
+          >{{tag.tagName}}</el-tag>
+        </div>
+        <div>
+          <span class="font-exs color-info">修改后</span>
+          <el-tag
+            size="mini"
+            v-for="tag in detail.tagBeforeChangeContent"
+            :key="tag.tagId"
+          >{{tag.tagName}}</el-tag>
+        </div>
       </div>
     </el-form-item>
 
@@ -157,19 +181,58 @@ export default {
   },
   mounted() {},
   methods: {
+    myFilter(arr1, arr2) {
+      let arr1Temp = []
+      let arr2Temp = []
+      let temp = [] //交集
+      arr1.forEach((item1) => {
+        arr2.forEach((item2) => {
+          if (item1.tagId === item2.tagId) {
+            temp.push(item1)
+          }
+        })
+      })
+
+      arr1.forEach((item) => {
+        if (
+          !temp.find((unit) => {
+            return unit.tagId === item.tagId
+          })
+        ) {
+          arr1Temp.push(item)
+        }
+      })
+
+      arr2.forEach((item) => {
+        if (
+          !temp.find((unit) => {
+            return unit.tagId === item.tagId
+          })
+        ) {
+          arr2Temp.push(item)
+        }
+      })
+
+      return [[...arr1Temp], [...arr2Temp], [...temp]]
+    },
     initData(payload) {
       this.$store
         .dispatch('audit/getDetail', payload)
         .then((res) => {
+          const arr1 = this.parse(res.tagBeforeChangeContent) || []
+          const arr2 = this.parse(res.tagChangeContent) || []
+          const temp = this.myFilter(arr1, arr2)
           this.detail = {
             ...res,
             auditUsers: this.parse(res.auditUsers),
-            tagBeforeChangeContent: res.tagBeforeChangeContent
-              ? this.groupingTags(this.parse(res.tagBeforeChangeContent))
-              : [],
-            tagChangeContent: res.tagChangeContent
-              ? this.groupingTags(this.parse(res.tagChangeContent))
-              : [],
+            tagBeforeChangeContent: temp[0],
+            // res.tagBeforeChangeContent
+            //   ? this.groupingTags(this.parse(res.tagBeforeChangeContent))
+            //   : [],
+            tagChangeContent: temp[1],
+            // res.tagChangeContent
+            //   ? this.groupingTags(this.parse(res.tagChangeContent))
+            //   : [],
           }
 
           this.permissionList = this.grouping(res.toPermissions)

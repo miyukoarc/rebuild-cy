@@ -47,7 +47,7 @@
           </el-radio-group>
 
           <!-- 上传图片 -->
-          <section class="message-content display-flex" v-show="form.autoReplyType == 'IMAGE'">
+          <section class="message-content display-flex" v-if="form.autoReplyType == 'IMAGE'">
             <div class="img-warp">
               <el-upload
                 class="avatar-uploader"
@@ -90,7 +90,7 @@
           </section>-->
 
           <!-- 上传文件 -->
-          <section class="message-content display-flex" v-show="form.autoReplyType == 'FILE'">
+          <section class="message-content display-flex" v-if="form.autoReplyType == 'FILE'">
             <div class="img-warp">
               <el-upload
                 action="/api/upload"
@@ -107,7 +107,7 @@
             </div>
           </section>
 
-          <div class="message-content" v-show="form.autoReplyType == 'ARTICLE'">
+          <div class="message-content" v-if="form.autoReplyType == 'ARTICLE'">
             <el-select
               :popper-append-to-body="false"
               v-model="form.mediaId"
@@ -125,7 +125,8 @@
                 v-if="form.mediaId"
               >
                 <img
-                  style="width:20px;height:20px"
+                  v-if="welcomecontentT.imgId"
+                  style="width:24px;height:24px"
                   :src="'/api/public/file/'+welcomecontentT.imgId"
                   alt
                 />
@@ -528,7 +529,7 @@ export default {
     margin-left: 10px;
     color: #8492a6;
     font-size: 13px;
-    line-height: 14px;
+    line-height: 20px;
   }
 }
 
@@ -547,7 +548,7 @@ export default {
     width: 95%;
     .input-title {
       margin-left: 5px;
-      font-size: 13px;
+      font-size: 12px;
       line-height: 14px;
       text-align: left;
       width: 95%;
