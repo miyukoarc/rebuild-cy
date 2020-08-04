@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-03 20:29:22
+ * @LastEditTime: 2020-08-04 15:46:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -106,7 +106,8 @@
                 v-if="form.mediaId"
               >
                 <img
-                  style="width:20px;height:20px"
+                  v-if="welcomecontentT.imgId"
+                  style="width:24px;height:24px"
                   :src="'/api/public/file/'+welcomecontentT.imgId"
                   alt
                 />
@@ -534,7 +535,7 @@ export default {
     margin-left: 10px;
     color: #8492a6;
     font-size: 13px;
-    line-height: 14px;
+    line-height: 20px;
   }
 }
 
@@ -553,7 +554,7 @@ export default {
     width: 95%;
     .input-title {
       margin-left: 5px;
-      font-size: 13px;
+      font-size: 12px;
       line-height: 14px;
       text-align: left;
       width: 95%;

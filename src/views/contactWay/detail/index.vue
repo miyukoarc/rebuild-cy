@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-11 11:15:45
- * @LastEditTime: 2020-07-30 16:33:08
+ * @LastEditTime: 2020-08-04 15:47:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\contactWay\detail.vue
@@ -168,7 +168,7 @@
                         v-if="ruleForm.link"
                       >
                         <img
-                          style="width:20px;height:20px"
+                          style="width:24px;height:24px"
                           :src="'/api/public/file/'+welcomecontentT.imgId"
                           alt
                         />
@@ -763,7 +763,7 @@ img.option-img {
     width: 100%;
     .input-title {
       margin-left: 5px;
-      font-size: 13px;
+      font-size: 12px;
       line-height: 14px;
       text-align: left;
     }

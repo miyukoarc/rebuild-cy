@@ -195,7 +195,7 @@
                           v-if="form.mediaUuid"
                         >
                           <img
-                            style="width:20px;height:20px"
+                            style="width:24px;height:24px"
                             :src="'/api/public/file/'+welcomecontentT.imgId"
                             alt
                           />
@@ -679,7 +679,7 @@ img.option-img {
     width: 100%;
     .input-title {
       margin-left: 5px;
-      font-size: 13px;
+      font-size: 12px;
       line-height: 14px;
       text-align: left;
     }
