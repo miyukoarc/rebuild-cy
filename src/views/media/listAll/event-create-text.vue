@@ -26,7 +26,7 @@
           <el-radio v-model="matchFormat" label="PERFECT_MATCH">完全匹配</el-radio>
         </div>
       </el-form-item>
-      <!-- <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select> -->
+
       <tag-multi-select v-model="tagSelects"></tag-multi-select>
 
       <el-form-item label="引用条例"></el-form-item>
@@ -46,7 +46,7 @@ import TagMultiSelect from '@/components/TagMultiSelect'
 export default {
   components: {
     TagSelect,
-    TagMultiSelect
+    TagMultiSelect,
   },
   props: {
     transfer: {
@@ -67,7 +67,6 @@ export default {
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        //   console.log()
         const { uuid } = newVal
         this.groupUuid = uuid
       },
@@ -107,11 +106,11 @@ export default {
       const content = this.content[0]
       const groupUuid = this.groupUuid
       const type = this.type
-      const tagUuids = this.tagSelects
-        // .reduce((sum, curr) => {
-        //   return sum.concat(curr)
-        // }, [])
-        // .join(',')
+      const tagUuids = this.tagSelects.join(',')
+      // .reduce((sum, curr) => {
+      //   return sum.concat(curr)
+      // }, [])
+      // .join(',')
       const matchFormat = this.matchFormat
       const data = { tagUuids, matchFormat }
       const params = { groupUuid, type, content, ...data }
@@ -148,9 +147,9 @@ export default {
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
     },
-    handleRefresh(){
-        this.$bus.$emit('handleRefresh')
-    }
+    handleRefresh() {
+      this.$bus.$emit('handleRefresh')
+    },
   },
 }
 </script>
