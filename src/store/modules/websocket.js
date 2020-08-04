@@ -147,11 +147,20 @@ const actions = {
                 }
                 else if (data.type == 'AUTOREP') {
                     if (data.properties.mobile) {
-                        $ipcRenderer.send('SendMessage', {
-                            type: 0,
-                            mobile: data.properties.mobile,
-                            textContent: data.properties.content
-                        })
+                        // $ipcRenderer.send('SendMessage', {
+                        //     type: 0,
+                        //     mobile: data.properties.mobile,
+                        //     textContent: data.properties.content
+                        // })
+                        console.log(data.properties)
+                        
+                        state.sendMsgContent = {
+                            msgtype: "image",
+                            image:
+                            {
+                                mediaid: state.batchSendTaskDetail.tempMediaWx,
+                            }
+                        }
                     }
                 }
             }
