@@ -51,17 +51,31 @@
               <div class="tag-container">
                 <div style="width:60px;">{{tagOperationType[row.tagOperationType]}}</div>&emsp;&emsp;
                 <div v-if="row.tagOperationType==='DELETE_TAG_GROUP'">
-                    <span class="font-exs color-info">{{row.tagChangeContent[0].groupName}}</span>
+                  <span class="font-exs color-info">{{row.tagChangeContent[0].groupName}}</span>
                   <!-- <el-tag v-for="tag in row.tagChangeContent" :key="tag.tagId" size="mini">{{tag.tagName}}</el-tag> -->
                   <!-- <el-tag size="mini" v-if="row.tagChangeContent.length>1">...</el-tag> -->
                 </div>
 
                 <div v-if="row.tagOperationType==='ADD_TAG'">
-                    <span class="font-exs color-info">{{row.tagChangeContent[0].groupName}}</span>
+                  <span class="font-exs color-info">{{row.tagChangeContent[0].groupName}}</span>
                 </div>
 
                 <div v-if="row.tagOperationType==='UPDATE_TAG'">
-                    
+                  <div v-if="row.tagChangeContent.length===0">
+                    <span class="font-exs color-info">删除</span>
+                    <el-tag
+                      v-for="tag in row.tagBeforeChangeContent"
+                      :key="tag.tagId"
+                    >{{tag.tagName}}</el-tag>
+                  </div>
+                  <div v-else>
+                    <div>
+                      <span class="font-exs color-info">修改前</span>
+                    </div>
+                    <div>
+                      <span class="font-exs color-info">修改后</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </template>
@@ -93,15 +107,11 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
+        <customer-pagination
+          :pageConfig="pageConfig"
           @current-change="changePage"
-        />
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -113,6 +123,7 @@
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from '@/components/ToolBar'
+import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -120,6 +131,7 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar,
+    CustomerPagination,
   },
   data() {
     return {
@@ -153,7 +165,7 @@ export default {
       loading: (state) => state.sensitive.loading,
       listAll: (state) => state.sensitive.auditTaglist,
       page: (state) => state.sensitive.auditTagPage,
-      tagOperationType: state => state.enum.tagOperationType
+      tagOperationType: (state) => state.enum.tagOperationType,
     }),
   },
   created() {

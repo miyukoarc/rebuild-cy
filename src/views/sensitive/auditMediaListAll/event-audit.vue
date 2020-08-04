@@ -1,12 +1,19 @@
 <template>
   <el-form ref="form" label-width="150px" label-position="left">
-    <el-form-item label="提交人：" v-if="detail.submitOperator">
-      <div class="submit-item">
+    <el-form-item label="提交人：">
+      <div class="submit-item" v-if="detail.submitOperator">
         <async-user-tag size="small" type="info" :uuid="detail.submitOperator.uuid">
           <i class="el-icon-user-solid color-primary"></i>
           {{detail.submitOperator.name}}
         </async-user-tag>
       </div>
+
+      <!-- <div class="submit-item" v-if="detail.approvedOperator">
+        <async-user-tag size="small" type="info" :uuid="detail.approvedOperator.uuid">
+          <i class="el-icon-user-solid color-primary"></i>
+          {{detail.approvedOperator.name}}
+        </async-user-tag>
+      </div>-->
 
       <div class="submit-item">
         <el-tag
@@ -230,6 +237,15 @@ export default {
       this.$store
         .dispatch('audit/getDetail', payload)
         .then((res) => {
+          let submitUser = {}
+          if (Object.keys(res.submitOperator).length) {
+            submitUser = res.submitOperator
+          } else {
+            submitUser = res.approvedOperator
+          }
+
+          console.log(submitUser)
+
           if (res.mediaOperationType === 'ADD_MEDIA') {
             this.detail = {
               ...res,
@@ -246,7 +262,7 @@ export default {
               arr = this.parse(res.auditAddMedia)[0].tagsDto || []
             }
 
-            console.log(arr, res.toTags)
+            // console.log(arr, res.toTags)
 
             this.tags = this.grouping(arr)
             // } else {
@@ -290,7 +306,7 @@ export default {
               arr = this.parse(res.auditAddMedia)[0].tagsDto || []
             }
 
-            console.log(arr, res.toTags)
+            // console.log(arr, res.toTags)
 
             this.tags = this.grouping(arr)
             // } else {

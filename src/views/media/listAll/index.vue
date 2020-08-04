@@ -227,7 +227,7 @@ export default {
     },
     initDataList(payload) {
       this.$store
-        .dispatch('media/getMediaGroupListAll', payload)
+        .dispatch('media/getMediaGroupListAll',payload)
         .then(() => {})
         .catch((err) => {
           this.$message({
@@ -238,7 +238,7 @@ export default {
     },
     initMediaList(payload) {
       this.$store
-        .dispatch('media/getMediaListAll', payload)
+        .dispatch('media/getMediaListAll',  {...payload,matchFormat:'CONTAINS_ANY',tagUuids:'91,92,93'})
         .then(() => {})
         .catch((err) => {
           this.$message({
