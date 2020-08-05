@@ -69,7 +69,6 @@ const actions = {
                     $ipcRenderer.on('reply-inputEnter', (event, arg) => {
                         console.log('reply-inputEnter', arg)
                         if (arg.err) {
-                            console.log('reply-inputEnter' + arg.err)
                             dispatch('clearTask')
                             Message({
                                 message: arg.err.message,
@@ -238,7 +237,11 @@ const actions = {
         })
     },
     sendMessage({ state, dispatch }, list) {
+        console.log('sendMessage1:', list)
+        console.log('sendMessage2:', state.batchSendTaskDetail)
+
         if (state.batchSendTaskDetail.tempMediaType == 'IMAGE') {
+            console.log('nmsl,1')
             state.sendMsgContent = {
                 msgtype: "image",
                 image: {
@@ -246,6 +249,7 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.tempMediaType == 'VIDEO') {
+            console.log('nmsl,2')
             state.sendMsgContent = {
                 msgtype: "video",
                 video: {
@@ -253,6 +257,7 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.tempMediaType == 'FILE') {
+            console.log('nmsl,3')
             state.sendMsgContent = {
                 msgtype: "file",
                 file: {
@@ -260,6 +265,7 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.media.type == 'IMAGE') {
+            console.log('nmsl,4')
             state.sendMsgContent = {
                 msgtype: "image",
                 image: {
@@ -267,6 +273,7 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.media.type == 'ARTICLE') {
+            console.log('nmsl,5')
             state.sendMsgContent = {
                 msgtype: "news",
                 news: {
@@ -277,6 +284,7 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.textContent) {
+            console.log('nmsl,7')
             state.sendMsgContent = {
                 msgtype: "text", //消息类型，必填
                 text: {
@@ -286,9 +294,11 @@ const actions = {
         }
         state.taskList = list;
         let taskResult = state.taskList.pop();
+        console.log('nmsl:', taskResult)
+        console.log("state.sendMsgContent:", state.sendMsgContent)
         if (taskResult) {
             state.articleLink = taskResult.contentUrl;
-            if (taskResult.userExternalUserRelationship.remarkMobiles != '') {
+            if (taskResult.externalUser.mobile != '') {
                 dispatch('openChat', taskResult)
             }
         }
@@ -298,7 +308,7 @@ const actions = {
         if (isElectron()) {
             state.sendMsgUuids = obj.uuid
             $ipcRenderer.send('openChat', {
-                mobile: obj.userExternalUserRelationship.remarkMobiles.split(',')[0],
+                mobile: obj.externalUser.mobile.split(',')[0],
                 x: state.mouseX,
                 y: state.mouseY,
             })
