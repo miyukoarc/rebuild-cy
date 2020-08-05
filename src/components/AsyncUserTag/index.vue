@@ -22,7 +22,7 @@
                     <div>部门</div>
                   </el-col>
                   <el-col :span="18">
-                    <div v-if="tempUserDetail.departments">{{tempUserDetail.departments[0].name}}</div>
+                    <div v-if="tempUserDetail.departments">{{tempUserDetail.departments[tempUserDetail.departments.length-1].name}}</div>
                   </el-col>
                 </el-row>
                 <el-row style="margin-bottom:10px;">

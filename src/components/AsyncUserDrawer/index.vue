@@ -136,6 +136,6 @@ export default {
 
 <style lang="scss" scoped>
 .container-user-tag {
-  max-width: 150px;
+  max-width: 160px;
 }
 </style>

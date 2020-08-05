@@ -59,9 +59,9 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
     [process.env.VUE_APP_BASE_API]: {
       // target: 'http://47.111.161.128:9000/',
       // target: 'http://10.10.10.4:9000', // 光
-    //   target: 'http://10.10.10.7', // 杜亮
-      target: 'http://10.10.10.198', // 骋昊
-    //   target: api_host,
+      //   target: 'http://10.10.10.7', // 杜亮
+      //   target: 'http://10.10.10.198', // 骋昊
+      target: api_host,
       // ws: true,
       changeOrigin: true,
       pathRewrite: {
@@ -69,11 +69,11 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
       }
     },
     '/public': {
-    //   target: 'http://10.10.10.172', // 杜亮
-    //   target: api_host,
-    //   target: 'http://10.10.10.7', // 杜亮
+      //   target: 'http://10.10.10.172', // 杜亮
+      target: api_host,
+      //   target: 'http://10.10.10.7', // 杜亮
       // target: 'http://47.111.161.128:9000/',
-      target: 'http://10.10.10.198',
+      //   target: 'http://10.10.10.198',
       changeOrigin: true,
     },
     // "/api": {
@@ -89,8 +89,8 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
         Host: 'sidebar.cyscrm.com'
       },
       // target: 'http://47.111.161.128:9000/',
-      target: "http://10.10.10.198", //陈浩
-      // target: api_host,
+      //   target: "http://10.10.10.198", //陈浩
+      target: api_host,
       // target: "http://sidebar.cyscrm.com:9000"//线上
       // target: "http://10.10.10.7", //杜亮
       // target: 'http://10.10.10.4:9000', //光
@@ -106,10 +106,10 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
         Host: 'sidebar.cyscrm.com'
       },
       // target: 'http://47.111.161.128:9000/',
-      target: "http://10.10.10.198", //陈浩
-    //   target: api_host,
+      //   target: "http://10.10.10.198", //陈浩
+      target: api_host,
       // target: "http://sidebar.cyscrm.com:9000"//线上
-    //   target: "http://10.10.10.7", //杜亮
+      //   target: "http://10.10.10.7", //杜亮
       // target: 'http://10.10.10.4:9000', //光
       // target: "http://47.111.161.128:80",
       secure: false,
