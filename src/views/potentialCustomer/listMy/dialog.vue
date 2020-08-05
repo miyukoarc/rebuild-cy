@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-16 20:20:12
+ * @LastEditTime: 2020-08-05 11:37:10
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\potentialCustomer\listMy\dialog.vue
+-->
 <template>
   <div>
     <el-dialog
@@ -6,6 +14,7 @@
       center
       :modal-append-to-body="false"
       append-to-body
+       @close="close"
       width="600px"
       :close-on-click-modal="false"
     >
@@ -68,6 +77,9 @@ export default {
       } else if (this.eventType === "AddBatchTask") {
         return "批量添加好友";
       }
+    },
+    close() {
+      this.event = "";
     }
   }
 };
