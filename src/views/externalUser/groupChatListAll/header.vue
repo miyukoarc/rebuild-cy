@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-06-28 16:02:36
+ * @LastEditTime: 2020-08-05 15:35:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\groupChatListAll\header.vue
@@ -9,7 +9,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="搜索群名称：">
-      <el-input v-model.trim="query.externalUuid" clearable></el-input>
+      <el-input v-model.trim="query.name" clearable></el-input>
     </el-form-item>
     <el-form-item label="全部群主：">
       <el-select v-model="query.userId" clearable filterable>
@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       query: {
-        externalUuid: "",
+        name: "",
         userId: ""
       }
     };

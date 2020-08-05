@@ -14,13 +14,13 @@
               <div class="group-item-content display-flex align-items-center">
                 <span>群主：</span>
                 <!-- <img :src="defaultAvatar" alt /> -->
-                <strong>{{ groupDetail.ownerName }}</strong>
+                <strong>{{ groupDetail.owner? groupDetail.owner.name :'' }}</strong>
                 <i>|</i>
                 <span v-if="groupDetail.member_list">共 {{ groupDetail.member_list.length }} 位成员</span>
               </div>
             </div>
           </div>
-          <el-button type="primary" size="mini">聊天记录</el-button>
+          <el-button type="primary" size="mini" disabled>聊天记录</el-button>
         </div>
         <div class="data-box display-flex">
           <div class="data-item flex-1">
@@ -43,9 +43,9 @@
             <div class="head-title flex-between-alinecenter">
               <span>群公告</span>
               <span class="text-blue">
-                <span class="icon-warp">
-                  <i class="el-icon-refresh" /> 更新
-                </span>
+                <!-- <span class="icon-warp">
+                  <i class="el-icon-refresh"  /> 更新
+                </span>-->
               </span>
             </div>
           </div>
@@ -81,12 +81,12 @@
                   lazy
                   :src="scope.row.avatar"
                 ></el-image>
-                <span>{{scope.row.username}}</span>
+                <span>{{scope.row.name}}</span>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="入群时间" prop="join_time" align="left"></el-table-column>
-          <el-table-column label="入群方式" prop="scene" align="left"></el-table-column>
+          <el-table-column label="入群时间" prop="joinTime" align="left"></el-table-column>
+          <el-table-column label="入群方式" prop="joinScene" align="left"></el-table-column>
           <el-table-column label="操作" align="left">
             <template v-slot="scope">
               <el-t-button
@@ -120,8 +120,8 @@ export default {
   watch: {
     $route: {
       handler(newVal, oldVal) {
-        const payload = newVal.query;
-        // console.log(newVal.query)
+        const payload = newVal.params.uuid;
+        console.log(payload);
         this.$once("hook:created", () => {
           this.initDetail(payload);
         });

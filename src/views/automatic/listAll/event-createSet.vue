@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-04 15:46:58
+ * @LastEditTime: 2020-08-05 16:30:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -381,7 +381,9 @@ export default {
       this.form.fileName = res.name;
     },
     beforeUploadImage(file) {
-      const isJPG = file.type === "image/jpeg";
+      // 图片上传
+      const types = ["image/jpeg", "image/gif", "image/png"];
+      const isJPG = types.includes(file.type);
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
