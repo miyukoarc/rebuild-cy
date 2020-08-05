@@ -32,10 +32,10 @@
         </el-col>
       </el-row>
     </div>
-    
+
     <div class="text-align-center" v-if="isShowMore && (newTagsList.length>2)">
       <el-button type="text" size="mini" @click="curly=!curly">
-        展开 
+        展开
         <i :class="[curly?'el-icon-caret-bottom':'el-icon-caret-top']"></i>
       </el-button>
     </div>
@@ -50,26 +50,26 @@ export default {
       type: Array,
       default: () => {
         return [];
-      }
+      },
     },
     checkboxGroup: {
       type: Array,
       default: () => {
         return [];
-      }
+      },
     },
     packUp: {
       type: Boolean,
       default: () => {
         return false;
-      }
+      },
     },
     isShow: {
       type: Boolean,
       default: () => {
         return false;
-      }
-    }
+      },
+    },
   },
   watch: {
     packUp: {
@@ -78,7 +78,7 @@ export default {
           this.curly = newVal;
         }
       },
-      immediate: true
+      immediate: true,
     },
     isShow: {
       handler(newVal, oldVal) {
@@ -87,8 +87,8 @@ export default {
           this.isShowMore = newVal;
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
@@ -98,14 +98,14 @@ export default {
     newTagsListPack() {
       console.log(this.curly, "curly");
       return this.curly ? this.newTagsList.slice(0, 2) : this.newTagsList;
-    }
+    },
   },
   data() {
     return {
       checkedGroup: [],
       newTagsList: [],
       curly: false,
-      isShowMore: false
+      isShowMore: false,
     };
   },
   created() {
@@ -113,7 +113,7 @@ export default {
     if (this.checkedGroup.length > 0) {
       this.newTagsList = JSON.parse(JSON.stringify(this.tagListSelect));
       this.newTagsList.map((item, index) => {
-        let isTrue = item.tagList.some(tag =>
+        let isTrue = item.tagList.some((tag) =>
           this.checkedGroup.includes(tag.tagId)
         );
         if (isTrue) {
@@ -130,8 +130,8 @@ export default {
   methods: {
     handleCheckedTagsChange(val) {
       this.$emit("change", val);
-    }
-  }
+    },
+  },
 };
 </script>
 

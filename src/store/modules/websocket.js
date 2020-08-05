@@ -35,17 +35,22 @@ const state = {
 
     selectMobiles: [],
     selectMobile: null,
-    articleLink: null
+    articleLink: null,
+
+    dialog_visible: false,
+    countdown: 10,
 
 }
 
 const mutations = {
-
+    TOGGLE_DIALOG_VISIBLE: (state, flag) => {
+        state.dialog_visible = flag;
+    }
 
 }
 
 const actions = {
-    createWebsocket({ state, dispatch, rootState }) {
+    createWebsocket({ state, commit, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
             state.sock = new SockJS(state.url, null, {
                 transports: 'websocket'
@@ -138,17 +143,21 @@ const actions = {
                 if (data.type == 'CONTROL_MANAGER') {
                     // dispatch('getDetail', data)
 
-                    // MessageBox.confirm('检测到有群发任务！', {
-                    //     title: "确认发送",
-                    //     cancelButtonText: '放弃'
-                    // }).then((res) => {
-                    //     state.loadingInstance = Loading.service({
-                    //         text: "别瞎鸡巴乱动鼠标，会崩的。"
-                    //     });
-                    //     dispatch('getDetail', data)
-                    // }).catch(err => {
-                    //     return false
-                    // })
+                    MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
+                        title: "确认发送",
+                        cancelButtonText: '放弃'
+                    }).then(() => {
+                        state.loadingInstance = Loading.service({
+                            text: "请保持鼠标静止状态，否则任务会中断。"
+                        });
+                        dispatch('getDetail', data)
+                    }).catch(err => {
+                        return false
+                    })
+
+                    // commit('TOGGLE_DIALOG_VISIBLE', true)
+
+
                 }
                 else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
@@ -179,9 +188,24 @@ const actions = {
                     })
                 }
                 else if (data.type == 'ADDTASK') {
+                    // MessageBox.confirm('检测到有自动添加好友任务！任务执行中别瞎鸡巴乱动鼠标', {
+                    //     title: "确认添加",
+                    //     cancelButtonText: '放弃'
+                    // }).then(() => {
+                    //     state.loadingInstance = Loading.service({
+                    //         text: "别瞎鸡巴乱动鼠标，会崩的。"
+                    //     });
+                    //     dispatch('listSelectMobil', data)
+                    // }).catch(err => {
+                    //     return false
+                    // })
+
                     dispatch('listSelectMobil', data)
                 }
                 else if (data.type == 'AUTOREP') {
+
+
+
                     if (data.properties.mobile) {
                         if (data.properties.content) {
                             state.sendMsgContent_autorep_text = {
