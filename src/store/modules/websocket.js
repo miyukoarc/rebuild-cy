@@ -23,6 +23,10 @@ const state = {
 
     taskList: null,
     sendMsgContent: null,
+    sendMsgContent_autorep_text: null,
+    sendMsgContent_autorep_media: null,
+
+
     sendMsgUuids: null,
     mouseX: null,
     mouseY: null,
@@ -50,7 +54,6 @@ const actions = {
                     $ipcRenderer.on('reply-openChat', (event, arg) => {
                         console.log('reply-openChat', arg)
                         if (arg.err) {
-                            console.log('reply-openChat' + arg.err)
                             dispatch('clearTask')
                             Message({
                                 message: arg.err.message,
@@ -98,7 +101,6 @@ const actions = {
                     $ipcRenderer.on('reply-AddCustomerByMobiles', (event, arg) => {
                         console.log('reply-AddCustomerByMobiles', arg)
                         if (arg.err) {
-                            console.log('reply-AddCustomerByMobiles' + arg.err)
                             dispatch('clearTask')
                             Message({
                                 message: arg.err.message,
@@ -126,7 +128,6 @@ const actions = {
             }
             state.sock.onmessage = function (e) {
                 const data = JSON.parse(e.data)
-
                 if (data.type == 'CONTROL_MANAGER') {
                     dispatch('getDetail', data)
                 }
@@ -134,6 +135,22 @@ const actions = {
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
                         console.log('onReady')
                         dispatch('sendChaoyingMessage', data)
+                    }
+                    if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
+                        console.log('sendMsgContent_autorep_media')
+                        sendChaoyingMessage({
+                            sendChatMessage: state.sendMsgContent_autorep_media
+                        }).then(() => {
+                            state.sendMsgContent_autorep_media = null
+                        })
+                    }
+                    if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
+                        console.log('sendMsgContent_autorep_text')
+                        sendChaoyingMessage({
+                            sendChatMessage: state.sendMsgContent_autorep_text
+                        }).then(() => {
+                            state.sendMsgContent_autorep_text = null
+                        })
                     }
                 }
                 else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
@@ -147,20 +164,52 @@ const actions = {
                 }
                 else if (data.type == 'AUTOREP') {
                     if (data.properties.mobile) {
-                        // $ipcRenderer.send('SendMessage', {
-                        //     type: 0,
-                        //     mobile: data.properties.mobile,
-                        //     textContent: data.properties.content
-                        // })
-                        console.log(data.properties)
-                        
-                        state.sendMsgContent = {
-                            msgtype: "image",
-                            image:
-                            {
-                                mediaid: state.batchSendTaskDetail.tempMediaWx,
+                        if (data.properties.content) {
+                            state.sendMsgContent_autorep_text = {
+                                msgtype: "text",
+                                text:
+                                {
+                                    content: data.properties.content,
+                                }
                             }
                         }
+                        if (data.properties.autoReplyType == 'IMAGE') {
+                            state.sendMsgContent_autorep_media = {
+                                msgtype: "image",
+                                image:
+                                {
+                                    mediaid: data.properties.mediaId,
+                                }
+                            }
+                        } else if (data.properties.autoReplyType == 'FILE') {
+                            state.sendMsgContent_autorep_media = {
+                                msgtype: "file",
+                                file:
+                                {
+                                    mediaid: data.properties.mediaId,
+                                }
+                            }
+                        } else if (data.properties.autoReplyType == 'ARTICLE') {
+                            state.sendMsgContent_autorep_media = {
+                                msgtype: "news",
+                                news:
+                                {
+                                    link: data.properties.link, //H5消息页面url 必填
+                                    title: data.properties.title, //H5消息标题
+                                    desc: data.properties.desc, //H5消息摘要
+                                    imgUrl: data.properties.imgUrl, //H5消息封面图片URL
+                                }
+                            }
+                        }
+
+                        if (isElectron()) {
+                            $ipcRenderer.send('openChat', {
+                                mobile: data.properties.mobile,
+                                x: state.mouseX,
+                                y: state.mouseY,
+                            })
+                        }
+
                     }
                 }
             }
@@ -176,7 +225,6 @@ const actions = {
     },
     getDetail({ state, dispatch }, data) {
         getDetail(data.properties.batchSendTaskUuid).then(res => {
-            console.log("getDetail：", res)
             state.batchSendTaskDetail = res
             dispatch('getListBatchSendTaskResult', data)
         })
@@ -190,48 +238,38 @@ const actions = {
         })
     },
     sendMessage({ state, dispatch }, list) {
-        console.log("sendMessage1:", list)
-        console.log("sendMessage2:", state.batchSendTaskDetail)
-
         if (state.batchSendTaskDetail.tempMediaType == 'IMAGE') {
             state.sendMsgContent = {
                 msgtype: "image",
-                image:
-                {
+                image: {
                     mediaid: state.batchSendTaskDetail.tempMediaWx,
                 }
             }
-            console.log('nmsl')
-            console.log(state.sendMsgContent)
         } else if (state.batchSendTaskDetail.tempMediaType == 'VIDEO') {
             state.sendMsgContent = {
                 msgtype: "video",
-                image:
-                {
+                video: {
                     mediaid: state.batchSendTaskDetail.tempMediaWx,
                 }
             }
         } else if (state.batchSendTaskDetail.tempMediaType == 'FILE') {
             state.sendMsgContent = {
                 msgtype: "file",
-                image:
-                {
+                file: {
                     mediaid: state.batchSendTaskDetail.tempMediaWx,
                 }
             }
         } else if (state.batchSendTaskDetail.media.type == 'IMAGE') {
             state.sendMsgContent = {
                 msgtype: "image",
-                image:
-                {
+                image: {
                     mediaid: state.batchSendTaskDetail.media.mediaId, //图片的素材id
                 }
             }
         } else if (state.batchSendTaskDetail.media.type == 'ARTICLE') {
             state.sendMsgContent = {
                 msgtype: "news",
-                news:
-                {
+                news: {
                     //link: state.batchSendTaskDetail.media.url, //H5消息页面url 必填
                     title: state.batchSendTaskDetail.media.title, //H5消息标题
                     desc: state.batchSendTaskDetail.media.description, //H5消息摘要
@@ -264,19 +302,15 @@ const actions = {
                 x: state.mouseX,
                 y: state.mouseY,
             })
-
         }
     },
 
     sendChaoyingMessage({ state }, obj) {
-        console.log('sendChaoyingMessage')
         if (state.batchSendTaskDetail.media.type == 'ARTICLE' && state.sendMsgContent) {
             state.sendMsgContent.news.link = state.articleLink;
         }
         sendChaoyingMessage({
             sendChatMessage: state.sendMsgContent
-        }).then(res => {
-            console.log("sendChaoyingMessage" + res)
         })
     },
 
