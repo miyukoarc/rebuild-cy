@@ -45,7 +45,7 @@
             </template>
           </el-table-column>
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="80" align="center">
             <template v-slot="{row}">
               <span class="color-primary" v-if="row.auditStateForOperation==='UNDER_REVCIEW'">审核中</span>
               <el-t-button v-else type="text" @click.stop="handleDelete(row.uuid)">删除</el-t-button>

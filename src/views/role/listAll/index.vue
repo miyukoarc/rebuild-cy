@@ -1,11 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- <el-header height="auto" style="padding:0"> -->
-    <!-- <el-card class="content-spacing">
-      <list-header></list-header>
-    </el-card>-->
-    <!-- </el-header> -->
-
     <el-card class="content-spacing">
       <tool-bar :hasExport="true" :hasImport="false" @handleExport="doExport">
         <div slot="left">
@@ -116,8 +110,6 @@ export default {
   created() {
     this.initDataList()
   },
-  mounted() {},
-  beforeDestroy() {},
   methods: {
     doExport() {},
     handleCreate() {

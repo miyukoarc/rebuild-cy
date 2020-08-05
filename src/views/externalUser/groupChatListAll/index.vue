@@ -32,21 +32,21 @@
           <el-table-column prop="countNum" label="群人数" align="left"></el-table-column>
           <el-table-column label="昨日入群" align="left">
             <template v-slot="scoped">
-              <div>{{scoped.row.countNum}}</div>
+              <div>0</div>
             </template>
           </el-table-column>
           <el-table-column label="昨日退群" align="left">
             <template v-slot="scoped">
-              <div>{{scoped.row.countNum}}</div>
+              <div>0</div>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" prop="createdAt"></el-table-column>
-          <el-table-column label="操作" align="left" width="240">
+          <el-table-column label="创建时间" prop="createTime"></el-table-column>
+          <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-t-button
                 type="text"
                 size="mini"
-                @click.stop="handleDetail(scope.$index)"
+                @click.stop="handleDetail(scope.row)"
                 :popAuth="true"
                 :auth="permissionMap['externalUser']['externalUser_groupDetail']"
               >详情</el-t-button>
@@ -65,11 +65,11 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import { mapState, mapMutations, mapActions } from "vuex";
 
-import ToolBar from '@/components/ToolBar'
-import CustomerPagination from '@/components/CustomerPagination'
+import ToolBar from "@/components/ToolBar";
+import CustomerPagination from "@/components/CustomerPagination";
 
 export default {
   components: {
@@ -88,10 +88,10 @@ export default {
       query: {
         page: 0,
         size: 10,
-        externalUuid: '',
-        userId: '',
+        name: "",
+        userId: "",
       },
-    }
+    };
   },
   watch: {},
   computed: {
@@ -107,73 +107,69 @@ export default {
     }),
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   mounted() {},
   beforeDestroy() {},
   methods: {
     doExport(val) {
-      console.log(val)
+      console.log(val);
     },
     initFilter() {
       this.$store
-        .dispatch('externalUser/getListOwner')
+        .dispatch("externalUser/getListOwner")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListGroup', payload)
+        .dispatch("externalUser/getListGroup", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.listGroupPage.pageNumber + 1
-          this.pageConfig.total = this.listGroupPage.total
+          this.pageConfig.pageNumber = this.listGroupPage.pageNumber + 1;
+          this.pageConfig.total = this.listGroupPage.total;
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
-    handleDetail(val) {
-      const chatId = this.listGroup[val].chatId
+    handleDetail(row) {
+      const uuid = row.uuid;
       this.$router.push({
-        path: '/externalUser/groupDetail',
-        query: { chatId },
-      })
+        path: "/externalUser/groupDetail/"+uuid,
+      });
     },
     handleSearch(val) {
-      const { externalUuid, userId } = val
-      this.query.externalUuid = externalUuid
-        ? externalUuid
-        : this.query.externalUuid
-      this.query.userId = userId ? userId : this.query.userId
-      this.query.page = 0
-      this.initDataList(this.query)
+      const { name, userId } = val;
+      this.query.name = name ? name : "";
+      this.query.userId = userId ? userId : "";
+      this.query.page = 0;
+      this.initDataList(this.query);
     },
     handleRefresh() {
-
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

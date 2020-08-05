@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-03 10:13:30
- * @LastEditTime: 2020-08-04 15:47:12
+ * @LastEditTime: 2020-08-05 16:30:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\listAll\event-detail.vue
@@ -421,7 +421,9 @@ export default {
       this.form.mediaId = res.id;
     },
     beforeUploadImage(file) {
-      const isJPG = file.type === "image/jpeg";
+      // 图片上传
+      const types = ["image/jpeg", "image/gif", "image/png"];
+      const isJPG = types.includes(file.type);
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {

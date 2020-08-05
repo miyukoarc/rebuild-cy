@@ -6,10 +6,10 @@ import request from '@/utils/request'
  * @param {string} uuid 
  */
 export const getExternalUserDetail = (uuid) => {
-  return request({
-    url: '/externalUser/' + uuid,
-    method: 'get',
-  })
+    return request({
+        url: '/externalUser/' + uuid,
+        method: 'get',
+    })
 }
 
 
@@ -19,11 +19,11 @@ export const getExternalUserDetail = (uuid) => {
  * @param {string} payload
  */
 export const addTag = (payload) => {
-  return request({
-    url: '/externalUser/addTag' + payload,
-    method: 'post',
-    data: payload
-  })
+    return request({
+        url: '/externalUser/addTag' + payload,
+        method: 'post',
+        data: payload
+    })
 }
 
 /**
@@ -31,11 +31,11 @@ export const addTag = (payload) => {
  * @param {string} payload
  */
 export const getCustomerStatistics = (payload) => {
-  return request({
-    url: '/externalUser/customerStatistics',
-    method: 'post',
-    data: payload
-  })
+    return request({
+        url: '/externalUser/customerStatistics',
+        method: 'post',
+        data: payload
+    })
 }
 
 /**
@@ -44,11 +44,11 @@ export const getCustomerStatistics = (payload) => {
  * @param {object} payload
  */
 export const getList = (payload) => {
-  return request({
-    url: '/externalUser/list',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/externalUser/list',
+        method: 'get',
+        params: payload
+    })
 }
 
 /**
@@ -57,11 +57,11 @@ export const getList = (payload) => {
  * @param {object} payload
  */
 export const getExternalUserListAll = (payload) => {
-  return request({
-    url: '/externalUser/listAll',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/externalUser/listAll',
+        method: 'get',
+        params: payload
+    })
 }
 
 /**
@@ -69,11 +69,11 @@ export const getExternalUserListAll = (payload) => {
  * @param {object} payload 
  */
 export const getListExUserByUserId = (payload) => {
-  return request({
-    url: '/externalUser/listExUserByUserId',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/externalUser/listExUserByUserId',
+        method: 'get',
+        params: payload
+    })
 }
 
 /**
@@ -81,11 +81,11 @@ export const getListExUserByUserId = (payload) => {
  * @param {object} payload 
  */
 export const getExternalUserListMy = (payload) => {
-  return request({
-    url: '/externalUser/listMy',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/externalUser/listMy',
+        method: 'get',
+        params: payload
+    })
 }
 
 /**
@@ -93,11 +93,11 @@ export const getExternalUserListMy = (payload) => {
  * @param {object} payload 
  */
 export const getQuitUserRelationExUserList = (payload) => {
-  return request({
-    url: '/externalUser/quitUserRelationExUserList',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/externalUser/quitUserRelationExUserList',
+        method: 'get',
+        params: payload
+    })
 }
 
 /**
@@ -105,11 +105,11 @@ export const getQuitUserRelationExUserList = (payload) => {
  * @param {object} payload 
  */
 export const redistributionExUser = (payload) => {
-  return request({
-    url: '/externalUser/redistributionExUser',
-    method: 'post',
-    data: payload
-  })
+    return request({
+        url: '/externalUser/redistributionExUser',
+        method: 'post',
+        data: payload
+    })
 }
 
 /**
@@ -117,11 +117,11 @@ export const redistributionExUser = (payload) => {
  * @param {object} payload 
  */
 export const remark = (payload) => {
-  return request({
-    url: '/externalUser/remark',
-    method: 'post',
-    data: payload
-  })
+    return request({
+        url: '/externalUser/remark',
+        method: 'post',
+        data: payload
+    })
 }
 
 /**
@@ -129,11 +129,11 @@ export const remark = (payload) => {
  * @param {object} payload 
  */
 export const removeTag = (payload) => {
-  return request({
-    url: '/externalUser/removeTag',
-    method: 'post',
-    data: payload
-  })
+    return request({
+        url: '/externalUser/removeTag',
+        method: 'post',
+        data: payload
+    })
 }
 
 /**
@@ -141,11 +141,11 @@ export const removeTag = (payload) => {
  * @param {object} payload 
  */
 export const getRunWayList = (payload) => {
-  return request({
-    url: '/externalUser/runWayListMy',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/externalUser/runWayListMy',
+        method: 'get',
+        params: payload
+    })
 }
 
 
@@ -154,11 +154,11 @@ export const getRunWayList = (payload) => {
  * @param {object} payload 
  */
 export const getRunWayListAll = (payload) => {
-  return request({
-    url: '/externalUser/runWayListAll',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/externalUser/runWayListAll',
+        method: 'get',
+        params: payload
+    })
 }
 
 /**
@@ -166,11 +166,11 @@ export const getRunWayListAll = (payload) => {
  * @param {object} payload 
  */
 export const update = (payload) => {
-  return request({
-    url: '/externalUser/update',
-    method: 'post',
-    data: payload
-  })
+    return request({
+        url: '/externalUser/update',
+        method: 'post',
+        data: payload
+    })
 }
 
 
@@ -180,11 +180,11 @@ export const update = (payload) => {
  * @param {object} payload 
  */
 export const getListGroup = (payload) => {
-  return request({
-    url: '/externalUser/groupChatListAll',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/groupChat/groupChatListAll',
+        method: 'get',
+        params: payload
+    })
 }
 
 
@@ -193,11 +193,11 @@ export const getListGroup = (payload) => {
  * @param {object} payload 
  */
 export const getListOwner = (payload) => {
-  return request({
-    url: '/externalUser/groupChatOwnerListSelect',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/groupChat/groupChatOwnerListSelect',
+        method: 'get',
+        params: payload
+    })
 }
 
 
@@ -206,11 +206,11 @@ export const getListOwner = (payload) => {
  * @param {object} payload 
  */
 export const getSensitiveListAll = (payload) => {
-  return request({
-    url: '/externalUser/sensitiveListAll',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/externalUser/sensitiveListAll',
+        method: 'get',
+        params: payload
+    })
 }
 
 
@@ -219,11 +219,11 @@ export const getSensitiveListAll = (payload) => {
  * @param {object} payload 
  */
 export const getQuitUserRelationExUserDetail = (payload) => {
-  return request({
-    url: '/externalUser/quitUserRelationExUserDetail',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/externalUser/quitUserRelationExUserDetail',
+        method: 'get',
+        params: payload
+    })
 }
 
 /**
@@ -231,11 +231,10 @@ export const getQuitUserRelationExUserDetail = (payload) => {
  * @param {object} payload 
  */
 export const getGroupDetail = (payload) => {
-  return request({
-    url: '/externalUser/groupDetail',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/groupChat/' + payload,
+        method: 'get',
+    })
 }
 
 /**
@@ -243,22 +242,22 @@ export const getGroupDetail = (payload) => {
  * @param {object} payload 
  */
 export const externalUserUpdateTag = (payload) => {
-  return request({
-    url: '/externalUser/updateTag',
-    method: 'post',
-    data: payload
-  })
-}
-/**
- * 批量添加好友listMy
- * @param {object} payload 
- */
+        return request({
+            url: '/externalUser/updateTag',
+            method: 'post',
+            data: payload
+        })
+    }
+    /**
+     * 批量添加好友listMy
+     * @param {object} payload 
+     */
 export const getListMy = (payload) => {
-  return request({
-    url: '/batchAddTask/listMy',
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: '/batchAddTask/listMy',
+        method: 'get',
+        params: payload
+    })
 }
 
 /**
@@ -266,9 +265,9 @@ export const getListMy = (payload) => {
  * @param {object} payload 
  */
 export const getResultList = (payload) => {
-  return request({
-    url: `/batchAddTask/result/${payload.uuid}`,
-    method: 'get',
-    params: payload
-  })
+    return request({
+        url: `/batchAddTask/result/${payload.uuid}`,
+        method: 'get',
+        params: payload
+    })
 }

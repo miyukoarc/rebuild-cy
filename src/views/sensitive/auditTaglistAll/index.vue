@@ -98,7 +98,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="center" width="80">
             <template v-slot="{row}">
               <div>
                 <el-t-button type="text" @click="handleAudit(row.uuid)">审核</el-t-button>

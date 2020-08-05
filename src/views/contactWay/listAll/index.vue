@@ -48,6 +48,7 @@
               <el-tag
                 v-for="(user,index) in scope.row.serviceUsers"
                 :key="index"
+                type="info"
                 style="margin-right:5px;margin-bottom:5px"
               >
                 <span v-if="user">{{ user.name }}</span>
@@ -59,40 +60,44 @@
               <el-tag
                 v-for="(tag,index) in scope.row.servicesTags"
                 :key="index"
+                type="info"
                 style="margin-right:5px;margin-bottom:5px"
               >
                 <span v-if="tag">{{ tag.tagName }}</span>
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="center" width="240">
             <template slot-scope="scope">
               <el-t-button
                 :popAuth="true"
                 :auth="permissionMap['contactWay']['contactWay_detail']"
-                type="primary"
-                size="mini"
+                type="text"
                 class="button-s"
                 @click.stop="handleDetail(scope.$index,scope.row)"
               >详情</el-t-button>
+              <el-divider direction="vertical"></el-divider>
+
               <el-t-button
-                type="primary"
-                size="mini"
+                type="text"
                 class="button-s"
                 @click.stop="downLoad(scope.row)"
               >下载</el-t-button>
+              <el-divider direction="vertical"></el-divider>
+
               <el-t-button
                 :popAuth="true"
                 :auth="permissionMap['contactWay']['contactWay_update']"
-                type="primary"
-                size="mini"
+                type="text"
                 class="button-s"
                 @click.stop="handleEdit(scope.row)"
               >编辑</el-t-button>
+              <el-divider direction="vertical"></el-divider>
+
               <el-t-button
                 :popAuth="true"
                 :auth="permissionMap['contactWay']['contactWay_delete']"
-                type="danger"
+                type="text"
                 size="mini"
                 class="button-s"
                 @click.stop="handleDelete(scope.row)"
@@ -265,7 +270,6 @@ export default {
       })
     },
     handleEdit(row) {
-
       this.$router.push({
         path: `/contactWay/detail`,
         query: { uuid: row.uuid },
@@ -273,7 +277,6 @@ export default {
     },
     // 删除渠道码
     handleDelete(row) {
-
       this.$confirm('删除后不可恢复, 确定删除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -301,10 +304,10 @@ export default {
           })
         })
     },
-    changeSize(val){
-        this.query.size = val
-        this.initDataList(this.query)
-    }
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
   },
 }
 </script>

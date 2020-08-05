@@ -194,6 +194,7 @@ export default {
       loading: (state) => state.media.loading,
 
       permissionMap: (state) => state.permission.permissionMap,
+      auditSetting: (state) => state.sensitive.auditSetting,
     }),
   },
   created() {
@@ -227,7 +228,7 @@ export default {
     },
     initDataList(payload) {
       this.$store
-        .dispatch('media/getMediaGroupListAll',payload)
+        .dispatch('media/getMediaGroupListAll', payload)
         .then(() => {})
         .catch((err) => {
           this.$message({
@@ -238,7 +239,7 @@ export default {
     },
     initMediaList(payload) {
       this.$store
-        .dispatch('media/getMediaListAll',  payload)
+        .dispatch('media/getMediaListAll', payload)
         .then(() => {})
         .catch((err) => {
           this.$message({
@@ -293,9 +294,8 @@ export default {
               this.$message({
                 type: 'error',
                 message: err,
-                duration: 3000
+                duration: 3000,
               })
-              
             })
         })
         .catch((err) => {})
@@ -357,9 +357,12 @@ export default {
           await this.$store
             .dispatch('media/batchDeleteMedia', payload)
             .then(() => {
+              const message = this.auditSetting['media']
+                ? '已提交审核'
+                : '已完成'
               this.$message({
                 type: 'success',
-                message: '操作成功',
+                message: message,
               })
               this.handleRefresh()
             })

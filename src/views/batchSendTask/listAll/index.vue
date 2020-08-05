@@ -40,9 +40,9 @@
           <el-table-column label="内容" align="left" prop="textContent"></el-table-column>
           <el-table-column label="修改时间" align="left" prop="updatedAt"></el-table-column>
           <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.row)">详情</el-button>
+              <el-button type="text" @click.stop="handleDetail(scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>

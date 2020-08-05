@@ -389,7 +389,9 @@ export default {
       this.form.fileName = res.name;
     },
     beforeUploadImage(file) {
-      const isJPG = file.type === "image/jpeg";
+      // 图片上传
+      const types = ["image/jpeg", "image/gif", "image/png"];
+      const isJPG = types.includes(file.type);
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {

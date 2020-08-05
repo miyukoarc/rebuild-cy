@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-11 11:15:45
- * @LastEditTime: 2020-08-04 15:47:57
+ * @LastEditTime: 2020-08-05 16:29:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\contactWay\detail.vue
@@ -283,7 +283,7 @@ import inputEdit from "@/components/inputEdit";
 export default {
   name: "ContactWayDetail",
   components: {
-    inputEdit
+    inputEdit,
   },
   data() {
     return {
@@ -302,16 +302,16 @@ export default {
         welComeType: "MYWEL",
         welcomeContent: "",
         welComeMediaType: "IMG",
-        link: ""
+        link: "",
       },
       rules: {
         name: [
           { required: true, message: "请输入活动名称", trigger: "blur" },
-          { min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur" }
+          { min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
         member: [
-          { required: true, message: "请选择客服人员", trigger: "change" }
-        ]
+          { required: true, message: "请选择客服人员", trigger: "change" },
+        ],
       },
       // 设置欢迎语
       messageImage: "",
@@ -326,7 +326,7 @@ export default {
       imgId: "",
       configId: "",
       startTime: "",
-      endTime: ""
+      endTime: "",
     };
   },
   watch: {
@@ -338,14 +338,14 @@ export default {
           this.insertName = true;
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      tagListSelect: state => state.tag.tagListSelect,
-      userListAll: state => state.user.listSelect,
-      articleListSelect: state => state.media.articleListSelect
+      tagListSelect: (state) => state.tag.tagListSelect,
+      userListAll: (state) => state.user.listSelect,
+      articleListSelect: (state) => state.media.articleListSelect,
     }),
     tagData() {
       if (!this.isShow) {
@@ -355,7 +355,7 @@ export default {
       } else {
         return this.tagListSelect;
       }
-    }
+    },
   },
   created() {
     this.initFilter();
@@ -371,7 +371,7 @@ export default {
     getContactWayDetail(uuid) {
       this.$store
         .dispatch("contactWay/getContactWayDetail", uuid)
-        .then(res => {
+        .then((res) => {
           this.configId = res.configId;
           this.qrCode = res.qrCode;
           this.ruleForm.name = res.remark;
@@ -384,18 +384,18 @@ export default {
           }
           if (res.welComeMediaType == "LINK") {
             this.ruleForm.link = Number(res.welcomeMediaContent);
-            this.welcomecontentT = this.articleListSelect.find(item => {
+            this.welcomecontentT = this.articleListSelect.find((item) => {
               return item.uuid === this.ruleForm.link;
             });
           }
-          res.serviceUsers.map(item => {
+          res.serviceUsers.map((item) => {
             this.ruleForm.member.push(item.userId);
           });
-          res.servicesTags.map(item => {
+          res.servicesTags.map((item) => {
             this.checkboxGroup.push(item.uuid);
           });
         })
-        .catch(err => {});
+        .catch((err) => {});
     },
     /**
      * 初始化筛选信息
@@ -404,30 +404,30 @@ export default {
       this.$store
         .dispatch("media/getArticleListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
 
       this.$store
         .dispatch("tag/getListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: err
+            message: err,
           });
         });
 
       this.$store
         .dispatch("user/getUserListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: err
+            message: err,
           });
         });
       // this.$store
@@ -441,7 +441,7 @@ export default {
       //   })
     },
     submitForm(formName) {
-      this.$refs[formName].validate(async valid => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           let params = {
             remark: this.ruleForm.name,
@@ -452,7 +452,7 @@ export default {
             user: this.ruleForm.member,
             welComeMediaType: this.ruleForm.welComeMediaType,
             welComeType: this.ruleForm.welComeType,
-            welcomeContent: this.ruleForm.welcomeContent
+            welcomeContent: this.ruleForm.welcomeContent,
           };
           if (this.ruleForm.welComeType != "MYWEL") {
             params.welcomeContent = "";
@@ -486,13 +486,13 @@ export default {
               .then(() => {
                 this.$message({
                   message: "保存成功",
-                  type: "success"
+                  type: "success",
                 });
                 this.$router.push({
-                  path: `/contactWay/listAll`
+                  path: `/contactWay/listAll`,
                 });
               })
-              .catch(err => {});
+              .catch((err) => {});
           } else {
             params.configId = this.configId;
             if (this.imgId != "") {
@@ -503,13 +503,13 @@ export default {
               .then(() => {
                 this.$message({
                   message: "保存成功",
-                  type: "success"
+                  type: "success",
                 });
                 this.$router.push({
-                  path: `/contactWay/listAll`
+                  path: `/contactWay/listAll`,
                 });
               })
-              .catch(err => {});
+              .catch((err) => {});
           }
         } else {
           return false;
@@ -533,7 +533,9 @@ export default {
     },
     beforeAvatarUpload(file) {
       console.log(file, "file");
-      const isJPG = file.type === "image/jpeg";
+      // 图片上传
+      const types = ["image/jpeg", "image/gif", "image/png"];
+      const isJPG = types.includes(file.type);
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
@@ -561,12 +563,12 @@ export default {
       // );
     },
     handleChoseLink(val) {
-      this.welcomecontentT = this.articleListSelect.find(item => {
+      this.welcomecontentT = this.articleListSelect.find((item) => {
         return item.uuid === val;
       });
       this.mediaUuid = this.welcomecontentT.uuid;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -684,6 +686,14 @@ export default {
       line-height: 20px;
       -webkit-box-flex: 1;
       flex: 1;
+      .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 165px;
+        height: 165px;
+        line-height: 178px;
+        text-align: center;
+      }
       .re-chose {
         // margin-top: 145px;
         position: absolute;
@@ -804,14 +814,6 @@ img.option-img {
       .el-upload:hover {
         border-color: #409eff;
       }
-      .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
-        width: 165px;
-        height: 165px;
-        line-height: 178px;
-        text-align: center;
-      }
     }
     .avatar {
       width: 165px;
@@ -822,8 +824,17 @@ img.option-img {
   .el-textarea .el-textarea__inner {
     border: none;
   }
+  .el-checkbox-button__inner {
+    border: 1px solid #dcdfe6;
+  }
+  .el-checkbox-button:last-child .el-checkbox-button__inner {
+    border-radius: 0px;
+  }
   .el-checkbox.is-bordered + .el-checkbox.is-bordered {
     margin-left: 0;
+  }
+  .el-checkbox-button--small .el-checkbox-button__inner {
+    padding: 6px 15px;
   }
   .contact-way-detail-feature-set {
     .avatar-uploader {
