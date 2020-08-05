@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/planet2.png" />
+    <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/planet2.png" /> -->
   </div>
 </template>
 
