@@ -423,8 +423,10 @@ export default {
             cancelButtonText: '取消',
             type: 'error',
           })
-            .then(() => {})
-            .catch((err) => {})
+            .finally(()=>{
+                this.handleRefresh()
+                this.handleCancel()
+            })
         })
     },
     handleRefresh() {

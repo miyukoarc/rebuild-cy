@@ -79,6 +79,7 @@ export default {
     },
     handleClose(index) {
       this.alterValue.splice(index, 1)
+      this.$emit('change',this.alterValue)
     },
 
     showInput() {
