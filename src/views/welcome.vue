@@ -1,7 +1,5 @@
 <template>
   <div class="container" id="container">
-    <!-- <div id="container"></div> -->
-    <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/planet2.png" /> -->
     <div class="info-container">
       <div class="tips-container">
         <h1>SocialCRM</h1>
@@ -11,7 +9,7 @@
         <el-button size="small" @click="handleEnter" type="primary">进入</el-button>
       </div>
     </div>
-
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/planet2.png" />
   </div>
 </template>
 
@@ -32,203 +30,199 @@ export default {
       this.$store.commit('auth/SAVE_CORPINFO', localStorage)
     }
   },
-//   mounted() {
-//     var camera, scene, renderer
+  mounted() {
+    var camera, scene, renderer
 
-//     var texture_placeholder,
-//       isUserInteracting = false,
-//       onMouseDownMouseX = 0,
-//       onMouseDownMouseY = 0,
-//       lon = 90,
-//       onMouseDownLon = 0,
-//       lat = 0,
-//       onMouseDownLat = 0,
-//       phi = 0,
-//       theta = 0,
-//       target = new THREE.Vector3()
+    var texture_placeholder,
+      isUserInteracting = false,
+      onMouseDownMouseX = 0,
+      onMouseDownMouseY = 0,
+      lon = 90,
+      onMouseDownLon = 0,
+      lat = 0,
+      onMouseDownLat = 0,
+      phi = 0,
+      theta = 0,
+      target = new THREE.Vector3()
 
-//     init()
-//     animate()
+    init()
+    animate()
 
-//     function init() {
-//       var container, mesh
+    function init() {
+      var container, mesh
 
-//       container = document.getElementById('container')
+      container = document.getElementById('container')
 
-//       camera = new THREE.PerspectiveCamera(
-//         75,
-//         window.innerWidth / window.innerHeight,
-//         1,
-//         1100
-//       )
+      camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        1,
+        1100
+      )
 
-//       scene = new THREE.Scene()
+      scene = new THREE.Scene()
 
-//       texture_placeholder = document.createElement('canvas')
-//       texture_placeholder.width = 128
-//       texture_placeholder.height = 128
+      texture_placeholder = document.createElement('canvas')
+      texture_placeholder.width = 128
+      texture_placeholder.height = 128
 
-//       var context = texture_placeholder.getContext('2d')
-//       context.fillStyle = 'rgb( 200, 200, 200 )'
-//       context.fillRect(
-//         0,
-//         0,
-//         texture_placeholder.width,
-//         texture_placeholder.height
-//       )
+      var context = texture_placeholder.getContext('2d')
+      context.fillStyle = 'rgb( 200, 200, 200 )'
+      context.fillRect(
+        0,
+        0,
+        texture_placeholder.width,
+        texture_placeholder.height
+      )
 
-//       var materials = [
-//         loadTexture(
-//           'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space4.jpg'
-//         ), // right
-//         loadTexture(
-//           'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space2.jpg'
-//         ), // left
-//         loadTexture(
-//           'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space1.jpg'
-//         ), // top
-//         loadTexture(
-//           'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space6.jpg'
-//         ), // bottom
-//         loadTexture(
-//           'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space3.jpg'
-//         ), // back
-//         loadTexture(
-//           'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space5.jpg'
-//         ), // front
-//       ]
+      var materials = [
+        loadTexture(
+          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space4.jpg'
+        ), // right
+        loadTexture(
+          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space2.jpg'
+        ), // left
+        loadTexture(
+          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space1.jpg'
+        ), // top
+        loadTexture(
+          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space6.jpg'
+        ), // bottom
+        loadTexture(
+          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space3.jpg'
+        ), // back
+        loadTexture(
+          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space5.jpg'
+        ), // front
+      ]
 
-//       mesh = new THREE.Mesh(
-//         new THREE.BoxGeometry(300, 300, 300, 7, 7, 7),
-//         new THREE.MultiMaterial(materials)
-//       )
-//       mesh.scale.x = -1
-//       scene.add(mesh)
+      mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(300, 300, 300, 7, 7, 7),
+        new THREE.MultiMaterial(materials)
+      )
+      mesh.scale.x = -1
+      scene.add(mesh)
 
-//       for (var i = 0, l = mesh.geometry.vertices.length; i < l; i++) {
-//         var vertex = mesh.geometry.vertices[i]
+      for (var i = 0, l = mesh.geometry.vertices.length; i < l; i++) {
+        var vertex = mesh.geometry.vertices[i]
 
-//         vertex.normalize()
-//         vertex.multiplyScalar(550)
-//       }
+        vertex.normalize()
+        vertex.multiplyScalar(550)
+      }
 
-//       renderer = new THREE.CanvasRenderer()
-//       renderer.setPixelRatio(window.devicePixelRatio)
-//       renderer.setSize(window.innerWidth, window.innerHeight)
-//       container.appendChild(renderer.domElement)
+      renderer = new THREE.CanvasRenderer()
+      renderer.setPixelRatio(window.devicePixelRatio)
+      renderer.setSize(window.innerWidth, window.innerHeight)
+      container.appendChild(renderer.domElement)
 
-      
+      document.addEventListener('mousedown', onDocumentMouseDown, false)
+      document.addEventListener('mousemove', onDocumentMouseMove, false)
+      document.addEventListener('mouseup', onDocumentMouseUp, false)
+      //document.addEventListener( 'wheel', onDocumentMouseWheel, false );
 
-//       document.addEventListener('mousedown', onDocumentMouseDown, false)
-//       document.addEventListener('mousemove', onDocumentMouseMove, false)
-//       document.addEventListener('mouseup', onDocumentMouseUp, false)
-//       //document.addEventListener( 'wheel', onDocumentMouseWheel, false );
+      document.addEventListener('touchstart', onDocumentTouchStart, false)
+      document.addEventListener('touchmove', onDocumentTouchMove, false)
 
-//       document.addEventListener('touchstart', onDocumentTouchStart, false)
-//       document.addEventListener('touchmove', onDocumentTouchMove, false)
+      //
 
-//       //
+      window.addEventListener('resize', onWindowResize, false)
+    }
 
-//       window.addEventListener('resize', onWindowResize, false)
-//     }
+    function loadTexture(path) {
+      var texture = new THREE.Texture(texture_placeholder)
+      var material = new THREE.MeshBasicMaterial({
+        map: texture,
+        overdraw: 0.5,
+      })
 
+      var image = new Image()
+      image.onload = function () {
+        texture.image = this
+        texture.needsUpdate = true
+      }
+      image.src = path
 
-    
-//     function loadTexture(path) {
-//         var texture = new THREE.Texture(texture_placeholder)
-//       var material = new THREE.MeshBasicMaterial({
-//           map: texture,
-//         overdraw: 0.5,
-//       })
+      return material
+    }
+    var onWindowResize = function () {
+      camera.aspect = window.innerWidth / window.innerHeight
+      camera.updateProjectionMatrix()
 
-//       var image = new Image()
-//       image.onload = function () {
-//           texture.image = this
-//         texture.needsUpdate = true
-//       }
-//       image.src = path
+      renderer.setSize(window.innerWidth, window.innerHeight)
+    }
 
-//       return material
-//     }
-//     var onWindowResize = function() {
-//         camera.aspect = window.innerWidth / window.innerHeight
-//         camera.updateProjectionMatrix()
+    var onDocumentMouseDown = function (event) {
+      event.preventDefault()
 
-//         renderer.setSize(window.innerWidth, window.innerHeight)
-//     }
+      isUserInteracting = true
 
-//     var onDocumentMouseDown = function(event) {
-//       event.preventDefault()
+      onPointerDownPointerX = event.clientX
+      onPointerDownPointerY = event.clientY
 
-//       isUserInteracting = true
+      onPointerDownLon = lon
+      onPointerDownLat = lat
+    }
 
-//       onPointerDownPointerX = event.clientX
-//       onPointerDownPointerY = event.clientY
+    var onDocumentMouseMove = function (event) {
+      if (isUserInteracting === true) {
+        lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon
+        lat = (event.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat
+      }
+    }
 
-//       onPointerDownLon = lon
-//       onPointerDownLat = lat
-//     }
+    var onDocumentMouseUp = function (event) {
+      isUserInteracting = false
+    }
 
-//     var onDocumentMouseMove = function(event) {
-//       if (isUserInteracting === true) {
-//         lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon
-//         lat = (event.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat
-//       }
-//     }
+    var onDocumentTouchStart = function (event) {
+      if (event.touches.length == 1) {
+        event.preventDefault()
 
-//     var onDocumentMouseUp = function(event) {
-//       isUserInteracting = false
-//     }
+        onPointerDownPointerX = event.touches[0].pageX
+        onPointerDownPointerY = event.touches[0].pageY
 
-//     var onDocumentTouchStart = function(event) {
-//       if (event.touches.length == 1) {
-//         event.preventDefault()
+        onPointerDownLon = lon
+        onPointerDownLat = lat
+      }
+    }
 
-//         onPointerDownPointerX = event.touches[0].pageX
-//         onPointerDownPointerY = event.touches[0].pageY
+    var onDocumentTouchMove = function (event) {
+      if (event.touches.length == 1) {
+        event.preventDefault()
 
-//         onPointerDownLon = lon
-//         onPointerDownLat = lat
-//       }
-//     }
+        lon =
+          (onPointerDownPointerX - event.touches[0].pageX) * 0.1 +
+          onPointerDownLon
+        lat =
+          (event.touches[0].pageY - onPointerDownPointerY) * 0.1 +
+          onPointerDownLat
+      }
+    }
 
-//     var onDocumentTouchMove = function(event) {
-//       if (event.touches.length == 1) {
-//         event.preventDefault()
+    function animate() {
+      requestAnimationFrame(animate)
+      update()
+    }
 
-//         lon =
-//           (onPointerDownPointerX - event.touches[0].pageX) * 0.1 +
-//           onPointerDownLon
-//         lat =
-//           (event.touches[0].pageY - onPointerDownPointerY) * 0.1 +
-//           onPointerDownLat
-//       }
-//     }
+    function update() {
+      if (isUserInteracting === false) {
+        lon += 0.1
+      }
 
-//     function animate() {
-//       requestAnimationFrame(animate)
-//       update()
-//     }
+      lat = Math.max(-85, Math.min(85, lat))
+      phi = THREE.Math.degToRad(90 - lat)
+      theta = THREE.Math.degToRad(lon)
 
-//     function update() {
-//       if (isUserInteracting === false) {
-//         lon += 0.1
-//       }
+      target.x = 500 * Math.sin(phi) * Math.cos(theta)
+      target.y = 500 * Math.cos(phi)
+      target.z = 500 * Math.sin(phi) * Math.sin(theta)
 
-//       lat = Math.max(-85, Math.min(85, lat))
-//       phi = THREE.Math.degToRad(90 - lat)
-//       theta = THREE.Math.degToRad(lon)
+      camera.position.copy(target).negate()
+      camera.lookAt(target)
 
-//       target.x = 500 * Math.sin(phi) * Math.cos(theta)
-//       target.y = 500 * Math.cos(phi)
-//       target.z = 500 * Math.sin(phi) * Math.sin(theta)
-
-//       camera.position.copy(target).negate()
-//       camera.lookAt(target)
-
-//       renderer.render(scene, camera)
-//     }
-//   },
+      renderer.render(scene, camera)
+    }
+  },
   methods: {
     handleEnter() {
       this.$router.push({
@@ -250,10 +244,11 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: center;
+  //   align-items: center;
+  overflow: hidden;
   background-color: #fff;
   .tips-container {
     margin: 20px 0;
@@ -266,6 +261,14 @@ export default {
     align-items: center;
     user-select: none;
     -webkit-app-region: no-drag;
+    z-index: 1;
+    position: absolute;
+    color: #fff;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin: auto;
   }
 }
 
@@ -277,5 +280,6 @@ img {
   left: 0;
   bottom: 0;
   margin: auto;
+  z-index: 0;
 }
 </style>
