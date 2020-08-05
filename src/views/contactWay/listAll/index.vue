@@ -48,6 +48,7 @@
               <el-tag
                 v-for="(user,index) in scope.row.serviceUsers"
                 :key="index"
+                type="info"
                 style="margin-right:5px;margin-bottom:5px"
               >
                 <span v-if="user">{{ user.name }}</span>
@@ -59,6 +60,7 @@
               <el-tag
                 v-for="(tag,index) in scope.row.servicesTags"
                 :key="index"
+                type="info"
                 style="margin-right:5px;margin-bottom:5px"
               >
                 <span v-if="tag">{{ tag.tagName }}</span>
