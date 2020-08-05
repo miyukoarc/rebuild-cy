@@ -133,32 +133,29 @@ export default {
         })
     },
     handleLogin() {
+      if (this.tenantId) {
+        this.tipsFlag = false
+        const tenantId = this.tenantId + ''
 
-        if(this.tenantId){
-            this.tipsFlag = false
-            const tenantId = this.tenantId + ''
-      
-            this.loading = true
+        this.loading = true
 
-      
-            // if (this.$isElectron()) {
-            //   console.log('!')
-      
-            //   const ipcRenderer = window.electron.ipcRenderer
-            //   ipcRenderer.send('qrcode-window', this.tenantId)
-            //   console.log('!')
-            //   this.loading = false
-            // } else {
-              this.getQrCode(tenantId, 'browser')
-              this.loading = false
-            // }
+        // if (this.$isElectron()) {
+        //   console.log('!')
 
-        }else{
-            this.$message({
-                type: 'warning',
-                message: '请选择组织！'
-            })
-        }
+        //   const ipcRenderer = window.electron.ipcRenderer
+        //   ipcRenderer.send('qrcode-window', this.tenantId)
+        //   console.log('!')
+        //   this.loading = false
+        // } else {
+        this.getQrCode(tenantId, 'browser')
+        this.loading = false
+        // }
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请选择组织！',
+        })
+      }
     },
   },
 }
