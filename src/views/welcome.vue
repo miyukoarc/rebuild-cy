@@ -222,6 +222,13 @@ export default {
 
       renderer.render(scene, camera)
     }
+
+    this.$nextTick(()=>{
+        window.watermark.remove()
+    })
+    this.$once('hook:beforeDestroy',()=>{
+        window.watermark.create()
+    })
   },
   methods: {
     handleEnter() {
