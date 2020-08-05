@@ -3,7 +3,7 @@ import isElectron from 'is-electron'
 import { getDetail, getListBatchSendTaskResult, sendResultHasSend } from '@/api/batchSendTask'
 import { listSelectMobil, batchAddTaskHandleTask } from '@/api/batchAddTask'
 import { sendChaoyingMessage, isOnline } from '@/api/longRange'
-import { Message } from 'element-ui';
+import { Message, MessageBox, Loading } from 'element-ui';
 
 let $ipcRenderer;
 if (isElectron()) {
@@ -11,6 +11,7 @@ if (isElectron()) {
 }
 
 const state = {
+    loadingInstance: null,
     sock: null,
     // url: process.env.NODE_ENV == 'development' ? '/ws?clientGroup=MANAGER' : '/api/ws?clientGroup=MANAGER',
     url: '/api/ws?clientGroup=MANAGER',
@@ -55,6 +56,7 @@ const actions = {
                         console.log('reply-openChat', arg)
                         if (arg.err) {
                             dispatch('clearTask')
+                            state.loadingInstance.close();
                             Message({
                                 message: arg.err.message,
                                 type: 'error'
@@ -70,6 +72,7 @@ const actions = {
                         console.log('reply-inputEnter', arg)
                         if (arg.err) {
                             dispatch('clearTask')
+                            state.loadingInstance.close();
                             Message({
                                 message: arg.err.message,
                                 type: 'error'
@@ -83,12 +86,15 @@ const actions = {
                         if (state.taskList.length <= 0) {
                             state.mouseX = null
                             state.mouseY = null
+
+                            // 取消loading 
+                            state.loadingInstance.close();
                         }
                         sendResultHasSend({ uuids: [state.sendMsgUuids] }).then(() => {
                             let taskResult = state.taskList.pop();
                             state.articleLink = taskResult.contentUrl;
                             if (taskResult) {
-                                if (taskResult.userExternalUserRelationship.remarkMobiles != '') {
+                                if (taskResult.externalUser.mobile != '') {
                                     dispatch('openChat', taskResult)
                                 }
                             }
@@ -101,6 +107,7 @@ const actions = {
                         console.log('reply-AddCustomerByMobiles', arg)
                         if (arg.err) {
                             dispatch('clearTask')
+                            state.loadingInstance.close();
                             Message({
                                 message: arg.err.message,
                                 type: 'error'
@@ -127,8 +134,21 @@ const actions = {
             }
             state.sock.onmessage = function (e) {
                 const data = JSON.parse(e.data)
+
                 if (data.type == 'CONTROL_MANAGER') {
-                    dispatch('getDetail', data)
+                    // dispatch('getDetail', data)
+
+                    // MessageBox.confirm('检测到有群发任务！', {
+                    //     title: "确认发送",
+                    //     cancelButtonText: '放弃'
+                    // }).then((res) => {
+                    //     state.loadingInstance = Loading.service({
+                    //         text: "别瞎鸡巴乱动鼠标，会崩的。"
+                    //     });
+                    //     dispatch('getDetail', data)
+                    // }).catch(err => {
+                    //     return false
+                    // })
                 }
                 else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
@@ -237,11 +257,8 @@ const actions = {
         })
     },
     sendMessage({ state, dispatch }, list) {
-        console.log('sendMessage1:', list)
-        console.log('sendMessage2:', state.batchSendTaskDetail)
-
         if (state.batchSendTaskDetail.tempMediaType == 'IMAGE') {
-            console.log('nmsl,1')
+            console.log('state.batchSendTaskDetail.tempMediaType == IMAGE')
             state.sendMsgContent = {
                 msgtype: "image",
                 image: {
@@ -249,7 +266,7 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.tempMediaType == 'VIDEO') {
-            console.log('nmsl,2')
+            console.log('state.batchSendTaskDetail.tempMediaType == VIDEO')
             state.sendMsgContent = {
                 msgtype: "video",
                 video: {
@@ -257,7 +274,7 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.tempMediaType == 'FILE') {
-            console.log('nmsl,3')
+            console.log('state.batchSendTaskDetail.tempMediaType == FILE')
             state.sendMsgContent = {
                 msgtype: "file",
                 file: {
@@ -265,7 +282,7 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.media.type == 'IMAGE') {
-            console.log('nmsl,4')
+            console.log('state.batchSendTaskDetail.media.type == IMAGE')
             state.sendMsgContent = {
                 msgtype: "image",
                 image: {
@@ -273,7 +290,7 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.media.type == 'ARTICLE') {
-            console.log('nmsl,5')
+            console.log('state.batchSendTaskDetail.media.type == ARTICLE')
             state.sendMsgContent = {
                 msgtype: "news",
                 news: {
@@ -284,7 +301,7 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.textContent) {
-            console.log('nmsl,7')
+            console.log('state.batchSendTaskDetail.textContent')
             state.sendMsgContent = {
                 msgtype: "text", //消息类型，必填
                 text: {
@@ -294,7 +311,6 @@ const actions = {
         }
         state.taskList = list;
         let taskResult = state.taskList.pop();
-        console.log('nmsl:', taskResult)
         console.log("state.sendMsgContent:", state.sendMsgContent)
         if (taskResult) {
             state.articleLink = taskResult.contentUrl;
@@ -305,7 +321,7 @@ const actions = {
     },
 
     openChat({ state }, obj) {
-        if (isElectron()) {
+        if (isElectron() && obj.externalUser.mobile) {
             state.sendMsgUuids = obj.uuid
             $ipcRenderer.send('openChat', {
                 mobile: obj.externalUser.mobile.split(',')[0],
