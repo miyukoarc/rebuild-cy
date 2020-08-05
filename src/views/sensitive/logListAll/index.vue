@@ -29,8 +29,8 @@
             </template>
           </el-table-column>
           <el-table-column label="时间" align="left" prop="createdAt"></el-table-column>
-          <el-table-column label="操作" align="left">
-            <el-button size="mini" disabled>详情</el-button>
+          <el-table-column label="操作" align="center" width="80">
+            <el-button type="text" disabled>详情</el-button>
           </el-table-column>
         </el-table>
 

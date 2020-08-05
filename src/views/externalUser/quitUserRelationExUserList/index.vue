@@ -66,7 +66,7 @@
               >{{quitUserRelationExUserListUserStatus[scope.row.userStatus]}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="center" width="120px">
             <template slot-scope="scope">
               <el-t-button
                 type="text"
@@ -75,6 +75,8 @@
                 :auth="permissionMap['externalUser']['externalUser_redistributionExUser']"
                 @click.stop="handleDistributeSingle(scope.row)"
               >分配</el-t-button>
+              <el-divider direction="vertical"></el-divider>
+
               <el-t-button
                 :popAuth="true"
                 :auth="permissionMap['externalUser']['externalUser_quitUserRelationExUserList']"
@@ -85,7 +87,6 @@
             </template>
           </el-table-column>
         </el-table>
-
 
         <customer-pagination
           :pageConfig="pageConfig"
@@ -137,7 +138,6 @@ export default {
   watch: {},
   computed: {
     ...mapState({
-
       loading: (state) => state.externalUser.loading,
       quitUserRelationExUserListUserStatus: (state) =>
         state.enum.quitUserRelationExUserListUserStatus,
@@ -156,8 +156,8 @@ export default {
       this.initDataList(this.query)
     })
 
-    this.$once('hook:beforeDestroy',()=>{
-        this.$bus.$off('handleRefresh')
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
     })
   },
   methods: {
@@ -168,7 +168,6 @@ export default {
      * 初始化筛选信息
      */
     initFilter() {
-
       this.$store
         .dispatch('department/getDepartmentListAll')
         .then(() => {})
@@ -178,7 +177,6 @@ export default {
             message: err || '初始化失败',
           })
         })
-
     },
     /**
      * 初始化表格信息

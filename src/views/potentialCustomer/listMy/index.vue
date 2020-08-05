@@ -73,7 +73,6 @@
               </div>
               <div v-else>--</div>
             </template>
-
           </el-table-column>
           <el-table-column label="添加员工" align="left">
             <template v-slot="{row}">
@@ -85,10 +84,9 @@
               </div>
               <div v-else>--</div>
             </template>
-
           </el-table-column>
           <el-table-column label="入库时间" align="left" prop="importTime"></el-table-column>
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="left" width="180px">
             <template slot-scope="scope">
               <el-t-button
                 type="text"
@@ -97,6 +95,7 @@
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
                 @click.stop="handleAllocation(scope.row)"
               >分配</el-t-button>
+              <el-divider direction="vertical"></el-divider>
               <el-t-button
                 type="text"
                 size="mini"
@@ -104,6 +103,7 @@
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
                 @click.stop="handleEdit(scope.row)"
               >编辑</el-t-button>
+              <el-divider direction="vertical"></el-divider>
               <el-t-button
                 type="text"
                 :popAuth="true"
@@ -111,12 +111,15 @@
                 size="mini"
                 @click.stop="handleDelete(scope.row)"
               >删除</el-t-button>
-
             </template>
           </el-table-column>
         </el-table>
 
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
+        <customer-pagination
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -140,7 +143,7 @@ export default {
     ToolBar,
     TagsDrawer,
     AsyncUserTag,
-    CustomerPagination
+    CustomerPagination,
   },
   data() {
     return {
@@ -350,7 +353,7 @@ export default {
       this.$refs['formDialog'].transfer = row
     },
     handleEdit(row) {
-      const { belong, uuid, mobile,name } = row
+      const { belong, uuid, mobile, name } = row
       let selectedTag = []
       row.potentialCustomerTags.map((item) => {
         item.tags.map((tag) => {
@@ -392,12 +395,11 @@ export default {
     },
     handleSelectionChange(val) {
       this.selects = val
-
     },
-    changeSize(val){
-        this.query.size = val
-        this.initDataList(this.query)
-    }
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
   },
 }
 </script>

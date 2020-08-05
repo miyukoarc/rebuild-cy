@@ -40,9 +40,7 @@
               <async-user-drawer :hasPop="true" :users="scope.row.user"></async-user-drawer>
             </template>
           </el-table-column>
-          <!-- <template v-slot="scope">
-              <user-drawer :hasPop="false" :users="scope.row.user"></user-drawer>
-          </template>-->
+
 
           <el-table-column label="企业标签" align="left">
             <template v-slot="scope">
@@ -55,15 +53,7 @@
           </el-table-column>
           <el-table-column label="添加时间" align="left" prop="createdAt"></el-table-column>
 
-          <!-- <el-table-column label="来源渠道" align="left">
-            <template v-slot="scope">
-              <div
-                v-if="Object.keys(scope.row.externalUser.contactWay).length"
-              >{{scope.row.externalUser.contactWay.state}}</div>
-              <div v-else>--</div>
-            </template>
-          </el-table-column>-->
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-t-button
                 :popAuth="true"
@@ -88,7 +78,7 @@
 
 <script>
 import ListHeader from './header.vue'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import UserDrawer from '@/components/UserDrawer'
 import TagsDrawerObj from '@/components/TagsDrawerObj'

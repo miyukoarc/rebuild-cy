@@ -31,13 +31,15 @@
           <el-table-column label="标题" prop="title"></el-table-column>
           <el-table-column label="描述" prop="description"></el-table-column>
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="120" align="center">
             <template v-slot="{row}">
               <div v-if="row.auditStateForOperation==='UNDER_REVCIEW'">
                 <span class="color-primary">审核中</span>
               </div>
               <div v-else>
                 <el-t-button type="text" @click.stop="handleEdit(row.uuid)">编辑</el-t-button>
+                <el-divider direction="vertical"></el-divider>
+
                 <el-t-button type="text" @click.stop="handleDelete(row.uuid)">删除</el-t-button>
               </div>
             </template>

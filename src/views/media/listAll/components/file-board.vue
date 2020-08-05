@@ -31,7 +31,7 @@
           <!-- <el-table-column label="内容" prop="content">
           </el-table-column>-->
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" align="center" width="80">
             <template v-slot="{row}">
 
                 <span v-if="row.auditStateForOperation==='UNDER_REVCIEW'" class="color-primary">审核中</span>

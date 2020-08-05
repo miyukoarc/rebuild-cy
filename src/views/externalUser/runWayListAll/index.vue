@@ -69,7 +69,7 @@
             <template v-slot="scope">{{scope.row.delFollow?'被客户删除':'主动删除客户'}}</template>
           </el-table-column>
 
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-button
                 type="text"

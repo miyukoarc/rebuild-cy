@@ -98,7 +98,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="center" width="120">
             <template slot-scope="scope">
               <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
               <el-t-button
@@ -121,9 +121,11 @@
           </el-table-column>
         </el-table>
 
-        <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
-
-
+        <customer-pagination
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -151,7 +153,7 @@ export default {
     AsyncUserDrawer,
     RoleDrawer,
     TagsDrawer,
-    CustomerPagination
+    CustomerPagination,
   },
   data() {
     return {
@@ -185,14 +187,14 @@ export default {
     this.initDataList(this.query)
     this.initFilter()
   },
-  mounted(){
-      this.$bus.$on('handleRefresh',()=>{
-          this.initDataList(this.query)
-      })
+  mounted() {
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
 
-      this.$once('hook:beforeDestroy',()=>{
-          this.$bus.$off('handleRefresh')
-      })
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
   },
 
   methods: {
@@ -356,10 +358,10 @@ export default {
     handleSelectionChange(val) {
       this.rowSelects = val
     },
-    changeSize(val){
-        this.query.size = val
-        this.initDataList(this.query)
-    }
+    changeSize(val) {
+      this.query.size = val
+      this.initDataList(this.query)
+    },
   },
 }
 </script>

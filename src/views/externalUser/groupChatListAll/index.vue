@@ -41,7 +41,7 @@
             </template>
           </el-table-column>
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
-          <el-table-column label="操作" align="left" width="240">
+          <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-t-button
                 type="text"

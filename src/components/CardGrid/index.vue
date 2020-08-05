@@ -53,7 +53,7 @@
                 <span class="font-exs color-info">{{item.updateAt}}</span>
               </div>
               <div class="operator">
-                <el-checkbox :key="item.uuid" :label="item.uuid">{{item.uuid?'':''}}</el-checkbox>
+                <el-checkbox :disabled="item.auditStateForOperation==='UNDER_REVCIEW'" :key="item.uuid" :label="item.uuid">{{item.uuid?'':''}}</el-checkbox>
                 <el-t-button type="text" @click="handleViewTags(item.toTags)">适用标签</el-t-button>
                 <div class="operator-icon">
                   <span

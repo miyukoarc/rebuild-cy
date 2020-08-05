@@ -31,7 +31,7 @@
           :default-sort="sortConfig"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="标签组名" align="left" prop="groupName" width="100"></el-table-column>
+          <el-table-column label="标签组名" align="left" prop="groupName" width="200"></el-table-column>
           <el-table-column label="标签" align="left">
             <template v-slot="scope">
               <div v-if="Object.keys(scope.row.tags).length">
@@ -45,7 +45,7 @@
             </template>
           </el-table-column>
           <!-- <el-table-column label="文章描述" align="left"></el-table-column> -->
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="center" width="80">
             <template slot-scope="scope">
               <span v-if="scope.row.auditStateForOperation==='UNDER_REVCIEW'" class="color-primary">审核中</span>
               <el-button

@@ -14,7 +14,7 @@
                     <div>公司</div>
                   </el-col>
                   <el-col :span="18">
-                    <div>XX部门</div>
+                    <div>{{corpInfo.name}}</div>
                   </el-col>
                 </el-row>
                 <el-row style="margin-bottom:10px;">
@@ -57,37 +57,30 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'async-user-tag',
   props: {
     hasPop: {
       type: Boolean,
-      default: true
+      default: true,
     }, //tooltip开关
     uuid: {
-      type: Number
-    }
+      type: Number,
+    },
   },
   data() {
     return {
       status: false,
       watchFlag: false,
       tempUserDetail: {},
-      timer: null
+      timer: null,
     }
   },
-  watch: {
-    //   propsData:{
-    //       handler(newVal,oldVal){
-    //           console.log('watcher')
-    //           if(Object.keys(newVal).length&&this.watchFlag){
-    //               console.log('有值')
-    //           }else{
-    //               console.log('空值')
-    //           }
-    //       },
-    //     //   immediate:true
-    //   }
+  computed: {
+    ...mapState({
+      corpInfo: (state) => state.auth.corpInfo,
+    }),
   },
   methods: {
     handleShow() {
@@ -106,14 +99,14 @@ export default {
     initData(uuid) {
       this.$store
         .dispatch('user/getDetail', uuid)
-        .then(res => {
+        .then((res) => {
           this.tempUserDetail = res
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err)
         })
-    }
-  }
+    },
+  },
 }
 </script>
 
