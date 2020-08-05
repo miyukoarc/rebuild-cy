@@ -1,6 +1,7 @@
 <template>
   <div class="container" id="container">
     <!-- <div id="container"></div> -->
+    <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/planet2.png" /> -->
     <div class="info-container">
       <div class="tips-container">
         <h1>SocialCRM</h1>
@@ -11,7 +12,6 @@
       </div>
     </div>
 
-    <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/planet2.png" /> -->
   </div>
 </template>
 
