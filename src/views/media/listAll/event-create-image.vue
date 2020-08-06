@@ -182,7 +182,7 @@ export default {
             message: message,
           })
         }, 2000)
-        this.$bus.$emit('handleRefresh')
+        this.$bus.$emit('handleMediaRefresh')
         //   Object.assign(this.$data, this.$options.data())
         this.$parent.$parent.dialogVisible = false
       }

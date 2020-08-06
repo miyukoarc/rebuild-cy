@@ -271,3 +271,28 @@ export function modifyListAll(obj) {
 
 }
 */
+
+/**
+ * 
+ */
+export const upgrade = (arr) => {
+
+  let _inner = []
+
+  let _temp = []
+
+  for (let i = 0; i < arr.length; i++) {
+    _inner.push(arr[i])
+    if (_inner.length === 3) {
+      _temp.push(JSON.parse(JSON.stringify(_inner)))
+      _inner.splice(0, 3)
+    } else {
+      if (i === arr.length - 1) {
+        _temp.push(_inner)
+      }
+    }
+  }
+
+  return _temp
+
+}

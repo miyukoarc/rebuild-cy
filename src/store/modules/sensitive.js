@@ -59,7 +59,7 @@ function myFilter(arr1, arr2) {
   let temp = [] //交集
   arr1.forEach(item1 => {
     arr2.forEach(item2 => {
-      if (item1.tagId === item2.tagId) {
+      if (item1.tagName === item2.tagName) {
         temp.push(item1)
       }
     })
@@ -67,7 +67,7 @@ function myFilter(arr1, arr2) {
 
   arr1.forEach(item => {
     if (!temp.find(unit => {
-        return unit.tagId === item.tagId
+        return unit.tagName === item.tagName
       })) {
       arr1Temp.push(item)
     }
@@ -75,7 +75,7 @@ function myFilter(arr1, arr2) {
 
   arr2.forEach(item => {
     if (!temp.find(unit => {
-        return unit.tagId === item.tagId
+        return unit.tagName === item.tagName
       })) {
 
       arr2Temp.push(item)

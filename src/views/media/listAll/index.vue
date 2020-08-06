@@ -206,6 +206,14 @@ export default {
       this.initDataList()
     })
 
+    this.$bus.$on('handleMediaRefresh',() => {
+        const groupUuid = this.query.groupUuid
+        this.initMediaList({groupUuid})
+    })
+
+    this.$once('hook:beforeDestroy', () => {
+        this.$bus.$off('handleMediaRefresh')
+    })
     this.$once('hook:beforeDestroy', () => {
       this.$bus.$off('handleRefresh')
     })
@@ -391,6 +399,7 @@ export default {
       this.query.groupUuid = groupUuid
       this.initMediaList({ ...this.query, groupUuid })
     },
+    
   },
 }
 </script>
