@@ -105,10 +105,10 @@ export default {
       })
 
       if (emptyFlag) {
-        const auditUserList = this.form.auditUserList.map((item,index) => {
+        const auditUserList = this.form.auditUserList.map((item, index) => {
           return {
             ...item,
-            level: index+1,
+            level: index + 1,
             userList: item.userList.map((unit) => {
               return {
                 name: unit.name,
@@ -124,7 +124,7 @@ export default {
         this.$store
           .dispatch('sensitive/setAuditUser', payload)
           .then(() => {
-            this.$message({
+                this.$message({
               type: 'success',
               message: '操作成功',
               duration: 1000,
@@ -138,19 +138,20 @@ export default {
             console.error(err)
             this.$message({
               type: 'error',
-              message: errw,
+              message: err,
             })
           })
       } else {
-        //   this.handleCancel()
-        this.$confirm('是否放弃设置审批人', 'warning', {
+        this.$confirm('请设置审批人！', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
         })
-          .then(async () => {})
-          .catch((err) => {
-            console.error(err)
+          .then(async () => {
+
+          })
+          .catch(() => {
+              this.handleCancel()
           })
       }
     },

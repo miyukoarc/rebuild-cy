@@ -111,7 +111,8 @@ export default {
       this.$emit('handleSearch', this.query)
     },
     handleRefresh() {
-      this.$emit('handleRefresh')
+      this.$bus.$emit('handleMediaRefresh')
+      this.value = this.$options.data().value
       this.query = this.$options.data().query
     }
   }

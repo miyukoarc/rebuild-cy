@@ -142,7 +142,7 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     beforeImageUpload(file) {
-      console.log(file)
+      console.log(file.type)
       const type = file.type
       const size = file.size
       if (size > 1024 * 1024 * 2) {

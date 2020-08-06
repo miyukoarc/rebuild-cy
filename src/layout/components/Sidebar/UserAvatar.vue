@@ -2,7 +2,7 @@
   <div class="container">
     <div class="left-menu">
       <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
+        <div class="avatar-wrapper user-select-none">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" />
           <div style="margin-left:10px;">
             <div class="font-l" style="color:#fff;font-size:16px">{{roles[roleCode]}}</div>
@@ -12,7 +12,7 @@
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
-            <el-dropdown-item>首页</el-dropdown-item>
+            <el-dropdown-item class="user-select-none">首页</el-dropdown-item>
           </router-link>
           <!-- <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
                 <el-dropdown-item>Github</el-dropdown-item>
@@ -21,7 +21,7 @@
                 <el-dropdown-item>Docs</el-dropdown-item>
           </a>-->
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">退出</span>
+            <span class="user-select-none" style="display:block;">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
