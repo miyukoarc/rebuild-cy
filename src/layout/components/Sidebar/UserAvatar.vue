@@ -31,29 +31,29 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import {removeToken} from '@/utils/auth'
+import { removeToken } from '@/utils/auth'
 
 export default {
-  name: "user-avatar",
+  name: 'user-avatar',
   computed: {
-    ...mapGetters(["sidebar", "avatar", "name", "roleCode"]),
+    ...mapGetters(['sidebar', 'avatar', 'name', 'roleCode']),
     ...mapState({
-      roles: state => state.enum.roles
-    })
+      roles: (state) => state.enum.roles,
+    }),
   },
   methods: {
-    logout() {
-      //   await this.$store.dispatch('user/logout')
+    async logout() {
       this.removeToken()
-      console.log(window)
       window.watermark.remove()
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      await this.$store.dispatch('user/logout')
+      window.location.reload()
+    //   this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
-    removeToken(){
-        return removeToken()
-    }
-  }
-};
+    removeToken() {
+      return removeToken()
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

@@ -11,8 +11,8 @@ export function wxLogin(tenantId) {
 
 export function logout() {
   return request({
-    url: '/vue-admin-template/user/logout',
-    method: 'post'
+    url: '/logout',
+    method: 'get'
   })
 }
 

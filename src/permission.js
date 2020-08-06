@@ -37,7 +37,7 @@ router.beforeEach(async(to, from, next) => {
     console.log(hasToken)
 
     if (hasToken) {
-        if (to.path === '/login') {
+        if (to.path.includes('/login')) {
             //if is logged in, redirect to the home page
             //   alert('login')
             next({
@@ -63,6 +63,7 @@ router.beforeEach(async(to, from, next) => {
 
                     await store.dispatch('user/getMyInfo').then(async(res) => {
                         const name = res.name
+
                         if (name) {
                             window.watermark = new Watermark(name)
                             window.watermark.create()
@@ -105,7 +106,6 @@ router.beforeEach(async(to, from, next) => {
         }
 
     } else {
-        console.log(whiteList.indexOf(to.path))
         if (whiteList.indexOf(to.path) !== -1) {
             //   console.log(router, '1')
             next()
