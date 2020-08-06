@@ -164,14 +164,18 @@ export default {
         //     this.checked.push(item)
         //   })
         // }
+        
         this.checked = newVal
       },
       //   immediate: true
     },
     options: {
       handler(newVal, oldVal) {
-        this.complexList = this.upgrade(newVal)
+        if (newVal) {
+          this.complexList = this.upgrade(newVal)
+        }
       },
+      immediate: true,
     },
   },
   computed: {
@@ -183,7 +187,7 @@ export default {
     },
   },
   updated() {
-      console.log('切换')
+    console.log('切换')
   },
   created() {},
   mounted() {},
