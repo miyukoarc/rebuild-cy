@@ -236,7 +236,7 @@ export default {
     },
     handleDetail(val) {
       const uuid = val.uuid
-      console.log(val)
+      
       this.$refs['formDialog'].event = 'DetailTemplate'
       this.$refs['formDialog'].eventType = 'detail'
       this.$refs['formDialog'].dialogVisible = true

@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      console.log(val);
+      ;
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
       this.$emit("handleSearch", this.query);
@@ -137,7 +137,7 @@ export default {
       }, 1000);
     },
     handleSelectedChange(val) {
-      console.log(val);
+      ;
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {

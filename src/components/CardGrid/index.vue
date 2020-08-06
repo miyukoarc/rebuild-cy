@@ -168,6 +168,11 @@ export default {
       },
       //   immediate: true
     },
+    options: {
+      handler(newVal, oldVal) {
+        this.complexList = this.upgrade(newVal)
+      },
+    },
   },
   computed: {
     listAll() {
@@ -177,9 +182,10 @@ export default {
       return this.value
     },
   },
-  created() {
-    this.complexList = this.upgrade(this.options)
+  updated() {
+      console.log('切换')
   },
+  created() {},
   mounted() {},
   methods: {
     upgrade(arr) {
@@ -277,7 +283,7 @@ export default {
     width: 100%;
     margin-bottom: 10px;
     .item-container {
-    //   flex: 1 0 0%;
+      //   flex: 1 0 0%;
       flex: 1;
     }
   }
@@ -325,7 +331,7 @@ export default {
         }
       }
       .info-container {
-          margin: 0 10px 10px 10px;
+        margin: 0 10px 10px 10px;
         .creator {
           display: flex;
           justify-content: space-between;

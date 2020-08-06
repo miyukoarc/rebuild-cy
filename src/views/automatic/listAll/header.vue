@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      console.log(val);
+      ;
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
       // this.$emit('handleSearch', this.query)

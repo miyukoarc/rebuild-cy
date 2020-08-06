@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     handleView(val) {
-      console.log(val)
+      
       this.$emit('handleView',val)
     }
   }
