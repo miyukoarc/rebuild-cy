@@ -1,80 +1,88 @@
 <template>
   <div class="card-container">
     <el-checkbox-group v-if="listAll.length" v-model="checked" @change="handleChangeCheck">
-      <div class="grid-item" v-for="(item) in listAll" :key="item.uuid">
-        <el-card style="margin: 15px;height: calc(100% - 30px);">
-          <div class="card-inner">
-            <div class="content-container">
-              <div v-if="item.type==='TEXT'">
-                <span>{{item.content}}</span>
-              </div>
-              <div
-                v-if="item.type==='IMAGE'"
-                @click="handleViewImage(item.localId)"
-                style="cursor: pointer;"
-              >
-                <el-image fit="cover" :src="`/api/public/file/${item.localId}`"></el-image>
-                <div class="cover">
-                  <i class="el-icon-picture-outline icon"></i>
-                </div>
-              </div>
-              <div v-if="item.type==='ARTICLE'">
-                <div>
-                  <h5 class="text-align-center">{{item.title}}</h5>
-                  <div>
-                    <span class="color-info font-exs">{{item.description}}</span>
+      <div class="row" v-for="(row) in complexList" :key="row[0].uuid">
+        <div class="item-container" v-for="item in row" :key="item.uuid">
+          <div class="grid-item" v-if="Object.keys(item).length">
+            <el-card>
+              <div class="card-inner">
+                <div class="content-container">
+                  <div v-if="item.type==='TEXT'">
+                    <span>{{item.content}}</span>
                   </div>
-                  <div v-html="item.articleContent"></div>
-                </div>
-              </div>
-              <div v-if="item.type==='FILE'">
-                <div class="file">
-                  <i class="el-icon-document color-info"></i>
-                  <span class="font-exs color-info user-select-none">{{item.fileName}}</span>
-                </div>
-              </div>
+                  <div
+                    v-if="item.type==='IMAGE'"
+                    @click="handleViewImage(item.localId)"
+                    style="cursor: pointer;"
+                  >
+                    <el-image fit="cover" :src="`/api/public/file/${item.localId}`"></el-image>
+                    <div class="cover">
+                      <i class="el-icon-picture-outline icon"></i>
+                    </div>
+                  </div>
+                  <div v-if="item.type==='ARTICLE'">
+                    <div>
+                      <h5 class="text-align-center">{{item.title}}</h5>
+                      <div>
+                        <span class="color-info font-exs">{{item.description}}</span>
+                      </div>
+                      <div v-html="item.articleContent"></div>
+                    </div>
+                  </div>
+                  <div v-if="item.type==='FILE'">
+                    <div class="file">
+                      <i class="el-icon-document color-info"></i>
+                      <span class="font-exs color-info user-select-none">{{item.fileName}}</span>
+                    </div>
+                  </div>
 
-              <div
-                v-if="item.type==='VIDEO'"
-                @click="handleViewVideo(item.localId)"
-                style="cursor: pointer;"
-              >
-                <div>
-                  <video-cover :url="item.localId"></video-cover>
+                  <div
+                    v-if="item.type==='VIDEO'"
+                    @click="handleViewVideo(item.localId)"
+                    style="cursor: pointer;"
+                  >
+                    <div>
+                      <video-cover :url="item.localId"></video-cover>
+                    </div>
+                    <div class="cover">
+                      <i class="el-icon-video-play icon"></i>
+                    </div>
+                  </div>
                 </div>
-                <div class="cover">
-                  <i class="el-icon-video-play icon"></i>
+                <div class="info-container">
+                  <div class="creator">
+                    <span class="font-exs color-info" v-if="item.creator">{{item.creator.name}}</span>
+                    <span class="font-exs color-info">{{item.updateAt}}</span>
+                  </div>
+                  <div class="operator">
+                    <el-checkbox
+                      :disabled="item.auditStateForOperation==='UNDER_REVCIEW'"
+                      :key="item.uuid"
+                      :label="item.uuid"
+                    >{{item.uuid?'':''}}</el-checkbox>
+                    <el-t-button type="text" @click="handleViewTags(item.toTags)">适用标签</el-t-button>
+                    <div class="operator-icon">
+                      <span
+                        class="color-primary font-exs"
+                        v-if="item.auditStateForOperation==='UNDER_REVCIEW'"
+                      >审核中</span>
+                      <el-t-button v-else type="text" @click="handleDelete(item.uuid)">
+                        <i class="el-icon-delete"></i>
+                      </el-t-button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="info-container">
-              <div class="creator">
-                <span class="font-exs color-info" v-if="item.creator">{{item.creator.name}}</span>
-                <span class="font-exs color-info">{{item.updateAt}}</span>
-              </div>
-              <div class="operator">
-                <el-checkbox :disabled="item.auditStateForOperation==='UNDER_REVCIEW'" :key="item.uuid" :label="item.uuid">{{item.uuid?'':''}}</el-checkbox>
-                <el-t-button type="text" @click="handleViewTags(item.toTags)">适用标签</el-t-button>
-                <div class="operator-icon">
-                  <span
-                    class="color-primary font-exs"
-                    v-if="item.auditStateForOperation==='UNDER_REVCIEW'"
-                  >审核中</span>
-                  <el-t-button v-else type="text" @click="handleDelete(item.uuid)">
-                    <i class="el-icon-delete"></i>
-                  </el-t-button>
-                </div>
-              </div>
-            </div>
+            </el-card>
           </div>
-        </el-card>
+        </div>
       </div>
     </el-checkbox-group>
 
     <div v-else class="text-align-center">
       <span class="tips font-exs color-info">暂无数据</span>
     </div>
-
+    <!-- 预览框 -->
     <el-dialog :visible.sync="dialogVisible" :width="width" center title="适用标签" destroy-on-close>
       <el-image v-if="view==='image'" :src="`/api/public/file/${imageUrl}`" @load="onLoad"></el-image>
       <video
@@ -109,6 +117,7 @@
 
 <script>
 import VideoCover from './video-cover'
+import { upgrade } from '@/utils/common'
 export default {
   name: 'CardGrid',
   components: {
@@ -144,6 +153,7 @@ export default {
       videoUrl: '',
       imageUrl: '',
       shownTags: [],
+      complexList: [],
     }
   },
   watch: {
@@ -167,8 +177,14 @@ export default {
       return this.value
     },
   },
+  created() {
+    this.complexList = this.upgrade(this.options)
+  },
   mounted() {},
   methods: {
+    upgrade(arr) {
+      return upgrade(arr)
+    },
     handleEdit(val) {
       this.$emit('handleEdit', val)
     },
@@ -255,9 +271,17 @@ export default {
 
 <style lang="scss" scoped>
 .card-container {
+  .row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+    .item-container {
+    //   flex: 1 0 0%;
+      flex: 1;
+    }
+  }
   .grid-item {
-    flex: 0 0 20%;
-    height: 360px;
     .card-inner {
       height: 100%;
       display: flex;
@@ -268,7 +292,7 @@ export default {
         left: 0;
         top: 0;
         height: 220px;
-        width: 177.8px;
+        // width: 177.8px;
         overflow: hidden;
 
         &:hover .cover {
@@ -301,6 +325,7 @@ export default {
         }
       }
       .info-container {
+          margin: 0 10px 10px 10px;
         .creator {
           display: flex;
           justify-content: space-between;
@@ -335,6 +360,7 @@ export default {
 .grid-item {
   .el-card__body {
     height: 100%;
+    padding: 0;
   }
 }
 .card-container {
@@ -343,6 +369,7 @@ export default {
     display: flex;
     flex-flow: row wrap;
     align-content: flex-start;
+    flex-direction: column;
   }
   .tips {
     line-height: 30px;
