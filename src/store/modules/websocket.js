@@ -22,13 +22,15 @@ const state = {
         article: ''
     },
 
-    taskList: null,
+    taskList: [],//队列数组
+    taskResult: null,//队列中的当前项
+
     sendMsgContent: null,
     sendMsgContent_autorep_text: null,
     sendMsgContent_autorep_media: null,
 
 
-    sendMsgUuids: null,
+
     mouseX: null,
     mouseY: null,
 
@@ -39,6 +41,10 @@ const state = {
 
     dialog_visible: false,
     countdown: 10,
+
+    messageQueue: [],
+
+
 
 }
 
@@ -71,7 +77,6 @@ const actions = {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
                         }
-                        // 显不处理，以后再说！！！！！！！！！！！！！！！
                     })
                     $ipcRenderer.on('reply-inputEnter', (event, arg) => {
                         console.log('reply-inputEnter', arg)
@@ -95,8 +100,8 @@ const actions = {
                             // 取消loading 
                             state.loadingInstance.close();
                         }
-                        sendResultHasSend({ uuids: [state.sendMsgUuids] }).then(() => {
-                            let taskResult = state.taskList.pop();
+                        sendResultHasSend({ uuids: [state.taskResult.uuid] }).then(() => {
+                            let taskResult = state.taskList.shift();
                             state.articleLink = taskResult.contentUrl;
                             if (taskResult) {
                                 if (taskResult.externalUser.mobile != '') {
@@ -131,18 +136,12 @@ const actions = {
                             dispatch('clearTask')
                         })
                     })
-
-                    $ipcRenderer.on('reply-SendMessage', (event, arg) => {
-                        console.log('reply-SendMessage', arg)
-                    })
                 }
             }
             state.sock.onmessage = function (e) {
                 const data = JSON.parse(e.data)
 
                 if (data.type == 'CONTROL_MANAGER') {
-                    // dispatch('getDetail', data)
-
                     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
                         title: "确认发送",
                         cancelButtonText: '放弃'
@@ -188,18 +187,6 @@ const actions = {
                     })
                 }
                 else if (data.type == 'ADDTASK') {
-                    // MessageBox.confirm('检测到有自动添加好友任务！任务执行中别瞎鸡巴乱动鼠标', {
-                    //     title: "确认添加",
-                    //     cancelButtonText: '放弃'
-                    // }).then(() => {
-                    //     state.loadingInstance = Loading.service({
-                    //         text: "别瞎鸡巴乱动鼠标，会崩的。"
-                    //     });
-                    //     dispatch('listSelectMobil', data)
-                    // }).catch(err => {
-                    //     return false
-                    // })
-
                     dispatch('listSelectMobil', data)
                 }
                 else if (data.type == 'AUTOREP') {
@@ -248,8 +235,8 @@ const actions = {
                         if (isElectron()) {
                             $ipcRenderer.send('openChat', {
                                 mobile: data.properties.mobile,
-                                x: state.mouseX,
-                                y: state.mouseY,
+                                // x: state.mouseX,
+                                // y: state.mouseY,
                             })
                         }
 
@@ -281,7 +268,15 @@ const actions = {
         })
     },
     sendMessage({ state, dispatch }, list) {
-        if (state.batchSendTaskDetail.tempMediaType == 'IMAGE') {
+        if (state.batchSendTaskDetail.textContent) {
+            console.log('state.batchSendTaskDetail.textContent')
+            state.sendMsgContent = {
+                msgtype: "text", //消息类型，必填
+                text: {
+                    content: state.batchSendTaskDetail.textContent, //文本内容
+                },
+            }
+        } else if (state.batchSendTaskDetail.tempMediaType == 'IMAGE') {
             console.log('state.batchSendTaskDetail.tempMediaType == IMAGE')
             state.sendMsgContent = {
                 msgtype: "image",
@@ -324,38 +319,34 @@ const actions = {
                     imgUrl: state.batchSendTaskDetail.media.imgUrl, //H5消息封面图片URL
                 }
             }
-        } else if (state.batchSendTaskDetail.textContent) {
-            console.log('state.batchSendTaskDetail.textContent')
-            state.sendMsgContent = {
-                msgtype: "text", //消息类型，必填
-                text: {
-                    content: state.batchSendTaskDetail.textContent, //文本内容
-                },
-            }
         }
-        state.taskList = list;
-        let taskResult = state.taskList.pop();
+
+
+        // 添加到任务队列中
+        // state.taskList = list;
+        state.taskList.concat(list);
+        state.taskResult = state.taskList.shift();
+
+        console.log("taskResult:", state.taskResult)
         console.log("state.sendMsgContent:", state.sendMsgContent)
-        if (taskResult) {
-            state.articleLink = taskResult.contentUrl;
-            if (taskResult.externalUser.mobile != '') {
-                dispatch('openChat', taskResult)
-            }
+
+        if (state.taskResult && state.taskResult.externalUser.mobile != '') {
+            state.articleLink = state.taskResult.contentUrl;
+            dispatch('openChat')
         }
     },
 
-    openChat({ state }, obj) {
-        if (isElectron() && obj.externalUser.mobile) {
-            state.sendMsgUuids = obj.uuid
+    openChat({ state }) {
+        if (isElectron() && state.taskResult.externalUser.mobile) {
             $ipcRenderer.send('openChat', {
-                mobile: obj.externalUser.mobile.split(',')[0],
-                x: state.mouseX,
-                y: state.mouseY,
+                mobile: state.taskResult.externalUser.mobile.split(',')[0],
+                // x: state.mouseX,
+                // y: state.mouseY,
             })
         }
     },
 
-    sendChaoyingMessage({ state }, obj) {
+    sendChaoyingMessage({ state }) {
         if (state.batchSendTaskDetail.media.type == 'ARTICLE' && state.sendMsgContent) {
             state.sendMsgContent.news.link = state.articleLink;
         }
@@ -366,8 +357,8 @@ const actions = {
 
     clearTask() {
         console.log('clearTask')
-        state.taskList = null
-        state.sendMsgUuids = null
+        state.taskList = [];
+        state.taskResult = null
         state.sendMsgContent = null
         state.mouseX = null
         state.mouseY = null
