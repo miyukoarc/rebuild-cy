@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-11 11:14:09
- * @LastEditTime: 2020-07-15 20:23:41
+ * @LastEditTime: 2020-08-07 14:10:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\tagsSelected\index.vue
@@ -82,7 +82,6 @@ export default {
     },
     isShow: {
       handler(newVal, oldVal) {
-        console.log(newVal, "nd444ddd");
         if (newVal) {
           this.isShowMore = newVal;
         }
@@ -96,7 +95,6 @@ export default {
       // editTagsUuid: state => state.externalUser.editTagsUuid
     }),
     newTagsListPack() {
-      console.log(this.curly, "curly");
       return this.curly ? this.newTagsList.slice(0, 2) : this.newTagsList;
     },
   },
@@ -124,7 +122,6 @@ export default {
     } else {
       this.newTagsList = JSON.parse(JSON.stringify(this.tagListSelect));
     }
-    console.log(this.curly, "88888888888");
   },
   mounted() {},
   methods: {

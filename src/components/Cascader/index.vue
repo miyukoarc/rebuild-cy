@@ -85,13 +85,11 @@ export default {
   },
   methods: {
       childDepartment(item){
-          console.log(item)
           return item[this.props.department]
       },
     changeStatus(val) {
       
       const { index, status } = val
-      console.log(this.$refs['department'].showDepartment)
       this.$refs['department'].showDepartment = status
 
       this.$refs['department'].forEach((item, index) => {

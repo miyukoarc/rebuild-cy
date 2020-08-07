@@ -146,11 +146,10 @@ export const updataArticle = (payload) => {
  * @param {string} uuid
  */
 export const browsingRecords = (payload) => {
-    console.log(payload.data)
     return request({
         url: '/media/browsingRecords/' + payload.uuid,
         method: 'get',
-        params: {...payload.data}
+        params: {...payload.data }
     })
 }
 
@@ -247,5 +246,3 @@ export const moveMedieToGroup = (payload) => {
         data: payload
     })
 }
-
-
