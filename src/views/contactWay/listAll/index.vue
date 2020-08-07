@@ -13,10 +13,7 @@
             :auth="permissionMap['contactWay']['contactWay_add']"
             @click.stop="newChannelCode"
           >新建活码</el-t-button>
-          <el-t-button
-            type="primary"
-            @click.stop="setdefaultwelcomeSpeech"
-          >设置默认欢迎语</el-t-button>
+          <el-t-button type="primary" @click.stop="setdefaultwelcomeSpeech">设置默认欢迎语</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -61,14 +58,17 @@
           </el-table-column>
           <el-table-column label="标签" align="left">
             <template slot-scope="scope">
-              <el-tag
-                v-for="(tag,index) in scope.row.servicesTags"
-                :key="index"
-                type="info"
-                style="margin-right:5px;margin-bottom:5px"
-              >
-                <span v-if="tag">{{ tag.tagName }}</span>
-              </el-tag>
+              <div v-if="scope.row.servicesTags.length>0">
+                <el-tag
+                  v-for="(tag,index) in scope.row.servicesTags"
+                  :key="index"
+                  type="info"
+                  style="margin-right:5px;margin-bottom:5px"
+                >
+                  <span v-if="tag">{{ tag.tagName }}</span>
+                </el-tag>
+              </div>
+              <span v-else>--</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" width="240">

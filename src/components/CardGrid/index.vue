@@ -187,7 +187,6 @@ export default {
     },
   },
   updated() {
-    console.log('切换')
   },
   created() {},
   mounted() {},

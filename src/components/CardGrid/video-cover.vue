@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-08-07 10:27:07
+ * @LastEditTime: 2020-08-07 14:09:39
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\components\CardGrid\video-cover.vue
+-->
 <template>
   <el-image fit="cover" lazy v-if="coverImage" style="cursor:pointer;" :src="coverImage"></el-image>
   <video v-else width="0" height="0" ref="videoZoom" :src="`/api/public/file/${alterUrl}`"></video>
@@ -24,7 +32,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       const video = this.$refs['videoZoom']
-      console.log(video)
       video.currentTime = 1
       const canvas = document.createElement('canvas')
       // 等待video获取到第一帧后
