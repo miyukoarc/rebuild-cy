@@ -88,31 +88,37 @@ export default {
       }
       const payload = this.form
 
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          this.$store
-            .dispatch('media/addGroup', payload)
-            .then(() => {
-              this.$message({
-                type: 'success',
-                message: '操作成功',
+      if (this.selects.length) {
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            this.$store
+              .dispatch('media/addGroup', payload)
+              .then(() => {
+                this.$message({
+                  type: 'success',
+                  message: '操作成功',
+                })
+                this.handleCancel()
+                this.handleRefresh()
               })
-              this.handleCancel()
-              this.handleRefresh()
-            })
-            .catch((err) => {
-              this.$message({
-                type: 'error',
-                message: '操作失败',
+              .catch((err) => {
+                this.$message({
+                  type: 'error',
+                  message: '操作失败',
+                })
               })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '请检查输入',
             })
-        } else {
-          this.$message({
-            type: 'error',
-            message: '请检查输入',
-          })
-        }
-      })
+          }
+        })
+      } else {
+        this.$confirm('请设置可见范围！', '', { type: 'error' })
+          .then(() => {})
+          .catch(() => {})
+      }
     },
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
