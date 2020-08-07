@@ -93,6 +93,7 @@ function createWindow() {
     //   if(url.match('sidebar.cysrcrm.com')){
     const str = JSON.stringify(url)
     win.webContents.send('login-navigate', str)
+    
     //   }
 
   })
@@ -101,14 +102,14 @@ function createWindow() {
 
   win.webContents.on('will-redirect', (event, url) => {
     //   event.preventDefault()
-      if(url==='http://sidebar.cyscrm.com/'&&!loginFlag){
-          
-          const str = JSON.stringify(url)
-        //   win.webContents.send('login-redirect', str)
-          loginFlag = true
-      }
+    if (url === 'http://sidebar.cyscrm.com/' && !loginFlag) {
 
-      console.log(loginFlag)
+      const str = JSON.stringify(url)
+      //   win.webContents.send('login-redirect', str)
+      loginFlag = true
+    }
+
+    console.log(loginFlag)
   })
 
   win.on('maximize', (event, args) => {
@@ -217,28 +218,34 @@ ipcMain.on('closeWindow', e => {
 
 
 
-ipcMain.on('qrcode-window',(event,args)=>{
-    let newWin = new BrowserWindow({
-        width: 480,
-        height: 480,
-        frame: true,
-        webPreferences:{
-            nodeIntegration: true
-        }
-    })
+ipcMain.on('qrcode-window', (event, args) => {
+  let newWin = new BrowserWindow({
+    width: 480,
+    height: 480,
+    frame: true,
+    webPreferences: {
+      nodeIntegration: true,
+      webSecurity: false
+    }
 
-    Promise.resolve(newWin).then(()=>{
-        newWin.loadURL(`http://localhost/#/qrcode?tenantId=${args}`)
-    }).then(()=>{
-        
-        newWin.on('close', ()=> { newWin = null })
-        newWin.show()
-        
-    })
+  })
 
-    newWin.webContents.on('will-navigate',(event,url)=>{
+  // Promise.resolve(newWin).then(()=>{
+  newWin.loadURL(`http://localhost/#/qrcode?tenantId=${args}`)
+  // }).then(()=>{
 
-    })
+  newWin.on('close', () => {
+    newWin = null
+  })
+  newWin.show()
+
+  // })
+
+  newWin.webContents.on('will-navigate', (event, url) => {
+    newWin.webContents.send('getUrl', url)
+    ses = win.webContents.session
+    
+  })
 
 })
 

@@ -113,7 +113,7 @@
         <span class="color-primary font-exs" v-else>未配置标签</span>
         <icon-tooltip>
           <div>
-            <div class="font-exs color-info">包含任意：至少包含一个标签。</div>
+            <div class="font-exs color-info">包含其一：至少包含一个标签。</div>
             <div class="font-exs color-info">完全匹配：包含全部标签。</div>
           </div>
         </icon-tooltip>

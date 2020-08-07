@@ -81,7 +81,7 @@
           <el-table-column label="操作" align="center" width="80">
             <template v-slot="{row}">
               <div>
-                <el-t-button type="text" @click="handleAudit(row.uuid)">审核</el-t-button>
+                <el-t-button type="text" @click="handleAudit(row.uuid)">详细</el-t-button>
               </div>
             </template>
           </el-table-column>

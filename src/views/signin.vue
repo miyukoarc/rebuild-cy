@@ -66,6 +66,12 @@ export default {
     // this.electronTragger()
   },
   mounted() {
+      if(this.$isElectron()){
+          const ipcRenderer = window.electron.ipcRenderer
+          ipcRenderer.on('getUrl',(event,payload)=>{
+              console.log(payload)
+          })
+      }
   },
   methods: {
     electronTragger() {
@@ -139,17 +145,16 @@ export default {
 
         this.loading = true
 
-        // if (this.$isElectron()) {
-        //   console.log('!')
+        if (this.$isElectron()) {
 
-        //   const ipcRenderer = window.electron.ipcRenderer
-        //   ipcRenderer.send('qrcode-window', this.tenantId)
-        //   console.log('!')
-        //   this.loading = false
-        // } else {
+          const ipcRenderer = window.electron.ipcRenderer
+          ipcRenderer.send('qrcode-window', this.tenantId)
+
+          this.loading = false
+        } else {
         this.getQrCode(tenantId, 'browser')
         this.loading = false
-        // }
+        }
       } else {
         this.$message({
           type: 'warning',
