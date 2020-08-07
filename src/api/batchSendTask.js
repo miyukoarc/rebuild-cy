@@ -43,10 +43,11 @@ export const addBatchSendTask = (payload) => {
  * 把一个批量发送任务设为中断
  * @param {object} uuid 
  */
-export const batchSendTaskSuspend = (uuid) => {
+export const batchSendTaskSuspend = (payload) => {
     return request({
-        url: '/batchSendTask/batchSendTaskSuspend/' + uuid,
-        method: 'get',
+        url: '/batchSendTask/batchSendTaskSuspend',
+        method: 'post',
+        data: payload
     })
 }
 
