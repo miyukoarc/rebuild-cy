@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-06-27 23:09:05
- * @LastEditors: your name
+ * @LastEditTime: 2020-08-06 15:48:22
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\contactWay\listAll\dialog.vue
 --> 
@@ -15,35 +15,41 @@
       append-to-body
       width="600px"
       center
+      @close="close"
       destroy-on-close
       :close-on-click-modal="false"
     >
       <div>
-        <component :is="event" />
+        <component :is="event" :transfer="transfer" />
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import DetailTemplate from './event-detail'
-import { mapState } from 'vuex'
+import DetailTemplate from "./event-detail.vue";
+import DefaultWelcomeTemplate from "./event-defaultWelcome.vue";
+
+import { mapState } from "vuex";
 export default {
   components: {
     DetailTemplate,
+    DefaultWelcomeTemplate,
   },
   data() {
     return {
       dialogVisible: false,
-      event: '',
-      eventType: '',
-    }
+      event: "",
+      eventType: "",
+      transfer: {},
+    };
   },
   watch: {
     eventType: {
       handler(newVal, oldVal) {
         if (newVal) {
-          this.genTitle()
+          console.log(newVal, "dddd");
+          this.genTitle();
         }
       },
       immediate: true,
@@ -60,19 +66,22 @@ export default {
       //       return '创建模板'
       //   }
 
-      //   if(this.eventType==='edit'){
-      //       return '编辑模板'
-      //   }
-
-      if (this.eventType === 'distribute') {
-        return '分配部门'
+      if (this.eventType === "defaultWelcome") {
+        return "设置默认欢迎语";
       }
-      if (this.eventType === 'detail') {
-        return '渠道详情'
+
+      if (this.eventType === "distribute") {
+        return "分配部门";
+      }
+      if (this.eventType === "detail") {
+        return "渠道详情";
       }
     },
+    close() {
+      this.event = "";
+    },
   },
-}
+};
 </script>
 
 <style>

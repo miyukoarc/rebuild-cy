@@ -12,7 +12,7 @@
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item>-->
 
-    <el-form-item label="发生时间">
+    <el-form-item label="创建时间">
       <el-date-picker
         v-model="value"
         type="daterange"
