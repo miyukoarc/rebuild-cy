@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-22 11:16:30
- * @LastEditTime: 2020-07-28 13:59:27
+ * @LastEditTime: 2020-08-07 16:56:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\ddd.vue
 -->
 <template>
   <section class="agree-component clearfix">
-    <div v-if="item.toUserId == toUserId" class="left-warp">
+    <div v-if="item.fromUser != fromUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == toUserId" class="right-warp">
+    <div v-else class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right display-flex justify-content-center align-items-center">

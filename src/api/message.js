@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-07-23 16:24:09
+ * @LastEditTime: 2020-08-07 16:05:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\api\message.js
@@ -56,5 +56,17 @@ export const downloadFile = (url) => {
         url: url,
         method: 'get',
         responseType: "blob",
+    })
+}
+
+/**
+ * 群聊留痕
+ * @param {object} payload 
+ */
+export const getMessageGroupListAll = (payload) => {
+    return request({
+        url: '/message/groupListAll',
+        method: 'get',
+        params: payload
     })
 }

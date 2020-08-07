@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-25 17:44:32
- * @LastEditTime: 2020-07-29 15:13:21
+ * @LastEditTime: 2020-08-07 16:56:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\chatrecordComponent.vue
 --> 
 <template>
   <section class="chatrecord-component clearfix">
-    <div v-if="item.toUser == toUserId" class="left-warp">
+    <div v-if="item.fromUser != fromUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == toUserId" class="right-warp">
+    <div v-else class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">

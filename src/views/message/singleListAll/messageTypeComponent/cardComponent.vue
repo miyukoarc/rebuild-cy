@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-30 16:24:40
+ * @LastEditTime: 2020-08-07 16:51:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
 -->
 <template>
   <section class="card-component clearfix">
-    <div v-if="item.toUser == toUserId" class="left-warp">
+    <div v-if="item.fromUser != fromUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <div v-if="item.fromUser == toUserId" class="right-warp">
+    <div v-else class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">

@@ -468,6 +468,7 @@ export default {
       const query = {
         uuid: this.query.uuid,
         userId,
+        type:'externalUser'
       };
       this.$router.push({
         path: "/message/singleListAll",

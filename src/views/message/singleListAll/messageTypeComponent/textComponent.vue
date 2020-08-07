@@ -1,26 +1,27 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-07-28 16:01:27
+ * @LastEditTime: 2020-08-07 16:55:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
 -->
 <template>
   <section class="text-component clearfix">
-    <div v-if="item.toUser == toUserId" class="text-left">
+    <div v-if="item.fromUser != fromUserId" class="text-left">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
-        <div style="margin-right:20px;margin-top:5px">
+        <div style="margin-left:20px;margin-top:5px">
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-          <div class="right">
+          <div class="left">
             <span>{{ item.msgContent }}</span>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == toUserId" class="text-right">
+
+    <div v-else class="text-right">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div style="margin-right:20px;margin-top:5px">
@@ -59,9 +60,9 @@ export default {
 }
 .left {
   background-color: #fff;
-  max-width: 50%;
-  left: 20px;
-  top: 8px;
+  // max-width: 50%;
+  // left: 20px;
+  // top: 8px;
 }
 .right {
   /*使左右的对话框分开*/
