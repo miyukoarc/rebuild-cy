@@ -142,7 +142,7 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     beforeImageUpload(file) {
-      console.log(file)
+      console.log(file.type)
       const type = file.type
       const size = file.size
       if (size > 1024 * 1024 * 2) {
@@ -182,7 +182,7 @@ export default {
             message: message,
           })
         }, 2000)
-        this.$bus.$emit('handleRefresh')
+        this.$bus.$emit('handleMediaRefresh')
         //   Object.assign(this.$data, this.$options.data())
         this.$parent.$parent.dialogVisible = false
       }

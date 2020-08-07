@@ -106,17 +106,6 @@
           </el-table-column>
         </el-table>
 
-
-        <!-- <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        /> -->
-
          <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
       </div>
     </el-card>
@@ -149,7 +138,7 @@ export default {
 
       query: {
         page: 0,
-        size: 20,
+        size: 10,
         userName: '',
         departmentsUuid: '',
         roleUuid: '',
@@ -332,12 +321,10 @@ export default {
       this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log('handleRefresh')
       this.query = this.$options.data().query
       this.initDataList(this.query)
     },
     changePage(key) {
-      console.log(this.query)
       this.query.page = key - 1
       this.pageConfig.pageNumber = key
       this.initDataList(this.query)

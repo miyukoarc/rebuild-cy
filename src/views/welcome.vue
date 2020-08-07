@@ -9,13 +9,15 @@
         <el-button size="small" @click="handleEnter" type="primary">进入</el-button>
       </div>
     </div>
-    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/planet2.png" />
+    <img src="@/assets/welcome/planet2.png" />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import Animation from '@/utils/animation'
+
+
 export default {
   data() {
     return {
@@ -75,24 +77,37 @@ export default {
         texture_placeholder.height
       )
 
+      const url1 =require('@/assets/welcome/space4.jpg')
+      const url2 =require('@/assets/welcome/space2.jpg')
+      const url3 =require('@/assets/welcome/space1.jpg')
+      const url4 =require('@/assets/welcome/space6.jpg')
+      const url5 =require('@/assets/welcome/space3.jpg')
+      const url6 =require('@/assets/welcome/space5.jpg')
+
       var materials = [
         loadTexture(
-          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space4.jpg'
+        //   'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space4.jpg'
+        url1
         ), // right
         loadTexture(
-          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space2.jpg'
+        //   'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space2.jpg'
+        url2
         ), // left
         loadTexture(
-          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space1.jpg'
+        //   'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space1.jpg'
+        url3
         ), // top
         loadTexture(
-          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space6.jpg'
+        //   'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space6.jpg'
+        url4
         ), // bottom
         loadTexture(
-          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space3.jpg'
+        //   'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space3.jpg'
+        url5
         ), // back
         loadTexture(
-          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space5.jpg'
+        //   'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1037366/space5.jpg'
+        url6
         ), // front
       ]
 

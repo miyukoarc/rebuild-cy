@@ -1,11 +1,5 @@
 <template>
-  <el-image
-    fit="cover"
-    lazy
-    v-if="coverImage"
-    style="cursor:pointer;"
-    :src="coverImage"
-  ></el-image>
+  <el-image fit="cover" lazy v-if="coverImage" style="cursor:pointer;" :src="coverImage"></el-image>
   <video v-else width="0" height="0" ref="videoZoom" :src="`/api/public/file/${alterUrl}`"></video>
 </template>
 
@@ -14,18 +8,18 @@ export default {
   props: {
     url: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   data() {
     return {
-      coverImage: ''
+      coverImage: '',
     }
   },
   computed: {
     alterUrl() {
       return this.url
-    }
+    },
   },
   mounted() {
     this.$nextTick(() => {
@@ -35,8 +29,8 @@ export default {
       const canvas = document.createElement('canvas')
       // 等待video获取到第一帧后
       video.oncanplay = () => {
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
+        canvas.width = video.videoWidth
+        canvas.height = video.videoHeight
         // 利用canvas对象方法绘图
         canvas
           .getContext('2d')
@@ -49,10 +43,9 @@ export default {
   },
   methods: {
     handleView(val) {
-      console.log(val)
-      this.$emit('handleView',val)
-    }
-  }
+      this.$emit('handleView', val)
+    },
+  },
 }
 </script>
 

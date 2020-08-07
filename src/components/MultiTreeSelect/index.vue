@@ -324,7 +324,7 @@ export default {
      * 删除标签
      */
     handleCloseUserTag(val) {
-      //   console.log(val)
+      //   
       //   this.selects.splice(
       //     this.selects.findIndex((item) => {
       //       return item.uuid == val.uuid

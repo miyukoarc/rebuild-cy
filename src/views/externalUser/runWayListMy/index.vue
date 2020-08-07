@@ -253,7 +253,7 @@ export default {
       this.initDataList(this.query);
     },
     doExport(val) {
-      console.log(val);
+      ;
     }
   }
 };

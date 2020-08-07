@@ -206,6 +206,14 @@ export default {
       this.initDataList()
     })
 
+    this.$bus.$on('handleMediaRefresh',() => {
+        const groupUuid = this.query.groupUuid
+        this.initMediaList({groupUuid})
+    })
+
+    this.$once('hook:beforeDestroy', () => {
+        this.$bus.$off('handleMediaRefresh')
+    })
     this.$once('hook:beforeDestroy', () => {
       this.$bus.$off('handleRefresh')
     })
@@ -301,7 +309,7 @@ export default {
         .catch((err) => {})
     },
     handleRowClick(val) {
-      console.log(val)
+      
       this.currentGroup = val
       this.query.groupUuid = val.uuid
       const payload = { groupUuid: val.uuid }
@@ -314,7 +322,7 @@ export default {
       this.$refs['formDialog'].transfer = this.currentGroup
     },
     handleEditText(val) {
-      console.log(val)
+      
       const { uuid } = val
       const payload = { uuid }
       this.$refs['formDialog'].dialogVisible = true
@@ -391,6 +399,7 @@ export default {
       this.query.groupUuid = groupUuid
       this.initMediaList({ ...this.query, groupUuid })
     },
+    
   },
 }
 </script>

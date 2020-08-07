@@ -107,7 +107,7 @@ export default {
   },
   methods: {
     doExport(val) {
-      console.log(val)
+      
     },
     /**
      * 初始化筛选信息

@@ -4,23 +4,26 @@
       <div class="setting-item" v-for="(item,index) in form.auditUserList" :key="index">
         <div class="col-item">
           <div class="left-container">
-            <h4>第{{item.level}}层审批流程</h4>
-            <div class="text-align-center">
-              <el-button type="text" @click="handleAddLevel">
-                <i class="el-icon-circle-plus-outline"></i>
-                添加流程
-              </el-button>
-            </div>
+            <h4>第{{index+1}}层审批流程</h4>
           </div>
         </div>
         <div class="col-item">
           <div class="audit-type">
             <el-radio v-model="item.range" :label="1">会签</el-radio>
             <el-radio v-model="item.range" :label="0">或签</el-radio>
+            <el-button v-if="index!==0" type="text" @click="handleDelete(index)">
+              <span class="color-danger">删除</span>
+            </el-button>
           </div>
 
           <add-tag v-model="item.userList"></add-tag>
         </div>
+      </div>
+      <div class="text-align-left">
+        <el-button type="text" @click="handleAddLevel">
+          <i class="el-icon-circle-plus-outline"></i>
+          添加流程
+        </el-button>
       </div>
       <el-divider></el-divider>
     </div>
@@ -79,7 +82,10 @@ export default {
   },
   computed: {},
   methods: {
-    handleAddUser() {},
+    handleDelete(index) {
+      this.form.auditUserList.splice(index, 1)
+      this.levels--
+    },
     handleAddLevel() {
       let addLevel = ++this.levels
       const obj = {
@@ -99,9 +105,10 @@ export default {
       })
 
       if (emptyFlag) {
-        const auditUserList = this.form.auditUserList.map((item) => {
+        const auditUserList = this.form.auditUserList.map((item, index) => {
           return {
             ...item,
+            level: index + 1,
             userList: item.userList.map((unit) => {
               return {
                 name: unit.name,
@@ -117,7 +124,7 @@ export default {
         this.$store
           .dispatch('sensitive/setAuditUser', payload)
           .then(() => {
-            this.$message({
+                this.$message({
               type: 'success',
               message: '操作成功',
               duration: 1000,
@@ -131,19 +138,20 @@ export default {
             console.error(err)
             this.$message({
               type: 'error',
-              message: errw,
+              message: err,
             })
           })
       } else {
-        //   this.handleCancel()
-        this.$confirm('是否放弃设置审批人', 'warning', {
+        this.$confirm('请设置审批人！', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
         })
-          .then(async () => {})
-          .catch((err) => {
-            console.error(err)
+          .then(async () => {
+
+          })
+          .catch(() => {
+              this.handleCancel()
           })
       }
     },
@@ -159,11 +167,13 @@ export default {
   margin-bottom: 0;
 }
 .setting-item {
-  width: 400px;
   display: flex;
   margin-bottom: 20px;
-  .col-item {
+  .col-item:nth-child(1) {
     margin-right: 30px;
+  }
+  .col-item:nth-child(2) {
+    flex: 1;
   }
   .left-container {
     height: 100%;

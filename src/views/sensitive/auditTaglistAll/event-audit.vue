@@ -38,26 +38,32 @@
       </div>
     </el-form-item>-->
     <el-form-item label="动作：" v-if="detail.tagChangeContent">
-      <div v-if="detail.tagChangeContent.length===0">
-        <span class="font-exs color-info">删除标签</span>
-        <el-tag size="mini" v-for="tag in detail.tagBeforeChangeContent" :key="tag.tagId">{{tag.tagName}}</el-tag>
+      <div v-if="detail.tagOperationType==='DELETE_TAG_GROUP'">
+        <span class="font-exs color-info">{{detail.tagChangeContent[0].groupName}}</span>
       </div>
-      <div v-else>
-        <div>
-          <span class="font-exs color-info">修改前</span>
-          <el-tag
-            size="mini"
-            v-for="tag in detail.tagChangeContent"
-            :key="tag.tagId"
-          >{{tag.tagName}}</el-tag>
+
+      <div v-if="detail.tagOperationType==='ADD_TAG'">
+        <span class="font-exs color-info">{{detail.tagChangeContent[0].groupName}}</span>
+      </div>
+
+      <div v-if="detail.tagOperationType==='UPDATE_TAG'">
+        <div v-if="detail.tagChangeContent.length===0">
+          <span class="font-exs color-info">删除</span>
+          <el-tag v-for="tag in detail.tagBeforeChangeContent" :key="tag.tagId">{{tag.tagName}}</el-tag>
         </div>
-        <div>
-          <span class="font-exs color-info">修改后</span>
-          <el-tag
-            size="mini"
-            v-for="tag in detail.tagBeforeChangeContent"
-            :key="tag.tagId"
-          >{{tag.tagName}}</el-tag>
+        <div v-else>
+          <div>
+            <span class="font-exs color-info">修改前</span>
+            <el-tag
+              size="mini"
+              v-for="tag in detail.tagBeforeChangeContent"
+              :key="tag.tagId"
+            >{{tag.tagName}}</el-tag>
+          </div>
+          <div>
+            <span class="font-exs color-info">修改后</span>
+            <el-tag size="mini" v-for="tag in detail.tagChangeContent" :key="tag.tagId">{{tag.tagName}}</el-tag>
+          </div>
         </div>
       </div>
     </el-form-item>
@@ -187,7 +193,7 @@ export default {
       let temp = [] //交集
       arr1.forEach((item1) => {
         arr2.forEach((item2) => {
-          if (item1.tagId === item2.tagId) {
+          if (item1.tagName === item2.tagName) {
             temp.push(item1)
           }
         })
@@ -196,7 +202,7 @@ export default {
       arr1.forEach((item) => {
         if (
           !temp.find((unit) => {
-            return unit.tagId === item.tagId
+            return unit.tagName === item.tagName
           })
         ) {
           arr1Temp.push(item)
@@ -206,7 +212,7 @@ export default {
       arr2.forEach((item) => {
         if (
           !temp.find((unit) => {
-            return unit.tagId === item.tagId
+            return unit.tagName === item.tagName
           })
         ) {
           arr2Temp.push(item)
@@ -282,11 +288,10 @@ export default {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'error',
+          }).finally(() => {
+            this.handleRefresh()
+            this.handleCancel()
           })
-            .finally(()=>{
-                this.handleRefresh()
-                this.handleCancel()
-            })
         })
     },
     handleRefresh() {

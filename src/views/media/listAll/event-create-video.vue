@@ -168,7 +168,7 @@ export default {
         message: '操作完成',
       })
       if (this.uploadFilesLength === list.length) {
-        this.$bus.$emit('handleRefresh')
+        this.$bus.$emit('handleMediaRefresh')
         const message = this.auditSetting['media'] ? '已提交审核' : '已完成'
         setTimeout(()=>{
             this.$message({

@@ -148,7 +148,7 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     handleRefresh() {
-      this.$bus.$emit('handleRefresh')
+      this.$bus.$emit('handleMediaRefresh')
     },
   },
 }

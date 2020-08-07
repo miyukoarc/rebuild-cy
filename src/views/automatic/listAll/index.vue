@@ -194,7 +194,7 @@ export default {
   },
   methods: {
     doExport(val) {
-      console.log(val);
+      
     },
     /**
      * 初始化表格信息
