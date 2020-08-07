@@ -152,12 +152,12 @@ export default {
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      if (this.timer) {
-        clearTimeout(this.timer);
-      }
-      this.timer = setTimeout(() => {
-        this.$emit("handleSearch", this.query);
-      }, 1000);
+      // if (this.timer) {
+      //   clearTimeout(this.timer);
+      // }
+      // this.timer = setTimeout(() => {
+      //   this.$emit("handleSearch", this.query);
+      // }, 1000);
     },
     handleSelectedChange(val) {
       ;
