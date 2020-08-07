@@ -114,7 +114,7 @@ export default {
   beforeDestroy() {},
   methods: {
     doExport(val) {
-      console.log(val);
+      ;
     },
     initFilter() {
       this.$store

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-07-31 14:57:20
+ * @LastEditTime: 2020-08-06 20:55:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -138,11 +138,11 @@
                   </el-tab-pane>
                 </el-tabs>
                 <customer-pagination
-                v-show=" singleListAllData.length>0"
-          :pageConfig="pageConfig"
-          @current-change="changePage"
-          @size-change="changeSize"
-        ></customer-pagination>
+                  v-show=" singleListAllData.length>0"
+                  :pageConfig="pageConfig"
+                  @current-change="changePage"
+                  @size-change="changeSize"
+                ></customer-pagination>
                 <!-- <el-pagination
                   v-show=" singleListAllData.length>0"
                   background
@@ -152,7 +152,7 @@
                   :current-page.sync="pageConfig.page"
                   :page-size="pageConfig.size"
                   @current-change="changePage"
-                /> -->
+                />-->
                 <div class="search-form" style="margin-top:5px">
                   <chat-search @handleSearch="handleSearch" @handleRefresh="handleRefresh"></chat-search>
                 </div>
@@ -175,7 +175,7 @@ import ChatInformation from "./components/ChatInformation.vue";
 import ChatTabBar from "./components/ChatTabBar.vue";
 
 import ChatSearch from "./components/ChatSearch.vue";
-import CustomerPagination from '@/components/CustomerPagination'
+import CustomerPagination from "@/components/CustomerPagination";
 
 import textComponent from "./messageTypeComponent/textComponent.vue";
 import imageComponent from "./messageTypeComponent/imageComponent.vue";
@@ -449,7 +449,7 @@ export default {
           .dispatch("message/getMessageSingleLastListAll", payload)
           .then((res) => {
             if (res) {
-              console.log('3233')
+              console.log("3233");
               if (this.sideTabActiveName == "1") {
                 this.chatSideData = res.allMessageList;
               }
@@ -490,8 +490,8 @@ export default {
       };
     },
     changeSize(val) {
-      this.query.size = val
-     this.getsinglelist(this.query);
+      this.query.size = val;
+      this.getsinglelist(this.query);
     },
     changePage(page) {
       console.log(page, "点击分页");

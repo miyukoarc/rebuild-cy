@@ -521,7 +521,7 @@ export default {
       console.log(uuid)
     },
     handleChange(val) {
-      console.log(val)
+      
     },
     initData() {
       this.$store

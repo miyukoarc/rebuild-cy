@@ -271,3 +271,33 @@ export function modifyListAll(obj) {
 
 }
 */
+
+/**
+ * 将一维数组以每4个元素为一组，升格为二维数组
+ * @param {array} arr 
+ */
+export const upgrade = (arr) => {
+
+  let _inner = []
+
+  let _temp = []
+
+  for (let i = 0; i < arr.length; i++) {
+    _inner.push(arr[i])
+    if (_inner.length === 4) {
+      _temp.push(JSON.parse(JSON.stringify(_inner)))
+      _inner.splice(0, 4)
+    } else {
+      if (i === arr.length - 1) {
+        //   console.log(4-_inner.length)
+        const emptyArr = new Array(4 - _inner.length).fill({})
+        const __temp = _inner.concat(emptyArr)
+        _temp.push(__temp)
+      }
+    }
+  }
+
+  return _temp
+
+}
+

@@ -78,10 +78,11 @@
               </span>
             </template>
             <template v-slot="{row}">
-              <div>
-                <div>{{row.tagType=='INSET'?'包含其一':'全部满足'}}</div>
+              <div v-if="row.sensitiveSetTag.length>0">
+                <div >{{row.tagType=='INSET'?'包含其一':'全部满足'}}</div>
                 <tags-drawer :tags="row.sensitiveSetTag"></tags-drawer>
               </div>
+              <span v-else>--</span>
             </template>
           </el-table-column>
 
@@ -134,15 +135,15 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from '@/components/ToolBar'
-import AsyncUserTag from '@/components/AsyncUserTag'
-import AsyncUserDrawer from '@/components/AsyncUserDrawer'
-import TagsDrawer from '@/components/TagsDrawer'
-import RoleDrawer from '@/components/RoleDrawer'
-import CustomerPagination from '@/components/CustomerPagination'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "@/components/ToolBar";
+import AsyncUserTag from "@/components/AsyncUserTag";
+import AsyncUserDrawer from "@/components/AsyncUserDrawer";
+import TagsDrawer from "@/components/TagsDrawer";
+import RoleDrawer from "@/components/RoleDrawer";
+import CustomerPagination from "@/components/CustomerPagination";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -166,12 +167,12 @@ export default {
       query: {
         page: 0,
         size: 10,
-        startTime: '',
-        endTime: '',
-        word: '',
+        startTime: "",
+        endTime: "",
+        word: "",
       },
       rowSelects: [],
-    }
+    };
   },
   watch: {},
   computed: {
@@ -184,120 +185,120 @@ export default {
     }),
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   mounted() {
-    this.$bus.$on('handleRefresh', () => {
-      this.initDataList(this.query)
-    })
+    this.$bus.$on("handleRefresh", () => {
+      this.initDataList(this.query);
+    });
 
-    this.$once('hook:beforeDestroy', () => {
-      this.$bus.$off('handleRefresh')
-    })
+    this.$once("hook:beforeDestroy", () => {
+      this.$bus.$off("handleRefresh");
+    });
   },
 
   methods: {
     doExport(val) {
-      console.log(val)
+      
     },
     /**
      * 初始化筛选信息
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListSelect')
+        .dispatch("tag/getListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
 
       this.$store
-        .dispatch('user/getUserListSelect')
+        .dispatch("user/getUserListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('sensitive/getSensitiveListAll', payload)
+        .dispatch("sensitive/getSensitiveListAll", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     handleDetail(val) {
-      const payload = this.userList[val].uuid
+      const payload = this.userList[val].uuid;
       this.$router.push({
-        path: '/user/detail',
+        path: "/user/detail",
         query: { uuid: payload },
-      })
+      });
     },
     handleSearch(val) {
-      const { startTime, endTime, word } = val
-      this.query.startTime = startTime ? startTime : this.query.startTime
-      this.query.endTime = endTime ? endTime : this.query.endTime
-      this.query.word = word ? word : this.query.word
-      console.log(val, 'handleSearch')
-      this.initDataList(this.query)
+      const { startTime, endTime, word } = val;
+      this.query.startTime = startTime ? startTime : this.query.startTime;
+      this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.query.word = word ? word : this.query.word;
+      console.log(val, "handleSearch");
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      console.log('handleRefresh')
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      console.log("handleRefresh");
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     handleCreate() {
-      this.$refs['formDialog'].event = 'CreateTemplate'
-      this.$refs['formDialog'].eventType = 'create'
-      this.$refs['formDialog'].dialogVisible = true
+      this.$refs["formDialog"].event = "CreateTemplate";
+      this.$refs["formDialog"].eventType = "create";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     handleDelete(index) {
-      const payload = { uuid: this.listAll[index].uuid }
-      this.$confirm('是否删除当前敏感词', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
+      const payload = { uuid: this.listAll[index].uuid };
+      this.$confirm("是否删除当前敏感词", "Warning", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       })
         .then(async () => {
           await this.$store
-            .dispatch('sensitive/deleteSensitive', payload)
+            .dispatch("sensitive/deleteSensitive", payload)
             .then(() => {
               this.$message({
-                type: 'success',
-                message: '操作成功',
-              })
-              this.initDataList(this.query)
+                type: "success",
+                message: "操作成功",
+              });
+              this.initDataList(this.query);
             })
             .catch((err) => {
               this.$message({
-                type: 'error',
+                type: "error",
                 message: err,
-              })
-            })
+              });
+            });
         })
-        .catch((err) => {})
+        .catch((err) => {});
     },
     handleEdit(index) {
       // let { toUser, type, uuid, word } = this.listAll[index]
@@ -315,10 +316,10 @@ export default {
         toUser,
         toRole,
         word,
-      } = this.listAll[index]
-      sensitiveSetTag = JSON.parse(JSON.stringify(sensitiveSetTag))
-      toUser = JSON.parse(JSON.stringify(toUser))
-      toRole = JSON.parse(JSON.stringify(toRole))
+      } = this.listAll[index];
+      sensitiveSetTag = JSON.parse(JSON.stringify(sensitiveSetTag));
+      toUser = JSON.parse(JSON.stringify(toUser));
+      toRole = JSON.parse(JSON.stringify(toRole));
 
       const transfer = {
         uuid,
@@ -329,41 +330,41 @@ export default {
         toUser,
         toRole,
         word,
-      }
-      const payload = this.listAll[index]
-      this.$store.commit('sensitive/SAVE_CURRENTWORD', payload)
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
-      this.$refs['formDialog'].dialogVisible = true
-      this.$refs['formDialog'].transfer = transfer
+      };
+      const payload = this.listAll[index];
+      this.$store.commit("sensitive/SAVE_CURRENTWORD", payload);
+      this.$refs["formDialog"].event = "EditTemplate";
+      this.$refs["formDialog"].eventType = "edit";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = transfer;
     },
     handleBatchChange() {
       if (this.rowSelects.length) {
         let sensitiveUuid = this.rowSelects.map((item) => {
-          return item.uuid
-        })
+          return item.uuid;
+        });
         // sensitiveUuid = JSON.parse(JSON.stringify(sensitiveUuid))
-        const transfer = { sensitiveUuid }
-        this.$refs['formDialog'].event = 'ChangeTemplate'
-        this.$refs['formDialog'].eventType = 'change'
-        this.$refs['formDialog'].dialogVisible = true
-        this.$refs['formDialog'].transfer = transfer
+        const transfer = { sensitiveUuid };
+        this.$refs["formDialog"].event = "ChangeTemplate";
+        this.$refs["formDialog"].eventType = "change";
+        this.$refs["formDialog"].dialogVisible = true;
+        this.$refs["formDialog"].transfer = transfer;
       } else {
         this.$message({
-          type: 'warning',
-          message: '请至少选择一项',
-        })
+          type: "warning",
+          message: "请至少选择一项",
+        });
       }
     },
     handleSelectionChange(val) {
-      this.rowSelects = val
+      this.rowSelects = val;
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

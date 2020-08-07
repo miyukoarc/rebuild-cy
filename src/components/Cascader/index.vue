@@ -89,7 +89,7 @@ export default {
           return item[this.props.department]
       },
     changeStatus(val) {
-      console.log(val)
+      
       const { index, status } = val
       console.log(this.$refs['department'].showDepartment)
       this.$refs['department'].showDepartment = status

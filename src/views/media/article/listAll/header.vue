@@ -77,15 +77,15 @@ export default {
   },
   methods: {
     handleChangeFirst(val) {
-      console.log(val);
+      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      console.log(val);
+      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      console.log(val);
+      ;
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {

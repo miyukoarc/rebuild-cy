@@ -9,6 +9,7 @@
       width="600px"
       center
       :close-on-click-modal="false"
+      :before-close="handleClose"
     >
       <div>
         <component :is="event" :transfer="transfer" />
@@ -24,14 +25,14 @@ import { mapState } from 'vuex'
 export default {
   components: {
     SettingTemplate,
-    DetailTemplate
+    DetailTemplate,
   },
   data() {
     return {
       dialogVisible: false,
       event: '',
       eventType: '',
-      transfer: {}
+      transfer: {},
     }
   },
   watch: {
@@ -41,15 +42,27 @@ export default {
           this.genTitle()
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
-    ...mapState({})
+    ...mapState({}),
   },
   mounted() {},
   updated() {},
   methods: {
+    handleClose(done) {
+      if (this.eventType === 'setting') {
+        this.$confirm('是否放弃设置审批人？')
+          .then((_) => {
+            done()
+          })
+          .catch((_) => {})
+      }
+      if (this.eventType === 'detail') {
+        done()
+      }
+    },
     genTitle() {
       if (this.eventType === 'setting') {
         return '设置审批人员'
@@ -57,8 +70,8 @@ export default {
       if (this.eventType === 'detail') {
         return '审批流程'
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

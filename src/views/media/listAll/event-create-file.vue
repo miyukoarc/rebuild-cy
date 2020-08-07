@@ -160,7 +160,7 @@ export default {
         message: message,
       })
       if (this.uploadFilesLength === list.length) {
-        this.$bus.$emit('handleRefresh')
+        this.$bus.$emit('handleMediaRefresh')
         this.$parent.$parent.dialogVisible = false
       }
     },

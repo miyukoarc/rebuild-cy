@@ -226,7 +226,7 @@ export default {
       this.initDataList(this.query)
     },
     handleExport(val) {
-        console.log(val)
+        
     //   const payload = this.query
     //   const total = this.pageConfig.total
     //   const list = await getExternalUserListAll({

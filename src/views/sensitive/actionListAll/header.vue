@@ -12,7 +12,7 @@
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item>-->
 
-    <el-form-item label="发生时间">
+    <el-form-item label="创建时间">
       <el-date-picker
         v-model="value"
         type="daterange"
@@ -101,17 +101,17 @@ export default {
   },
   methods: {
     handleChangeFirst(val) {
-      //   console.log(val)
+      //   
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      console.log(val);
+      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      console.log(val);
+      ;
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {

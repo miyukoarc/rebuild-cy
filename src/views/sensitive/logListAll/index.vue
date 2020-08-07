@@ -98,7 +98,7 @@ export default {
   methods: {
     //   ...mapActions('log',['getLogListAll']),
     doExport(val) {
-      console.log(val)
+      
     },
     /**
      * 初始化筛选信息

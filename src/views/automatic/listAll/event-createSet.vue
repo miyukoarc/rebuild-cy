@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-05 16:30:43
+ * @LastEditTime: 2020-08-06 20:35:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -9,7 +9,14 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" label-width="120px" label-position="left">
     <el-form-item label="默认回复">
-      <span class="color-primary mr-10 set-auto-replay" @click="setAutoRepaly">配置</span>
+      <el-t-button
+        type="text"
+        size="mini"
+        :popAuth="true"
+        :auth="permissionMap['automatic']['automatic_defaultDetail']"
+        @click.stop="setAutoRepaly"
+      >配置</el-t-button>
+      <!-- <span class="color-primary mr-10 set-auto-replay" ></span> -->
       <span>当未匹配到关键词，小助理将发送次条消息内容</span>
     </el-form-item>
     <el-form-item label="文字消息" v-show="isSetAuto == true">
@@ -140,8 +147,18 @@
 
     <el-form-item label="重复回复" v-show="isSetAuto == false">
       <div class="flex-alinecenter">
-        <span class="font-es mr-15">{{repeat?'开启':'关闭'}}</span>
-        <el-switch v-model="repeat" @change="handleChangeRepeatTime"></el-switch>
+        <el-t-button
+          type="text"
+          size="mini"
+          style="padding:0 15px 0 0"
+          :popAuth="true"
+          :auth="permissionMap['automatic']['automatic_switchReplyInterval']"
+        >
+          <div class="display-flex align-items-center">
+            <span class="font-es mr-15">{{repeat?'开启':'关闭'}}</span>
+            <el-switch v-model="repeat" @change="handleChangeRepeatTime"></el-switch>
+          </div>
+        </el-t-button>
       </div>
     </el-form-item>
     <el-form-item v-show="isSetAuto == false">
@@ -262,6 +279,7 @@ export default {
   watch: {},
   computed: {
     ...mapState({
+      permissionMap: (state) => state.permission.permissionMap,
       articleListSelect: (state) => state.media.articleListSelect,
       automaticDefaultDetail: (state) => state.automatic.automaticDefaultDetail,
     }),

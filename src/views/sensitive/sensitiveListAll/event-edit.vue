@@ -31,7 +31,7 @@
       <span class="font-exs color-info">当员工触发敏感词后，除通知以上设置被通知人，触发的员工本人也将收到通知消息。</span>
     </div>-->
 
-    <el-form-item label="重置标签">
+    <el-form-item label="符合标签">
       <div>
         <el-radio v-model="form.tagType" label="INSET">包含其一</el-radio>
         <el-radio v-model="form.tagType" label="UNIONSET">完全匹配</el-radio>

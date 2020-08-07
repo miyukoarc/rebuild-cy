@@ -58,12 +58,12 @@
         </el-select>
         <span class="tag-warp">
           <el-radio-group v-model="query.flag">
-            <el-radio :label="true">包含任一</el-radio>
+            <el-radio :label="true">包含其一</el-radio>
             <el-radio :label="false">完全匹配</el-radio>
           </el-radio-group>
           <el-tooltip placement="right">
             <div slot="content">
-              包含任一：有任意一个选择的标签的用户;
+              包含其一：有任意一个选择的标签的用户;
               <br />完全匹配：必须拥有全部选择的标签的用户。
             </div>
             <i class="el-icon-question tip"></i>
@@ -122,21 +122,21 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      console.log(val);
+      ;
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      if (this.timer) {
-        clearTimeout(this.timer);
-      }
-      this.timer = setTimeout(() => {
-        this.$emit("handleSearch", this.query);
-      }, 1000);
+      // if (this.timer) {
+      //   clearTimeout(this.timer);
+      // }
+      // this.timer = setTimeout(() => {
+      //   this.$emit("handleSearch", this.query);
+      // }, 1000);
     },
     handleSelectedChange(val) {
-      console.log(val);
+      ;
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {

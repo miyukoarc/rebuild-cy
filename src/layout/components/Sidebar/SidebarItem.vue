@@ -180,4 +180,14 @@ export default {
 }
 </script>
 
+<style lang="scss">
+.el-submenu__title{
+    user-select: none;
+}
+
+.el-menu-item{
+    user-select: none;
+}
+</style>
+
 
