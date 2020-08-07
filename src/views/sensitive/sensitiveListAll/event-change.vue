@@ -2,8 +2,8 @@
   <el-form :model="form" ref="form" label-width="100px" label-position="left">
     <el-form-item label="被通知人">
       <div>
-        <el-radio v-model="form.informType" label="USER">员工通知</el-radio>
-        <el-radio v-model="form.informType" label="ROLE">角色通知</el-radio>
+        <el-radio v-model="form.informType" label="USER">员工</el-radio>
+        <el-radio v-model="form.informType" label="ROLE">角色</el-radio>
       </div>
     </el-form-item>
 
@@ -35,15 +35,15 @@
 </template>
 
 <script>
-import ComplexSelect from '@/components/ComplexSelect'
-import { mapState } from 'vuex'
+import ComplexSelect from "@/components/ComplexSelect";
+import { mapState } from "vuex";
 export default {
-  inject: ['reload'],
+  inject: ["reload"],
   props: {
     transfer: {
       type: Object,
       default: () => {
-        return {}
+        return {};
       },
     },
   },
@@ -55,17 +55,17 @@ export default {
       roleSelects: [],
       userSelects: [],
       form: {
-        informType: 'ROLE', //USER//ROLE
+        informType: "ROLE", //USER//ROLE
         sensitiveUuid: [],
         noticeUuid: [],
       },
-    }
+    };
   },
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        console.log(newVal.sensitiveUuid)
-        this.form.sensitiveUuid = newVal.sensitiveUuid
+        console.log(newVal.sensitiveUuid);
+        this.form.sensitiveUuid = newVal.sensitiveUuid;
       },
       immediate: true,
     },
@@ -77,67 +77,66 @@ export default {
     }),
   },
   created() {
-    this.initFilter()
+    this.initFilter();
   },
   methods: {
     initFilter() {
       this.$store
-        .dispatch('role/getRoleListSelect')
+        .dispatch("role/getRoleListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
 
       this.$store
-        .dispatch('department/getDepartmentListAll')
+        .dispatch("department/getDepartmentListAll")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
     handleCancel() {
-      this.$parent.$parent.dialogVisible = false
+      this.$parent.$parent.dialogVisible = false;
     },
     handleConfirm() {
       const noticeUuid = this.userSelects.length
         ? this.userSelects.map((item) => {
-            return item.uuid
+            return item.uuid;
           })
         : this.roleSelects.map((item) => {
-            return item.uuid
-          })
-
-      const payload = { ...this.form, noticeUuid }
-
+            return item;
+          });
+      const payload = { ...this.form, noticeUuid };
       this.$store
-        .dispatch('sensitive/updateNoticeUser', payload)
+        .dispatch("sensitive/updateNoticeUser", payload)
         .then((res) => {
           if (res.code == 0) {
             this.$message({
-              type: 'success',
-              message: '操作成功',
-            })
-            this.handleRefresh()
+              type: "success",
+              message: "操作成功",
+            });
+            this.handleRefresh();
+            this.handleCancel();
           }
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '操作失败',
-          })
-        })
+            type: "error",
+            message: err || "操作失败",
+          });
+        });
     },
-    handleRefresh(){
-        this.$bus.$emit('handleRefresh')
-    }
+    handleRefresh() {
+      this.$bus.$emit("handleRefresh");
+    },
   },
-}
+};
 </script>
 
 <style>

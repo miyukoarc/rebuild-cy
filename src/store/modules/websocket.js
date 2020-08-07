@@ -1,6 +1,6 @@
 import SockJS from 'sockjs-client'
 import isElectron from 'is-electron'
-import { getDetail, getListBatchSendTaskResult, sendResultHasSend } from '@/api/batchSendTask'
+import { getDetail, getListBatchSendTaskResult, sendResultHasSend, batchSendTaskSuspend } from '@/api/batchSendTask'
 import { listSelectMobil, batchAddTaskHandleTask } from '@/api/batchAddTask'
 import { sendChaoyingMessage, isOnline } from '@/api/longRange'
 import { Message, MessageBox, Loading } from 'element-ui';
@@ -42,9 +42,7 @@ const state = {
     dialog_visible: false,
     countdown: 10,
 
-    messageQueue: [],
-
-
+    sidebarIsOnline: false
 
 }
 
@@ -66,6 +64,13 @@ const actions = {
                     $ipcRenderer.on('reply-openChat', (event, arg) => {
                         console.log('reply-openChat', arg)
                         if (arg.err) {
+
+                            // 群发出错，任务状态设为“中断”
+                            batchSendTaskSuspend({
+                                uuids: [state.batchSendTaskDetail.uuid]
+                            })
+
+
                             dispatch('clearTask')
                             state.loadingInstance.close();
                             Message({
@@ -76,11 +81,20 @@ const actions = {
                         } else {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
+
+
                         }
                     })
                     $ipcRenderer.on('reply-inputEnter', (event, arg) => {
                         console.log('reply-inputEnter', arg)
                         if (arg.err) {
+
+                            // 群发出错，任务状态设为“中断”
+                            batchSendTaskSuspend({
+                                uuids: [state.batchSendTaskDetail.uuid]
+                            })
+
+
                             dispatch('clearTask')
                             state.loadingInstance.close();
                             Message({
@@ -94,19 +108,19 @@ const actions = {
                         }
 
                         if (state.taskList.length <= 0) {
+                            // state.taskList 中没有任务了
                             state.mouseX = null
                             state.mouseY = null
 
                             // 取消loading 
                             state.loadingInstance.close();
                         }
+                        // 发送给下一个人
                         sendResultHasSend({ uuids: [state.taskResult.uuid] }).then(() => {
-                            let taskResult = state.taskList.shift();
-                            state.articleLink = taskResult.contentUrl;
-                            if (taskResult) {
-                                if (taskResult.externalUser.mobile != '') {
-                                    dispatch('openChat', taskResult)
-                                }
+                            state.taskResult = state.taskList.shift();
+                            state.articleLink = state.taskResult.contentUrl;
+                            if (state.taskResult.externalUser.mobile != '') {
+                                dispatch('openChat', state.taskResult)
                             }
                         }).catch(e => {
                             dispatch('clearTask')
@@ -140,7 +154,6 @@ const actions = {
             }
             state.sock.onmessage = function (e) {
                 const data = JSON.parse(e.data)
-
                 if (data.type == 'CONTROL_MANAGER') {
                     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
                         title: "确认发送",
@@ -153,10 +166,20 @@ const actions = {
                     }).catch(err => {
                         return false
                     })
-
                     // commit('TOGGLE_DIALOG_VISIBLE', true)
-
-
+                }
+                else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
+                    MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
+                        title: "确认发送",
+                        cancelButtonText: '放弃'
+                    }).then(() => {
+                        state.loadingInstance = Loading.service({
+                            text: "请保持鼠标静止状态，否则任务会中断。"
+                        });
+                        dispatch('getDetail', data)
+                    }).catch(err => {
+                        return false
+                    })
                 }
                 else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
@@ -190,9 +213,6 @@ const actions = {
                     dispatch('listSelectMobil', data)
                 }
                 else if (data.type == 'AUTOREP') {
-
-
-
                     if (data.properties.mobile) {
                         if (data.properties.content) {
                             state.sendMsgContent_autorep_text = {
@@ -235,8 +255,8 @@ const actions = {
                         if (isElectron()) {
                             $ipcRenderer.send('openChat', {
                                 mobile: data.properties.mobile,
-                                // x: state.mouseX,
-                                // y: state.mouseY,
+                                x: state.mouseX,
+                                y: state.mouseY,
                             })
                         }
 
@@ -269,7 +289,6 @@ const actions = {
     },
     sendMessage({ state, dispatch }, list) {
         if (state.batchSendTaskDetail.textContent) {
-            console.log('state.batchSendTaskDetail.textContent')
             state.sendMsgContent = {
                 msgtype: "text", //消息类型，必填
                 text: {
@@ -277,7 +296,6 @@ const actions = {
                 },
             }
         } else if (state.batchSendTaskDetail.tempMediaType == 'IMAGE') {
-            console.log('state.batchSendTaskDetail.tempMediaType == IMAGE')
             state.sendMsgContent = {
                 msgtype: "image",
                 image: {
@@ -285,7 +303,6 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.tempMediaType == 'VIDEO') {
-            console.log('state.batchSendTaskDetail.tempMediaType == VIDEO')
             state.sendMsgContent = {
                 msgtype: "video",
                 video: {
@@ -293,7 +310,6 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.tempMediaType == 'FILE') {
-            console.log('state.batchSendTaskDetail.tempMediaType == FILE')
             state.sendMsgContent = {
                 msgtype: "file",
                 file: {
@@ -301,7 +317,6 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.media.type == 'IMAGE') {
-            console.log('state.batchSendTaskDetail.media.type == IMAGE')
             state.sendMsgContent = {
                 msgtype: "image",
                 image: {
@@ -309,7 +324,6 @@ const actions = {
                 }
             }
         } else if (state.batchSendTaskDetail.media.type == 'ARTICLE') {
-            console.log('state.batchSendTaskDetail.media.type == ARTICLE')
             state.sendMsgContent = {
                 msgtype: "news",
                 news: {
@@ -321,32 +335,55 @@ const actions = {
             }
         }
 
-
         // 添加到任务队列中
         // state.taskList = list;
-        state.taskList.concat(list);
+        state.taskList = state.taskList.concat(list);
         state.taskResult = state.taskList.shift();
-
-        console.log("taskResult:", state.taskResult)
-        console.log("state.sendMsgContent:", state.sendMsgContent)
-
         if (state.taskResult && state.taskResult.externalUser.mobile != '') {
             state.articleLink = state.taskResult.contentUrl;
             dispatch('openChat')
         }
     },
 
-    openChat({ state }) {
+    openChat({ state, dispatch }) {
         if (isElectron() && state.taskResult.externalUser.mobile) {
             $ipcRenderer.send('openChat', {
                 mobile: state.taskResult.externalUser.mobile.split(',')[0],
-                // x: state.mouseX,
-                // y: state.mouseY,
+                x: state.mouseX,
+                y: state.mouseY,
             })
         }
+
+        // 有2种情况，1侧边栏为开启，2侧边栏开启了但是为返回READY
+
+        // console.log('检查侧边栏是否在线')
+        // if (!state.sidebarIsOnline) {
+        //     isOnline('SIDEBAR').then(res => {
+        //         if (res) {
+        //             dispatch("sendChaoyingMessage")
+        //         } else {
+        //             if (isElectron() && state.taskResult.externalUser.mobile) {
+        //                 $ipcRenderer.send('openChat', {
+        //                     mobile: state.taskResult.externalUser.mobile.split(',')[0],
+        //                     x: state.mouseX,
+        //                     y: state.mouseY,
+        //                 })
+        //             }
+        //         }
+        //     })
+        // } else {
+        //     if (isElectron() && state.taskResult.externalUser.mobile) {
+        //         $ipcRenderer.send('openChat', {
+        //             mobile: state.taskResult.externalUser.mobile.split(',')[0],
+        //             x: state.mouseX,
+        //             y: state.mouseY,
+        //         })
+        //     }
+        // }
     },
 
     sendChaoyingMessage({ state }) {
+        console.log(state.batchSendTaskDetail)
         if (state.batchSendTaskDetail.media.type == 'ARTICLE' && state.sendMsgContent) {
             state.sendMsgContent.news.link = state.articleLink;
         }

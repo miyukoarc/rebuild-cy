@@ -478,10 +478,7 @@ export default {
     handleGroupRouter(item) {
       console.log(item);
       this.$router.push({
-        path: "/externalUser/groupDetail",
-        query: {
-          chatId: item.groupId,
-        },
+        path: "/externalUser/groupDetail/"+item.uuid,
       });
     },
     mouseEnter(value, key) {

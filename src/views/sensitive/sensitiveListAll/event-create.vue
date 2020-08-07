@@ -25,8 +25,8 @@
     </el-form-item>
     <el-form-item label="被通知人">
       <div>
-        <el-radio v-model="form.informType" label="USER">员工通知</el-radio>
-        <el-radio v-model="form.informType" label="ROLE">角色通知</el-radio>
+        <el-radio v-model="form.informType" label="USER">员工</el-radio>
+        <el-radio v-model="form.informType" label="ROLE">角色</el-radio>
       </div>
     </el-form-item>
 

@@ -13,6 +13,7 @@
             :auth="permissionMap['contactWay']['contactWay_add']"
             @click.stop="newChannelCode"
           >新建活码</el-t-button>
+          <el-t-button type="primary" @click.stop="setdefaultwelcomeSpeech">设置默认欢迎语</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -57,14 +58,17 @@
           </el-table-column>
           <el-table-column label="标签" align="left">
             <template slot-scope="scope">
-              <el-tag
-                v-for="(tag,index) in scope.row.servicesTags"
-                :key="index"
-                type="info"
-                style="margin-right:5px;margin-bottom:5px"
-              >
-                <span v-if="tag">{{ tag.tagName }}</span>
-              </el-tag>
+              <div v-if="scope.row.servicesTags.length>0">
+                <el-tag
+                  v-for="(tag,index) in scope.row.servicesTags"
+                  :key="index"
+                  type="info"
+                  style="margin-right:5px;margin-bottom:5px"
+                >
+                  <span v-if="tag">{{ tag.tagName }}</span>
+                </el-tag>
+              </div>
+              <span v-else>--</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" width="240">
@@ -78,11 +82,7 @@
               >详情</el-t-button>
               <el-divider direction="vertical"></el-divider>
 
-              <el-t-button
-                type="text"
-                class="button-s"
-                @click.stop="downLoad(scope.row)"
-              >下载</el-t-button>
+              <el-t-button type="text" class="button-s" @click.stop="downLoad(scope.row)">下载</el-t-button>
               <el-divider direction="vertical"></el-divider>
 
               <el-t-button
@@ -118,11 +118,11 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from '@/components/ToolBar'
-import CustomerPagination from '@/components/CustomerPagination'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "@/components/ToolBar";
+import CustomerPagination from "@/components/CustomerPagination";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -142,9 +142,9 @@ export default {
       query: {
         page: 0,
         size: 10,
-        remark: '',
+        remark: "",
       },
-    }
+    };
   },
   watch: {},
   computed: {
@@ -158,158 +158,150 @@ export default {
     }),
   },
   created() {
-    this.initDataList(this.query)
-    // this.initFilter();
+    this.initDataList(this.query);
+    this.initFilter();
   },
   methods: {
     doExport(val) {
-      
+      console.log(val);
     },
     /**
      * 初始化筛选信息
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListSelect')
+        .dispatch("media/getArticleListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err,
-          })
-        })
-
-      this.$store
-        .dispatch('user/getUserListSelect')
-        .then(() => {})
-        .catch((err) => {
-          this.$message({
-            type: 'error',
-            message: err,
-          })
-        })
-      // this.$store
-      //   .dispatch('user/getAllUserList')
-      //   .then(() => {})
-      //   .catch(err => {
-      //     this.$message({
-      //       type: 'error',
-      //       message: '初始化失败'
-      //     })
-      //   })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('contactWay/getList', payload)
+        .dispatch("contactWay/getList", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
-          console.log(this.pageConfig, 'pageconfig')
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
+          console.log(this.pageConfig, "pageconfig");
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     // 详情弹出框
     handleDetail(index, row) {
-      this.$refs['formDialog'].event = 'DetailTemplate'
-      this.$refs['formDialog'].eventType = 'detail'
-      this.$refs['formDialog'].dialogVisible = true
-      this.$store.commit('contactWay/SAVE_CONTACTWAYDETAILROW', row)
+      this.$refs["formDialog"].event = "DetailTemplate";
+      this.$refs["formDialog"].eventType = "detail";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$store.commit("contactWay/SAVE_CONTACTWAYDETAILROW", row);
     },
     // 下载渠道码
     downLoad(row) {
-      console.log(row, '下载')
-      this.downloadIamge(row.qrCode, row.remark)
+      console.log(row, "下载");
+      this.downloadIamge(row.qrCode, row.remark);
     },
     downloadIamge(imgsrc, name) {
       // 下载图片地址和图片名
-      const image = new Image()
-      image.setAttribute('crossOrigin', 'anonymous')
+      const image = new Image();
+      image.setAttribute("crossOrigin", "anonymous");
       image.onload = function () {
-        const canvas = document.createElement('canvas')
-        canvas.width = image.width
-        canvas.height = image.height
-        const context = canvas.getContext('2d')
-        context.drawImage(image, 0, 0, image.width, image.height)
-        const url = canvas.toDataURL('image/png') // 得到图片的base64编码数据
-        const a = document.createElement('a') // 生成一个a元素
-        const event = new MouseEvent('click') // 创建一个单击事件
-        a.download = name || 'photo' // 设置图片名称
-        a.href = url // 将生成的URL设置为a.href属性
-        a.dispatchEvent(event) // 触发a的单击事件
-      }
-      image.src = imgsrc
+        const canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, image.width, image.height);
+        const url = canvas.toDataURL("image/png"); // 得到图片的base64编码数据
+        const a = document.createElement("a"); // 生成一个a元素
+        const event = new MouseEvent("click"); // 创建一个单击事件
+        a.download = name || "photo"; // 设置图片名称
+        a.href = url; // 将生成的URL设置为a.href属性
+        a.dispatchEvent(event); // 触发a的单击事件
+      };
+      image.src = imgsrc;
     },
     handleSearch(val) {
-      const { remark } = val
-      this.query.remark = remark ? remark : this.query.remark
-      this.query.page = 0
-      this.initDataList(this.query)
+      const { remark } = val;
+      this.query.remark = remark ? remark : this.query.remark;
+      this.query.page = 0;
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     // 新建渠道码
     newChannelCode() {
       this.$router.push({
         path: `/contactWay/detail`,
-      })
+      });
+    },
+    setdefaultwelcomeSpeech() {
+      this.$refs["formDialog"].event = "DefaultWelcomeTemplate";
+      this.$refs["formDialog"].eventType = "defaultWelcome";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$store
+        .dispatch("contactWay/contactWayDefaulWel")
+        .then((res) => {
+          this.$refs["formDialog"].transfer = res;
+        })
+        .catch((err) => {});
     },
     handleEdit(row) {
       this.$router.push({
         path: `/contactWay/detail`,
         query: { uuid: row.uuid },
-      })
+      });
     },
     // 删除渠道码
     handleDelete(row) {
-      this.$confirm('删除后不可恢复, 确定删除吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
+      this.$confirm("删除后不可恢复, 确定删除吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       })
         .then(async () => {
           const params = {
             configId: row.configId,
-          }
+          };
           this.$store
-            .dispatch('contactWay/deleteContactWay', params)
+            .dispatch("contactWay/deleteContactWay", params)
             .then(() => {
               this.$message({
-                type: 'success',
-                message: '删除成功!',
-              })
-              this.initDataList(this.query)
+                type: "success",
+                message: "删除成功!",
+              });
+              this.initDataList(this.query);
             })
-            .catch((err) => {})
+            .catch((err) => {});
         })
         .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消',
-          })
-        })
+            type: "info",
+            message: "已取消",
+          });
+        });
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
