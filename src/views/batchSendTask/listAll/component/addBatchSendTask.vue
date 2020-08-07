@@ -42,7 +42,7 @@
                 <div class="tag-border">
 
                     <!-- <tag-multi-select v-model="query.tagIds"></tag-multi-select> -->
-                  <el-select v-model="query.tagIds" @change="initDataList" size="mini" multiple>
+                  <el-select filterable v-model="query.tagIds" @change="initDataList" size="mini" multiple>
                     <el-option-group
                       v-for="item in tagListSelect"
                       :key="item.groupId"
@@ -182,6 +182,7 @@
                         :popper-append-to-body="false"
                         v-model="form.mediaUuid"
                         clearable
+                        filterable
                         placeholder="请选择"
                         style="width:80%"
                         popper-class="selectinfo"

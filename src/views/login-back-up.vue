@@ -5,7 +5,7 @@
 
 <script>;
 
-import { wxLogin } from "@/api/user";
+import { wxLogin } from "@/api/auth";
 
 export default {
   name: "Login",

@@ -1,13 +1,5 @@
 import request from '@/utils/request'
 
-export function wxLogin(tenantId) {
-  return request({
-    url: '/login/' + tenantId,
-    method: 'get'
-  })
-}
-
-
 
 export function logout() {
   return request({

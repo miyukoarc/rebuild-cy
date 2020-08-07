@@ -108,7 +108,7 @@ const state = {
         agree: '[同意会话聊天内容]'
     },
     matchFormat: {
-        "CONTAINS_ANY": '包含任意',
+        "CONTAINS_ANY": '包含其一',
         "PERFECT_MATCH": '完全匹配'
     },
     tagOperationType: {

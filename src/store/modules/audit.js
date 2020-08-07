@@ -1,6 +1,4 @@
 import {
-    auditPermissionConfirmation,
-    auditTagConfirmation,
     batchAuditBatchTaskConfirmation,
     batchAuditMediaConfirmation,
     batchAuditPermissionConfirmation,
@@ -9,15 +7,11 @@ import {
 } from '@/api/audit'
 
 const state = {
-    auditTaglist: [],
-    loading: false,
 
 }
 
 const mutations = {
-    SAVE_AUDITTAGLIST(state,payload){
-        state.auditTaglist = payload
-    }
+
 }
 
 const actions = {

@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie'
-import Watermark from '@/utils/watermark'
 
 const state = {
   sidebar: {
@@ -7,7 +6,6 @@ const state = {
     withoutAnimation: false
   },
   device: 'desktop',
-  watermark: null,
   windowHeight: '600px',
   windowWidth: '800px',
   maximumFlag: false,
@@ -15,23 +13,6 @@ const state = {
 }
 
 const mutations = {
-  TOGGLE_SIDEBAR: state => {
-    state.sidebar.opened = !state.sidebar.opened
-    state.sidebar.withoutAnimation = false
-    if (state.sidebar.opened) {
-      Cookies.set('sidebarStatus', 1)
-    } else {
-      Cookies.set('sidebarStatus', 0)
-    }
-  },
-  CLOSE_SIDEBAR: (state, withoutAnimation) => {
-    Cookies.set('sidebarStatus', 0)
-    state.sidebar.opened = false
-    state.sidebar.withoutAnimation = withoutAnimation
-  },
-  TOGGLE_DEVICE: (state, device) => {
-    state.device = device
-  },
   SAVE_WINDOWSIZE:(state,payload)=>{
       const {windowHeight,windowWidth} = payload
       state.windowHeight = windowHeight 

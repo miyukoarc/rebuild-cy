@@ -2,7 +2,7 @@
   <div>
     <el-form :model="form" ref="form" label-width="120px">
       <el-form-item label="名称" prop="name">
-        <el-select v-model="form.departmentsUuid">
+        <el-select filterable v-model="form.departmentsUuid">
           <el-option
             v-for="item in departments"
             :key="item.uuid"
