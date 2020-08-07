@@ -35,7 +35,7 @@
 
     <el-form-item label="客户标签：">
       <div class="tag-border">
-        <el-select v-model="query.tagIds" @change="handleChangeSecond" size="mini" multiple>
+        <el-select filterable v-model="query.tagIds" @change="handleChangeSecond" size="mini" multiple>
           <el-option-group v-for="(item,key) in tagListAll" :key="key" :label="item.groupName">
             <el-option
               v-for="(child,index) in item.tagList"

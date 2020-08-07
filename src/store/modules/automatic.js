@@ -89,14 +89,11 @@ const actions = {
     add({
         commit
     }, payload) {
-        commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
             add(payload).then(res => {
                 resolve()
             }).catch(err => {
                 reject(err)
-            }).finally(() => {
-                commit('TOGGLE_LOADING', false)
             })
         })
     },
@@ -108,14 +105,11 @@ const actions = {
     doDelete({
         commit
     }, payload) {
-        commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
             doDelete(payload).then(res => {
                 resolve()
             }).catch(err => {
                 reject(err)
-            }).finally(() => {
-                commit('TOGGLE_LOADING', false)
             })
         })
     },
@@ -128,14 +122,11 @@ const actions = {
     automaticSwitchReplyInterval({
         commit
     }, payload) {
-        commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
             automaticSwitchReplyInterval(payload).then(res => {
                 resolve()
             }).catch(err => {
                 reject(err)
-            }).finally(() => {
-                commit('TOGGLE_LOADING', false)
             })
         })
     },
@@ -147,14 +138,11 @@ const actions = {
     automaticSwitchReply({
         commit
     }, payload) {
-        commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
             automaticSwitchReply(payload).then(res => {
                 resolve()
             }).catch(err => {
                 reject(err)
-            }).finally(() => {
-                commit('TOGGLE_LOADING', false)
             })
         })
     },
@@ -168,14 +156,11 @@ const actions = {
     automaticAddDefault({
         commit
     }, payload) {
-        commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
             automaticAddDefault(payload).then(res => {
                 resolve()
             }).catch(err => {
                 reject(err)
-            }).finally(() => {
-                commit('TOGGLE_LOADING', false)
             })
         })
     },
@@ -188,15 +173,12 @@ const actions = {
     automaticDefaultDetail({
         commit
     }, payload) {
-        commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
             automaticDefaultDetail(payload).then(res => {
                 commit('SAVE_AUTOMATICDEFAULTDETAIL', res)
                 resolve(res)
             }).catch(err => {
                 reject(err)
-            }).finally(() => {
-                commit('TOGGLE_LOADING', false)
             })
         })
     },
@@ -208,15 +190,13 @@ const actions = {
     automaticDetail({
         commit
     }, payload) {
-        commit('TOGGLE_LOADING', true)
+
         return new Promise((resolve, reject) => {
             automaticDetail(payload).then(res => {
                 commit('SAVE_AUTOMATICDETAIL', res)
                 resolve(res)
             }).catch(err => {
                 reject(err)
-            }).finally(() => {
-                commit('TOGGLE_LOADING', false)
             })
         })
     },
@@ -228,14 +208,12 @@ const actions = {
     automaticUpdate({
         commit
     }, payload) {
-        commit('TOGGLE_LOADING', true)
+
         return new Promise((resolve, reject) => {
             automaticUpdate(payload).then(res => {
                 resolve(res)
             }).catch(err => {
                 reject(err)
-            }).finally(() => {
-                commit('TOGGLE_LOADING', false)
             })
         })
     },

@@ -102,6 +102,7 @@
               clearable
               placeholder="请选择"
               style="width:100%"
+              filterable
               popper-class="selectinfo"
               @change="handleChoseLink"
               @clear="handleClear"
