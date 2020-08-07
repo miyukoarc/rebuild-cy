@@ -355,11 +355,10 @@ const actions = {
         }
 
         // 有2种情况，1侧边栏为开启，2侧边栏开启了但是为返回READY
-        
+
         // console.log('检查侧边栏是否在线')
         // if (!state.sidebarIsOnline) {
         //     isOnline('SIDEBAR').then(res => {
-
         //         if (res) {
         //             dispatch("sendChaoyingMessage")
         //         } else {
