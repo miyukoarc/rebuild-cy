@@ -6,7 +6,7 @@ import request from '@/utils/request'
  */
 export const isOnline = (uuid) => {
     return request({
-        url: '/longRangeControl/isOnline/'+uuid,
+        url: '/longRangeControl/isOnline/' + uuid,
         method: 'get'
     })
 }
@@ -31,6 +31,18 @@ export const sendBatchTask = (payload) => {
 export const sendChaoyingMessage = (payload) => {
     return request({
         url: '/longRangeControl/sendChaoyingMessage',
+        method: 'post',
+        data: payload
+    })
+}
+
+/**
+ * 发送自定义消息
+ * @param {object} payload 
+ */
+export const sendCustomizeMessage = (payload) => {
+    return request({
+        url: '/longRangeControl/sendCustomizeMessage',
         method: 'post',
         data: payload
     })

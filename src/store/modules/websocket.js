@@ -2,7 +2,8 @@ import SockJS from 'sockjs-client'
 import isElectron from 'is-electron'
 import { getDetail, getListBatchSendTaskResult, sendResultHasSend, batchSendTaskSuspend } from '@/api/batchSendTask'
 import { listSelectMobil, batchAddTaskHandleTask } from '@/api/batchAddTask'
-import { sendChaoyingMessage, isOnline } from '@/api/longRange'
+import { sendChaoyingMessage, isOnline, sendCustomizeMessage } from '@/api/longRange'
+import { getExternalUserDetail } from '@/api/externalUser'
 import { Message, MessageBox, Loading } from 'element-ui';
 
 let $ipcRenderer;
@@ -21,6 +22,7 @@ const state = {
         msgId: '',
         article: ''
     },
+
 
     taskList: [],//队列数组
     taskResult: null,//队列中的当前项
@@ -42,7 +44,8 @@ const state = {
     dialog_visible: false,
     countdown: 10,
 
-    sidebarIsOnline: false
+    isCheckOpenedSidebar: false,// 只需要第一次打开侧边栏检查即可
+    isOpenedSidebar: false
 
 }
 
@@ -72,7 +75,7 @@ const actions = {
 
 
                             dispatch('clearTask')
-                            state.loadingInstance.close();
+
                             Message({
                                 message: arg.err.message,
                                 type: 'error'
@@ -96,7 +99,7 @@ const actions = {
 
 
                             dispatch('clearTask')
-                            state.loadingInstance.close();
+
                             Message({
                                 message: arg.err.message,
                                 type: 'error'
@@ -112,15 +115,21 @@ const actions = {
                             state.mouseX = null
                             state.mouseY = null
 
-                            // 取消loading 
                             state.loadingInstance.close();
                         }
                         // 发送给下一个人
                         sendResultHasSend({ uuids: [state.taskResult.uuid] }).then(() => {
                             state.taskResult = state.taskList.shift();
                             state.articleLink = state.taskResult.contentUrl;
-                            if (state.taskResult.externalUser.mobile != '') {
+                            if (state.taskResult.externalUser.mobile) {
                                 dispatch('openChat', state.taskResult)
+                            } else {
+                                dispatch('clearTask')
+
+                                Message({
+                                    message: "请为群发客户设置完手机号后再试",
+                                    type: 'error'
+                                })
                             }
                         }).catch(e => {
                             dispatch('clearTask')
@@ -131,7 +140,7 @@ const actions = {
                         console.log('reply-AddCustomerByMobiles', arg)
                         if (arg.err) {
                             dispatch('clearTask')
-                            state.loadingInstance.close();
+
                             Message({
                                 message: arg.err.message,
                                 type: 'error'
@@ -182,9 +191,10 @@ const actions = {
                     })
                 }
                 else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
+                    state.isOpenedSidebar = true;
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
                         console.log('onReady')
-                        dispatch('sendChaoyingMessage', data)
+                        dispatch('sendChaoyingMessage')
                     }
                     if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
                         console.log('sendMsgContent_autorep_media')
@@ -207,6 +217,23 @@ const actions = {
                     $ipcRenderer.send('inputEnter', {
                         x: state.mouseX,
                         y: state.mouseY
+                    })
+                }
+                else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID') {
+                    getExternalUserDetail(data.properties.userId).then(res => {
+                        console.log(state.taskResult.externalUser.name)
+                        if (state.taskResult.externalUser.name == res.externalUserDetail.externalUserName) {
+                            console.log('直接发送')
+
+                            dispatch('sendChaoyingMessage')
+                        } else {
+                            console.log("打开openchat")
+                            $ipcRenderer.send('openChat', {
+                                mobile: state.taskResult.externalUser.mobile.split(',')[0],
+                                x: state.mouseX,
+                                y: state.mouseY,
+                            })
+                        }
                     })
                 }
                 else if (data.type == 'ADDTASK') {
@@ -284,7 +311,16 @@ const actions = {
             batchSendTaskUuid: data.properties.batchSendTaskUuid,
             sendResult: 'NOT_SEND'
         }).then(res => {
-            dispatch('sendMessage', res.items)
+            if (res.items.length) {
+                dispatch('sendMessage', res.items)
+            } else {
+                Message({
+                    message: '该任务已全部群发完成',
+                    type: 'success'
+                })
+                dispatch('clearTask')
+            }
+
         })
     },
     sendMessage({ state, dispatch }, list) {
@@ -339,47 +375,78 @@ const actions = {
         // state.taskList = list;
         state.taskList = state.taskList.concat(list);
         state.taskResult = state.taskList.shift();
-        if (state.taskResult && state.taskResult.externalUser.mobile != '') {
+
+        if (state.taskResult) {
             state.articleLink = state.taskResult.contentUrl;
             dispatch('openChat')
         }
     },
 
     openChat({ state, dispatch }) {
-        if (isElectron() && state.taskResult.externalUser.mobile) {
-            $ipcRenderer.send('openChat', {
-                mobile: state.taskResult.externalUser.mobile.split(',')[0],
-                x: state.mouseX,
-                y: state.mouseY,
-            })
-        }
-
-        // 有2种情况，1侧边栏为开启，2侧边栏开启了但是为返回READY
-
-        // console.log('检查侧边栏是否在线')
-        // if (!state.sidebarIsOnline) {
-        //     isOnline('SIDEBAR').then(res => {
-        //         if (res) {
-        //             dispatch("sendChaoyingMessage")
-        //         } else {
-        //             if (isElectron() && state.taskResult.externalUser.mobile) {
-        //                 $ipcRenderer.send('openChat', {
-        //                     mobile: state.taskResult.externalUser.mobile.split(',')[0],
-        //                     x: state.mouseX,
-        //                     y: state.mouseY,
-        //                 })
-        //             }
-        //         }
+        // if (isElectron() && state.taskResult.externalUser.mobile) {
+        //     $ipcRenderer.send('openChat', {
+        //         mobile: state.taskResult.externalUser.mobile.split(',')[0],
+        //         x: state.mouseX,
+        //         y: state.mouseY,
         //     })
         // } else {
-        //     if (isElectron() && state.taskResult.externalUser.mobile) {
-        //         $ipcRenderer.send('openChat', {
-        //             mobile: state.taskResult.externalUser.mobile.split(',')[0],
-        //             x: state.mouseX,
-        //             y: state.mouseY,
-        //         })
-        //     }
+        //     dispatch('clearTask')
+        //     state.loadingInstance.close();
+        //     Message({
+        //         message: "请为群发客户设置完手机号后再试",
+        //         type: 'error'
+        //     })
         // }
+
+
+        // 1:当前选择人不在群发人中，会自动打开侧边栏  正常操作即可
+        // 2:当前选择人不在群发人中，不会自动打开侧边栏  提示用户打开侧边栏后操作
+        // 3:当前选择人在群发人中，已打开侧边栏  问侧边栏用户信息
+        // 4:当前选择人在群发人中，未打开侧边栏  提示用户打开侧边栏后操作
+        console.log('检查侧边栏是否在线')
+        if (!state.isCheckOpenedSidebar) {
+            isOnline('SIDEBAR').then(res => {
+                state.isCheckOpenedSidebar = true;
+                // 这是在线情况
+                if (res) {
+                    console.log("请问你打开的是谁的页面")
+                    sendCustomizeMessage({
+                        toUserId: state.batchSendTaskDetail.sender.userId,
+                        clientGroup: "SIDEBAR",
+                        properties: {
+                            code: 'WHOSE_WINDOW_DO_YO_OPEN'
+                        }
+                    })
+                }
+                // 不在线
+                else {
+                    if (isElectron() && state.taskResult.externalUser.mobile) {
+                        $ipcRenderer.send('openChat', {
+                            mobile: state.taskResult.externalUser.mobile.split(',')[0],
+                            x: state.mouseX,
+                            y: state.mouseY,
+                        })
+                    }
+                    setTimeout(() => {
+                        if (state.isOpenedSidebar == false) {
+                            Message({
+                                message: '请打开侧边栏后重试',
+                                type: 'error'
+                            })
+                            dispatch('clearTask')
+                        }
+                    }, 10000);
+                }
+            })
+        } else {
+            if (isElectron() && state.taskResult.externalUser.mobile) {
+                $ipcRenderer.send('openChat', {
+                    mobile: state.taskResult.externalUser.mobile.split(',')[0],
+                    x: state.mouseX,
+                    y: state.mouseY,
+                })
+            }
+        }
     },
 
     sendChaoyingMessage({ state }) {
@@ -402,6 +469,9 @@ const actions = {
         state.selectMobiles = []
         state.selectMobile = null
         state.articleLink = null
+        state.isCheckOpenedSidebar = false
+        state.isOpenedSidebar = false
+        state.loadingInstance.close();
     },
 
     listSelectMobil({ state, dispatch }, data) {
