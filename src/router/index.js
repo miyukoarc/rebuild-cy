@@ -30,11 +30,10 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-import online from '@/views/signin'
-import offline from '@/views/login'
+import loginPage from '@/views/signin'
 import welcome from '@/views/welcome'
 import Qrcode from '@/views/qrcode'
-const loginPage = process.env.VUE_APP_WORK === 'offline' ? offline : online
+
 export const constantRoutes = [{
     path: '/redirect',
     component: Layout,
@@ -79,7 +78,7 @@ export const constantRoutes = [{
       component: () =>
         import('@/views/zeness.vue'),
       hidden: true,
-    }, ]
+    }]
   },
   {
     path: '/',
