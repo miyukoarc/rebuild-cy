@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 18:01:25
- * @LastEditTime: 2020-07-28 16:30:36
+ * @LastEditTime: 2020-08-07 16:52:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\videoComponent.vue
 -->
 <template>
   <section class="emotion-component">
-    <div v-if="item.toUser == toUserId" class="left-warp">
+    <div v-if="item.fromUser != fromUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == toUserId" class="right-warp">
+    <div v-else class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end mb-5">
         <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>

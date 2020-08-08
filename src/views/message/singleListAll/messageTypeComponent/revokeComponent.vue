@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-27 11:09:43
- * @LastEditTime: 2020-07-27 15:35:12
+ * @LastEditTime: 2020-08-07 16:53:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\revokeComponent.vue
 --> 
 <template>
   <section class="revoke-component clearfix">
-    <div v-if="item.toUser == toUserId" class="left-warp">
+    <div v-if="item.fromUser != fromUserId" class="left-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div v-if="item.fromUser == toUserId" class="right-warp">
+    <div v-else class="right-warp">
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
