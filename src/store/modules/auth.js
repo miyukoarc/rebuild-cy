@@ -1,4 +1,4 @@
-import {getLoginList} from '@/api/auth'
+import {getLoginList,logout} from '@/api/auth'
 
 
 const state = {
@@ -21,6 +21,20 @@ const mutations = {
 }
 
 const actions = {
+        // user logout
+        logout({
+            commit,
+        }) {
+            return new Promise((resolve, reject) => {
+                logout().then(() => {
+                     // must remove  token  first
+                    // commit('RESET_STATE')
+                    resolve()
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
     /**
      * 登录列表
      * @param {*} param0 

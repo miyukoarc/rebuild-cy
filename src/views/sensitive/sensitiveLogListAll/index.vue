@@ -22,7 +22,7 @@
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="触发内容" align="left">
             <template v-slot="{row}">
-              <div>{{row.sensitive.word}}</div>
+              <div>{{row.sensitiveWord}}</div>
             </template>
           </el-table-column>
           <el-table-column label="触发员工" align="left">

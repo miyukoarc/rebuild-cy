@@ -45,7 +45,7 @@ export default {
     async logout() {
       this.removeToken()
       window.watermark.remove()
-      await this.$store.dispatch('user/logout')
+      await this.$store.dispatch('auth/logout')
       window.location.reload()
     //   this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
