@@ -1,15 +1,15 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-06 16:40:48
+ * @LastEditTime: 2020-08-07 17:53:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
 --> 
 <template>
-  <el-form :model="form" ref="form" :rules="rules" label-width="100px" label-position="left">
+  <el-form :model="form" ref="form" label-width="100px" label-position="left">
     <div class="set-welcome-message">
-      <el-form-item label="欢迎语1:" prop="welcomeContent">
+      <el-form-item label="欢迎语1:">
         <div class="msg-textarea-box full-w">
           <div class="insert-btn">
             <el-button
@@ -31,7 +31,7 @@
           ></el-input>-->
         </div>
       </el-form-item>
-      <el-form-item label="欢迎语2:" prop="welcomeMediaContent">
+      <el-form-item label="欢迎语2:">
         <div class="msg-textarea-box full-w">
           <div class="message-box-content">
             <el-radio-group v-model="form.welComeMediaType" @change="changeWelComeMediaType">
@@ -177,10 +177,12 @@ export default {
     },
     "form.welcomeContent": {
       handler(newVal, oldVal) {
-        if (newVal.indexOf('<span class="nickName">客户昵称</span>') > -1) {
-          this.insertName = false;
-        } else {
-          this.insertName = true;
+        if (newVal) {
+          if (newVal.indexOf('<span class="nickName">客户昵称</span>') > -1) {
+            this.insertName = false;
+          } else {
+            this.insertName = true;
+          }
         }
       },
       immediate: true,
@@ -229,7 +231,17 @@ export default {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           console.log(this.form.welcomeMediaContent, "9999");
-          if (this.form.welcomeMediaContent.toString().indexOf("file/") > 0) {
+          if (!this.form.welcomeMediaContent && !this.form.welcomeContent) {
+            this.$message({
+              type: "error",
+              message: "欢迎语文本或图片链接不能为空",
+            });
+            return;
+          }
+          if (
+            this.form.welcomeMediaContent &&
+            this.form.welcomeMediaContent.toString().indexOf("file/") > 0
+          ) {
             this.form.welcomeMediaContent = this.form.welcomeMediaContent.split(
               "file/"
             )[1];

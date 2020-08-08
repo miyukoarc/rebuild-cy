@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-28 10:57:05
- * @LastEditTime: 2020-07-24 15:14:34
+ * @LastEditTime: 2020-08-07 16:22:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\message.js
@@ -9,13 +9,19 @@
 import {
     getMessageSingleListAll,
     getMessageSingleLastListAll,
-    downloadFile
+    downloadFile,
+    getMessageGroupListAll
 } from '@/api/message'
 const state = {
     loading: false,
     // 单聊数据
     singleListAll: [],
     singleListPage: {
+        total: 0,
+        pageSize: 0,
+        pageNumber: 0
+    },
+    groupListAll: {
         total: 0,
         pageSize: 0,
         pageNumber: 0
@@ -40,6 +46,9 @@ const mutations = {
     },
     SAVE_SINGLELISTALL(state, payload) {
         state.singleListAll = payload
+    },
+    SAVE_GROUPLISTPAGE(state, payload) {
+        state.groupListAll = payload
     },
     SAVE_SINGLELISTPAGE(state, payload) {
         const {
@@ -111,6 +120,29 @@ const actions = {
             })
         })
     },
+    /**
+     * 获取群聊数据
+     * @param {*} param0 
+     * @param {object} payload 
+     */
+    getMessageGroupListAll({
+        commit
+    }, payload) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            getMessageGroupListAll(payload).then(res => {
+                // commit('SAVE_SINGLELASTLISTALL', res)
+                commit('SAVE_GROUPLISTPAGE', res)
+                commit('TOGGLE_LOADING', false)
+                resolve(res)
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+
+                reject()
+            })
+        })
+    },
+
 }
 
 export default {

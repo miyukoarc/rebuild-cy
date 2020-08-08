@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-15 15:08:24
- * @LastEditTime: 2020-07-24 19:35:20
+ * @LastEditTime: 2020-08-07 20:43:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\components\ChatInfomation.vue
@@ -19,8 +19,11 @@
     </div>
     <div class="flex-1">
       <p>
-        <span>{{name == currnetMember.fromName? currnetMember.toName:currnetMember.fromName}}</span>
-        <span>@微信</span>
+        <span
+          v-if="currnetMember.chatType != 'ROOM'"
+        >{{name == currnetMember.fromName? currnetMember.toName:currnetMember.fromName}}</span>
+        <span v-else>{{currnetMember.groupName}}</span>
+        <!-- <span>@微信</span> -->
       </p>
       <div
         v-show="currnetMember.toName || currnetMember.fromName"
@@ -34,13 +37,13 @@ export default {
   props: {
     currnetMember: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
-    name: String
+    name: String,
   },
   mounted() {
     console.log(this.currnetMember, "CURR", this.name);
-  }
+  },
 };
 </script>
 

@@ -9,3 +9,11 @@ export const getLoginList = () => {
       method: 'get',
     })
   }
+
+  export function wxLogin(tenantId) {
+    return request({
+      url: '/login/' + tenantId,
+      method: 'get'
+    })
+  }
+  

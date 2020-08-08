@@ -20,7 +20,7 @@
               </div>
             </div>
           </div>
-          <el-button type="primary" size="mini" disabled>聊天记录</el-button>
+          <el-button type="primary" size="mini" @click="toGroupChat">聊天记录</el-button>
         </div>
         <div class="data-box display-flex">
           <div class="data-item flex-1">
@@ -155,6 +155,19 @@ export default {
           path: "/externalUser/detail/" + uuid,
         });
       }
+    },
+    toGroupChat() {
+      console.log(this.groupDetail.chatId, "4444");
+      let userId = this.groupDetail.chatId;
+      const query = {
+        uuid: this.groupDetail.owner.uuid,
+        userId,
+        type:'user'
+      };
+      this.$router.push({
+        path: "/message/singleListAll",
+        query,
+      });
     },
   },
 };
