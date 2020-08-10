@@ -1,7 +1,4 @@
 import {
-    login,
-    logout,
-    getInfo,
     getMyInfo,
     getUserList,
     getAllUserList,
@@ -60,15 +57,6 @@ const mutations = {
     },
     RESET_STATE: (state) => {
         Object.assign(state, getDefaultState())
-    },
-    SET_TOKEN: (state, token) => {
-        state.token = token
-    },
-    SET_NAME: (state, name) => {
-        state.name = name
-    },
-    SET_AVATAR: (state, avatar) => {
-        state.avatar = avatar
     },
     SET_USERINFO: (state, payload) => {
         const {
@@ -137,23 +125,6 @@ const mutations = {
 }
 
 const actions = {
-
-    // user logout
-    logout({
-        commit,
-        state
-    }) {
-        return new Promise((resolve, reject) => {
-            logout(state.token).then(() => {
-                removeToken() // must remove  token  first
-                resetRouter()
-                commit('RESET_STATE')
-                resolve()
-            }).catch(error => {
-                reject(error)
-            })
-        })
-    },
     getMyInfo({
         commit
     }) {

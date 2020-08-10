@@ -242,16 +242,16 @@ export const getGroupDetail = (payload) => {
  * @param {object} payload 
  */
 export const externalUserUpdateTag = (payload) => {
-        return request({
-            url: '/externalUser/updateTag',
-            method: 'post',
-            data: payload
-        })
-    }
-    /**
-     * 批量添加好友listMy
-     * @param {object} payload 
-     */
+    return request({
+        url: '/externalUser/updateTag',
+        method: 'post',
+        data: payload
+    })
+}
+/**
+ * 批量添加好友listMy
+ * @param {object} payload 
+ */
 export const getListMy = (payload) => {
     return request({
         url: '/batchAddTask/listMy',

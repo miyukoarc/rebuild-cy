@@ -38,7 +38,6 @@ export default {
     return {
       redirect: undefined,
       otherQuery: {},
-      wxQrCode: null,
       tenantId: '',
       tipsFlag: true,
       loading: false,
@@ -63,7 +62,6 @@ export default {
   },
   created() {
     this.initDataList()
-    // this.electronTragger()
   },
   mounted() {
       if(this.$isElectron()){
@@ -74,19 +72,6 @@ export default {
       }
   },
   methods: {
-    electronTragger() {
-      if (this.$isElectron()) {
-        const ipcRenderer = window.electron.ipcRenderer
-
-        ipcRenderer.on('login-navigate', (event, payload) => {
-          console.log(payload)
-        })
-        ipcRenderer.on('login-redirect', (event, payload) => {
-          console.log(payload)
-        })
-        console.log('ipcRenderer loaded')
-      }
-    },
     getQrCode(id, target) {
       this.$nextTick(() => {
         return new WwLogin({
