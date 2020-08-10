@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:44:55
- * @LastEditTime: 2020-08-07 16:57:12
+ * @LastEditTime: 2020-08-10 20:03:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\videoComponent.vue
@@ -13,6 +13,7 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left demo">
+          <div class="chat-name text-align-left">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <video-player
             ref="videoPlayer"
@@ -29,6 +30,7 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="demo right">
+          <div class="chat-name" style="text-align:right">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <video-player
             ref="videoPlayer"
@@ -163,7 +165,6 @@ export default {
     }
   }
   .left {
-    background-color: #f4f4f5;
     max-width: 50%;
     left: 20px;
     margin-top: 5px;
@@ -173,7 +174,6 @@ export default {
     max-width: 50%;
     top: 5px;
     left: -20px;
-    background-color: #9eea6a;
   }
   .demo {
     display: inline-block;
@@ -184,7 +184,6 @@ export default {
     border: 1px solid transparent;
     border-radius: 4px;
     overflow: hidden;
-    background: #fff;
     position: relative;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
     // margin-right: 4px;

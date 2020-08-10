@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-28 14:13:07
- * @LastEditTime: 2020-08-07 16:56:38
+ * @LastEditTime: 2020-08-10 20:16:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\docmsgComponent.vue
@@ -13,6 +13,7 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
+          <div class="chat-name">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <a target="_blank" :href="item.messageMedias[0].linkUrl">
             <div class="docmsg-warp">
@@ -36,6 +37,7 @@
       <p>{{ item.msgTime }}</p>
       <div class="right-warp display-flex justify-content-flex-end">
         <div class="right">
+           <div class="chat-name" style="text-align:right">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <a target="_blank" :href="item.messageMedias[0].linkUrl">
             <div class="docmsg-warp">

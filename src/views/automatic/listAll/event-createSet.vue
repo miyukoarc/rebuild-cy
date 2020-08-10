@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-10 11:15:43
+ * @LastEditTime: 2020-08-10 20:13:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -17,7 +17,7 @@
         @click.stop="setAutoRepaly"
       >配置</el-t-button>
       <!-- <span class="color-primary mr-10 set-auto-replay" ></span> -->
-      <span>当未匹配到关键词，小助理将发送次条消息内容</span>
+      <span>当未匹配到关键词，小助理将发送此条消息内容</span>
     </el-form-item>
     <el-form-item label="文字消息" v-show="isSetAuto == true">
       <div class="full-w">

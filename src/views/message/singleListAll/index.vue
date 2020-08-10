@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-08-08 12:31:15
+ * @LastEditTime: 2020-08-10 20:05:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -109,7 +109,7 @@
         <div class="flex-1">
           <!-- 右侧顶部按钮-->
           <div class="right">
-            <chat-information :currnetMember="currnetMember" ></chat-information>
+            <chat-information :currnetMember="currnetMember"></chat-information>
             <keep-alive>
               <div class="chat-content chat-tab-bar">
                 <el-tabs v-model="chatActiveName" @tab-click="handleClickChatType">
@@ -185,6 +185,8 @@ import docmsgComponent from "./messageTypeComponent/docmsgComponent.vue";
 import chatrecordComponent from "./messageTypeComponent/chatrecordComponent.vue";
 import locationComponent from "./messageTypeComponent/locationComponent.vue";
 import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_callComponent.vue";
+ 
+import mixedComponent from "./messageTypeComponent/mixedComponent.vue";
 
 export default {
   name: "ListSingleAll",
@@ -210,6 +212,7 @@ export default {
     chatrecordComponent,
     locationComponent,
     meeting_voice_callComponent,
+    mixedComponent
   },
   data() {
     return {
@@ -698,6 +701,11 @@ export default {
 }
 </style>
 <style lang="scss">
+.chat-name {
+  line-height: 16px;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
 .left {
   .chat-side-bar {
     .el-tabs__nav {

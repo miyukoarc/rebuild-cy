@@ -4,12 +4,11 @@
       <el-input v-model.trim="form.rule" placeholder="请输入规则名称"></el-input>
     </el-form-item>
 
-    <el-form-item label="关键词" prop="keyWord">
+    <el-form-item label="关键词" prop="keyword">
       <el-input v-model.trim="form.keyword">
         <el-select v-model="form.keyType" slot="prepend" placeholder="请选择" style="width:100px">
           <el-option label="包含" value="CONTAIN"></el-option>
           <el-option label="完全匹配" value="COMPLETE"></el-option>
-          <!-- <el-option label="用户电话" value="3"></el-option> -->
         </el-select>
       </el-input>
     </el-form-item>
@@ -20,7 +19,7 @@
      
     </el-form-item>-->
 
-    <el-form-item label="文字消息">
+    <el-form-item label="文字消息" prop="reply">
       <!-- <div class="set-welcome-message"> -->
       <div class="full-w">
         <el-input
@@ -247,6 +246,7 @@ export default {
             trigger: "blur",
           },
         ],
+        reply: [{ required: true, message: "请输入回复内容", trigger: "blur" }],
       },
       // 标签
       selectTags: [],
