@@ -1,6 +1,6 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
-    <el-form-item label="文章名：">
+    <el-form-item label="文章标题：">
       <el-input v-model.trim="query.title"></el-input>
     </el-form-item>
 

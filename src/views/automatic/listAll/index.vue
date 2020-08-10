@@ -307,7 +307,7 @@ export default {
       this.$refs["formDialog"].eventType = "create";
       this.$refs["formDialog"].dialogVisible = true;
     },
-    handleDelete(index) {
+    handleDelete(row) {
       const payload = { uuid: row.uuid };
       this.$confirm("是否删除当前自动回复", "Warning", {
         confirmButtonText: "确定",

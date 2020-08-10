@@ -45,7 +45,7 @@
         <el-radio :label="1">全部客户</el-radio>
         <el-radio :label="0">未添加过的客户</el-radio>
         <el-radio :label="2">
-          自定义添加次数的客户
+          自定义添加客户的次数
           <span style="display:inline-block;width:50px;color:#000">
             <el-input
               ref="minInput"

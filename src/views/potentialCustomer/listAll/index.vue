@@ -46,7 +46,7 @@
                 预设标签
                 <el-tooltip placement="right">
                   <div slot="content">
-                    <span class="font-exs color-info">添加成为用户后，将自动打上预设标签。</span>
+                    <span class="font-exs ">添加成为用户后，将自动打上预设标签。</span>
                   </div>
                   <i class="el-icon-question"></i>
                 </el-tooltip>

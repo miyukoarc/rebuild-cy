@@ -7,7 +7,7 @@
 
     <!-- </el-header> -->
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个群`"></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">

@@ -89,6 +89,7 @@
                       <span
                         class="edit-info"
                         v-if="(item.label == currentIndex) || currentInput===item.label"
+                        v-preventReClick
                         @click.stop="editInfo(item,key)"
                       >
                         <span v-if="currentInput===item.label">保存</span>
@@ -384,17 +385,15 @@ export default {
   created() {
     const uuid = this.$route.params.uuid;
     this.query.uuid = uuid;
-    // this.initGroupList(payload);
     this.initDetail(this.$route.params.uuid);
 
     this.initExternalUserTrendsListAll(this.query);
-  },
-  mounted() {
     document.addEventListener("click", () => {
       this.currentInput = "";
       this.currentIndex = "";
     });
-
+  },
+  mounted() {
     // window.addEventListener('scroll',this.handleScroll);
   },
   methods: {
@@ -468,7 +467,7 @@ export default {
       const query = {
         uuid: this.query.uuid,
         userId,
-        type:'externalUser'
+        type: "externalUser",
       };
       this.$router.push({
         path: "/message/singleListAll",
@@ -479,7 +478,7 @@ export default {
     handleGroupRouter(item) {
       console.log(item);
       this.$router.push({
-        path: "/externalUser/groupDetail/"+item.uuid,
+        path: "/externalUser/groupDetail/" + item.uuid,
       });
     },
     mouseEnter(value, key) {

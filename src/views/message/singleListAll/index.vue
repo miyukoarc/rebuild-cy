@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-08-07 20:51:57
+ * @LastEditTime: 2020-08-08 12:31:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -71,7 +71,7 @@
                       >
                         <img
                           v-if="item.chatType != 'ROOM'"
-                          :src="singleLastListAll.name == item.fromName? item.toAvatar:item.fromAvatar "
+                          :src="item._id == item.fromUserId? item.fromAvatar :item.toAvatar"
                           alt
                         />
                         <div v-else class="group-list-left flex-column-center-alinecenter">
@@ -82,7 +82,7 @@
                           <p class="display-flex justify-content-space-between">
                             <strong
                               v-if="item.chatType != 'ROOM'"
-                            >{{singleLastListAll.name == item.fromName? item.toName:item.fromName}}</strong>
+                            >{{item._id == item.fromUserId? item.fromName:item.toName}}</strong>
                             <strong v-else>{{item.groupName}}</strong>
                             <span>{{item.msgTime.substr(11)}}</span>
                           </p>
@@ -109,7 +109,7 @@
         <div class="flex-1">
           <!-- 右侧顶部按钮-->
           <div class="right">
-            <chat-information :currnetMember="currnetMember" :name="singleLastListAll.name"></chat-information>
+            <chat-information :currnetMember="currnetMember" ></chat-information>
             <keep-alive>
               <div class="chat-content chat-tab-bar">
                 <el-tabs v-model="chatActiveName" @tab-click="handleClickChatType">
@@ -325,14 +325,21 @@ export default {
         .then((res) => {
           if (res) {
             this.chatSideData = res.allMessageList;
-            
+
             res.allMessageList.forEach((item, index) => {
-              console.log(this.$route.query.userId == item._id,'000',this.$route.query.userId,item._id)
+              console.log(
+                this.$route.query.userId == item._id,
+                "000",
+                this.$route.query.userId,
+                item._id
+              );
               if (this.$route.query.userId == item._id) {
                 this.activeIdx = index;
                 this.currnetMember = item;
-                console.log(item, "item====");
+                console.log(item, "item====", this.currnetMember);
                 this.chatType = item.chatType;
+              } else {
+                this.currnetMember = item;
               }
             });
             this.query.fromUserId = this.singleLastListAll.userId;
@@ -461,7 +468,7 @@ export default {
             console.log(item, "点击侧边栏用户", index, tab);
             this.activeIdx = index;
             this.currnetMember = item;
-            this.chatType = item.chatType
+            this.chatType = item.chatType;
             this.query.toUserId = item._id;
             // let payload = {
             //   type: "externalUser",

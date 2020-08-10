@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-31 16:41:29
+ * @LastEditTime: 2020-08-10 11:24:38
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\externalUser\quitUserRelationExUserList\header.vue
+-->
 <template>
   <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
     <el-form-item label="已离职成员：">
@@ -48,7 +56,7 @@ export default {
           id: 'ALLOCATE',
         },
         {
-          type: '等待分配审核',
+          type: '待审核',
           id: '2',
         },
         {

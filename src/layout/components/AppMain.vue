@@ -1,10 +1,20 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-13 12:05:38
+ * @LastEditTime: 2020-08-10 10:48:45
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\layout\components\AppMain.vue
+-->
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
       <el-scrollbar>
+        <!-- <keep-alive v-if="saveroutes"> -->
         <keep-alive :include="cachedViews">
           <router-view></router-view>
         </keep-alive>
+        <!-- <router-view v-else></router-view>  -->
       </el-scrollbar>
       <!-- <router-view :key="key" /> -->
     </transition>
@@ -12,18 +22,24 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
-  name: 'AppMain',
+  name: "AppMain",
   computed: {
     ...mapState({
-      cachedViews: state => state.tagsView.cachedViews
-    })
+      cachedViews: (state) => state.tagsView.cachedViews,
+      routes: (state) => state.permission.routes,
+    }),
+    saveroutes() {
+      return this.cachedViews.some((item) => {
+        return JSON.stringify(this.routes).includes(item);
+      });
+    },
     // key() {
     //   return this.$route.path
     // }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -44,7 +60,7 @@ export default {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(144,147,153,.3);
+  background-color: rgba(144, 147, 153, 0.3);
   border-radius: 3px;
 }
 </style>

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-06 20:35:33
+ * @LastEditTime: 2020-08-10 11:15:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -21,7 +21,14 @@
     </el-form-item>
     <el-form-item label="文字消息" v-show="isSetAuto == true">
       <div class="full-w">
-        <el-input v-model="form.reply" type="textarea" :rows="6" placeholder="请输入文字消息"></el-input>
+        <el-input
+          v-model="form.reply"
+          type="textarea"
+          :rows="6"
+          maxlength="500"
+          show-word-limit
+          placeholder="请输入文字消息"
+        ></el-input>
       </div>
     </el-form-item>
 

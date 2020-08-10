@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :hasExport="false" @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar :hasExport="false" @handleExport="doExport" :msg="`共${pageConfig.total}个活码`">
         <div slot="right">
           <el-t-button
             type="primary"
@@ -45,7 +45,13 @@
           <el-table-column label="添加好友人数" prop="joinNumber" align="left"></el-table-column>
           <el-table-column label="创建时间" prop="createdAt" align="left"></el-table-column>
           <el-table-column label="使用成员" align="left">
-            <template slot-scope="scope">
+            <template v-slot="scope">
+              <div v-if="Object.keys(scope.row.serviceUsers).length">
+                <async-user-drawer :hasPop="true" :users="scope.row.serviceUsers"></async-user-drawer>
+              </div>
+              <span v-else>--</span>
+            </template>
+            <!-- <template slot-scope="scope">
               <el-tag
                 v-for="(user,index) in scope.row.serviceUsers"
                 :key="index"
@@ -54,19 +60,20 @@
               >
                 <span v-if="user">{{ user.name }}</span>
               </el-tag>
-            </template>
+            </template>-->
           </el-table-column>
           <el-table-column label="标签" align="left">
             <template slot-scope="scope">
               <div v-if="scope.row.servicesTags.length>0">
-                <el-tag
+                <tags-drawer :tags="scope.row.servicesTags"></tags-drawer>
+                <!-- <el-tag
                   v-for="(tag,index) in scope.row.servicesTags"
                   :key="index"
                   type="info"
                   style="margin-right:5px;margin-bottom:5px"
                 >
                   <span v-if="tag">{{ tag.tagName }}</span>
-                </el-tag>
+                </el-tag>-->
               </div>
               <span v-else>--</span>
             </template>
@@ -121,6 +128,8 @@
 import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
 import ToolBar from "@/components/ToolBar";
+import TagsDrawer from "@/components/TagsDrawer";
+import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import CustomerPagination from "@/components/CustomerPagination";
 import { mapState, mapMutations, mapActions } from "vuex";
 
@@ -129,6 +138,8 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar,
+    TagsDrawer,
+    AsyncUserDrawer,
     CustomerPagination,
   },
   data() {
