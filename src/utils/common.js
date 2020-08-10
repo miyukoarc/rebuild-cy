@@ -301,3 +301,20 @@ export const upgrade = (arr) => {
 
 }
 
+
+export const queue = (tasks,callback)=>{
+    let promise = Promise.resolve()
+    tasks.reduce((arr,task)=>{
+        return arr.then(()=>{
+            return new Promise((resolve,reject)=>{
+                Promise.resolve(task).then(res=>{
+                    if(typeof callback=='function'){
+                        callback(res)                   
+                    }
+                    resolve()
+                })
+            })
+        })
+    },promise)
+} 
+

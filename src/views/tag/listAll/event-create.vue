@@ -36,7 +36,15 @@
       <!-- <el-form-item style="text-align:center;"> -->
       <div style="text-align:center;">
         <el-t-button size="small" @click="handleCancel">取 消</el-t-button>
-        <el-t-button size="small" type="primary" @click="handleApply">确定</el-t-button>
+        <el-t-button
+          :throttle="true"
+          v-if="permissionMap['tag']['tag_add']"
+          :popAuth="true"
+          :auth="permissionMap['tag']['tag_add']"
+          size="small"
+          type="primary"
+          @click="handleApply"
+        >确定</el-t-button>
       </div>
 
       <!-- <el-t-button size="mini" v-else>确定</el-t-button> -->
@@ -156,7 +164,7 @@ export default {
             .catch((err) => {
               this.$message({
                 type: 'error',
-                message: err||'操作失败',
+                message: err || '操作失败',
               })
             })
         } else {

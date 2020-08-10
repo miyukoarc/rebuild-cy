@@ -8,6 +8,7 @@
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个标签`">
         <div slot="right">
           <el-t-button
+            v-if="permissionMap['tag']['tag_add']"
             @click.stop="handleCreate"
             :popAuth="true"
             :auth="permissionMap['tag']['tag_add']"
@@ -47,13 +48,18 @@
           <!-- <el-table-column label="文章描述" align="left"></el-table-column> -->
           <el-table-column label="操作" align="center" width="80">
             <template slot-scope="scope">
-              <span v-if="scope.row.auditStateForOperation==='UNDER_REVCIEW'" class="color-primary">审核中</span>
-              <el-button
-                v-else
+              <span
+                v-if="scope.row.auditStateForOperation==='UNDER_REVCIEW'"
+                class="color-primary"
+              >审核中</span>
+              <el-t-button
+                v-if="scope.row.auditStateForOperation!=='UNDER_REVCIEW'"
+                :popAuth="true"
+                :auth="permissionMap['tag']['tag_update']"
                 type="text"
                 size="mini"
                 @click.stop="handleEdit(scope.$index,scope.row)"
-              >编辑</el-button>
+              >编辑</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -138,9 +144,7 @@ export default {
     this.setSort()
   },
   methods: {
-    doExport(val) {
-      
-    },
+    doExport(val) {},
     /**
      * 初始化筛选信息
      */

@@ -52,7 +52,41 @@
 
         }
 
-        console.log(temp)
+        // console.log(temp)
+        function random() {
+            return Math.floor(Math.random() * 10) > 5
+        }
+
+
+        function callback(res) {
+            console.log(res)
+        }
+
+        function queue(tasks, callback) {
+            let promise = Promise.resolve()
+            tasks.reduce((arr, task) => {
+                return arr.then(() => {
+                    return new Promise((resolve, reject) => {
+
+                        Promise.resolve(task).then(res => {
+                            if (typeof callback == 'function') {
+                                callback(res)
+                            } else {
+
+                                throw Error(res)
+                            }
+                            resolve()
+                        })
+                    })
+                })
+            }, promise)
+            return promise
+        }
+
+
+        const ps = [Promise.resolve('h1'), Promise.resolve('h2'), Promise.resolve('h3')]
+
+
     </script>
 </body>
 

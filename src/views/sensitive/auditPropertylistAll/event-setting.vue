@@ -136,10 +136,10 @@ export default {
           })
           .catch((err) => {
             console.error(err)
-            this.$message({
-              type: 'error',
-              message: err,
-            })
+            // this.$message({
+            //   type: 'error',
+            //   message: err,
+            // })
           })
       } else {
         this.$confirm('请设置审批人！', '', {
