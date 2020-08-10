@@ -33,7 +33,7 @@ export default {
   props: {
     throttle: {
       type: Boolean,
-      default: false
+      default: true
     }, //节流功能
     auth: {
       type: Object,

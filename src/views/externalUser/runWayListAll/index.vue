@@ -71,11 +71,15 @@
 
           <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
-              <el-button
+              <el-t-button
+                v-if="permissionMap['externalUser']['externalUser_detail']"
                 type="text"
                 size="mini"
+                :auth="permissionMap['externalUser']['externalUser_detail']"
+                :popAuth="true"
                 @click.stop="handleDetail(scope.$index,scope.row)"
-              >详情</el-button>
+              >详情</el-t-button>
+              <i class="el-icon-circle-close color-info"></i>
             </template>
           </el-table-column>
         </el-table>
@@ -139,7 +143,8 @@ export default {
       tagListAll: state => state.tag.tagListAll,
       loading: state => state.externalUser.loading,
       runWayListAll: state => state.externalUser.runWayListAll,
-      runWayListAllPage: state => state.externalUser.runWayListAllPage
+      runWayListAllPage: state => state.externalUser.runWayListAllPage,
+      permissionMap: state => state.permission.permissionMap
     })
   },
   created() {

@@ -66,7 +66,7 @@ export default {
 
       this.$refs["form"].validate(valid => {
         if (valid) {
-          console.log(payload);
+
           this.$store
             .dispatch("media/rename", payload)
             .then(() => {

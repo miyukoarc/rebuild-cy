@@ -110,7 +110,6 @@ export default {
 
         Promise.all(promiseList)
           .then(res => {
-            console.log(res);
             this.$message({
               type: "success",
               message: "操作成功"

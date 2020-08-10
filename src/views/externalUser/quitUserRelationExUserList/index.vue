@@ -8,11 +8,13 @@
       <tool-bar @handleExport="doExport">
         <div slot="right">
           <el-t-button
+          v-if="permissionMap['externalUser']['externalUser_redistributionExUser']"
             type="primary"
             @click="handleDistribute"
             :popAuth="true"
             :auth="permissionMap['externalUser']['externalUser_redistributionExUser']"
           >分配客户资源</el-t-button>
+
         </div>
       </tool-bar>
     </el-card>
@@ -72,6 +74,7 @@
                 type="text"
                 size="mini"
                 :popAuth="true"
+                v-if="permissionMap['externalUser']['externalUser_redistributionExUser']"
                 :auth="permissionMap['externalUser']['externalUser_redistributionExUser']"
                 @click.stop="handleDistributeSingle(scope.row)"
               >分配</el-t-button>
@@ -79,11 +82,14 @@
 
               <el-t-button
                 :popAuth="true"
+                v-if="permissionMap['externalUser']['externalUser_quitUserRelationExUserList']"
                 :auth="permissionMap['externalUser']['externalUser_quitUserRelationExUserList']"
                 type="text"
                 size="mini"
                 @click.stop="handleDetail(scope.row)"
               >详情</el-t-button>
+
+              <!-- <i class="el-icon-circle-close color-info" v-if="!!permissionMap['externalUser']['externalUser_redistributionExUser']&&!!permissionMap['externalUser']['externalUser_quitUserRelationExUserList']"></i> -->
             </template>
           </el-table-column>
         </el-table>

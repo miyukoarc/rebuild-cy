@@ -2,7 +2,13 @@
   <div>
     <el-form :model="form" ref="form" label-width="100px" label-position="left">
       <h3>添加素材</h3>
-      <el-form-item label="内容" v-for="(item,index) in content" :key="index">
+      <el-form-item
+        label="内容"
+        v-for="(item,index) in content"
+        :key="index"
+        :prop="'content'"
+        :rules="rules.content"
+      >
         <div class="input-item">
           <el-input
             style="flex:1;"
@@ -61,6 +67,17 @@ export default {
       form: {},
       type: 'TEXT',
       groupUuid: '',
+      rules: {
+        content: [
+          { required: true, message: '请输入内容', trigger: 'blur' },
+          {
+            min: 1,
+            max: 15,
+            message: '长度在 1 到 4000 个字符',
+            trigger: 'blur',
+          },
+        ],
+      },
       matchFormat: 'CONTAINS_ANY',
     }
   },

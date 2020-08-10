@@ -12,6 +12,7 @@
             size="mini"
             style="padding:0 15px 0 0"
             :popAuth="true"
+            v-if="permissionMap['automatic']['automatic_switchReply']"
             :auth="permissionMap['automatic']['automatic_switchReply']"
           >
             <div class="display-flex align-items-center">
@@ -100,6 +101,7 @@
               <el-t-button
                 type="text"
                 :popAuth="true"
+                v-if="permissionMap['automatic']['automatic_update']"
                 :auth="permissionMap['automatic']['automatic_update']"
                 size="mini"
                 @click.stop="handleEdit(scope.row)"
@@ -109,6 +111,7 @@
               <el-t-button
                 type="text"
                 :popAuth="true"
+                v-if="permissionMap['automatic']['automatic_delete']"
                 :auth="permissionMap['automatic']['automatic_delete']"
                 size="mini"
                 @click.stop="handleDelete(scope.row)"

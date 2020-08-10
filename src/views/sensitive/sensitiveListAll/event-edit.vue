@@ -42,7 +42,7 @@
 
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
-      <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
+      <el-t-button type="primary" size="small" @click="handleConfirm">确定</el-t-button>
     </div>
   </el-form>
 </template>
@@ -61,14 +61,14 @@ export default {
       type: Object,
       default: () => {
         return {}
-      }
-    }
+      },
+    },
   },
   components: {
     AsyncUserTag,
     ComplexSelect,
     TagSelect,
-    TagMultiSelect
+    TagMultiSelect,
   },
   data() {
     return {
@@ -79,6 +79,12 @@ export default {
       inputVisible: false,
       inputValue: '',
       form: {
+        uuid: '',
+        type: '',
+        informType: '',
+        tagType: '',
+        word: '',
+        setTag: [],
         // tagType: 'INSET', //INSET UNIONSET
         // informType: 'USER', //USER,ROLE
         // type: 'MSG',
@@ -90,26 +96,35 @@ export default {
       rules: {
         word: [
           { required: true, message: '请输入敏感词', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+          {
+            min: 1,
+            max: 20,
+            message: '长度在 1 到 20 个字符',
+            trigger: 'blur',
+          },
         ],
         code: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-        ]
-      }
+          {
+            min: 3,
+            max: 20,
+            message: '长度在 3 到 20 个字符',
+            trigger: 'blur',
+          },
+        ],
+      },
     }
   },
   watch: {
-      transfer: {
-          handler(newVal,oldVal){
-              this.tagSelects = this.$options.data().tagSelects
-              console.log(newVal)
-
-          },
-          immediate: true
+    transfer: {
+      handler(newVal, oldVal) {
+        this.tagSelects = this.$options.data().tagSelects
+        console.log(newVal)
       },
+      immediate: true,
+    },
     currentWord: {
-      handler: function(newVal, oldVal) {
+      handler: function (newVal, oldVal) {
         this.tagSelects = this.$options.data().tagSelects
         console.log(newVal)
         const {
@@ -120,32 +135,54 @@ export default {
           sensitiveSetTag,
           toUser,
           toRole,
-          word
+          word,
         } = newVal
+        this.form.uuid = uuid
+        this.form.type = type
+        this.form.informType = informType
+        this.form.tagType = tagType
+        this.form.word = word
 
-        this.$set(this.form, 'uuid', uuid)
-        this.$set(this.form, 'type', type)
-        this.$set(this.form, 'informType', informType)
-        this.$set(this.form, 'tagType', tagType)
-        this.$set(this.form, 'word', word)
-        this.$set(this.form,'setTag',sensitiveSetTag.map(item=>{return item.uuid}))
+        this.form.setTag = sensitiveSetTag
+          .reduce((sum, curr) => {
+            return sum.concat(curr.tags)
+          }, [])
+          .map((item) => {
+            return item.uuid
+          })
 
+        // this.form.setTag = sensitiveSetTag.map((item) => {
+        //   return item.uuid
+        // })
+
+        // this.$set(this.form, 'uuid', uuid)
+        // this.$set(this.form, 'type', type)
+        // this.$set(this.form, 'informType', informType)
+        // this.$set(this.form, 'tagType', tagType)
+        // this.$set(this.form, 'word', word)
+        // this.$set(
+        //   this.form,
+        //   'setTag',
+        //   sensitiveSetTag.map((item) => {
+        //     return item.uuid
+        //   })
+        // )
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      userListSelect: state => state.user.listSelect,
-      departmentList: state => state.department.departmentList,
-      listSelect: state => state.role.listSelect,
-      tagListSelect: state => state.tag.tagListSelect,
-      currentWord: state => state.sensitive.currentWord,
-      tagListMap: state => state.tag.tagListMap
+      userListSelect: (state) => state.user.listSelect,
+      departmentList: (state) => state.department.departmentList,
+      listSelect: (state) => state.role.listSelect,
+      tagListSelect: (state) => state.tag.tagListSelect,
+      currentWord: (state) => state.sensitive.currentWord,
+      tagListMap: (state) => state.tag.tagListMap,
     }),
     toUser() {
       return this.form.toUser
-    }
+    },
   },
   created() {
     this.initFilter()
@@ -156,79 +193,79 @@ export default {
       this.$store
         .dispatch('role/getRoleListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
 
       this.$store
         .dispatch('department/getDepartmentListAll')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
 
       this.$store
         .dispatch('tag/getListSelect')
-        .then(res => {
+        .then((res) => {
           let temp = []
-          res.forEach(item => {
+          res.forEach((item) => {
             temp.push(
-              item.tagList.map(unit => {
+              item.tagList.map((unit) => {
                 return unit.uuid
               })
             )
           })
           this.tagOriginSelects = temp
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
     },
     handleConfirm() {
-    //   if (this.form.informType == 'USER') {
-    //     this.form.toUser = this.userSelects.map(item => {
-    //       return item.uuid
-    //     })
-    //   } else {
-    //     this.form.toRole = this.toRoles
-    //   }
+      //   if (this.form.informType == 'USER') {
+      //     this.form.toUser = this.userSelects.map(item => {
+      //       return item.uuid
+      //     })
+      //   } else {
+      //     this.form.toRole = this.toRoles
+      //   }
       this.form.setTag = this.tagSelects.reduce((sum, curr) => {
         return sum.concat(curr)
       }, [])
       const payload = this.form
 
-      this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate((valid) => {
         console.log(payload)
         if (valid) {
-            this.$store
-              .dispatch('sensitive/update', payload)
-              .then(() => {
-                this.$message({
-                  type: 'success',
-                  message: '操作成功'
-                })
-                this.handleCancel()
-                this.handleRefresh()
+          this.$store
+            .dispatch('sensitive/update', payload)
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功',
               })
-              .catch(err => {
-                this.$message({
-                  type: 'error',
-                  message: '操作失败'
-                })
+              this.handleCancel()
+              this.handleRefresh()
+            })
+            .catch((err) => {
+              this.$message({
+                type: 'error',
+                message: '操作失败',
               })
+            })
         } else {
           this.$message({
             type: 'error',
-            message: '请检查输入'
+            message: '请检查输入',
           })
         }
       })
@@ -238,8 +275,8 @@ export default {
     },
     handleChange() {},
     handleCloseTag() {},
-    handleRefresh(){
-        this.$bus.$emit('handleRefrensh')
+    handleRefresh() {
+      this.$bus.$emit('handleRefrensh')
     },
     handleClose(tag) {
       this.form.words.splice(this.form.words.indexOf(tag), 1)
@@ -247,7 +284,7 @@ export default {
 
     showInput() {
       this.inputVisible = true
-      this.$nextTick(_ => {
+      this.$nextTick((_) => {
         this.$refs.saveTagInput.$refs.input.focus()
       })
     },
@@ -259,8 +296,8 @@ export default {
       }
       this.inputVisible = false
       this.inputValue = ''
-    }
-  }
+    },
+  },
 }
 </script>
 

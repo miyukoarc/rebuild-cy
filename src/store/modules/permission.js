@@ -57,7 +57,7 @@ function generatePermissionRoutes(routes) {
         })
         temp.push(firstObj)
     }
-    console.log(temp, 'temp')
+
     return temp
 }
 
