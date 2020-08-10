@@ -23,7 +23,14 @@
     <el-form-item label="文字消息">
       <!-- <div class="set-welcome-message"> -->
       <div class="full-w">
-        <el-input v-model="form.reply" type="textarea" :rows="6" placeholder="请输入文字消息"></el-input>
+        <el-input
+          v-model="form.reply"
+          type="textarea"
+          :rows="6"
+          maxlength="500"
+          show-word-limit
+          placeholder="请输入文字消息"
+        ></el-input>
         <!-- <div class="insert-btn">
           <el-button
             type="text"

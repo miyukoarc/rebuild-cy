@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-11 11:14:09
- * @LastEditTime: 2020-08-07 14:10:37
+ * @LastEditTime: 2020-08-10 11:28:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\tagsSelected\index.vue
@@ -35,7 +35,7 @@
 
     <div class="text-align-center" v-if="isShowMore && (newTagsList.length>2)">
       <el-button type="text" size="mini" @click="curly=!curly">
-        展开
+        {{curly?'展开':'收起'}}
         <i :class="[curly?'el-icon-caret-bottom':'el-icon-caret-top']"></i>
       </el-button>
     </div>

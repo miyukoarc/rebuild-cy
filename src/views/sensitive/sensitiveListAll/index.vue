@@ -49,7 +49,7 @@
                 通知人
                 <el-tooltip placement="right">
                   <div slot="content">
-                    <span class="font-exs color-info">除了发送者，设置人也会收到触发通知。</span>
+                    <span class="font-exs">除了发送者，设置人也会收到触发通知。</span>
                   </div>
 
                   <i class="el-icon-question"></i>
@@ -71,7 +71,7 @@
                 适用标签
                 <el-tooltip placement="right">
                   <div slot="content">
-                    <span class="font-exs color-info">员工与不满足该标签的人沟通时，不会被监控。</span>
+                    <span class="font-exs">员工与不满足该标签的人沟通时，不会被监控。</span>
                   </div>
                   <i class="el-icon-question"></i>
                 </el-tooltip>

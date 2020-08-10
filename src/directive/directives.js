@@ -41,6 +41,21 @@ Vue.directive('noClick', {
     }
 })
 
+// 防重复点击(指令实现)
+Vue.directive('preventReClick', {
+    inserted(el, binding) {
+        el.addEventListener('click', () => {
+            if (!el.disabled) {
+                el.disabled = true
+                setTimeout(() => {
+                    el.disabled = false
+                }, binding.value || 3000)
+            }
+        })
+    }
+})
+
+
 // 自动获取焦点
 Vue.directive('focus', {
         // 注册一个局部的自定义指令 v-focus

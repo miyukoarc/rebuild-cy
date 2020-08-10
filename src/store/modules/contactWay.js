@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-08-06 15:28:11
+ * @LastEditTime: 2020-08-10 11:41:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\contactWay.js
@@ -141,8 +141,7 @@ const actions = {
                 resolve(res)
             }).catch(err => {
                 commit('TOGGLE_LOADING', false)
-
-                reject()
+                reject(err)
             })
         })
     },
@@ -163,7 +162,7 @@ const actions = {
             }).catch(err => {
                 commit('TOGGLE_LOADING', false)
 
-                reject()
+                reject(err)
             })
         })
     },
