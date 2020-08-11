@@ -125,6 +125,18 @@ export const allocation = (payload) => {
     })
 }
 
+/**
+ * 
+ * @param {object} payload 
+ */
+export const alterType = (payload)=>{
+    return request({
+        url: '/department/alterType',
+        method: 'post',
+        data: payload
+    })
+}
+
 
 
 

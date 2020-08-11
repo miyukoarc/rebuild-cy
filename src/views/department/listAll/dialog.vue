@@ -7,11 +7,11 @@
       center
       append-to-body
       width="600px"
-      destroy-on-close
       :close-on-click-modal="false"
+
     >
       <div>
-        <component :is="event" />
+        <component :is="event" :transfer="transfer"/>
       </div>
     </el-dialog>
   </div>
@@ -20,17 +20,20 @@
 <script>
 import CreateTemplate from './event-create.vue'
 import EditTemplate from './event-edit.vue'
+import ChangeTemplate from './event-change.vue'
 import { mapState } from 'vuex'
 export default {
   components: {
     CreateTemplate,
-    EditTemplate
+    EditTemplate,
+    ChangeTemplate,
   },
   data() {
     return {
       dialogVisible: false,
-      event: 'CreateTemplate',
-      eventType: ''
+      event: '',
+      eventType: '',
+      transfer: {}
     }
   },
   watch: {
@@ -42,11 +45,11 @@ export default {
           //   this.toggleComponent(newVal)
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
-    ...mapState({})
+    ...mapState({}),
   },
   mounted() {},
   updated() {
@@ -63,14 +66,18 @@ export default {
     //   },
     genTitle() {
       if (this.eventType === 'create') {
-        return '创建模板'
+        return '创建创建'
       }
 
       if (this.eventType === 'edit') {
-        return '编辑模板'
+        return '编辑部门'
       }
-    }
-  }
+
+      if (this.eventType === 'change') {
+        return '变更部门'
+      }
+    },
+  },
 }
 </script>
 

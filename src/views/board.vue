@@ -2,7 +2,7 @@
   <div>
 
       <div>
-          <el-t-button :throttle="true" @click="handleClick">点击</el-t-button>
+          <el-t-button :throttle="true" @click="handleClick" :enable="false">点击</el-t-button>
       </div>
     <div>
       <tags-drawer :tags="tagGroups"></tags-drawer>
