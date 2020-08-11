@@ -152,7 +152,7 @@ export default {
       const output = multiTemp.reduce((sum, curr) => {
         return sum.concat(curr);
       }, []);
-      console.log(output);
+
 
       this.$emit("change", output);
     },

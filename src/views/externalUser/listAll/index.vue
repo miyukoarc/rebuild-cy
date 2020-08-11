@@ -59,12 +59,14 @@
           <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-t-button
+                v-if="permissionMap['externalUser']['externalUser_detail']"
                 :popAuth="true"
                 :auth="permissionMap['externalUser']['externalUser_detail']"
                 type="text"
                 size="mini"
                 @click.stop="handleDetail(scope.row)"
               >详情</el-t-button>
+              <i class="el-icon-circle-close color-info" v-else></i>
             </template>
           </el-table-column>
         </el-table>
@@ -136,7 +138,9 @@ export default {
     this.initDataList(this.query)
     this.initFilter()
   },
-  mounted() {},
+  mounted() {
+    console.log(this.$router.options.routes)
+  },
   methods: {
     /**
      * 初始化表格信息
@@ -226,36 +230,33 @@ export default {
       this.initDataList(this.query)
     },
     handleExport(val) {
-        
-    //   const payload = this.query
-    //   const total = this.pageConfig.total
-    //   const list = await getExternalUserListAll({
-    //     ...payload,
-    //     total,
-    //   })
-    //     .then((res) => Promise.resolve(res.items))
-    //     .catch((err) => {
-    //       console.error(err)
-    //       Promise.reject(err)
-    //     })
-
-    //   this.downloadLoading = true
-    //   import('@/vendor/Export2Excel').then((excel) => {
-    //     const tHeader = ['客户', '所属员工', '企业标签', '添加时间']
-    //     console.log(excel)
-    //     const filterVal = ['wxNickName', 'title', 'user', 'externalUserDetailCorpTagsList', 'createdAt']
-    //     // const list = this.list
-
-    //     const data = this.formatJson(filterVal, list)
-    //     excel.export_json_to_excel({
-    //       header: tHeader,
-    //       data,
-    //       filename: 'ceshi',
-    //       autoWidth: true,
-    //       bookType: 'xlsx',
-    //     })
-    //     this.downloadLoading = false
-    //   })
+      //   const payload = this.query
+      //   const total = this.pageConfig.total
+      //   const list = await getExternalUserListAll({
+      //     ...payload,
+      //     total,
+      //   })
+      //     .then((res) => Promise.resolve(res.items))
+      //     .catch((err) => {
+      //       console.error(err)
+      //       Promise.reject(err)
+      //     })
+      //   this.downloadLoading = true
+      //   import('@/vendor/Export2Excel').then((excel) => {
+      //     const tHeader = ['客户', '所属员工', '企业标签', '添加时间']
+      //     console.log(excel)
+      //     const filterVal = ['wxNickName', 'title', 'user', 'externalUserDetailCorpTagsList', 'createdAt']
+      //     // const list = this.list
+      //     const data = this.formatJson(filterVal, list)
+      //     excel.export_json_to_excel({
+      //       header: tHeader,
+      //       data,
+      //       filename: 'ceshi',
+      //       autoWidth: true,
+      //       bookType: 'xlsx',
+      //     })
+      //     this.downloadLoading = false
+      //   })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map((v) =>

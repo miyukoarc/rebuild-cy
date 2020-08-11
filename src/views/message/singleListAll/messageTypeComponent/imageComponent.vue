@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 17:35:09
- * @LastEditTime: 2020-08-07 16:52:45
+ * @LastEditTime: 2020-08-10 19:39:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\imageComponent.vue
@@ -14,6 +14,7 @@
         <el-avatar :src="item.fromAvatar" />
         <div>
           <div class="img-warp-left revoke-warp" v-if="item.messageMedias">
+            <div class="chat-name">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
             <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
             <el-popover placement="right" title trigger="hover">
               <img :src="item.messageMedias[0].file" style="width:400px;height:400px" />
@@ -33,6 +34,7 @@
 
       <div class="display-flex justify-content-flex-end mb-5">
         <div class="img-warp-right revoke-warp" v-if="item.messageMedias">
+          <div class="chat-name" style="text-align:right">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <el-popover placement="right" title trigger="hover">
             <img :src="item.messageMedias[0].file" style="width:400px;height:400px" />
@@ -65,6 +67,11 @@ export default {
 <style lang="scss" scoped>
 .image-component {
   margin: 0 10px 20px 10px;
+  .chat-name {
+    line-height: 16px;
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
   .left-warp {
     > p {
       font-size: 13px;

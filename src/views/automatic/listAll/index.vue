@@ -12,6 +12,7 @@
             size="mini"
             style="padding:0 15px 0 0"
             :popAuth="true"
+            v-if="permissionMap['automatic']['automatic_switchReply']"
             :auth="permissionMap['automatic']['automatic_switchReply']"
           >
             <div class="display-flex align-items-center">
@@ -66,7 +67,15 @@
                 <span
                   v-if="row.autoReplyType !='CONTENT'"
                 >{{autoReplyContentType[row.autoReplyType]}}</span>
-                <p>{{row.replyWord}}</p>
+                <p>{{tableReplyWord(row)}}</p>
+                <div class="text-align-center" v-if="row.replyWord.length>20">
+                  <el-button type="text" size="mini" @click="curly = !curly">
+                    {{curly?'展开':'收起'}}
+                    <i
+                      :class="[curly?'el-icon-caret-bottom':'el-icon-caret-top']"
+                    ></i>
+                  </el-button>
+                </div>
               </div>
             </template>
           </el-table-column>
@@ -81,7 +90,7 @@
           </el-table-column>
           <el-table-column label="创建人" align="left">
             <template v-slot="{row}">
-              <div v-if="Object.keys(row.creator).length">
+              <div v-if="Object.keys(row.creator).length" style="cursor: pointer;">
                 <async-user-tag
                   size="small"
                   v-for="item in [row.creator]"
@@ -100,6 +109,7 @@
               <el-t-button
                 type="text"
                 :popAuth="true"
+                v-if="permissionMap['automatic']['automatic_update']"
                 :auth="permissionMap['automatic']['automatic_update']"
                 size="mini"
                 @click.stop="handleEdit(scope.row)"
@@ -109,6 +119,7 @@
               <el-t-button
                 type="text"
                 :popAuth="true"
+                v-if="permissionMap['automatic']['automatic_delete']"
                 :auth="permissionMap['automatic']['automatic_delete']"
                 size="mini"
                 @click.stop="handleDelete(scope.row)"
@@ -155,6 +166,7 @@ export default {
   },
   data() {
     return {
+      curly: true,
       isReplySwitch: false,
       pageConfig: {
         total: 0,
@@ -187,15 +199,26 @@ export default {
       autoReplyContentType: (state) => state.enum.autoReplyContentType,
       replySwitch: (state) => state.automatic.replySwitch,
     }),
+    tableReplyWord: function () {
+      return function (row) {
+        if (row.replyWord.length > 20) {
+          if (this.curly) {
+            return row.replyWord.substring(0, 20);
+          } else {
+            return row.replyWord;
+          }
+        } else {
+          return row.replyWord;
+        }
+      };
+    },
   },
   created() {
     this.initDataList(this.query);
     this.initFilter();
   },
   methods: {
-    doExport(val) {
-      
-    },
+    doExport(val) {},
     /**
      * 初始化表格信息
      */
@@ -249,7 +272,18 @@ export default {
         .then(() => {})
         .catch((err) => {});
     },
-
+    // showMore(row) {
+    //   console.log(row, "row");
+    //   // this.curly = !this.curly
+    //   if (row.replyWord.length > 20) {
+    //     console.log(row.replyWord.length, "row.replyWord.length");
+    //     this.curly = true;
+    //     this.tableReplyWord = row.replyWord.substring(0, 20);
+    //   } else {
+    //     this.curly = false;
+    //     this.tableReplyWord = row.replyWord;
+    //   }
+    // },
     handleEdit(row) {
       const payload = row.uuid;
       console.log(row, "row");
@@ -307,7 +341,7 @@ export default {
       this.$refs["formDialog"].eventType = "create";
       this.$refs["formDialog"].dialogVisible = true;
     },
-    handleDelete(index) {
+    handleDelete(row) {
       const payload = { uuid: row.uuid };
       this.$confirm("是否删除当前自动回复", "Warning", {
         confirmButtonText: "确定",

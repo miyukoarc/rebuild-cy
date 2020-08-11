@@ -45,7 +45,7 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" align="left">
-          <template v-slot="{row}">
+          <template v-slot="{row,$index}">
             <el-t-button
               type="text"
               size="mini"
@@ -69,7 +69,7 @@
               size="mini"
               :popAuth="true"
               :auth="permissionMap['role']['role_delete']"
-              @click="handleChange(row)"
+              @click="handleChange($index)"
             >
               <span v-if="row.openState" class="color-danger">关闭</span>
               <span v-else class="color-success">开启</span>
@@ -174,8 +174,9 @@ export default {
           })
         })
     },
-    handleChange(val) {
-      let { openState, moduleName, uuid } = val
+    handleChange(index) {
+        // console.log(index)
+      let { openState, moduleName, uuid,auditUsers } = this.listAll[index]
       this.$confirm(
         `是否${openState ? '关闭' : '开启'}${moduleName}审核？`,
         'Warning',
@@ -187,7 +188,7 @@ export default {
       )
         .then(async () => {
           //是否未设置审批人
-          const emptyFlag = !!val.auditUsers.length
+          const emptyFlag = !!auditUsers.length
 
         //   console.log(emptyFlag,val.auditUsers)
 
@@ -208,7 +209,7 @@ export default {
                 })
               })
           } else {
-            this.$confirm('请先设置审批流程', 'warning', {
+            this.$confirm('请先设置审批流程', '设置审批流程', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning',
@@ -221,10 +222,6 @@ export default {
         })
         .catch((err) => {
           console.error(err)
-          this.$message({
-            type: 'error',
-            message: err,
-          })
         })
     },
     handleSetting(val) {

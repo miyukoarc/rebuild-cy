@@ -8,6 +8,7 @@
         <div slot="right">
           <el-t-button
             type="primary"
+            v-if="permissionMap['batchSendTask']['batchSendTask_add']"
             :popAuth="true"
             :auth="permissionMap['batchSendTask']['batchSendTask_add']"
             @click="actionDepartment"
@@ -29,8 +30,7 @@
           header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="id" align="left" prop="msgId">
-          </el-table-column>
+          <el-table-column label="id" align="left" prop="msgId"></el-table-column>
           <el-table-column label="发送者" align="left">
             <template v-slot="scope">
               <div>{{scope.row.sender.name}}</div>
@@ -42,15 +42,22 @@
           <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
           <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
-              <el-button type="text" @click.stop="handleDetail(scope.row)">详情</el-button>
+              <el-t-button
+                v-if="permissionMap['batchSendTask']['batchSendTask_detail']"
+                :popAuth="true"
+                :auth="permissionMap['batchSendTask']['batchSendTask_detail']"
+                type="text"
+                @click.stop="handleDetail(scope.row)"
+              >详情</el-t-button>
             </template>
           </el-table-column>
         </el-table>
 
-        <customer-pagination 
-        :pageConfig="pageConfig" 
-        @current-change="changePage" 
-        @size-change="changeSize"></customer-pagination>
+        <customer-pagination
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -71,7 +78,7 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar,
-    CustomerPagination
+    CustomerPagination,
   },
   data() {
     return {
@@ -102,19 +109,17 @@ export default {
     this.initDataList(this.query)
     this.initFilter()
   },
-  mounted(){
-      this.$bus.$on('handleRefresh',()=>{
-          this.initDataList(this.query)
-      })
+  mounted() {
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
 
-      this.$once('hook:beforeDestroy',()=>{
-          this.$bus.$off('handleRefresh')
-      })
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
   },
   methods: {
-    doExport(val) {
-      
-    },
+    doExport(val) {},
     /**
      * 初始化筛选信息
      */
@@ -161,9 +166,12 @@ export default {
       this.$router.push(`/batchSendTask/detail/${val.uuid}`)
     },
     handleSearch(val) {
-      const { tagIds, name } = val
-      this.query.tagIds = tagIds ? tagIds : this.query.tagIds
-      this.query.name = name ? name : this.query.name
+      const { state, sendType, senderUuid, startTime, endTime } = val
+      this.query.state = state ? state : this.query.state
+      this.query.sendType = sendType ? sendType : this.query.sendType
+      this.query.senderUuid = senderUuid ? senderUuid : this.query.senderUuid
+      this.query.startTime = startTime ? startTime : this.query.startTime
+      this.query.endTime = endTime ? endTime : this.query.endTime
       this.query.page = 0
       this.initDataList(this.query)
     },

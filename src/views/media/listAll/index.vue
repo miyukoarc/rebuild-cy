@@ -9,7 +9,7 @@
         <el-card class="content-spacing" style="min-height:84vh;margin-right:20px;">
           <el-form label-position="left" label-width="60px">
             <el-form-item label="搜索：">
-              <el-input v-model="groupName" @keypress.enter="handleSearchGroup">
+              <el-input v-model="groupName" @keyup.enter.native="handleSearchGroup">
                 <el-button slot="append" icon="el-icon-search" @click="handleSearchGroup"></el-button>
               </el-input>
             </el-form-item>

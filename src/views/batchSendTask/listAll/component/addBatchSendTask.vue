@@ -241,7 +241,7 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" @click="submit">提交</el-button>
+              <el-t-button type="primary" @click="submit">提交</el-t-button>
             </el-form-item>
           </div>
         </el-form>

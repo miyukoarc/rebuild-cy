@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:48:28
- * @LastEditTime: 2020-08-07 16:56:46
+ * @LastEditTime: 2020-08-10 19:53:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\fileComponent.vue
@@ -13,6 +13,7 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
+          <div class="chat-name" style="margin-left:20px">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div
             class="file-warp"
@@ -43,6 +44,7 @@
       <p>{{ item.msgTime }}</p>
       <div class="right-warp display-flex justify-content-flex-end">
         <div class="right">
+          <div class="chat-name" style="text-align:right;margin-right:20px">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div
             class="file-warp"
@@ -163,6 +165,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.chat-name {
+  line-height: 16px;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
 .file-component {
   margin: 0 10px 20px 10px;
   .left-warp {

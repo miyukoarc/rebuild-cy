@@ -72,7 +72,7 @@
         stripe
         lazy
         highlight-current-row
-         header-row-class-name="el-table-header"
+        header-row-class-name="el-table-header"
       >
         <!-- <el-table-column type="selection"></el-table-column> -->
         <el-table-column label="全部客户" align="left">
@@ -111,7 +111,14 @@
         <el-table-column label="操作" align="left">
           <template v-slot="scope">
             <el-t-button
-              type="primary"
+              type="text"
+              :popAuth="true"
+              :auth="permissionMap['externalUser']['externalUser_detail']"
+              size="mini"
+              @click.stop="handleGroupChat(scope.row)"
+            >聊天记录</el-t-button>
+            <el-t-button
+              type="text"
               :popAuth="true"
               :auth="permissionMap['externalUser']['externalUser_detail']"
               size="mini"
@@ -139,7 +146,7 @@ export default {
       form: {
         end: "",
         sta: "",
-        userid: []
+        userid: [],
       },
       externalUser: {},
       message: {},
@@ -150,8 +157,8 @@ export default {
         avg_reply_time: "平均首次回复时长",
         negative_feedback_cnt: "拉黑/删除某人(人)",
         new_apply_cnt: "主动添加客户数(人)",
-        new_contact_cnt: "新增客户数(人)"
-      }
+        new_contact_cnt: "新增客户数(人)",
+      },
     };
   },
   watch: {
@@ -161,65 +168,62 @@ export default {
         this.$once("hook:created", () => {
           this.initData(uuid);
         });
-
       },
-      immediate: true
+      immediate: true,
     },
     date: {
       handler(newVal, oldVal) {
         this.changeDate(newVal);
         // this.initBoard(this.form);
       },
-      immediate: true
+      immediate: true,
     },
-    'form.userid.length':{
-        handler(newVal,oldVal){
-            // console.log(newVal)
-            if(newVal){
-                this.initBoard(this.form)
-            }
+    "form.userid.length": {
+      handler(newVal, oldVal) {
+        // console.log(newVal)
+        if (newVal) {
+          this.initBoard(this.form);
         }
-    }
+      },
+    },
   },
   computed: {
     ...mapState({
-      userDetail: state => state.user.userDetail,
-      customerStatistics: state => state.externalUser.customerStatistics,
-      loading: state => state.externalUser.loading,
-      idList: state => state.externalUser.idList,
-      permissionMap: state => state.permission.permissionMap
-    })
+      userDetail: (state) => state.user.userDetail,
+      customerStatistics: (state) => state.externalUser.customerStatistics,
+      loading: (state) => state.externalUser.loading,
+      idList: (state) => state.externalUser.idList,
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
     // this.initBoard(this.form)
   },
-  mounted() {
-    
-  },
+  mounted() {},
   methods: {
     initData(payload) {
       this.$store
         .dispatch("user/getDetail", payload)
         .then((res) => {
-            const {userId} = res
-            this.form.userid.push(userId)
+          const { userId } = res;
+          this.form.userid.push(userId);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           this.$message({
             type: "error",
-            message: err || "初始化失败"
+            message: err || "初始化失败",
           });
         });
 
       this.$store
         .dispatch("externalUser/getListExUserByUserId", { uuid: payload })
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           this.$message({
             type: "error",
-            message: err || "初始化失败"
+            message: err || "初始化失败",
           });
         });
     },
@@ -230,31 +234,31 @@ export default {
           const {
             new_contact_cnt,
             new_apply_cnt,
-            negative_feedback_cnt
+            negative_feedback_cnt,
           } = this.customerStatistics;
           this.externalUser = {
             new_contact_cnt,
             new_apply_cnt,
-            negative_feedback_cnt
+            negative_feedback_cnt,
           };
           const {
             chat_cnt,
             message_cnt,
             reply_percentage,
-            avg_reply_time
+            avg_reply_time,
           } = this.customerStatistics;
           this.message = {
             chat_cnt,
             message_cnt,
             reply_percentage,
-            avg_reply_time
+            avg_reply_time,
           };
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           this.$message({
             type: "error",
-            message: err || "初始化失败"
+            message: err || "初始化失败",
           });
         });
     },
@@ -267,15 +271,28 @@ export default {
         .format("YYYY-MM-DD HH:mm:ss");
       this.form.end = dayjs().format("YYYY-MM-DD HH:mm:ss");
     },
+    handleGroupChat(row) {
+      console.log(row, "row",this.userDetail);
+      let userId = row.externalUser.externalUserId;
+      const query = {
+        uuid: this.userDetail.uuid,
+        userId,
+        type: "user",
+      };
+      this.$router.push({
+        path: "/message/singleListAll",
+        query,
+      });
+    },
     handleDetail(index) {
       const uuid = this.idList[index].externalUser.uuid;
       this.$router.push({
-        path: "/externalUser/detail/" + uuid
+        path: "/externalUser/detail/" + uuid,
       });
     },
     formatTime() {},
-    changeTime() {}
-  }
+    changeTime() {},
+  },
 };
 </script>
 

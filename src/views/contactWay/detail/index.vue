@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-11 11:15:45
- * @LastEditTime: 2020-08-06 17:46:29
+ * @LastEditTime: 2020-08-10 16:30:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\contactWay\detail.vue
@@ -203,7 +203,7 @@
               v-show="ruleForm.welComeType == 'DEFAULTWEL'"
               class="default-wel"
             >
-              <span>将发送成员已设置的欢迎语，若所选成员未设置欢迎语，则不会发送欢迎语</span>
+              <span>将发送该成员已设置的欢迎语，若未设置欢迎语，则不会发送</span>
             </el-form-item>
           </div>
         </div>
@@ -213,14 +213,22 @@
           <div class="info-warp">
             <el-form-item label="自动通过好友:" prop="autoAddFriend">
               <el-switch v-model="ruleForm.autoAddFriend" />
-              <el-tooltip
+
+              <el-tooltip placement="right">
+                <div slot="content">
+                  <span class="font-exs">开启后，客户添加该企业微信时，无需好友验证，将会自动添加成功</span>
+                </div>
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+
+              <!-- <el-tooltip
                 class="add-friend-tip"
                 effect="light"
                 content="开启后，客户添加该企业微信时，无需好友验证，将会自动添加成功"
                 placement="right-start"
               >
                 <i class="el-icon-question" />
-              </el-tooltip>
+              </el-tooltip>-->
             </el-form-item>
             <!-- <el-form-item label="开启时间:" prop="openTime">
               <el-radio-group v-model="ruleForm.openTime">
@@ -265,7 +273,7 @@
               <div>* 此二维码只是样式预览效果，请勿直接使用</div>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+              <el-button type="primary" v-preventReClick @click="submitForm('ruleForm')">保存</el-button>
             </el-form-item>
           </div>
         </div>
@@ -492,7 +500,13 @@ export default {
                   path: `/contactWay/listAll`,
                 });
               })
-              .catch((err) => {});
+              .catch((err) => {
+                console.log(err, "err");
+                this.$message({
+                  message: err || "失败",
+                  type: "error",
+                });
+              });
           } else {
             params.configId = this.configId;
             if (this.imgId != "") {
@@ -509,7 +523,12 @@ export default {
                   path: `/contactWay/listAll`,
                 });
               })
-              .catch((err) => {});
+              .catch((err) => {
+                this.$message({
+                  message: err || "失败",
+                  type: "error",
+                });
+              });
           }
         } else {
           return false;
@@ -584,7 +603,7 @@ export default {
       margin-bottom: 20px;
       .info-warp {
         .tip {
-          font-size: 14px;
+          font-size: 13px;
           margin-left: 15px;
           color: #bbb;
         }

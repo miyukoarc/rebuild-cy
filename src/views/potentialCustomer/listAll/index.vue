@@ -9,12 +9,14 @@
         <div slot="right">
           <el-t-button
             type="primary"
+            v-if="permissionMap['potentialCustomer']['potentialCustomer_add']"
             :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
             :popAuth="true"
             @click.stop="handleCreate"
           >新增用户</el-t-button>
           <el-t-button
             :popAuth="true"
+            v-if="permissionMap['potentialCustomer']['potentialCustomer_allocation']"
             :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']"
             @click.stop="handleDistribute"
           >分配</el-t-button>
@@ -46,7 +48,7 @@
                 预设标签
                 <el-tooltip placement="right">
                   <div slot="content">
-                    <span class="font-exs color-info">添加成为用户后，将自动打上预设标签。</span>
+                    <span class="font-exs ">添加成为用户后，将自动打上预设标签。</span>
                   </div>
                   <i class="el-icon-question"></i>
                 </el-tooltip>
@@ -102,19 +104,22 @@
                 type="text"
                 size="mini"
                 :popAuth="true"
-                :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
+                v-if="permissionMap['potentialCustomer']['potentialCustomer_allocation']"
+                :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']"
                 @click.stop="handleAllocation(scope.row)"
               >分配</el-t-button>
               <el-t-button
                 type="text"
                 size="mini"
                 :popAuth="true"
+                v-if="permissionMap['potentialCustomer']['potentialCustomer_update']"
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
                 @click.stop="handleEdit(scope.row)"
               >编辑</el-t-button>
               <el-t-button
                 type="text"
                 :popAuth="true"
+                v-if="permissionMap['potentialCustomer']['potentialCustomer_delete']"
                 :auth="permissionMap['potentialCustomer']['potentialCustomer_delete']"
                 size="mini"
                 @click.stop="handleDelete(scope.row)"

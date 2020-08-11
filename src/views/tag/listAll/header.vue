@@ -5,9 +5,15 @@
     </el-form-item>
 
     <el-form-item label="标签名称：">
-      <el-input v-model.trim="query.tagName" clearable></el-input>
+      <div class="display-flex align-items-center">
+        <el-input v-model.trim="query.tagName" clearable class="mr-10"></el-input>
+        <el-tooltip placement="right">
+          <div slot="content">企业标签由管理员统一配置，配置后企业全部成员可使用。</div>
+          <i class="el-icon-question tip"></i>
+        </el-tooltip>
+      </div>
     </el-form-item>
-    <el-form-item>卡片名称（企业标签由管理员统一配置，配置后企业全部成员可使用）</el-form-item>
+    <!-- <el-form-item>卡片名称（企业标签由管理员统一配置，配置后企业全部成员可使用）</el-form-item> -->
     <!-- <el-form-item label="手机号码">
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item>
@@ -66,10 +72,10 @@ export default {
       //   value: '',
       query: {
         groupName: "",
-        tagName: ""
+        tagName: "",
         // userId: ''
         // roleUuid: ''
-      }
+      },
     };
   },
   computed: {
@@ -77,19 +83,16 @@ export default {
       //   tagListAll: state => state.tag.tagListAll,
       //   userListAll: state => state.user.userListAll
       //   departments: state => state.department.departments
-    })
+    }),
   },
   methods: {
     handleChangeFirst(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {
@@ -98,8 +101,8 @@ export default {
     handleRefresh() {
       this.$emit("handleRefresh");
       this.query = this.$options.data().query;
-    }
-  }
+    },
+  },
 };
 </script>
 

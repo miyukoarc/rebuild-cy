@@ -1,23 +1,5 @@
 import request from '@/utils/request'
 
-
-export function logout() {
-  return request({
-    url: '/logout',
-    method: 'get'
-  })
-}
-
-// /**
-//  * 微信登录
-//  * @param {} 
-//  */
-// export const wxLogin = () => {
-//   return request({
-//     url: '/login',
-//     method: 'get'
-//   })
-// }
 /**
  * 员工详细页
  * @param {string} uuid 

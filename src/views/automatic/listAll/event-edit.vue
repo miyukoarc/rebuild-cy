@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-03 10:13:30
- * @LastEditTime: 2020-08-05 16:31:00
+ * @LastEditTime: 2020-08-10 15:24:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\listAll\event-detail.vue
@@ -12,7 +12,7 @@
       <el-input v-model.trim="form.rule" placeholder="请输入规则名称"></el-input>
     </el-form-item>
 
-    <el-form-item label="关键词" prop="keyWord">
+    <el-form-item label="关键词" prop="keyword">
       <el-input v-model.trim="form.keyword">
         <el-select v-model="form.keyType" slot="prepend" placeholder="请选择" style="width:100px">
           <el-option label="包含" value="CONTAIN"></el-option>
@@ -21,7 +21,7 @@
       </el-input>
     </el-form-item>
 
-    <el-form-item label="文字消息">
+    <el-form-item label="文字消息" prop="reply">
       <div class="full-w">
         <el-input v-model="form.reply" type="textarea" :rows="6" placeholder="请输入文字消息"></el-input>
       </div>
@@ -201,6 +201,7 @@ export default {
             trigger: "blur",
           },
         ],
+        reply:[{ required: true, message: "请输入规则名称", trigger: "blur" }],
       },
       // 标签
       selectTags: [],

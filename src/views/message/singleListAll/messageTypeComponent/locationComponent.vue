@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-27 15:26:03
- * @LastEditTime: 2020-08-07 16:53:09
+ * @LastEditTime: 2020-08-10 20:00:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\locationComponent.vue
@@ -13,6 +13,7 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left amap-page-container">
+          <div class="chat-name">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div id="mapa" class="map-container">
             <div :id="id" class="maps"></div>
@@ -37,6 +38,7 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right amap-page-container">
+          <div class="chat-name" style="text-align:right">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div id="mapa" class="map-container">
             <div :id="id" class="maps"></div>

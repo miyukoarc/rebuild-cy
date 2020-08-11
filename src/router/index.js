@@ -30,106 +30,106 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-import online from '@/views/signin'
-import offline from '@/views/login'
+import loginPage from '@/views/signin'
 import welcome from '@/views/welcome'
 import Qrcode from '@/views/qrcode'
-const loginPage = process.env.VUE_APP_WORK === 'offline' ? offline : online
+
 export const constantRoutes = [{
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: '/redirect/:path(.*)',
-      component: () => import('@/views/redirect/index')
-    }]
-  }, {
-    path: '/login',
-    component: loginPage,
-    hidden: true
-  }, {
-    path: '/qrcode',
-    component: Qrcode,
-    hidden: true
-  },{
-    path: '/welcome',
-    component: welcome,
-    hidden: true,
-  },
-  {
-    path: '#',
-    component: Layout,
-    // redirect: '/dashboard',
-    children: [{
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: () =>
-        import('@/views/dashboard/index'),
-      meta: {
-        title: '首页',
-        icon: 'dashboard'
-      }
+        path: '/redirect',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: '/redirect/:path(.*)',
+            component: () =>
+                import ('@/views/redirect/index')
+        }]
     }, {
-      path: '/board',
-      component: () =>
-        import('@/views/board.vue'),
-      hidden: true,
+        path: '/login',
+        component: loginPage,
+        hidden: true
     }, {
-      path: '/zeness',
-      component: () =>
-        import('@/views/zeness.vue'),
-      hidden: true,
-    }, ]
-  },
-  {
-    path: '/',
-    redirect: '/welcome'
-  },
-  /**
-   * local test
-   */
-  //   {
-  //     path: '/department',
-  //     component: Layout,
-  //     children: [{
-  //       path: 'list',
-  //       component: () => import('@/views/department/list'),
-  //     }]
-  //   },
-  //   {
-  //     path: '/role',
-  //     component: Layout,
-  //     children: [{
-  //       path: 'list',
-  //       component: () => import('@/views/role/list'),
-  //     }]
-  //   },
-  {
-    path: '/404',
-    component: () =>
-      import('@/views/404'),
-    hidden: true
-  },
-  // 404 page must be placed at the end !!!
-  // { path: '*', redirect: '/404', hidden: true }
+        path: '/qrcode',
+        component: Qrcode,
+        hidden: true
+    }, {
+        path: '/welcome',
+        component: welcome,
+        hidden: true,
+    },
+    {
+        path: '#',
+        component: Layout,
+        // redirect: '/dashboard',
+        children: [{
+            path: '/dashboard',
+            name: 'Dashboard',
+            component: () =>
+                import ('@/views/dashboard/index'),
+            meta: {
+                title: '首页',
+                icon: 'dashboard'
+            }
+        }, {
+            path: '/board',
+            component: () =>
+                import ('@/views/board.vue'),
+            hidden: true,
+        }, {
+            path: '/zeness',
+            component: () =>
+                import ('@/views/zeness.vue'),
+            hidden: true,
+        }]
+    },
+    {
+        path: '/',
+        redirect: '/welcome'
+    },
+    /**
+     * local test
+     */
+    //   {
+    //     path: '/department',
+    //     component: Layout,
+    //     children: [{
+    //       path: 'list',
+    //       component: () => import('@/views/department/list'),
+    //     }]
+    //   },
+    //   {
+    //     path: '/role',
+    //     component: Layout,
+    //     children: [{
+    //       path: 'list',
+    //       component: () => import('@/views/role/list'),
+    //     }]
+    //   },
+    {
+        path: '/404',
+        component: () =>
+            import ('@/views/404'),
+        hidden: true
+    },
+    // 404 page must be placed at the end !!!
+    // { path: '*', redirect: '/404', hidden: true }
 ]
 
 
 
 const createRouter = () => new Router({
-  mode: 'hash', // require service support
-  scrollBehavior: () => ({
-    y: 0
-  }),
-  routes: constantRoutes
+    mode: 'hash', // require service support
+    //   scrollBehavior: () => ({
+    //     y: 0
+    //   }),
+    routes: constantRoutes
 })
 
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+    const newRouter = createRouter()
+    router.matcher = newRouter.matcher // reset router
 }
 
 export default router

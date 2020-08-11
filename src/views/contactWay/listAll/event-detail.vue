@@ -4,8 +4,8 @@
       <div class="detail-left">
         <img :src="contactWayDetailRow.qrCode" alt />
         <p>{{ contactWayDetailRow.remark }}</p>
-        <el-button type="primary" size="mini" @click="downLoad(contactWayDetailRow)">下载活码</el-button>
-        <el-button size="mini" @click="handleEdit(contactWayDetailRow)">修改</el-button>
+        <el-t-button type="primary" size="mini" @click="downLoad(contactWayDetailRow)">下载活码</el-t-button>
+        <el-t-button size="mini" @click="handleEdit(contactWayDetailRow)">修改</el-t-button>
       </div>
 
       <div class="detail-right">

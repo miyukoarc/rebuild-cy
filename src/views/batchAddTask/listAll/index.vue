@@ -45,17 +45,27 @@
             <template slot-scope="scope">
               <!-- :popAuth="true"
               :auth="permissionMap['user']['user_detail']"-->
-              <el-t-button type="text" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-t-button>
+              <el-t-button 
+              type="text"
+              size="mini" 
+              :auth="permissionMap['batchAddTask']['batchAddTask_detail']" 
+              :popAuth="true" 
+              @click.stop="handleDetail(scope.$index)" 
+              v-if="permissionMap['batchAddTask']['batchAddTask_detail']">详情</el-t-button>
               <el-t-button
                 v-if="scope.row.addStatus == 'INTERRUPT'"
                 type="text"
                 size="mini"
+                :popAuth="true"
+                :auth="permissionMap['batchAddTask']['batchAddTask_cancel']"
                 @click.stop="handleContinue(scope.$index)"
               >继续</el-t-button>
               <el-t-button
                 v-if="scope.row.addStatus != 'CANCELED'"
                 type="text"
                 size="mini"
+                :popAuth="true"
+                :auth="permissionMap['batchAddTask']['batchAddTask_cancel']"
                 @click.stop="handleCancel(scope.$index)"
               >取消</el-t-button>
             </template>

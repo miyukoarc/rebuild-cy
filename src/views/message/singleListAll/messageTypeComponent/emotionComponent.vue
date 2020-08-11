@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 18:01:25
- * @LastEditTime: 2020-08-07 16:52:23
+ * @LastEditTime: 2020-08-10 20:32:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\videoComponent.vue
@@ -12,14 +12,37 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
-        <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
         <div>
-          <div class="img-warp revoke-warp mb-5 ml-20" v-if="item.messageMedias">
+          <div class="chat-name ml-20">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div>
+            <div class="img-warp revoke-warp mb-5 ml-20" v-if="item.messageMedias">
+              <el-popover placement="right" title trigger="hover">
+                <img
+                  :src="item.messageMedias[0].file"
+                  style="width:400px;height:400px;margin-left:20px"
+                />
+                <img
+                  slot="reference"
+                  :src="item.messageMedias[0].file"
+                  alt
+                  style="max-height: 100px;max-width: 150px"
+                />
+              </el-popover>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="right-warp">
+      <p>{{ item.msgTime }}</p>
+      <div class="display-flex justify-content-flex-end mb-5">
+        <div>
+          <div class="chat-name mr-20" style="text-align:right">{{item.fromName}}</div>
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div class="img-warp revoke-warp mr-20" v-if="item.messageMedias">
             <el-popover placement="right" title trigger="hover">
-              <img
-                :src="item.messageMedias[0].file"
-                style="width:400px;height:400px;margin-left:20px"
-              />
+              <img :src="item.messageMedias[0].file" style="width:400px;height:400px" />
               <img
                 slot="reference"
                 :src="item.messageMedias[0].file"
@@ -29,23 +52,7 @@
             </el-popover>
           </div>
         </div>
-      </div>
-    </div>
-    <div v-else class="right-warp">
-      <p>{{ item.msgTime }}</p>
-      <div class="display-flex justify-content-flex-end mb-5">
-        <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-        <div class="img-warp revoke-warp mr-20" v-if="item.messageMedias">
-          <el-popover placement="right" title trigger="hover">
-            <img :src="item.messageMedias[0].file" style="width:400px;height:400px" />
-            <img
-              slot="reference"
-              :src="item.messageMedias[0].file"
-              alt
-              style="max-height: 100px;max-width: 150px"
-            />
-          </el-popover>
-        </div>
+
         <el-avatar :src="item.fromAvatar" />
       </div>
     </div>
@@ -58,8 +65,8 @@ export default {
   props: {
     item: Object,
     toUserId: String,
-    fromUserId: String
-  }
+    fromUserId: String,
+  },
 };
 </script>
 

@@ -44,7 +44,8 @@
           </el-select>
         </div>
         <div v-else>
-          <complex-select v-model="userSelects" :section="'user'" :options="departmentList"></complex-select>
+            <multi-tree-select v-model="userSelects" :section="'user'" :multiple="true"></multi-tree-select>
+          <!-- <complex-select v-model="userSelects" :section="'user'" :options="departmentList"></complex-select> -->
         </div>
       </keep-alive>
       <span class="font-exs color-info">当员工触发敏感词后，除通知以上设置被通知人，触发的员工本人也将收到通知消息。</span>
@@ -60,7 +61,7 @@
 
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
-      <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
+      <el-t-button type="primary" size="small" @click="handleConfirm">确定</el-t-button>
     </div>
   </el-form>
 </template>
@@ -70,6 +71,7 @@ import { mapState } from 'vuex'
 import ComplexSelect from '@/components/ComplexSelect'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import TagMultiSelect from '@/components/TagMultiSelect'
+import MultiTreeSelect from '@/components/MultiTreeSelect'
 
 export default {
   inject: ['reload'],
@@ -77,6 +79,7 @@ export default {
     AsyncUserTag,
     ComplexSelect,
     TagMultiSelect,
+    MultiTreeSelect,
   },
   data() {
     return {
@@ -153,7 +156,7 @@ export default {
       return this.form.toUser
     },
   },
-  mounted() {
+  created() {
     this.initFilter()
   },
   methods: {
@@ -190,9 +193,10 @@ export default {
     },
     handleConfirm() {
       if (this.form.informType == 'USER') {
-        this.form.toUser = this.userSelects.map((item) => {
-          return item.uuid
-        })
+        this.form.toUser = this.userSelects
+        // .map((item) => {
+        //   return item.uuid
+        // })
       } else {
         this.form.toRole = this.toRoles
       }

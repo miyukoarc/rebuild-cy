@@ -1,31 +1,41 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="群发状态：">
-      <el-select v-model="query.value1" placeholder="请选择" disabled>
+      <el-select v-model="query.state" placeholder="请选择">
         <el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="群发类型：">
-      <el-select v-model="query.value2" placeholder="请选择" disabled>
-        <el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value"></el-option>
+      <el-select v-model="query.sendType" placeholder="请选择">
+        <el-option
+          v-for="item in sendType"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="创建员工：">
-      <el-select v-model="query.value3" placeholder="请选择" disabled>
-        <el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value"></el-option>
+      <el-select v-model="query.senderUuid" placeholder="请选择" filterable>
+        <el-option
+          v-for="item in userListSelect"
+          :key="item.value"
+          :label="item.name"
+          :value="item.uuid"
+        ></el-option>
       </el-select>
     </el-form-item>
 
     <el-form-item label="发送时间">
       <el-date-picker
-      disabled
-        v-model="query.value4"
+        v-model="value"
         type="daterange"
         :value-format="'yyyy-MM-dd HH-mm-ss'"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         :default-time="['00:00:00', '23:59:59']"
+        @change="handleChangeData"
       ></el-date-picker>
     </el-form-item>
 
@@ -39,51 +49,85 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
+      value: [],
+      sendType: [
+        {
+          label: 'WX',
+          value: 'WX',
+        },
+        {
+          label: 'MY',
+          value: 'My',
+        },
+      ],
       state: [
-        { value: 1, label: "a" },
-        { value: 2, label: "b" },
-        { value: 3, label: "c" }
+        {
+          value: 'PENDING',
+          label: '挂起',
+        },
+        {
+          value: 'SENDING',
+          label: '发送中',
+        },
+        {
+          value: 'SUSPEND',
+          label: '中止',
+        },
+        {
+          value: 'FINISHED',
+          label: '已完成',
+        },
       ],
       query: {
-        value1: "",
-        value2: "",
-        value3: "",
-        value4: ""
-      }
-    };
+        state: '',
+        sendType: '',
+        senderUuid: '',
+        startTime: '',
+        endTime: '',
+      },
+    }
   },
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      userListAll: state => state.user.userListAll
-    })
+      tagListAll: (state) => state.tag.tagListAll,
+      userListSelect: (state) => state.user.listSelect,
+    }),
   },
   methods: {
+    initFilter() {
+      this.$store
+        .dispatch('user/getUserListSelect')
+        .then(() => {})
+        .catch((err) => {
+          console.error(err)
+        })
+    },
+    handleChangeData(val) {
+      this.query.startTime = this.value[0]
+      this.query.endTime = this.value[1]
+    },
     handleChangeFirst(val) {
-      ;
-      this.$emit("handleSearch", this.query);
+      this.$emit('handleSearch', this.query)
     },
     handleChangeSecond(val) {
-      ;
-      this.$emit("handleSearch", this.query);
+      this.$emit('handleSearch', this.query)
     },
     handleChangeThird(val) {
-      ;
-      this.$emit("handleSearch", this.query);
+      this.$emit('handleSearch', this.query)
     },
     handleSearch() {
-      this.$emit("handleSearch", this.query);
+      this.$emit('handleSearch', this.query)
     },
     handleRefresh() {
-      this.$emit("handleRefresh");
-      this.query = this.$options.data().query;
-    }
-  }
-};
+      this.$emit('handleRefresh')
+      this.query = this.$options.data().query
+    },
+  },
+}
 </script>
 
 <style>
