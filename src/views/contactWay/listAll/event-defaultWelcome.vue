@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-07 17:53:34
+ * @LastEditTime: 2020-08-11 11:23:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -161,16 +161,24 @@ export default {
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        this.form.welComeMediaType = newVal.welComeMediaType;
-        this.form.welcomeContent = newVal.welcomeContent;
+        this.form.welComeMediaType = newVal.welComeMediaType
+          ? newVal.welComeMediaType
+          : "IMG";
+        this.form.welcomeContent = newVal.welcomeContent
+          ? newVal.welcomeContent
+          : "";
         if (newVal.welComeMediaType == "LINK") {
           this.form.welcomeMediaContent = Number(newVal.welcomeMediaContent);
           this.welcomecontentT = this.articleListSelect.find((item) => {
             return item.uuid === this.form.welcomeMediaContent;
           });
         } else {
-          this.messageImage = newVal.welcomeMediaContent;
-          this.form.welcomeMediaContent = newVal.welcomeMediaContent;
+          this.messageImage = newVal.welcomeMediaContent
+            ? newVal.welcomeMediaContent
+            : "";
+          this.form.welcomeMediaContent = newVal.welcomeMediaContent
+            ? newVal.welcomeMediaContent
+            : "";
         }
       },
       immediate: true,

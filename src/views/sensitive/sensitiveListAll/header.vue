@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-31 16:41:29
+ * @LastEditTime: 2020-08-11 10:33:55
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\sensitive\sensitiveListAll\header.vue
+-->
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="敏感词：">
@@ -12,7 +20,7 @@
       <el-input v-model.trim="query.name"></el-input>
     </el-form-item>-->
 
-    <el-form-item label="发生时间：">
+    <el-form-item label="创建时间：">
       <el-date-picker
         v-model="value"
         type="daterange"
