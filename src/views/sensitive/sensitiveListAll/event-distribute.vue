@@ -14,7 +14,7 @@
       {{user.uuid}}
       <div class="text-align-center">
         <el-button size="small" @click="handleCancel">取消</el-button>
-        <el-button size="small" type="primary" @click="handleConfrim">确定</el-button>
+        <el-t-button size="small" type="primary" @click="handleConfrim">确定</el-t-button>
       </div>
     </el-form>
   </div>

@@ -40,11 +40,11 @@
       <!-- <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select> -->
       <tag-multi-select v-model="tagSelects"></tag-multi-select>
 
-      <el-form-item label="引用条例"></el-form-item>
+      <!-- <el-form-item label="引用条例"></el-form-item> -->
 
       <div class="text-align-center">
         <el-button size="small" @click="handleCancel">取消</el-button>
-        <el-button type="primary" size="small" @click="handleConfirm">确定</el-button>
+        <el-t-button type="primary" size="small" @click="handleConfirm">确定</el-t-button>
       </div>
     </el-form>
   </div>

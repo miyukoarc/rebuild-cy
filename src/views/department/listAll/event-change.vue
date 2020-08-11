@@ -128,6 +128,8 @@ export default {
                     message: '操作成功'
                 })
                 this.form = this.$options.data().form
+                this.handleCancel()
+                this.$bus.$emit('handleRefresh')
             })
             .catch((err) => {
               console.error(err)
@@ -135,6 +137,7 @@ export default {
                   type: 'error',
                   message: err
               })
+              
             })
         } else {
           this.$message({

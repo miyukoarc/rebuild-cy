@@ -2,11 +2,11 @@
   <div class="app-container">
     <el-card class="content-spacing">
       <tool-bar
-        :hasExport="true"
+        :hasExport="false"
         :hasImport="false"
         :hasRefresh="true"
         @handleRefresh="initDataList"
-        :msg="`共条${total}数据`"
+        
       >
         <div slot="right">
           <el-t-button
@@ -66,8 +66,9 @@
               :auth="permissionMap['department']['department_update']"
               :popAuth="true"
               @click.stop="handleChange(scope.$index,scope.row)"
-              :unabel="true"
-            >变更</el-t-button>
+              :enable="scope.row.type==='DEPT'"
+            >变更
+            </el-t-button>
             <i class="el-icon-circle-close color-info" v-else></i>
             <el-divider direction="vertical"></el-divider>
             <el-t-button
@@ -134,6 +135,12 @@ export default {
       this.$refs['formDialog'].event = 'CreateTemplate'
       this.$refs['formDialog'].eventType = 'create'
       this.$refs['formDialog'].dialogVisible = true
+    })
+    this.$bus.$on('handleRefresh',()=>{
+        this.initDataList()
+    })
+    this.$once('hook:beforeDestroy',()=>{
+        this.$bus.$off('handleRefresh')
     })
   },
   beforeDestroy() {
