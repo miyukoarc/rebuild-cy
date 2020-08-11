@@ -113,17 +113,22 @@
             <el-t-button
               type="text"
               :popAuth="true"
+              v-if="permissionMap['externalUser']['externalUser_detail']"
               :auth="permissionMap['externalUser']['externalUser_detail']"
               size="mini"
               @click.stop="handleGroupChat(scope.row)"
             >聊天记录</el-t-button>
+            <i class="el-icon-circle-close color-info" v-else></i>
+            <el-divider direction="vertical"></el-divider>
             <el-t-button
               type="text"
               :popAuth="true"
+              v-if="permissionMap['externalUser']['externalUser_detail']"
               :auth="permissionMap['externalUser']['externalUser_detail']"
               size="mini"
               @click.stop="handleDetail(scope.$index)"
             >详情</el-t-button>
+            <i class="el-icon-circle-close color-info" v-else></i>
           </template>
         </el-table-column>
       </el-table>
@@ -136,52 +141,52 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import dayjs from "dayjs";
+import { mapState } from 'vuex'
+import dayjs from 'dayjs'
 export default {
   data() {
     return {
       value: [],
       date: 1,
       form: {
-        end: "",
-        sta: "",
+        end: '',
+        sta: '',
         userid: [],
       },
       externalUser: {},
       message: {},
       reflect: {
-        chat_cnt: "聊天总数(条)",
-        message_cnt: "发送消息总数(条)",
-        reply_percentage: "已回复聊天占比",
-        avg_reply_time: "平均首次回复时长",
-        negative_feedback_cnt: "拉黑/删除某人(人)",
-        new_apply_cnt: "主动添加客户数(人)",
-        new_contact_cnt: "新增客户数(人)",
+        chat_cnt: '聊天总数(条)',
+        message_cnt: '发送消息总数(条)',
+        reply_percentage: '已回复聊天占比',
+        avg_reply_time: '平均首次回复时长',
+        negative_feedback_cnt: '拉黑/删除某人(人)',
+        new_apply_cnt: '主动添加客户数(人)',
+        new_contact_cnt: '新增客户数(人)',
       },
-    };
+    }
   },
   watch: {
     $route: {
       handler(newVal, oldVal) {
-        const uuid = newVal.params.uuid;
-        this.$once("hook:created", () => {
-          this.initData(uuid);
-        });
+        const uuid = newVal.params.uuid
+        this.$once('hook:created', () => {
+          this.initData(uuid)
+        })
       },
       immediate: true,
     },
     date: {
       handler(newVal, oldVal) {
-        this.changeDate(newVal);
+        this.changeDate(newVal)
         // this.initBoard(this.form);
       },
       immediate: true,
     },
-    "form.userid.length": {
+    'form.userid.length': {
       handler(newVal, oldVal) {
         if (newVal) {
-          this.initBoard(this.form);
+          this.initBoard(this.form)
         }
       },
     },
@@ -202,97 +207,95 @@ export default {
   methods: {
     initData(payload) {
       this.$store
-        .dispatch("user/getDetail", payload)
+        .dispatch('user/getDetail', payload)
         .then((res) => {
-          const { userId } = res;
-          this.form.userid.push(userId);
+          const { userId } = res
+          this.form.userid.push(userId)
         })
         .catch((err) => {
-          console.error(err);
+          console.error(err)
           this.$message({
-            type: "error",
-            message: err || "初始化失败",
-          });
-        });
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
 
       this.$store
-        .dispatch("externalUser/getListExUserByUserId", { uuid: payload })
+        .dispatch('externalUser/getListExUserByUserId', { uuid: payload })
         .then(() => {})
         .catch((err) => {
-          console.error(err);
+          console.error(err)
           this.$message({
-            type: "error",
-            message: err || "初始化失败",
-          });
-        });
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
     },
     initBoard(payload) {
       this.$store
-        .dispatch("externalUser/getCustomerStatistics", payload)
+        .dispatch('externalUser/getCustomerStatistics', payload)
         .then(() => {
           const {
             new_contact_cnt,
             new_apply_cnt,
             negative_feedback_cnt,
-          } = this.customerStatistics;
+          } = this.customerStatistics
           this.externalUser = {
             new_contact_cnt,
             new_apply_cnt,
             negative_feedback_cnt,
-          };
+          }
           const {
             chat_cnt,
             message_cnt,
             reply_percentage,
             avg_reply_time,
-          } = this.customerStatistics;
+          } = this.customerStatistics
           this.message = {
             chat_cnt,
             message_cnt,
             reply_percentage,
             avg_reply_time,
-          };
+          }
         })
         .catch((err) => {
-          console.error(err);
+          console.error(err)
           this.$message({
-            type: "error",
-            message: err || "初始化失败",
-          });
-        });
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
     },
     handleChange() {
-      console.log(this.value);
+      console.log(this.value)
     },
     changeDate(val) {
-      this.form.sta = dayjs()
-        .subtract(val, "day")
-        .format("YYYY-MM-DD HH:mm:ss");
-      this.form.end = dayjs().format("YYYY-MM-DD HH:mm:ss");
+      this.form.sta = dayjs().subtract(val, 'day').format('YYYY-MM-DD HH:mm:ss')
+      this.form.end = dayjs().format('YYYY-MM-DD HH:mm:ss')
     },
     handleGroupChat(row) {
-      console.log(row, "row",this.userDetail);
-      let userId = row.externalUser.externalUserId;
+      console.log(row, 'row', this.userDetail)
+      let userId = row.externalUser.externalUserId
       const query = {
         uuid: this.userDetail.uuid,
         userId,
-        type: "user",
-      };
+        type: 'user',
+      }
       this.$router.push({
-        path: "/message/singleListAll",
+        path: '/message/singleListAll',
         query,
-      });
+      })
     },
     handleDetail(index) {
-      const uuid = this.idList[index].externalUser.uuid;
+      const uuid = this.idList[index].externalUser.uuid
       this.$router.push({
-        path: "/externalUser/detail/" + uuid,
-      });
+        path: '/externalUser/detail/' + uuid,
+      })
     },
     formatTime() {},
     changeTime() {},
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

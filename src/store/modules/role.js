@@ -32,7 +32,6 @@ const mutations = {
     },
     SAVE_DETAIL(state, payload) {
         state.currentRole = payload
-        console.log(state.currentRole, 'state.currentRole')
     }
 }
 

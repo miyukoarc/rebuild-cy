@@ -4,16 +4,13 @@
       <tool-bar :hasExport="true" :hasImport="false" @handleExport="doExport">
         <div slot="left">
           <span class="font-l">{{corpInfo.name}}</span>
-          <el-t-button
-            :popAuth="true"
-            :auth="permissionMap['role']['role_add']"
-            size="small"
-            type="text"
-            @click="handleChange"
-          >切换企业</el-t-button>
+          <!-- :popAuth="true"
+          :auth="permissionMap['role']['role_add']"-->
+          <el-t-button size="small" type="text" :enable="false" @click="handleChange">切换企业</el-t-button>
         </div>
         <div slot="right">
           <el-t-button
+            v-if="permissionMap['role']['role_add']"
             :popAuth="true"
             :auth="permissionMap['role']['role_add']"
             size="small"
@@ -35,7 +32,7 @@
           lazy
           highlight-current-row
           header-row-class-name="el-table-header"
-          >
+        >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column prop="name" label="角色名称" align="left"></el-table-column>
           <el-table-column label="备注" align="left">
@@ -49,15 +46,19 @@
                 @click="handlePermission(scope.row)"
                 :popAuth="true"
                 :auth="permissionMap['role']['role_update']"
+                v-if="permissionMap['role']['role_update']"
               >配置权限</el-t-button>
+              <i class="el-icon-circle-close color-info" v-else></i>
               <el-divider direction="vertical"></el-divider>
               <el-t-button
                 type="text"
                 size="mini"
                 @click="handleEdit(scope.row)"
                 :popAuth="true"
+                v-if="permissionMap['role']['role_update']"
                 :auth="permissionMap['role']['role_update']"
               >编辑</el-t-button>
+              <i class="el-icon-circle-close color-info" v-else></i>
               <el-divider direction="vertical"></el-divider>
 
               <el-t-button
@@ -65,8 +66,10 @@
                 size="mini"
                 @click="handleDelete(scope.row)"
                 :popAuth="true"
+                v-if="permissionMap['role']['role_delete']"
                 :auth="permissionMap['role']['role_delete']"
               >删除</el-t-button>
+              <i class="el-icon-circle-close color-info" v-else></i>
             </template>
           </el-table-column>
         </el-table>
@@ -88,24 +91,24 @@ export default {
   components: {
     ListHeader,
     FormDialog,
-    ToolBar
+    ToolBar,
     // mHeadedr
   },
   data() {
     return {
-      corp: ''
+      corp: '',
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      roleList: state => state.role.roleList,
-      departmentList: state => state.department.departmentList,
-      loading: state => state.role.loading,
-      corpInfo: state => state.auth.corpInfo,
+      roleList: (state) => state.role.roleList,
+      departmentList: (state) => state.department.departmentList,
+      loading: (state) => state.role.loading,
+      corpInfo: (state) => state.auth.corpInfo,
 
-      permissionMap: state => state.permission.permissionMap
-    })
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
     this.initDataList()
@@ -124,10 +127,10 @@ export default {
       this.$store
         .dispatch('role/getRoleList')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -152,7 +155,7 @@ export default {
       this.$confirm('是否删除当前角色', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(async () => {
           await this.$store
@@ -160,28 +163,28 @@ export default {
             .then(() => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               this.initDataList()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: err
+                message: err,
               })
             })
         })
-        .catch(err => {})
+        .catch((err) => {})
     },
     handlePermission(val) {
       const { uuid, code } = val
       //   const roleCode = code
       this.$router.push({
         path: '/role/detail/' + uuid,
-        query: { code }
+        query: { code },
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
