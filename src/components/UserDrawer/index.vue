@@ -48,7 +48,6 @@ export default {
   watch: {
     users: {
       handler(newVal, oldVal) {
-        // console.log(newVal)
         if (newVal) {
           if (newVal.length > 2) {
             this.curly = true;

@@ -87,7 +87,6 @@ export default {
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        console.log(newVal)
         const { name, uuid } = newVal
         this.name = name
         this.form.deptUuid = uuid

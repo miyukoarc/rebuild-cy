@@ -54,7 +54,6 @@ export default {
     currDepartmentTemplate: {
       handler(newVal, oldVal) {
         if (newVal) {
-          //   console.log(newVal)
           this.initData()
         }
       },

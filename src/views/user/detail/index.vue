@@ -180,7 +180,6 @@ export default {
     },
     "form.userid.length": {
       handler(newVal, oldVal) {
-        // console.log(newVal)
         if (newVal) {
           this.initBoard(this.form);
         }
