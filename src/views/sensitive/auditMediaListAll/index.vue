@@ -172,12 +172,12 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from '@/components/ToolBar'
-import VideoCover from '@/components/VideoCover'
-import CustomerPagination from '@/components/CustomerPagination'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "@/components/ToolBar";
+import VideoCover from "@/components/VideoCover";
+import CustomerPagination from "@/components/CustomerPagination";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -189,29 +189,29 @@ export default {
   },
   data() {
     return {
-      width: '',
-      viewMode: '', //IMAGE//VIDEO
-      imageUrl: '',
-      videoUrl: '',
+      width: "",
+      viewMode: "", //IMAGE//VIDEO
+      imageUrl: "",
+      videoUrl: "",
       dialogVisible: false,
       pageConfig: {
         total: 0,
         pageNumber: 0,
         pageSize: 10,
       },
-      sortConfig: { prop: 'auditState', order: 'ascending' },
+      sortConfig: { prop: "auditState", order: "ascending" },
 
       query: {
         page: 0,
         size: 10,
-        auditConfirmation: '',
-        auditType: 'MEDIA',
-        handlerId: '',
-        submitterId: '',
+        auditConfirmation: "",
+        auditType: "MEDIA",
+        handlerId: "",
+        submitterId: "",
       },
 
       selects: [],
-    }
+    };
   },
   watch: {},
   computed: {
@@ -229,193 +229,191 @@ export default {
     }),
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   mounted() {
     //刷新eventBUs
-    this.$bus.$on('handleRefresh', () => {
-      this.initDataList(this.query)
-    })
-    this.$once('hook:beforeDestroy', () => {
-      this.$bus.$off('handleRefresh')
-    })
+    this.$bus.$on("handleRefresh", () => {
+      this.initDataList(this.query);
+    });
+    this.$once("hook:beforeDestroy", () => {
+      this.$bus.$off("handleRefresh");
+    });
   },
   methods: {
-    doExport(val) {
-      
-    },
+    doExport(val) {},
     /**
      * 初始化筛选信息
      */
     initFilter() {
       this.$store
-        .dispatch('user/getUserListSelect')
+        .dispatch("user/getUserListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('sensitive/auditMediaListAll', payload)
+        .dispatch("sensitive/auditMediaListAll", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     handleSearch(val) {
-      const { auditConfirmation, handlerId, submitterId } = val
+      const { auditConfirmation, handlerId, submitterId } = val;
       this.query.auditConfirmation = auditConfirmation
         ? auditConfirmation
-        : this.query.auditConfirmation
-      this.query.handlerId = handlerId ? handlerId : this.query.handlerId
+        : this.query.auditConfirmation;
+      this.query.handlerId = handlerId ? handlerId : this.query.handlerId;
       this.query.submitterId = submitterId
         ? submitterId
-        : this.query.submitterId
-      this.query.page = 0
-      this.initDataList(this.query)
+        : this.query.submitterId;
+      this.query.page = 0;
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      console.log(key)
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      console.log(key);
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     handleSelectionChange(val) {
       this.selects = val.map((item) => {
-        return item.uuid
-      })
+        return item.uuid;
+      });
     },
     handleView(type, str) {
-      const mediaId = str[0].localId
+      const mediaId = str[0].localId;
 
-      if (type === 'IMAGE') {
-        this.imageUrl = mediaId
+      if (type === "IMAGE") {
+        this.imageUrl = mediaId;
       } else {
-        this.videoUrl = mediaId
+        this.videoUrl = mediaId;
       }
-      this.viewMode = type
+      this.viewMode = type;
 
-      this.dialogVisible = true
+      this.dialogVisible = true;
     },
     parse(str) {
-      return JSON.parse(str)
+      return JSON.parse(str);
     },
     handleAudit(uuid) {
-      this.$refs['formDialog'].event = 'AuditTemplate'
-      this.$refs['formDialog'].eventType = 'audit'
-      this.$refs['formDialog'].transfer = { uuid }
-      this.$refs['formDialog'].dialogVisible = true
+      this.$refs["formDialog"].event = "AuditTemplate";
+      this.$refs["formDialog"].eventType = "audit";
+      this.$refs["formDialog"].transfer = { uuid };
+      this.$refs["formDialog"].dialogVisible = true;
     },
     onLoad(e) {
-      const img = e.target
-      let width = 0
+      const img = e.target;
+      let width = 0;
       if (img.fileSize > 0 || (img.width > 1 && img.height > 1)) {
-        width = img.width + 40
+        width = img.width + 40;
       }
-      this.width = width + 'px'
+      this.width = width + "px";
     },
     onCanplay(e) {
-      this.width = 640 + 'px'
+      this.width = 640 + "px";
     },
     selectable(row, index) {
-      let flag = false
+      let flag = false;
       row.auditUsers.forEach((item) => {
         item.userList.forEach((user) => {
           if (user.uuid === this.currentUserUuid) {
             //   console.log(user.auditState)
             if (
-              user.auditState === 'APPROVED' ||
-              user.auditState === 'AUDIT_FAILED'
+              user.auditState === "APPROVED" ||
+              user.auditState === "AUDIT_FAILED"
             ) {
-              flag = true
+              flag = true;
             }
           }
-        })
-      })
-      return row.auditState === 'TO_BE_REVIEWED' && !flag
+        });
+      });
+      return row.auditState === "TO_BE_REVIEWED" && !flag;
     },
     handleBatch(action) {
       if (this.selects.length) {
-        let uuids = this.selects
-        let payload = null
-        if (action === 'reject') {
-          uuids = this.selects
+        let uuids = this.selects;
+        let payload = null;
+        if (action === "reject") {
+          uuids = this.selects;
           payload = {
-            auditConfirmation: 'AUDIT_FAILED',
+            auditConfirmation: "AUDIT_FAILED",
             uuids,
-          }
+          };
         } else {
-          uuids = this.selects
+          uuids = this.selects;
           payload = {
-            auditConfirmation: 'APPROVED',
+            auditConfirmation: "APPROVED",
             uuids,
-          }
+          };
         }
 
-        this.batchAudit(payload)
+        this.batchAudit(payload);
       } else {
         this.$message({
-          type: 'warning',
-          message: '请至少选择一项',
-        })
+          type: "warning",
+          message: "请至少选择一项",
+        });
       }
     },
     batchAudit(payload) {
       this.$store
-        .dispatch('audit/batchAuditMediaConfirmation', payload)
+        .dispatch("audit/batchAuditMediaConfirmation", payload)
         .then(() => {
           this.$message({
-            type: 'success',
-            message: '操作成功',
+            type: "success",
+            message: "操作成功",
             duration: 1000,
             onClose: () => {
-              this.initDataList(this.query)
+              this.initDataList(this.query);
             },
-          })
+          });
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
+            type: "error",
             message: err,
-          })
-        })
+          });
+        });
     },
     sortMethod(a, b) {
-      if (a.auditState === 'TO_BE_REVIEWED') {
-        return -1
+      if (a.auditState === "TO_BE_REVIEWED") {
+        return -1;
       }
-      if (b.auditState === 'TO_BE_REVIEWED') {
-        return 1
+      if (b.auditState === "TO_BE_REVIEWED") {
+        return 1;
       }
       if (a.auditState === b.auditState) {
-        return 0
+        return 0;
       }
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
