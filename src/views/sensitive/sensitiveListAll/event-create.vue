@@ -44,7 +44,7 @@
           </el-select>
         </div>
         <div v-else>
-            <multi-tree-select v-model="userSelects" :section="'user'" :multiple="true"></multi-tree-select>
+          <multi-tree-select v-model="userSelects" :section="'user'" :multiple="true"></multi-tree-select>
           <!-- <complex-select v-model="userSelects" :section="'user'" :options="departmentList"></complex-select> -->
         </div>
       </keep-alive>
@@ -193,10 +193,9 @@ export default {
     },
     handleConfirm() {
       if (this.form.informType == 'USER') {
-        this.form.toUser = this.userSelects
-        // .map((item) => {
-        //   return item.uuid
-        // })
+        this.form.toUser = this.userSelects.map((item) => {
+          return item.uuid
+        })
       } else {
         this.form.toRole = this.toRoles
       }
@@ -205,22 +204,29 @@ export default {
 
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.$store
-            .dispatch('sensitive/add', payload)
-            .then(() => {
-              this.$message({
-                type: 'success',
-                message: '操作成功',
+          if (this.userSelects.length) {
+            this.$store
+              .dispatch('sensitive/add', payload)
+              .then(() => {
+                this.$message({
+                  type: 'success',
+                  message: '操作成功',
+                })
+                this.handleCancel()
+                this.handleRefresh()
               })
-              this.handleCancel()
-              this.handleRefresh()
-            })
-            .catch((err) => {
-              this.$message({
-                type: 'error',
-                message: '操作失败',
+              .catch((err) => {
+                this.$message({
+                  type: 'error',
+                  message: '操作失败',
+                })
               })
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '请输入敏感词',
             })
+          }
         } else {
           this.$message({
             type: 'error',
