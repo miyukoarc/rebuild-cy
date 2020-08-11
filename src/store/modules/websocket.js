@@ -45,15 +45,14 @@ const state = {
     countdown: 10,
 
     isCheckOpenedSidebar: false,// 只需要第一次打开侧边栏检查即可
-    isOpenedSidebar: false
-
+    isOpenedSidebar: false,// 是否打开侧边栏，如果10秒没反应，则就是未开启侧边栏
+    isChangeState: false,// 是否把“待发送”变为“发送中”，只需改一次即可
 }
 
 const mutations = {
     TOGGLE_DIALOG_VISIBLE: (state, flag) => {
         state.dialog_visible = flag;
     }
-
 }
 
 const actions = {
@@ -108,6 +107,7 @@ const actions = {
                         } else {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
+
                         }
 
                         if (state.taskList.length <= 0) {
@@ -119,13 +119,25 @@ const actions = {
                         }
                         // 发送给下一个人
                         sendResultHasSend({ uuids: [state.taskResult.uuid] }).then(() => {
+
+                            // 告诉工作台刷新一下列表页，只执行一次即可
+                            if (!state.isChangeState) {
+                                state.isChangeState = true
+                                sendCustomizeMessage({
+                                    toUserId: state.batchSendTaskDetail.sender.userId,
+                                    clientGroup: "WORKSPACE",
+                                    properties: {
+                                        code: 'REFRESH_TASKLIST'
+                                    }
+                                })
+                            }
+
                             state.taskResult = state.taskList.shift();
                             state.articleLink = state.taskResult.contentUrl;
                             if (state.taskResult.externalUser.mobile) {
                                 dispatch('openChat', state.taskResult)
                             } else {
                                 dispatch('clearTask')
-
                                 Message({
                                     message: "请为群发客户设置完手机号后再试",
                                     type: 'error'
@@ -228,11 +240,19 @@ const actions = {
                             dispatch('sendChaoyingMessage')
                         } else {
                             console.log("打开openchat")
-                            $ipcRenderer.send('openChat', {
-                                mobile: state.taskResult.externalUser.mobile.split(',')[0],
-                                x: state.mouseX,
-                                y: state.mouseY,
-                            })
+                            if (state.taskResult.externalUser.mobile) {
+                                $ipcRenderer.send('openChat', {
+                                    mobile: state.taskResult.externalUser.mobile.split(',')[0],
+                                    x: state.mouseX,
+                                    y: state.mouseY,
+                                })
+                            } else {
+                                Message({
+                                    message: '请先填写对面手机号便于查找用户',
+                                    type: 'error'
+                                })
+                                dispatch('clearTask')
+                            }
                         }
                     })
                 }
@@ -376,6 +396,8 @@ const actions = {
         state.taskList = state.taskList.concat(list);
         state.taskResult = state.taskList.shift();
 
+
+
         if (state.taskResult) {
             state.articleLink = state.taskResult.contentUrl;
             dispatch('openChat')
@@ -398,14 +420,17 @@ const actions = {
         //     })
         // }
 
-
         // 1:当前选择人不在群发人中，会自动打开侧边栏  正常操作即可
         // 2:当前选择人不在群发人中，不会自动打开侧边栏  提示用户打开侧边栏后操作
         // 3:当前选择人在群发人中，已打开侧边栏  问侧边栏用户信息
         // 4:当前选择人在群发人中，未打开侧边栏  提示用户打开侧边栏后操作
-        console.log('检查侧边栏是否在线')
+
+        // 每次群发只需判断当前聊天框状态(即只需判断一次)
         if (!state.isCheckOpenedSidebar) {
+            console.log('检查侧边栏是否在线')
+            state.isOpenedSidebar = false
             isOnline('SIDEBAR').then(res => {
+                console.log('是否在线：' + res)
                 state.isCheckOpenedSidebar = true;
                 // 这是在线情况
                 if (res) {
@@ -421,12 +446,15 @@ const actions = {
                 // 不在线
                 else {
                     if (isElectron() && state.taskResult.externalUser.mobile) {
+                        console.log('打开侧边栏了')
                         $ipcRenderer.send('openChat', {
                             mobile: state.taskResult.externalUser.mobile.split(',')[0],
                             x: state.mouseX,
                             y: state.mouseY,
                         })
                     }
+
+                    console.log('开始倒计时')
                     setTimeout(() => {
                         if (state.isOpenedSidebar == false) {
                             Message({
@@ -434,6 +462,8 @@ const actions = {
                                 type: 'error'
                             })
                             dispatch('clearTask')
+                        } else {
+                            console.log('111111')
                         }
                     }, 10000);
                 }
@@ -471,7 +501,17 @@ const actions = {
         state.articleLink = null
         state.isCheckOpenedSidebar = false
         state.isOpenedSidebar = false
+        state.isChangeState = false
         state.loadingInstance.close();
+
+        // 告诉工作台刷新一下列表页
+        sendCustomizeMessage({
+            toUserId: state.batchSendTaskDetail.sender.userId,
+            clientGroup: "WORKSPACE",
+            properties: {
+                code: 'REFRESH_TASKLIST'
+            }
+        })
     },
 
     listSelectMobil({ state, dispatch }, data) {

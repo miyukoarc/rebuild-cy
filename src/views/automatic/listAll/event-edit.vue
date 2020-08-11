@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-03 10:13:30
- * @LastEditTime: 2020-08-10 15:24:01
+ * @LastEditTime: 2020-08-11 14:59:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\listAll\event-detail.vue
@@ -21,7 +21,7 @@
       </el-input>
     </el-form-item>
 
-    <el-form-item label="文字消息" prop="reply">
+    <el-form-item label="文字消息">
       <div class="full-w">
         <el-input v-model="form.reply" type="textarea" :rows="6" placeholder="请输入文字消息"></el-input>
       </div>
@@ -201,7 +201,7 @@ export default {
             trigger: "blur",
           },
         ],
-        reply:[{ required: true, message: "请输入规则名称", trigger: "blur" }],
+        reply: [{ required: true, message: "请输入规则名称", trigger: "blur" }],
       },
       // 标签
       selectTags: [],
@@ -306,29 +306,36 @@ export default {
       //   });
     },
     handleConfirm() {
-      const payload = this.form;
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.autoReplyType != "FILE") {
             this.form.fileName = "";
           }
-          console.log(this.form, "8888");
-          this.$store
-            .dispatch("automatic/automaticUpdate", payload)
-            .then(() => {
-              this.$message({
-                type: "success",
-                message: "新建成功",
-              });
-              this.handleCancel();
-              this.initDataList();
-            })
-            .catch((err) => {
-              this.$message({
-                type: "error",
-                message: err || "新建失败",
-              });
+          if (!this.form.mediaId && !this.form.reply) {
+            this.$message({
+              type: "warning",
+              message: "文字消息或(图片/文件/文章)内容不能为空",
             });
+            return;
+          } else {
+            const payload = this.form;
+            this.$store
+              .dispatch("automatic/automaticUpdate", payload)
+              .then(() => {
+                this.$message({
+                  type: "success",
+                  message: "新建成功",
+                });
+                this.handleCancel();
+                this.initDataList();
+              })
+              .catch((err) => {
+                this.$message({
+                  type: "error",
+                  message: err || "新建失败",
+                });
+              });
+          }
         } else {
           this.$message({
             type: "error",
@@ -412,8 +419,9 @@ export default {
     // 标签绑定事件
     handleChange() {},
     initDataList() {
+      const payload = {size: 10};
       this.$store
-        .dispatch("automatic/getListAll")
+        .dispatch("automatic/getListAll",payload)
         .then(() => {})
         .catch((err) => {
           this.$message({
