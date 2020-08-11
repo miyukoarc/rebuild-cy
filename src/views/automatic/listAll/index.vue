@@ -65,7 +65,7 @@
             <template v-slot="{row}">
               <div>
                 <span
-                  v-if="row.autoReplyType !='CONTENT'"
+                  v-if="row.autoReplyType !='CONTENT' && row.mediaId"
                 >{{autoReplyContentType[row.autoReplyType]}}</span>
                 <p>{{tableReplyWord(row)}}</p>
                 <div class="text-align-center" v-if="row.replyWord.length>20">

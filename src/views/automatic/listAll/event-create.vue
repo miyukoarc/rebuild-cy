@@ -19,7 +19,7 @@
      
     </el-form-item>-->
 
-    <el-form-item label="文字消息" prop="reply">
+    <el-form-item label="文字消息">
       <!-- <div class="set-welcome-message"> -->
       <div class="full-w">
         <el-input
@@ -350,23 +350,31 @@ export default {
           if (this.form.autoReplyType != "FILE") {
             this.form.fileName = "";
           }
-          const payload = this.form;
-          this.$store
-            .dispatch("automatic/add", payload)
-            .then(() => {
-              this.$message({
-                type: "success",
-                message: "新建成功",
-              });
-              this.handleCancel();
-              this.initDataList();
-            })
-            .catch((err) => {
-              this.$message({
-                type: "error",
-                message: err || "新建失败",
-              });
+          if (!this.form.mediaId && !this.form.reply) {
+            this.$message({
+              type: "warning",
+              message: "文字消息或(图片/文件/文章)内容不能为空",
             });
+            return;
+          } else {
+            const payload = this.form;
+            this.$store
+              .dispatch("automatic/add", payload)
+              .then(() => {
+                this.$message({
+                  type: "success",
+                  message: "新建成功",
+                });
+                this.handleCancel();
+                this.initDataList();
+              })
+              .catch((err) => {
+                this.$message({
+                  type: "error",
+                  message: err || "新建失败",
+                });
+              });
+          }
         } else {
           this.$message({
             type: "error",
