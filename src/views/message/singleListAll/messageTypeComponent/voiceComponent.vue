@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-08-07 16:53:58
+ * @LastEditTime: 2020-08-10 19:58:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -13,7 +13,8 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
-          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div class="chat-name ml-20">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
+          <div class="revoke-content ml-20" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="user-select">
             <div
               class="audio-left display-flex align-items-center"
@@ -34,7 +35,8 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
-          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div class="chat-name mr-20" style="text-align:right">{{item.fromName}}</div>
+          <div class="revoke-content mr-20" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="user-select">
             <div
               class="audio-right display-flex align-items-center"
@@ -118,7 +120,7 @@ export default {
           that.isPlayAudio = false;
           amr.stop();
         }
-        console.log(that.isPlayAudio,'4444',amr.isPlaying())
+        console.log(that.isPlayAudio, "4444", amr.isPlaying());
       });
       // amr.onIsPlaying(()=>{
       //   console.log('3')
@@ -126,13 +128,13 @@ export default {
       amr.onPlay(function () {
         console.log("开始播放");
         // amr.stop();
-        console.log(that.isPlayAudio,'5555')
+        console.log(that.isPlayAudio, "5555");
         // this.isPlayAudio = true;
         // amr.play();
       });
       amr.onStop(function () {
         console.log("停止播放");
-        console.log(that.isPlayAudio,'66666')
+        console.log(that.isPlayAudio, "66666");
         // this.isPlayAudio = false;
       });
       amr.onEnded(() => {

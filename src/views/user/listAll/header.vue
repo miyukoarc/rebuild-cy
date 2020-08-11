@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-06-28 15:20:57
+ * @LastEditTime: 2020-08-10 20:10:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\user\listAll\header.vue
@@ -52,7 +52,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="通讯录授权：">
-      <el-select v-model="query.isFollowUser" clearable >
+      <el-select v-model="query.isFollowUser" clearable>
         <el-option
           v-for="item in isFollowUserList"
           :key="item.isFollowUser"
@@ -78,16 +78,16 @@ export default {
       options: [
         {
           label: "待审核",
-          value: "TO_BE_REVIEWED"
+          value: "TO_BE_REVIEWED",
         },
         {
           label: "审核通过",
-          value: "APPROVED"
+          value: "APPROVED",
         },
         {
           label: "审核不通过",
-          value: "AUDIT_FAILED"
-        }
+          value: "AUDIT_FAILED",
+        },
       ],
       query: {
         userName: "",
@@ -95,51 +95,45 @@ export default {
         roleUuid: "",
         isFollowUser: null,
         isMessageUser: null,
-        visible: null
+        visible: null,
       },
       isFollowUserList: [
         { isFollowUser: 1, name: "已授权" },
-        { isFollowUser: 0, name: "未授权" }
+        { isFollowUser: 0, name: "未授权" },
       ],
       isMessageUserList: [
         { isMessageUser: 1, name: "已授权" },
-        { isMessageUser: 0, name: "未授权" }
+        { isMessageUser: 0, name: "未授权" },
       ],
       visibleList: [
-        { visible: 1, name: "允许" },
-        { visible: 0, name: "禁止" }
-      ]
+        { visible: 1, name: "已授权" },
+        { visible: 0, name: "未授权" },
+      ],
     };
   },
   computed: {
     ...mapState({
-      roleList: state => state.role.roleListSelect,
-      departmentList: state => state.department.listSelect
-    })
+      roleList: (state) => state.role.roleListSelect,
+      departmentList: (state) => state.department.listSelect,
+    }),
   },
   methods: {
     handleChangeFirst(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeForth(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeFifth(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeSixth(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {
@@ -149,8 +143,8 @@ export default {
       this.$emit("handleRefresh");
       console.log(this.$options);
       this.query = this.$options.data().query;
-    }
-  }
+    },
+  },
 };
 </script>
 

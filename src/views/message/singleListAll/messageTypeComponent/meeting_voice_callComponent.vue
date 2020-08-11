@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-08-07 16:57:02
+ * @LastEditTime: 2020-08-10 19:57:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -13,10 +13,11 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
+          <div class="chat-name ml-20">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-           <div style="height:42px;background-color:#fff">
-          <audio controls :src="item.messageMedias[0].file" class="audio-warp">您的浏览器不支持 audio 元素。</audio>
-           </div>
+          <div style="height:42px;background-color:#fff">
+            <audio controls :src="item.messageMedias[0].file" class="audio-warp">您的浏览器不支持 audio 元素。</audio>
+          </div>
           <!-- <div
             class="audio-left display-flex align-items-center"
             @click="playAudio(item.messageMedias[0].file)"
@@ -33,6 +34,7 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
+          <div class="chat-name mr-20" style="text-align:right">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div style="height:42px;background-color:#fff">
             <audio controls :src="item.messageMedias[0].file" class="audio-warp">您的浏览器不支持 audio 元素。</audio>
@@ -46,7 +48,7 @@
               class="play-audio"
               :class="isPlayAudio? 'el-icon-microphone' :'el-icon-turn-off-microphone'"
             />
-          </div> -->
+          </div>-->
         </div>
         <el-avatar :src="item.fromAvatar" />
       </div>
@@ -129,7 +131,7 @@ export default {
     height: 40px;
     margin-top: 1px;
   }
-  audio{
+  audio {
     background-color: #fff;
   }
   .audio-left {

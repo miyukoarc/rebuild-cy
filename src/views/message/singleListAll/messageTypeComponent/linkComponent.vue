@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-22 13:50:04
- * @LastEditTime: 2020-08-07 16:56:54
+ * @LastEditTime: 2020-08-10 20:22:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\linkComponent.vue
@@ -12,21 +12,24 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
-        <div class="left">
-          <div>
-            <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-            <a target="_blank" :href="item.messageMedias[0].linkUrl">
-              <div class="link-warp">
-                <div class="title">{{item.messageMedias[0].title}}</div>
-                <div class="content-warp flex-between-alinecenter">
-                  <div class="content">
-                    <span>{{item.messageMedias[0].description.split(/\r\n|\n|\r/)[0]}}</span>
-                    <p>{{item.messageMedias[0].description.split(/\r\n|\n|\r/)[1]}}</p>
+        <div>
+          <div class="chat-name ml-20">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
+          <div class="left">
+            <div>
+              <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+              <a target="_blank" :href="item.messageMedias[0].linkUrl">
+                <div class="link-warp">
+                  <div class="title">{{item.messageMedias[0].title}}</div>
+                  <div class="content-warp flex-between-alinecenter">
+                    <div class="content">
+                      <span>{{item.messageMedias[0].description.split(/\r\n|\n|\r/)[0]}}</span>
+                      <p>{{item.messageMedias[0].description.split(/\r\n|\n|\r/)[1]}}</p>
+                    </div>
+                    <img :src="item.messageMedias[0].imageUrl" alt />
                   </div>
-                  <img :src="item.messageMedias[0].imageUrl" alt />
                 </div>
-              </div>
-            </a>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -35,6 +38,7 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div>
+          <div class="chat-name mr-20 text-align-right">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="right">
             <a target="_blank" :href="item.messageMedias[0].linkUrl">

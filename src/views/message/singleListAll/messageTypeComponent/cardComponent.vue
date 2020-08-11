@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-08-07 16:51:42
+ * @LastEditTime: 2020-08-10 19:38:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -13,6 +13,7 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
+          <div class="chat-name">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="card-warp">
             <div class="card-top">
@@ -35,6 +36,7 @@
       <p>{{ item.msgTime }}</p>
       <div class="display-flex justify-content-flex-end">
         <div class="right">
+          <div class="chat-name" style="text-align:right">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="card-warp">
             <div class="card-top">
@@ -70,6 +72,11 @@ export default {
 <style lang="scss" scoped>
 .card-component {
   margin: 0px 10px 20px 10px;
+  .chat-name {
+    line-height: 16px;
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
   .left-warp {
     > p {
       font-size: 13px;
@@ -81,7 +88,7 @@ export default {
       max-width: 50%;
       margin-left: 20px;
       margin-top: 5px;
-      
+
       .card-warp {
         width: 238px;
         border: 1px solid #eee;
