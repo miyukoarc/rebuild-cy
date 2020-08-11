@@ -8,7 +8,8 @@ import {
   updateDepartment,
   getDepartments,
   getDepartmentListSelect,
-  allocation
+  allocation,
+  alterType
 } from '@/api/department'
 import { flatten } from '@/utils/common'
 
@@ -238,6 +239,20 @@ const actions = {
         reject(err)
       })
     })
+  },
+  /**
+   * 
+   * @param {*} param0 
+   * @param {*} payload 
+   */
+  alterType({commit},payload){
+     return new Promise((resolve,reject)=>{
+         alterType(payload).then(res=>{
+             resolve(res)
+         }).catch(err=>{
+             reject(err)
+         })
+     })
   }
 
 }

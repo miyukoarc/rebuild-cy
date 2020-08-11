@@ -1,12 +1,19 @@
 <template>
   <div class="app-container">
     <el-card class="content-spacing">
-      <tool-bar :hasExport="true" :hasImport="false" :hasRefresh="true" @handleRefresh="initDataList" :msg="`共条${total}数据`">
+      <tool-bar
+        :hasExport="false"
+        :hasImport="false"
+        :hasRefresh="true"
+        @handleRefresh="initDataList"
+        
+      >
         <div slot="right">
           <el-t-button
             size="small"
+            type="primary"
             :popAuth="true"
-            type='primary'
+            v-if="permissionMap['department']['department_add']"
             :auth="permissionMap['department']['department_add']"
             @click="handleCreate"
           >创建部门</el-t-button>
@@ -21,43 +28,58 @@
         style="width: 100%"
         row-key="uuid"
         lazy
-        
         default-expand-all
-        @row-click="handleDetail"
         :tree-props="{ children: 'children' }"
-         header-row-class-name="el-table-header"
-       >
-        <el-table-column  label="名称" align="left">
-            <template v-slot="{row}">
-                {{row.name}}
-                <span style="margin-left:20px">
-                    <el-tag size="small" type="info">{{orgType[row.type]}}</el-tag>
-                </span>
-            </template>
+        header-row-class-name="el-table-header"
+      >
+        <el-table-column label="名称" align="left">
+          <template v-slot="{row}">
+            {{row.name}}
+            <span style="margin-left:20px">
+              <el-tag size="small" type="info">{{orgType[row.type]}}</el-tag>
+            </span>
+          </template>
         </el-table-column>
         <!-- <el-table-column label="标签">
             <template v-slot="{row}">
             
                 <span>{{row.orgNode?'组织':'部门'}}</span>
             </template>
-        </el-table-column> -->
+        </el-table-column>-->
         <el-table-column label="操作" align="left" width="240">
           <template slot-scope="scope">
             <el-t-button
               type="text"
               size="mini"
+              v-if="permissionMap['department']['department_update']"
               :auth="permissionMap['department']['department_update']"
               :popAuth="true"
               @click.stop="handleEdit(scope.$index,scope.row)"
             >编辑</el-t-button>
+            <i class="el-icon-circle-close color-info" v-else></i>
+
             <el-divider direction="vertical"></el-divider>
             <el-t-button
               type="text"
+              size="mini"
+              v-if="permissionMap['department']['department_update']"
+              :auth="permissionMap['department']['department_update']"
+              :popAuth="true"
+              @click.stop="handleChange(scope.$index,scope.row)"
+              :enable="scope.row.type==='DEPT'"
+            >变更
+            </el-t-button>
+            <i class="el-icon-circle-close color-info" v-else></i>
+            <el-divider direction="vertical"></el-divider>
+            <el-t-button
+              type="text"
+              v-if="permissionMap['department']['department_delete']"
               :auth="permissionMap['department']['department_delete']"
               :popAuth="true"
               size="mini"
               @click.stop="handleDelete(scope.row)"
             >删除</el-t-button>
+            <i class="el-icon-circle-close color-info" v-else></i>
           </template>
         </el-table-column>
       </el-table>
@@ -65,11 +87,9 @@
 
     <!-- <el-card class="content-spacing">
         <Cascader :options="departmentList" :props="{childre:'children',department:'nodes'}"></Cascader>
-    </el-card> -->
+    </el-card>-->
 
-    <form-dialog ref="formDialog">
-
-    </form-dialog>
+    <form-dialog ref="formDialog"></form-dialog>
   </div>
 </template>
 
@@ -89,33 +109,38 @@ export default {
     UserDetail,
     FormDialog,
     ToolBar,
-    Cascader
+    Cascader,
   },
   data() {
     return {
-        total: 0
+      total: 0,
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      departmentList: state => state.department.departmentList,
-      loading: state => state.department.loading,
-      orgType: state => state.enum.orgType,
-      
+      departmentList: (state) => state.department.departmentList,
+      loading: (state) => state.department.loading,
+      orgType: (state) => state.enum.orgType,
 
-      permissionMap: state => state.permission.permissionMap
-    })
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
     this.initDataList()
     // this.initFilter()
   },
   mounted() {
-    this.$bus.$on('showFormDialog', target => {
+    this.$bus.$on('showFormDialog', (target) => {
       this.$refs['formDialog'].event = 'CreateTemplate'
       this.$refs['formDialog'].eventType = 'create'
       this.$refs['formDialog'].dialogVisible = true
+    })
+    this.$bus.$on('handleRefresh',()=>{
+        this.initDataList()
+    })
+    this.$once('hook:beforeDestroy',()=>{
+        this.$bus.$off('handleRefresh')
     })
   },
   beforeDestroy() {
@@ -144,10 +169,10 @@ export default {
       this.$store
         .dispatch('department/getDepartmentListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
@@ -155,36 +180,37 @@ export default {
       this.$store
         .dispatch('department/getDepartmentListAll')
         .then((res) => {
-            const {total} = res
-            this.total = total
+          const { total } = res
+          this.total = total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
     },
     handleEdit(index, row) {
-    //   const payload = this.departmentList[index]
-    //   console.log(row)
-        this.$store.commit('department/SAVE_DETAIL', row)
+      //   const payload = this.departmentList[index]
+      //   console.log(row)
+      //   this.$store.commit('department/SAVE_DETAIL', row)
       this.$refs['formDialog'].event = 'EditTemplate'
       this.$refs['formDialog'].eventType = 'edit'
       this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = row
     },
     handleDelete(val) {
       console.log(val.uuid)
       const uuid = val.uuid
 
       const payload = {
-          uuid: uuid
+        uuid: uuid,
       }
-      
+
       this.$confirm('是否删除当前部门', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(async () => {
           await this.$store
@@ -192,28 +218,31 @@ export default {
             .then(() => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               this.initDataList()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: err
+                message: err,
               })
             })
         })
-        .catch(err => {
-          
-        })
+        .catch((err) => {})
     },
-    handleDetail() {},
+    handleChange(index, row) {
+      this.$refs['formDialog'].event = 'ChangeTemplate'
+      this.$refs['formDialog'].eventType = 'change'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].transfer = row
+    },
     handleCreate() {
       this.$refs['formDialog'].event = 'CreateTemplate'
       this.$refs['formDialog'].eventType = 'create'
       this.$refs['formDialog'].dialogVisible = true
-    }
-  }
+    },
+  },
 }
 </script>
 

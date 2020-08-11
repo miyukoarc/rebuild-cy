@@ -47,7 +47,6 @@ const state = {
     isCheckOpenedSidebar: false,// 只需要第一次打开侧边栏检查即可
     isOpenedSidebar: false,// 是否打开侧边栏，如果10秒没反应，则就是未开启侧边栏
     isChangeState: false,// 是否把“待发送”变为“发送中”，只需改一次即可
-
 }
 
 const mutations = {
@@ -241,11 +240,19 @@ const actions = {
                             dispatch('sendChaoyingMessage')
                         } else {
                             console.log("打开openchat")
-                            $ipcRenderer.send('openChat', {
-                                mobile: state.taskResult.externalUser.mobile.split(',')[0],
-                                x: state.mouseX,
-                                y: state.mouseY,
-                            })
+                            if (state.taskResult.externalUser.mobile) {
+                                $ipcRenderer.send('openChat', {
+                                    mobile: state.taskResult.externalUser.mobile.split(',')[0],
+                                    x: state.mouseX,
+                                    y: state.mouseY,
+                                })
+                            } else {
+                                Message({
+                                    message: '请先填写对面手机号便于查找用户',
+                                    type: 'error'
+                                })
+                                dispatch('clearTask')
+                            }
                         }
                     })
                 }
@@ -439,6 +446,7 @@ const actions = {
                 // 不在线
                 else {
                     if (isElectron() && state.taskResult.externalUser.mobile) {
+                        console.log('打开侧边栏了')
                         $ipcRenderer.send('openChat', {
                             mobile: state.taskResult.externalUser.mobile.split(',')[0],
                             x: state.mouseX,
