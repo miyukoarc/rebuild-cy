@@ -104,10 +104,10 @@ const actions = {
      * @param {*} payload 
      *
      */
-    getRoleList({ commit }) {
+    getRoleList({ commit },payload) {
         commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
-            getRoleList().then(res => {
+            getRoleList(payload).then(res => {
                 commit('SAVE_LIST', res.items)
                 commit('TOGGLE_LOADING', false)
                 resolve()
