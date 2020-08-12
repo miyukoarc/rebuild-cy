@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-11 15:05:17
+ * @LastEditTime: 2020-08-12 14:34:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -443,12 +443,11 @@ export default {
     //   return isMP4 && isLt50M;
     // },
     beforeUploadFile(file) {
-      const isLt50M = file.size / 1024 / 1024 < 50;
-
-      if (!isLt50M) {
-        this.$message.error("上传视频大小不能超过 50MB!");
+      const isLt20M = file.size / 1024 / 1024 < 20;
+      if (!isLt20M) {
+        this.$message.error("上传视频大小不能超过 20MB!");
       }
-      return isLt50M;
+      return isLt20M;
     },
     beforeRemoveFile(file) {
       this.messageFile = "";

@@ -18,7 +18,7 @@
             :popAuth="true"
             v-permission="'potentialCustomer,potentialCustomer_allocation'"
             :auth="'potentialCustomer,potentialCustomer_allocation'"
-            @click.stop="handleDistribute"
+            @click.native="handleDistribute"
           >分配</el-t-button>
         </div>
       </tool-bar>
@@ -31,7 +31,6 @@
           v-loading="loading"
           :data="listAll"
           style="width: 100%"
-          row-key="uuid"
           stripe
           lazy
           fit
@@ -106,7 +105,7 @@
                 :popAuth="true"
                 v-permission="'potentialCustomer,potentialCustomer_allocation'"
                 :auth="'potentialCustomer,potentialCustomer_allocation'"
-                @click.stop="handleAllocation(scope.row)"
+                @click.native="handleAllocation(scope.row)"
               >分配</el-t-button>
               <el-t-button
                 type="text"
@@ -114,7 +113,7 @@
                 :popAuth="true"
                 v-permission="'potentialCustomer,potentialCustomer_update'"
                 :auth="'potentialCustomer,potentialCustomer_update'"
-                @click.stop="handleEdit(scope.row)"
+                @click.native="handleEdit(scope.row)"
               >编辑</el-t-button>
               <el-t-button
                 type="text"
@@ -122,7 +121,7 @@
                 v-permission="'potentialCustomer,potentialCustomer_delete'"
                 :auth="'potentialCustomer,potentialCustomer_delete'"
                 size="mini"
-                @click.stop="handleDelete(scope.row)"
+                @click.native="handleDelete(scope.row)"
               >删除</el-t-button>
             </template>
           </el-table-column>
@@ -341,6 +340,7 @@ export default {
       }
     },
     handleAllocation(row) {
+      console.log(row,'dddadfasdfasd======')
       row.uuid = [row.uuid];
       this.$refs.multipleTable.clearSelection();
       this.handleSelectionChange([row]);
