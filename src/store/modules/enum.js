@@ -76,8 +76,8 @@ const state = {
         REJECTED: '审核通过',
         PENDING: '待发送',
         SENDING: '发送中',
-        SUSPEND: '发送失败',
-        FINISHED: '已发送'
+        SUSPEND: '中断',
+        FINISHED: '已发送',
     },
     batchAddTaskSendResult: {
         NOT_SEND: '',

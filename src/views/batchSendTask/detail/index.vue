@@ -8,43 +8,66 @@
           <el-form-item label="创建者：">
             <el-tag>
               <i class="el-icon-user-solid"></i>
-              <span>程开元</span>
+              <span>{{batchSendTaskListAllDetail.sender.name}}</span>
             </el-tag>
           </el-form-item>
-          <el-form-item label="群发消息1：">
-            <span>超盈产品测试01</span>
+
+          <!-- 文章 -->
+          <el-form-item
+            v-if="batchSendTaskListAllDetail.media.uuid"
+            label="群发文章："
+          >《{{batchSendTaskListAllDetail.media.title}}》</el-form-item>
+
+          <!-- 文本 -->
+          <el-form-item v-if="batchSendTaskListAllDetail.textContent" label="群发文本：">
+            <span>{{batchSendTaskListAllDetail.textContent}}</span>
           </el-form-item>
-          <el-form-item label="群发消息2：">
+
+          <!-- 文件 -->
+          <el-form-item v-if="batchSendTaskListAllDetail.tempMediaType == 'FILE'" label="群发文件：">-</el-form-item>
+
+          <!-- 图片 -->
+          <el-form-item v-if="batchSendTaskListAllDetail.tempMediaType == 'IMAGE'" label="群发图片：">
             <el-popover placement="right" title trigger="hover">
-              <el-image :src="defaultAvatar" style="width:400px;height:400px" />
+              <el-image
+                :src="`/api/public/file/${batchSendTaskListAllDetail.tempMediaKey}`"
+                style="width:400px;height:400px"
+              />
               <el-image
                 slot="reference"
-                :src="defaultAvatar"
+                :src="`/api/public/file/${batchSendTaskListAllDetail.tempMediaKey}`"
                 alt
                 style="max-height: 80px;max-width: 80px"
               />
             </el-popover>
           </el-form-item>
+
+          <!-- 视频 -->
+          <el-form-item v-if="batchSendTaskListAllDetail.tempMediaType == 'VIDEO'" label="群发视频：">
+            <video
+              :src="`/api/public/file/${batchSendTaskListAllDetail.tempMediaKey}`"
+              controls
+              width="320"
+            ></video>
+          </el-form-item>
+
           <el-form-item label="群发类型：">
-            <!-- <span>{{batchSendTaskListAllDetail.sendType =='wx'?"企业微信群发":'超盈群发' }}</span> -->
-            <span>企业微信群发</span>
+            <span>{{batchSendTaskListAllDetail.sendType =='MY'?"超盈群发":'企业微信群发' }}</span>
           </el-form-item>
           <el-form-item label="发送状态：">
-            <!-- <span>{{batchAddTaskState[batchSendTaskListAllDetail.state]}}</span> -->
-            <span>发送成功</span>
+            <span>{{batchAddTaskState[batchSendTaskListAllDetail.state]}}</span>
           </el-form-item>
           <el-form-item label="发送时间：">
-            <!-- <span>{{batchSendTaskListAllDetail.updatedAt}}</span> -->
-            <span>2020-07-20 10:13:29</span>
+            <span>{{batchSendTaskListAllDetail.updatedAt}}</span>
           </el-form-item>
           <p></p>
           <el-form-item label="群发对象：">
-            <span>在陈开元、陆浩然里2个客户</span>
+            <span>{{batchSendTaskListAllDetail.sender.name}}的{{batchSendTaskListAllDetail.results.length}}位客户</span>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
-    
+
     <!-- 数据统计 -->
     <el-card class="content-spacing">
       <div class="data-statistics">
@@ -52,11 +75,12 @@
         <el-row type="flex" class="row-bg" justify="space-around">
           <el-col :span="8" class="data-box flex-between-alinecenter text-align-center">
             <div class="flex-1 border-right">
-              <span class="blod">1 人</span>
+              <span class="blod" v-if="batchSendTaskListAllDetail.state == 'PENDING'">0 人</span>
+              <span class="blod" v-else>1 人</span>
               <p class="desc">已发送成员</p>
             </div>
             <div class="flex-1">
-              <span class="blod">2 人</span>
+              <span class="blod">{{statistics.HAS_SEND.length}} 人</span>
               <p class="desc">送达用户</p>
             </div>
           </el-col>
@@ -66,11 +90,12 @@
             style="margin:0 20px"
           >
             <div class="flex-1 border-right">
-              <span class="blod">0 人</span>
+              <span class="blod" v-if="batchSendTaskListAllDetail.state == 'PENDING'">1 人</span>
+              <span class="blod" v-else>0 人</span>
               <p class="desc">未发送成员</p>
             </div>
             <div class="flex-1">
-              <span class="blod">0人</span>
+              <span class="blod">{{statistics.NOT_SEND.length}} 人</span>
               <p class="desc">
                 未送达客户
                 <el-tooltip placement="top">
@@ -96,7 +121,7 @@
               </p>
             </div>
             <div class="flex-1">
-              <span class="blod">0 人</span>
+              <span class="blod">{{statistics.NOT_FRIEND_FAIL.length}} 人</span>
               <p class="desc">因不是好友发送失败</p>
             </div>
           </el-col>
@@ -153,9 +178,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 
-import defaultAvatar from "@/assets/no-menber-result.png";
 import EventDialog from "./dialog";
-
 import memberComponent from "./components/member";
 import clientComponent from "./components/client";
 
@@ -163,11 +186,10 @@ export default {
   components: {
     EventDialog,
     memberComponent,
-    clientComponent
+    clientComponent,
   },
   data() {
     return {
-      defaultAvatar: defaultAvatar,
       ruleForm: {
         name: "",
         region: "",
@@ -176,90 +198,98 @@ export default {
         delivery: false,
         type: [],
         resource: "",
-        desc: ""
+        desc: "",
       },
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
       query: {
-        uuid: ""
+        uuid: "",
       },
       memberActiveName: "all",
       memberTabs: [
         {
           label: "本次推送全部成员",
-          name: "all"
+          name: "all",
         },
         {
           label: "已发送成员",
-          name: "1"
+          name: "1",
         },
         {
           label: "未发送成员",
-          name: "2"
+          name: "2",
         },
         {
           label: "发送失败",
-          name: "3"
-        }
+          name: "3",
+        },
       ],
+      statistics: {
+        NOT_SEND: [],
+        HAS_SEND: [],
+        NOT_FRIEND_FAIL: [],
+        HAS_RECEIVED_FAIL: [],
+        HAS_RECEIVED: [],
+        HAS_READ_ARTICLE: [],
+      },
       memberData: [
         {
           name: "陈开元",
           img:
             "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-          length: "13"
-        }
+          length: "13",
+        },
       ],
 
       clientActiveName: "all",
       clientTabs: [
         {
           label: "本次推送全部客户",
-          name: "all"
+          name: "all",
         },
         {
           label: "已送达",
-          name: "1"
+          name: "1",
         },
         {
           label: "未送达客户",
-          name: "2"
+          name: "2",
         },
         {
           label: "客户接收达上限",
-          name: "3"
+          name: "3",
         },
         {
           label: "已不是好友客户",
-          name: "4"
-        }
+          name: "4",
+        },
       ],
       clientData: [
         {
           name: "陈开元",
           img:
             "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-          length: "13"
+          length: "13",
         },
         {
           name: "陆浩然",
           img:
             " http://wework.qpic.cn/wwhead/duc2TvpEgSTPk74IwG7Bs1CTrX18wQ9JrSmyhm8dh60HicOr3bNBoHaM1mB9iaNXrY99mCXfrFNBE/0",
-          length: "21"
-        }
-      ]
+          length: "21",
+        },
+      ],
     };
   },
   watch: {},
   computed: {
     ...mapState({
-      batchSendTaskListAllDetail: state =>
+      batchSendTaskListAllDetail: (state) =>
         state.batchSendTask.batchSendTaskListAllDetail,
-      batchAddTaskState: state => state.enum.batchAddTaskState
-    })
+      batchAddTaskState: (state) => state.enum.batchAddTaskState,
+    }),
   },
   created() {
     this.query.uuid = this.$route.params.uuid;
@@ -281,11 +311,16 @@ export default {
     initDetail(payload) {
       this.$store
         .dispatch("batchSendTask/getBatchSendTaskDetail", payload)
-        .then(() => {})
-        .catch(err => {
+        .then(() => {
+          Object.assign(this.$data.statistics, this.$options.data().statistics);
+          this.batchSendTaskListAllDetail.results.map((obj) => {
+            this.statistics[obj.sendResult].push(obj);
+          });
+        })
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: err || "初始化失败"
+            message: err || "初始化失败",
           });
         });
     },
@@ -293,10 +328,10 @@ export default {
       this.$store
         .dispatch("getListBatchSendTaskResult", payload)
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: err || "初始化失败"
+            message: err || "初始化失败",
           });
         });
     },
@@ -308,8 +343,8 @@ export default {
             name: "陈开元",
             img:
               "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-            length: "13"
-          }
+            length: "13",
+          },
         ];
       }
       if (this.memberActiveName == 1) {
@@ -318,8 +353,8 @@ export default {
             name: "陈开元",
             img:
               "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-            length: "13"
-          }
+            length: "13",
+          },
         ];
       }
       if (this.memberActiveName == 2) {
@@ -336,14 +371,14 @@ export default {
             name: "陈开元",
             img:
               "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-            length: "13"
+            length: "13",
           },
           {
             name: "陆浩然",
             img:
               " http://wework.qpic.cn/wwhead/duc2TvpEgSTPk74IwG7Bs1CTrX18wQ9JrSmyhm8dh60HicOr3bNBoHaM1mB9iaNXrY99mCXfrFNBE/0",
-            length: "21"
-          }
+            length: "21",
+          },
         ];
       }
       if (this.clientActiveName == 1) {
@@ -352,14 +387,14 @@ export default {
             name: "陈开元",
             img:
               "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-            length: "13"
+            length: "13",
           },
           {
             name: "陆浩然",
             img:
               " http://wework.qpic.cn/wwhead/duc2TvpEgSTPk74IwG7Bs1CTrX18wQ9JrSmyhm8dh60HicOr3bNBoHaM1mB9iaNXrY99mCXfrFNBE/0",
-            length: "21"
-          }
+            length: "21",
+          },
         ];
       }
       if (this.clientActiveName == 2) {
@@ -371,8 +406,8 @@ export default {
       if (this.clientActiveName == 4) {
         this.clientData = [];
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
