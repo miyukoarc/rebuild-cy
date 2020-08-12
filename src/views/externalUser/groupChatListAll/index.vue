@@ -44,12 +44,12 @@
           <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-t-button
-                v-if="permissionMap['externalUser']['externalUser_groupDetail']"
+                v-permission="'externalUser,externalUser_groupDetail'"
                 type="text"
                 size="mini"
                 @click.stop="handleDetail(scope.row)"
                 :popAuth="true"
-                :auth="permissionMap['externalUser']['externalUser_groupDetail']"
+                :auth="'externalUser,externalUser_groupDetail'"
               >详情</el-t-button>
             </template>
           </el-table-column>

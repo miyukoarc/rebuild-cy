@@ -96,7 +96,8 @@
               <el-t-button
                 type="primary"
                 size="mini"
-                :auth="permissionMap['user']['user_detail']"
+                :auth="'user,user_detail'"
+                v-permission="'user,user_detail'"
                 :popAuth="true"
                 @click.stop="handleDetail(scope.row)"
                 :enable="scope.row.visible"

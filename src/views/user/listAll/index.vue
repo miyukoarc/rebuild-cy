@@ -10,13 +10,15 @@
           <el-t-button
             type="primary"
             :popAuth="true"
-            :auth="permissionMap['user']['user_update']"
+            :auth="'user,user_update'"
+            v-permission="'user,user_update'"
             @click="actionRole"
           >批量分配角色</el-t-button>
           <el-t-button
             type="primary"
             :popAuth="true"
-            :auth="permissionMap['department']['department_allocation']"
+            v-permission="'department,department_allocation'"
+            :auth="'department,department_allocation'"
             @click="actionDepartment"
           >批量分配部门</el-t-button>
         </div>
@@ -83,35 +85,31 @@
                 type="text"
                 size="mini"
                 :popAuth="true"
-                v-if="permissionMap['user']['user_update']"
-                :auth="permissionMap['user']['user_update']"
+                v-permission="'user,user_update'"
+                :auth="'user,user_update'"
                 @click.stop="handleDistributeRole(scope.$index)"
               >分配角色</el-t-button>
-              <i class="el-icon-circle-close color-info" v-else></i>
 
-              <el-divider direction="vertical"></el-divider>
 
               <el-t-button
                 type="text"
                 size="mini"
                 :popAuth="true"
-                v-if="permissionMap['department']['department_allocation']"
-                :auth="permissionMap['department']['department_allocation']"
+                v-permission="'department,department_allocation'"
+                :auth="'department,department_allocation'"
                 @click.stop="handleDistributeDepartment(scope.$index)"
               >分配部门</el-t-button>
-              <i class="el-icon-circle-close color-info" v-else></i>
-              <el-divider direction="vertical"></el-divider>
+
 
               <el-t-button
                 type="text"
                 size="mini"
                 :popAuth="true"
-                v-if="permissionMap['user']['user_detail']"
-                :auth="permissionMap['user']['user_detail']"
+                v-permission="'user,user_detail'"
+                :auth="'user,user_detail'"
                 @click.stop="handleDetail(scope.$index)"
               >详情</el-t-button>
 
-              <i class="el-icon-circle-close color-info" v-else></i>
             </template>
           </el-table-column>
         </el-table>

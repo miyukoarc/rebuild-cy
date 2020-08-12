@@ -21,7 +21,8 @@
             size="small"
             type="primary"
             :popAuth="true"
-            :auth="permissionMap['media']['media_add']"
+            :auth="'media,media_add'"
+            v-permission="'media,media_add'"
           >选取文件</el-t-button>
 
           <div slot="tip" class="el-upload__tip">图片支持png、jpg、jpeg，大小不超过2M。</div>

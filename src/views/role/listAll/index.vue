@@ -10,9 +10,9 @@
         </div>
         <div slot="right">
           <el-t-button
-            v-if="permissionMap['role']['role_add']"
+            v-permission="'role,role_add'"
             :popAuth="true"
-            :auth="permissionMap['role']['role_add']"
+            :auth="'role,role_add'"
             size="small"
             type="primary"
             @click="handleCreate"
@@ -45,31 +45,31 @@
                 size="mini"
                 @click="handlePermission(scope.row)"
                 :popAuth="true"
-                :auth="permissionMap['role']['role_update']"
-                v-if="permissionMap['role']['role_update']"
+                :auth="'role,role_update'"
+                v-permission="'role,role_update'"
               >配置权限</el-t-button>
-              <i class="el-icon-circle-close color-info" v-else></i>
-              <el-divider direction="vertical"></el-divider>
+              <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
+              <!-- <el-divider direction="vertical"></el-divider> -->
               <el-t-button
                 type="text"
                 size="mini"
                 @click="handleEdit(scope.row)"
                 :popAuth="true"
-                v-if="permissionMap['role']['role_update']"
-                :auth="permissionMap['role']['role_update']"
+                v-permission="'role,role_update'"
+                :auth="'role,role_update'"
               >编辑</el-t-button>
-              <i class="el-icon-circle-close color-info" v-else></i>
-              <el-divider direction="vertical"></el-divider>
+              <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
+              <!-- <el-divider direction="vertical"></el-divider> -->
 
               <el-t-button
                 type="text"
                 size="mini"
                 @click="handleDelete(scope.row)"
                 :popAuth="true"
-                v-if="permissionMap['role']['role_delete']"
-                :auth="permissionMap['role']['role_delete']"
+                v-permission="'role,role_delete'"
+                :auth="'role,role_delete'"
               >删除</el-t-button>
-              <i class="el-icon-circle-close color-info" v-else></i>
+              <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
             </template>
           </el-table-column>
         </el-table>

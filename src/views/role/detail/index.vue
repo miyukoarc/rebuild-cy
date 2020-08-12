@@ -6,7 +6,8 @@
           <div slot="right">
             <el-t-button
               type="primary"
-              :auth="permissionMap['role']['role_update']"
+              v-permission="'role,role_update'"
+              :auth="'role,role_update'"
               :popAuth="true"
               @click.stop="handleConfirm"
             >{{auditSetting['permission']?'提交审核':'完成'}}</el-t-button>

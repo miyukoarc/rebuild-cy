@@ -67,7 +67,8 @@
             <template slot-scope="scope">
               <el-t-button
                 :popAuth="true"
-                :auth="permissionMap['externalUser']['externalUser_detail']"
+                :auth="'externalUser,externalUser_detail'"
+                v-permission="'externalUser,externalUser_detail'"
                 type="text"
                 size="mini"
                 @click.stop="handleDetail(scope.row)"

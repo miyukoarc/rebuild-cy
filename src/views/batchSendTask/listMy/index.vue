@@ -2,13 +2,18 @@
   <div class="app-container">
     <!-- <el-card class="content-spacing">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
-    </el-card> -->
+    </el-card>-->
 
     <el-card class="content-spacing">
       <tool-bar :hasExport="false" @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
-          <div slot="right">
-              <el-t-button :popAuth="true" :auth="permissionMap['batchSendTask']['batchSendTask_add']" type="primary">新建群发</el-t-button>
-          </div>
+        <div slot="right">
+          <el-t-button
+            :popAuth="true"
+            v-permission="'batchSendTask,batchSendTask_add'"
+            :auth="'batchSendTask,batchSendTask_add'"
+            type="primary"
+          >新建群发</el-t-button>
+        </div>
       </tool-bar>
     </el-card>
 
@@ -22,7 +27,7 @@
           stripe
           lazy
           highlight-current-row
-           header-row-class-name="el-table-header"
+          header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column label="id" align="left">
@@ -82,7 +87,7 @@ export default {
     ListHeader,
     UserDetail,
     FormDialog,
-    ToolBar
+    ToolBar,
     // mHeadedr
   },
   data() {
@@ -90,7 +95,7 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
@@ -101,19 +106,19 @@ export default {
         // tagIds: '',
         // userId: '',
         // roleUuid: ''
-      }
+      },
     }
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
+      tagListAll: (state) => state.tag.tagListAll,
 
-      loading: state => state.batchSendTask.loading,
-      listAll: state => state.batchSendTask.list,
-      page: state => state.batchSendTask.listAllPage,
+      loading: (state) => state.batchSendTask.loading,
+      listAll: (state) => state.batchSendTask.list,
+      page: (state) => state.batchSendTask.listAllPage,
 
-      permissionMap: state => state.permission.permissionMap
+      permissionMap: (state) => state.permission.permissionMap,
     }),
   },
   created() {
@@ -121,9 +126,7 @@ export default {
     // this.initFilter()
   },
   methods: {
-    doExport(val) {
-      
-    },
+    doExport(val) {},
     /**
      * 初始化筛选信息
      */
@@ -131,20 +134,20 @@ export default {
       this.$store
         .dispatch('tag/getListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
 
       this.$store
         .dispatch('user/getAllUserList')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -159,10 +162,10 @@ export default {
           this.pageConfig.pageNumber = this.page.pageNumber + 1
           this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: '初始化失败'
+            message: '初始化失败',
           })
         })
     },
@@ -170,7 +173,7 @@ export default {
       const payload = this.userList[val].uuid
       this.$router.push({
         path: '/user/detail',
-        query: { uuid: payload }
+        query: { uuid: payload },
       })
     },
     handleSearch(val) {
@@ -189,8 +192,8 @@ export default {
       this.query.page = key - 1
       this.pageConfig.pageNumber = key - 1
       this.initDataList(this.query)
-    }
-  }
+    },
+  },
 }
 </script>
 

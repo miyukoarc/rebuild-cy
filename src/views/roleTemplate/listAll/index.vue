@@ -12,7 +12,8 @@
             <span class="font-l">{{corpInfo.name}}</span>
             <el-t-button
             :popAuth="true"
-            :auth="permissionMap['role']['role_add']"
+            v-permission="'role,role_add'"
+            :auth="'role,role_add'"
             size="small"
             type="text"
             @click="handleChange"
@@ -21,7 +22,8 @@
         <div slot="right">
           <el-t-button
             :popAuth="true"
-            :auth="permissionMap['role']['role_add']"
+            v-permission="'role,role_add'"
+            :auth="'role,role_add'"
             size="small"
             type="primary"
             @click="handleCreate"
@@ -52,7 +54,8 @@
                 size="mini"
                 @click="handlePermission(scope.row)"
                 :popAuth="true"
-                :auth="permissionMap['roleTemplate']['roleTemplate_roleLinkPermission']"
+                :auth="'roleTemplate,roleTemplate_roleLinkPermission'"
+                v-permission="'roleTemplate,roleTemplate_roleLinkPermission'"
               >配置权限</el-t-button>
               <!-- <el-divider direction="vertical"></el-divider>
               <el-t-button

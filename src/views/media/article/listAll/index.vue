@@ -10,7 +10,8 @@
           <el-t-button
             type="primary"
             :popAuth="true"
-            :auth="permissionMap['media']['media_addMediaIsAudit']"
+            v-permission="'media,media_addMediaIsAudit'"
+            :auth="'media,media_addMediaIsAudit'"
             @click="handleCreate"
           >新建文章</el-t-button>
         </div>
@@ -40,7 +41,8 @@
                 type="text"
                 @click.stop="handleEdit(scope.$index)"
                 :popAuth="true"
-                :auth="permissionMap['media']['media_article_update']"
+                :auth="'media,media_article_update'"
+                v-permission="'media,media_article_update'"
               >编辑</el-t-button>
 
               <el-divider direction="vertical"></el-divider>
@@ -50,7 +52,8 @@
                 type="text"
                 @click.stop="handleRecords(scope.$index)"
                 :popAuth="true"
-                :auth="permissionMap['media']['media_browsing_Records']"
+                :auth="'media,media_browsing_Records'"
+                v-permission="'media,media_browsing_Records'"
               >记录</el-t-button>
             </template>
           </el-table-column>

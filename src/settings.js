@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-17 23:18:57
- * @LastEditTime: 2020-08-12 10:32:16
+ * @LastEditTime: 2020-08-12 13:41:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\settings.js

@@ -13,8 +13,8 @@
             size="small"
             type="primary"
             :popAuth="true"
-            v-if="permissionMap['department']['department_add']"
-            :auth="permissionMap['department']['department_add']"
+            v-permission="'department,department_add'"
+            :auth="'department,department_add'"
             @click="handleCreate"
           >创建部门</el-t-button>
         </div>
@@ -51,35 +51,35 @@
             <el-t-button
               type="text"
               size="mini"
-              v-if="permissionMap['department']['department_update']"
-              :auth="permissionMap['department']['department_update']"
+              v-permission="'department,department_update'"
+              :auth="'department,department_update'"
               :popAuth="true"
               @click.stop="handleEdit(scope.$index,scope.row)"
             >编辑</el-t-button>
-            <i class="el-icon-circle-close color-info" v-else></i>
+            <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
 
-            <el-divider direction="vertical"></el-divider>
+            <!-- <el-divider direction="vertical"></el-divider> -->
             <el-t-button
               type="text"
               size="mini"
-              v-if="permissionMap['department']['department_update']"
-              :auth="permissionMap['department']['department_update']"
+              v-permission="'department,department_update'"
+              :auth="'department,department_update'"
               :popAuth="true"
               @click.stop="handleChange(scope.$index,scope.row)"
               :enable="scope.row.type==='DEPT'"
             >变更
             </el-t-button>
-            <i class="el-icon-circle-close color-info" v-else></i>
-            <el-divider direction="vertical"></el-divider>
+            <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
+            <!-- <el-divider direction="vertical"></el-divider> -->
             <el-t-button
               type="text"
-              v-if="permissionMap['department']['department_delete']"
-              :auth="permissionMap['department']['department_delete']"
+              v-permission="'department,department_delete'"
+              :auth="'department,department_delete'"
               :popAuth="true"
               size="mini"
               @click.stop="handleDelete(scope.row)"
             >删除</el-t-button>
-            <i class="el-icon-circle-close color-info" v-else></i>
+            <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
           </template>
         </el-table-column>
       </el-table>

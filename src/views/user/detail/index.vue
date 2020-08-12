@@ -113,22 +113,19 @@
             <el-t-button
               type="text"
               :popAuth="true"
-              v-if="permissionMap['externalUser']['externalUser_detail']"
-              :auth="permissionMap['externalUser']['externalUser_detail']"
+              v-permission="'externalUser,externalUser_detail'"
+              :auth="'externalUser,externalUser_detail'"
               size="mini"
               @click.stop="handleGroupChat(scope.row)"
             >聊天记录</el-t-button>
-            <i class="el-icon-circle-close color-info" v-else></i>
-            <el-divider direction="vertical"></el-divider>
             <el-t-button
               type="text"
               :popAuth="true"
-              v-if="permissionMap['externalUser']['externalUser_detail']"
-              :auth="permissionMap['externalUser']['externalUser_detail']"
+              v-permission="'externalUser,externalUser_detail'"
+              :auth="'externalUser,externalUser_detail'"
               size="mini"
               @click.stop="handleDetail(scope.$index)"
             >详情</el-t-button>
-            <i class="el-icon-circle-close color-info" v-else></i>
           </template>
         </el-table-column>
       </el-table>

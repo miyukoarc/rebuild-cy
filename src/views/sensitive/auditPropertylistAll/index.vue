@@ -6,7 +6,8 @@
           <span class="font-l">{{corpInfo.name}}</span>
           <el-t-button
             :popAuth="true"
-            :auth="permissionMap['role']['role_add']"
+            v-permission="'role,role_add'"
+            :auth="'role,role_add'"
             size="small"
             type="text"
           >切换企业</el-t-button>
@@ -50,7 +51,8 @@
               type="text"
               size="mini"
               :popAuth="true"
-              :auth="permissionMap['role']['role_update']"
+              v-permission="'role,role_update'"
+              :auth="'role,role_update'"
               @click="handleDetail(row)"
             >详情</el-t-button>
             <el-divider direction="vertical"></el-divider>
@@ -59,7 +61,8 @@
               type="text"
               size="mini"
               :popAuth="true"
-              :auth="permissionMap['role']['role_update']"
+              v-permission="'role,role_update'"
+              :auth="'role,role_update'"
               @click="handleSetting(row)"
             >设置流程</el-t-button>
             <el-divider direction="vertical"></el-divider>
@@ -68,7 +71,8 @@
               type="text"
               size="mini"
               :popAuth="true"
-              :auth="permissionMap['role']['role_delete']"
+              v-permission="'role,role_delete'"
+              :auth="'role,role_delete'"
               @click="handleChange($index)"
             >
               <span v-if="row.openState" class="color-danger">关闭</span>

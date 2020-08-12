@@ -13,7 +13,8 @@
         type="text"
         size="mini"
         :popAuth="true"
-        :auth="permissionMap['automatic']['automatic_defaultDetail']"
+        :auth="'automatic,automatic_defaultDetail'"
+        v-permission="'automatic,automatic_defaultDetail'"
         @click.stop="setAutoRepaly"
       >配置</el-t-button>
       <!-- <span class="color-primary mr-10 set-auto-replay" ></span> -->
@@ -160,7 +161,8 @@
           size="mini"
           style="padding:0 15px 0 0"
           :popAuth="true"
-          :auth="permissionMap['automatic']['automatic_switchReplyInterval']"
+          v-permission="'automatic,automatic_switchReplyInterval'"
+          :auth="'automatic,automatic_switchReplyInterval'"
         >
           <div class="display-flex align-items-center">
             <span class="font-es mr-15">{{repeat?'开启':'关闭'}}</span>
