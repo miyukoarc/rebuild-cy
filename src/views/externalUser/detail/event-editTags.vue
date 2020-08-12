@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-30 17:39:37
- * @LastEditTime: 2020-07-11 18:16:10
+ * @LastEditTime: 2020-08-11 20:55:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\detail\event-editTags.vue
@@ -33,8 +33,12 @@
           </el-col>
         </el-row>
       </div>
-    </div> -->
-    <tags-selected @change="handleCheckedTagsChange" :tagListSelect="tagListSelect" :checkboxGroup="checkboxGroup"></tags-selected>
+    </div>-->
+    <tags-selected
+      @change="handleCheckedTagsChange"
+      :tagListSelect="tagListSelect"
+      :checkboxGroup="checkboxGroup"
+    ></tags-selected>
     <div class="text-align-center">
       <el-t-button size="small" @click="handleCancel">取消</el-t-button>
       <el-t-button type="primary" size="small" @click="handleConfirm">确定</el-t-button>
@@ -50,11 +54,11 @@ import TagsSelected from "@/components/TagsSelected";
 export default {
   props: {
     uuid: {
-      type: String
-    }
+      type: String,
+    },
   },
   components: {
-    TagsSelected
+    TagsSelected,
   },
   data() {
     return {
@@ -62,14 +66,14 @@ export default {
       checkboxGroup: [],
       delTags: [],
       addTags: [],
-      newTagsList: []
+      newTagsList: [],
     };
   },
   computed: {
     ...mapState({
-      tagListSelect: state => state.tag.tagListSelect,
-      editTagsUuid: state => state.externalUser.editTagsUuid
-    })
+      tagListSelect: (state) => state.tag.tagListSelect,
+      editTagsUuid: (state) => state.externalUser.editTagsUuid,
+    }),
   },
   watch: {},
   created() {
@@ -89,7 +93,6 @@ export default {
     //     }
     //   });
     // });
-
     // console.log(this.newTagsList, "3333", this.tagListSelect);
   },
   methods: {
@@ -99,12 +102,12 @@ export default {
       this.checkboxGroup = tag;
     },
     del(arr1, arr2) {
-      return arr1.filter(v => {
+      return arr1.filter((v) => {
         return arr2.indexOf(v) == -1; //第一个数组在第二个数组中不同的项
       });
     },
     add(arr2, arr1) {
-      return arr2.filter(v => {
+      return arr2.filter((v) => {
         return arr1.indexOf(v) == -1; //第二个数组在第一个数组中不同的项
       });
     },
@@ -116,7 +119,7 @@ export default {
       const payload = {
         addTags: this.addTags,
         externalUserUuid: this.uuid,
-        removeTags: this.delTags
+        removeTags: this.delTags,
       };
       console.log(payload, "99");
       this.$store
@@ -124,15 +127,15 @@ export default {
         .then(() => {
           this.$message({
             type: "success",
-            message: "操作成功"
+            message: "操作成功",
           });
           this.handleCancel();
-          this.refresh();
+          this.getExternalUserDetail();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "操作失败"
+            message: "操作失败",
           });
         });
     },
@@ -140,21 +143,21 @@ export default {
     handleCancel() {
       this.$parent.$parent.dialogVisible = false;
     },
-    refresh() {
+    getExternalUserDetail() {
       this.$store
         .dispatch(
           "externalUser/getExternalUserDetail",
           this.$route.params.uuid + ""
         )
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: err
+            message: err,
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

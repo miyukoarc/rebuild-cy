@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-10 20:13:50
+ * @LastEditTime: 2020-08-11 15:05:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -13,7 +13,8 @@
         type="text"
         size="mini"
         :popAuth="true"
-        :auth="permissionMap['automatic']['automatic_defaultDetail']"
+        :auth="'automatic,automatic_defaultDetail'"
+        v-permission="'automatic,automatic_defaultDetail'"
         @click.stop="setAutoRepaly"
       >配置</el-t-button>
       <!-- <span class="color-primary mr-10 set-auto-replay" ></span> -->
@@ -160,7 +161,8 @@
           size="mini"
           style="padding:0 15px 0 0"
           :popAuth="true"
-          :auth="permissionMap['automatic']['automatic_switchReplyInterval']"
+          v-permission="'automatic,automatic_switchReplyInterval'"
+          :auth="'automatic,automatic_switchReplyInterval'"
         >
           <div class="display-flex align-items-center">
             <span class="font-es mr-15">{{repeat?'开启':'关闭'}}</span>
@@ -323,25 +325,33 @@ export default {
           if (this.form.autoReplyType != "FILE") {
             this.form.fileName = "";
           }
-          const payload = this.form;
-          this.$store
-            .dispatch("automatic/automaticAddDefault", payload)
-            .then(() => {
-              this.$message({
-                type: "success",
-                message: "新建成功",
-              });
-              this.isSetAuto = false;
-              this.initData();
-              // this.handleCancel();
-              // this.refresh();
-            })
-            .catch((err) => {
-              this.$message({
-                type: "error",
-                message: err || "新建失败",
-              });
+          if (!this.form.mediaId && !this.form.reply) {
+            this.$message({
+              type: "warning",
+              message: "文字消息或(图片/文件/文章)内容不能为空",
             });
+            return;
+          } else {
+            const payload = this.form;
+            this.$store
+              .dispatch("automatic/automaticAddDefault", payload)
+              .then(() => {
+                this.$message({
+                  type: "success",
+                  message: "新建成功",
+                });
+                this.isSetAuto = false;
+                this.initData();
+                // this.handleCancel();
+                // this.refresh();
+              })
+              .catch((err) => {
+                this.$message({
+                  type: "error",
+                  message: err || "新建失败",
+                });
+              });
+          }
         } else {
           this.$message({
             type: "error",

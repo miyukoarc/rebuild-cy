@@ -11,7 +11,8 @@
             type="primary"
             @click="handleDistribute"
             :popAuth="true"
-            :auth="permissionMap['externalUser']['externalUser_redistributionExUser']"
+            :auth="'externalUser,externalUser_redistributionExUser'"
+            v-permission="'externalUser,externalUser_redistributionExUser'"
           >分配给其他员工</el-t-button>
         </div>
       </tool-bar>
@@ -48,7 +49,8 @@
                 type="primary"
                 size="mini"
                 :popAuth="true"
-                :auth="permissionMap['externalUser']['externalUser_redistributionExUser']"
+                v-permission="'externalUser,externalUser_redistributionExUser'"
+                :auth="'externalUser,externalUser_redistributionExUser'"
                 @click.stop="handleDistributeSingle(scope.$index,scope.row)"
               >分配</el-t-button>
               <!-- <el-t-button :popAuth="true" :auth="permissionMap['externalUser']['externalUser_quitUserRelationExUserList']" type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-t-button> -->

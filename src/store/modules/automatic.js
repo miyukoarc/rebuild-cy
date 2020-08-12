@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-17 23:18:57
- * @LastEditTime: 2020-08-03 21:09:58
+ * @LastEditTime: 2020-08-11 17:45:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\automatic.js
@@ -91,7 +91,7 @@ const actions = {
     }, payload) {
         return new Promise((resolve, reject) => {
             add(payload).then(res => {
-                resolve()
+                resolve(res)
             }).catch(err => {
                 reject(err)
             })

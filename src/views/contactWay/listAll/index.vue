@@ -10,13 +10,17 @@
           <el-t-button
             type="primary"
             :popAuth="true"
-            v-if="permissionMap['contactWay']['contactWay_add']"
-            :auth="permissionMap['contactWay']['contactWay_add']"
+            v-permission="'contactWay,contactWay_add'"
+            :auth="'contactWay,contactWay_add'"
             @click.stop="newChannelCode"
           >新建活码</el-t-button>
-          <el-t-button             :popAuth="true"
-            v-if="permissionMap['contactWay']['contactWay_update']"
-            :auth="permissionMap['contactWay']['contactWay_update']" type="primary" @click.stop="setdefaultwelcomeSpeech">设置默认欢迎语</el-t-button>
+          <el-t-button
+            :popAuth="true"
+            v-permission="'contactWay,contactWay_update'"
+            :auth="'contactWay,contactWay_update'"
+            type="primary"
+            @click.stop="setdefaultwelcomeSpeech"
+          >设置默认欢迎语</el-t-button>
         </div>
       </tool-bar>
     </el-card>
@@ -85,8 +89,8 @@
             <template slot-scope="scope">
               <el-t-button
                 :popAuth="true"
-                v-if="permissionMap['contactWay']['contactWay_detail']"
-                :auth="permissionMap['contactWay']['contactWay_detail']"
+                v-permission="'contactWay,contactWay_detail'"
+                :auth="'contactWay,contactWay_detail'"
                 type="text"
                 class="button-s"
                 @click.stop="handleDetail(scope.$index,scope.row)"
@@ -95,8 +99,8 @@
 
               <el-t-button
                 :popAuth="true"
-                v-if="permissionMap['contactWay']['contactWay_detail']"
-                :auth="permissionMap['contactWay']['contactWay_detail']"
+                v-permission="'contactWay,contactWay_detail'"
+                :auth="'contactWay,contactWay_detail'"
                 type="text"
                 class="button-s"
                 @click.stop="downLoad(scope.row)"
@@ -104,9 +108,9 @@
               <el-divider direction="vertical"></el-divider>
 
               <el-t-button
-                v-if="permissionMap['contactWay']['contactWay_update']"
+                v-permission="'contactWay,contactWay_update'"
                 :popAuth="true"
-                :auth="permissionMap['contactWay']['contactWay_update']"
+                :auth="'contactWay,contactWay_update'"
                 type="text"
                 class="button-s"
                 @click.stop="handleEdit(scope.row)"
@@ -114,9 +118,9 @@
               <el-divider direction="vertical"></el-divider>
 
               <el-t-button
-                v-if="permissionMap['contactWay']['contactWay_delete']"
+                v-permission="'contactWay,contactWay_delete'"
                 :popAuth="true"
-                :auth="permissionMap['contactWay']['contactWay_delete']"
+                :auth="'contactWay,contactWay_delete'"
                 type="text"
                 size="mini"
                 class="button-s"

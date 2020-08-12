@@ -6,7 +6,8 @@
           <span class="font-l">{{corpInfo.name}}</span>
           <el-t-button
             :popAuth="true"
-            :auth="permissionMap['role']['role_add']"
+            v-permission="'role,role_add'"
+            :auth="'role,role_add'"
             size="small"
             type="text"
           >切换企业</el-t-button>
@@ -24,7 +25,7 @@
         highlight-current-row
         header-row-class-name="el-table-header"
       >
-        <el-table-column type="selection"></el-table-column>
+        <!-- <el-table-column type="selection"></el-table-column> -->
         <el-table-column prop="moduleName" label="审核类型" align="left"></el-table-column>
         <el-table-column label="审批角色" align="left">
           <template v-slot="{row}">
@@ -50,7 +51,8 @@
               type="text"
               size="mini"
               :popAuth="true"
-              :auth="permissionMap['role']['role_update']"
+              v-permission="'role,role_update'"
+              :auth="'role,role_update'"
               @click="handleDetail(row)"
             >详情</el-t-button>
             <el-divider direction="vertical"></el-divider>
@@ -59,7 +61,8 @@
               type="text"
               size="mini"
               :popAuth="true"
-              :auth="permissionMap['role']['role_update']"
+              v-permission="'role,role_update'"
+              :auth="'role,role_update'"
               @click="handleSetting(row)"
             >设置流程</el-t-button>
             <el-divider direction="vertical"></el-divider>
@@ -68,7 +71,8 @@
               type="text"
               size="mini"
               :popAuth="true"
-              :auth="permissionMap['role']['role_delete']"
+              v-permission="'role,role_delete'"
+              :auth="'role,role_delete'"
               @click="handleChange($index)"
             >
               <span v-if="row.openState" class="color-danger">关闭</span>
@@ -175,8 +179,8 @@ export default {
         })
     },
     handleChange(index) {
-        // console.log(index)
-      let { openState, moduleName, uuid,auditUsers } = this.listAll[index]
+      // console.log(index)
+      let { openState, moduleName, uuid, auditUsers } = this.listAll[index]
       this.$confirm(
         `是否${openState ? '关闭' : '开启'}${moduleName}审核？`,
         'Warning',
@@ -190,7 +194,7 @@ export default {
           //是否未设置审批人
           const emptyFlag = !!auditUsers.length
 
-        //   console.log(emptyFlag,val.auditUsers)
+          //   console.log(emptyFlag,val.auditUsers)
 
           if (emptyFlag) {
             const payload = {
@@ -233,7 +237,7 @@ export default {
     },
     handleDetail(val) {
       const uuid = val.uuid
-      
+
       this.$refs['formDialog'].event = 'DetailTemplate'
       this.$refs['formDialog'].eventType = 'detail'
       this.$refs['formDialog'].dialogVisible = true

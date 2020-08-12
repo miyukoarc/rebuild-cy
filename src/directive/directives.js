@@ -1,5 +1,8 @@
 /* jshint esversion: 6 */
 import Vue from 'vue';
+import './permission'
+
+// permission.install
 
 // 聚焦鼠标
 // Vue.directive('focus', {

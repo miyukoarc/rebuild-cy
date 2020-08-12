@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="content-spacing">
+    <el-card class="content-spacing" style="overflow:initial">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 
@@ -12,8 +12,8 @@
             size="mini"
             style="padding:0 15px 0 0"
             :popAuth="true"
-            v-if="permissionMap['automatic']['automatic_switchReply']"
-            :auth="permissionMap['automatic']['automatic_switchReply']"
+            v-permission="'automatic,automatic_switchReply'"
+            :auth="'automatic,automatic_switchReply'"
           >
             <div class="display-flex align-items-center">
               <span class="font-s mr-10">自动回复开关</span>
@@ -25,7 +25,8 @@
             type="primary"
             size="mini"
             :popAuth="true"
-            :auth="permissionMap['automatic']['automatic_addDefault']"
+            v-permission="'automatic,automatic_addDefault'"
+            :auth="'automatic,automatic_addDefault'"
             @click.stop="handleClickSetAutoReplay"
           >设置</el-t-button>
         </div>
@@ -40,7 +41,8 @@
           <el-t-button
             type="primary"
             :popAuth="true"
-            :auth="permissionMap['automatic']['automatic_add']"
+            v-permission="'automatic,automatic_add'"
+            :auth="'automatic,automatic_add'"
             @click.stop="handleCreate"
           >新建回复</el-t-button>
         </div>
@@ -79,7 +81,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="企业标签" align="left">
+          <el-table-column label="适用标签" align="left">
             <template v-slot="{row}">
               <div v-if="row.autoReplyTags.length>0">
                 <strong>{{row.autoReplyTagType=='CONTAIN'?'包含其一':'完全匹配'}}</strong>
@@ -109,8 +111,8 @@
               <el-t-button
                 type="text"
                 :popAuth="true"
-                v-if="permissionMap['automatic']['automatic_update']"
-                :auth="permissionMap['automatic']['automatic_update']"
+                v-permission="'automatic,automatic_update'"
+                :auth="'automatic,automatic_update'"
                 size="mini"
                 @click.stop="handleEdit(scope.row)"
               >编辑</el-t-button>
@@ -119,8 +121,8 @@
               <el-t-button
                 type="text"
                 :popAuth="true"
-                v-if="permissionMap['automatic']['automatic_delete']"
-                :auth="permissionMap['automatic']['automatic_delete']"
+                v-permission="'automatic,automatic_delete'"
+                :auth="'automatic,automatic_delete'"
                 size="mini"
                 @click.stop="handleDelete(scope.row)"
               >删除</el-t-button>

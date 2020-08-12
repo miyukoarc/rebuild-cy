@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-13 12:05:38
- * @LastEditTime: 2020-08-10 10:48:45
+ * @LastEditTime: 2020-08-11 21:58:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\layout\components\AppMain.vue
@@ -10,11 +10,11 @@
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
       <el-scrollbar>
-        <!-- <keep-alive v-if="saveroutes"> -->
-        <keep-alive :include="cachedViews">
+        <keep-alive v-if="saveroutes">
+        <!-- <keep-alive :include="cachedViews"> -->
           <router-view></router-view>
         </keep-alive>
-        <!-- <router-view v-else></router-view>  -->
+        <router-view v-else></router-view> 
       </el-scrollbar>
       <!-- <router-view :key="key" /> -->
     </transition>

@@ -6,7 +6,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="群发类型：">
-      <el-select v-model="query.sendType" placeholder="请选择">
+      <el-select v-model="query.sendType" placeholder="请选择" >
         <el-option
           v-for="item in sendType"
           :key="item.value"

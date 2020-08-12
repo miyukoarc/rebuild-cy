@@ -9,15 +9,15 @@
         <div slot="right">
           <el-t-button
             type="primary"
-            v-if="permissionMap['potentialCustomer']['potentialCustomer_add']"
-            :auth="permissionMap['potentialCustomer']['potentialCustomer_add']"
+            v-permission="'potentialCustomer,potentialCustomer_add'"
+            :auth="'potentialCustomer,potentialCustomer_add'"
             :popAuth="true"
             @click.stop="handleCreate"
           >新增用户</el-t-button>
           <el-t-button
             :popAuth="true"
-            v-if="permissionMap['potentialCustomer']['potentialCustomer_allocation']"
-            :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']"
+            v-permission="'potentialCustomer,potentialCustomer_allocation'"
+            :auth="'potentialCustomer,potentialCustomer_allocation'"
             @click.stop="handleDistribute"
           >分配</el-t-button>
         </div>
@@ -104,23 +104,23 @@
                 type="text"
                 size="mini"
                 :popAuth="true"
-                v-if="permissionMap['potentialCustomer']['potentialCustomer_allocation']"
-                :auth="permissionMap['potentialCustomer']['potentialCustomer_allocation']"
+                v-permission="'potentialCustomer,potentialCustomer_allocation'"
+                :auth="'potentialCustomer,potentialCustomer_allocation'"
                 @click.stop="handleAllocation(scope.row)"
               >分配</el-t-button>
               <el-t-button
                 type="text"
                 size="mini"
                 :popAuth="true"
-                v-if="permissionMap['potentialCustomer']['potentialCustomer_update']"
-                :auth="permissionMap['potentialCustomer']['potentialCustomer_update']"
+                v-permission="'potentialCustomer,potentialCustomer_update'"
+                :auth="'potentialCustomer,potentialCustomer_update'"
                 @click.stop="handleEdit(scope.row)"
               >编辑</el-t-button>
               <el-t-button
                 type="text"
                 :popAuth="true"
-                v-if="permissionMap['potentialCustomer']['potentialCustomer_delete']"
-                :auth="permissionMap['potentialCustomer']['potentialCustomer_delete']"
+                v-permission="'potentialCustomer,potentialCustomer_delete'"
+                :auth="'potentialCustomer,potentialCustomer_delete'"
                 size="mini"
                 @click.stop="handleDelete(scope.row)"
               >删除</el-t-button>

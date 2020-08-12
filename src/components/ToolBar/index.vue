@@ -5,9 +5,9 @@
         <slot name="left"></slot>
       </div>
       <div class="middle-left">
-        <el-button :loading="loading" type="primary" @click="actionExport" v-if="hasExport">导出Excel</el-button>
+        <el-button :loading="loading" type="primary" @click="actionExport" v-if="hasExport" :disabled="true">导出Excel</el-button>
         <el-button type="primary" @click="actionImport" v-if="hasImport">导入Excel</el-button>
-        <el-button type="text" @click="actionRefresh" v-if="hasRefresh">更新数据</el-button>
+        <el-t-button type="text" @click="actionRefresh" v-if="hasRefresh">更新数据</el-t-button>
         <span class="font-s color-info">{{msg}}</span>
       </div>
 

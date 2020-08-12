@@ -28,11 +28,15 @@
             <p class="name">总人数</p>
           </div>
           <div class="data-item flex-1">
-            <p class="bold">0</p>
+            <p
+              class="bold"
+            >{{groupDetail.groupNumber && groupDetail.groupNumber.yesterdayIn ? groupDetail.groupNumber.yesterdayIn:'0'}}</p>
             <p class="name">昨日新增</p>
           </div>
           <div class="data-item flex-1">
-            <p class="bold">0</p>
+            <p
+              class="bold"
+            >{{groupDetail.groupNumber && groupDetail.groupNumber.yesterdayOut ? groupDetail.groupNumber.yesterdayOut:'0'}}</p>
             <p class="name">昨日退群</p>
           </div>
         </div>
@@ -92,9 +96,11 @@
               <el-t-button
                 type="primary"
                 size="mini"
-                :auth="permissionMap['user']['user_detail']"
+                :auth="'user,user_detail'"
+                v-permission="'user,user_detail'"
                 :popAuth="true"
                 @click.stop="handleDetail(scope.row)"
+                :enable="scope.row.visible"
               >详情</el-t-button>
             </template>
           </el-table-column>
@@ -162,7 +168,7 @@ export default {
       const query = {
         uuid: this.groupDetail.owner.uuid,
         userId,
-        type:'user'
+        type: "user",
       };
       this.$router.push({
         path: "/message/singleListAll",

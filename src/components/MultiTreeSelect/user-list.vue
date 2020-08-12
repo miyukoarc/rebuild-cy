@@ -99,7 +99,6 @@ export default {
         } else {
           // if(!this.multiple){
 
-        //   console.log(newVal)
           const arr = pick(this.list, newVal)
           this.$emit('single', arr)
           // this.$emit('output', newVal)

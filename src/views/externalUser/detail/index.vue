@@ -86,15 +86,15 @@
                       ></el-input>
                       <span class="value" v-else>{{ item.value ? item.value : "--" }}</span>
 
-                      <span
+                      <el-t-button
+                        type="text"
                         class="edit-info"
                         v-if="(item.label == currentIndex) || currentInput===item.label"
-                        v-preventReClick
-                        @click.stop="editInfo(item,key)"
+                        @click.native.stop="editInfo(item,key)"
                       >
                         <span v-if="currentInput===item.label">保存</span>
                         <i class="el-icon-edit" v-else></i>
-                      </span>
+                      </el-t-button>
                     </div>
                   </el-col>
                 </el-row>
@@ -234,7 +234,8 @@
                 style="margin:auto 0;"
                 :popAuth="true"
                 size="mini"
-                :auth="permissionMap['externalUserTrends']['externalUserTrends_add']"
+                :auth="'externalUserTrends,externalUserTrends_add'"
+                v-permission="'externalUserTrends,externalUserTrends_add'"
               >添加动态</el-t-button>
             </div>
             <div class="member-status-content margin-top-20">
@@ -251,7 +252,8 @@
                       <p style="margin:0px;text-align:right;">
                         <el-t-button
                           :popAuth="true"
-                          :auth="permissionMap['externalUserTrends']['externalUserTrends_update']"
+                          :auth="'externalUserTrends,externalUserTrends_update'"
+                          v-permission="'externalUserTrends,externalUserTrends_update'"
                           type="text"
                           v-show="item.editable"
                           class="ml-10"
@@ -259,7 +261,8 @@
                         >编辑</el-t-button>
                         <el-t-button
                           :popAuth="true"
-                          :auth="permissionMap['externalUserTrends']['externalUserTrends_delete']"
+                          :auth="'externalUserTrends,externalUserTrends_delete'"
+                          v-permission="'externalUserTrends,externalUserTrends_delete'"
                           type="text"
                           v-show="item.editable"
                           class="ml-10"
@@ -333,6 +336,7 @@ export default {
         startTime: "",
         endTime: "",
       },
+      tempRoute: {},
     };
   },
 
@@ -346,6 +350,14 @@ export default {
     //   },
     //   immediate: true
     // }
+
+    uuid: {
+      handler(newVal, oldVal) {
+        if (newVal != 'undefined') {
+          this.initData(newVal)
+        }
+      },
+    },
   },
   computed: {
     ...mapState({
@@ -359,6 +371,9 @@ export default {
       permissionMap: (state) => state.permission.permissionMap,
       externalUserAddwayType: (state) => state.enum.externalUserAddwayType,
     }),
+    uuid() {
+      return this.$route.params.uuid;
+    },
     externalUserTrends() {
       return this.externalUserDetail?.externalUserTrends?.items;
     },
@@ -382,16 +397,9 @@ export default {
       }
     },
   },
-  created() {
-    const uuid = this.$route.params.uuid;
-    this.query.uuid = uuid;
-    this.initDetail(this.$route.params.uuid);
-
-    this.initExternalUserTrendsListAll(this.query);
-    document.addEventListener("click", () => {
-      this.currentInput = "";
-      this.currentIndex = "";
-    });
+  activated() {
+    this.initData(this.$route.params.uuid);
+    // this.tempRoute = Object.assign({}, this.$route);
   },
   mounted() {
     // window.addEventListener('scroll',this.handleScroll);
@@ -401,13 +409,35 @@ export default {
     initDetail(payload) {
       this.$store
         .dispatch("externalUser/getExternalUserDetail", payload)
-        .then(() => {})
+        .then(() => {
+          // this.setTagsViewTitle()
+        })
         .catch((err) => {
           this.$message({
             type: "error",
             message: err || "初始化失败",
           });
         });
+    },
+    initData(paramsUuid) {
+      if (paramsUuid) {
+        const uuid = paramsUuid;
+        this.query.uuid = paramsUuid;
+        this.initDetail(paramsUuid);
+
+        this.initExternalUserTrendsListAll(this.query);
+      }
+      document.addEventListener("click", () => {
+        this.currentInput = "";
+        this.currentIndex = "";
+      });
+    },
+    setTagsViewTitle() {
+      const title = "客户详情";
+      const route = Object.assign({}, this.tempRoute, {
+        title: `${title}-${this.$route.params.uuid}`,
+      });
+      this.$store.dispatch("tagsView/updateVisitedView", route);
     },
     // 初始化客户动态数据
     initExternalUserTrendsListAll(payload) {
@@ -457,6 +487,8 @@ export default {
           "externalUser/SAVE_EDITTAGSUUID",
           this.externalUserDetail.externalUserDetailCorpTagsList.corpTags
         );
+      } else {
+        this.$store.commit("externalUser/SAVE_EDITTAGSUUID");
       }
     },
     // 聊天

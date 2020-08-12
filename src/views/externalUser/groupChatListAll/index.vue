@@ -32,24 +32,24 @@
           <el-table-column prop="countNum" label="群人数" align="left"></el-table-column>
           <el-table-column label="昨日入群" align="left">
             <template v-slot="scoped">
-              <div>0</div>
+              <div>{{scoped.row.groupNumber && scoped.row.groupNumber.yesterdayIn ? scoped.row.groupNumber.yesterdayIn :"0"}}</div>
             </template>
           </el-table-column>
           <el-table-column label="昨日退群" align="left">
             <template v-slot="scoped">
-              <div>0</div>
+              <div>{{scoped.row.groupNumber && scoped.row.groupNumber.yesterdayOut ? scoped.row.groupNumber.yesterdayOut :"0"}}</div>
             </template>
           </el-table-column>
           <el-table-column label="创建时间" prop="createTime"></el-table-column>
           <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-t-button
-                v-if="permissionMap['externalUser']['externalUser_groupDetail']"
+                v-permission="'externalUser,externalUser_groupDetail'"
                 type="text"
                 size="mini"
                 @click.stop="handleDetail(scope.row)"
                 :popAuth="true"
-                :auth="permissionMap['externalUser']['externalUser_groupDetail']"
+                :auth="'externalUser,externalUser_groupDetail'"
               >详情</el-t-button>
             </template>
           </el-table-column>

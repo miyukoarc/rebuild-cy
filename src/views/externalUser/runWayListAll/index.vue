@@ -21,7 +21,6 @@
           highlight-current-row
           header-row-class-name="el-table-header"
         >
-
           <el-table-column label="流失客户" align="left">
             <template v-slot="scope">
               <div class="user-card">
@@ -56,12 +55,11 @@
                   {{item.name}}
                 </async-user-tag>
               </div>
-
             </template>
           </el-table-column>
           <el-table-column label="标签" align="left">
             <template v-slot="scope">
-              <tags-drawer-obj v-if="scope.row.tags" :tags="scope.row.tags.corpTags"></tags-drawer-obj>
+              <tags-drawer-obj v-if="scope.row.tags" :tags="scope.row.tags"></tags-drawer-obj>
             </template>
           </el-table-column>
           <el-table-column label="流失时间" align="left" prop="updatedAt"></el-table-column>
@@ -72,24 +70,22 @@
           <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-t-button
-                v-if="permissionMap['externalUser']['externalUser_detail']"
+                v-permission="'externalUser,externalUser_detail'"
                 type="text"
                 size="mini"
-                :auth="permissionMap['externalUser']['externalUser_detail']"
+                :auth="'externalUser,externalUser_detail'"
                 :popAuth="true"
-                @click.stop="handleDetail(scope.$index,scope.row)"
+                @click.native.stop="handleDetail(scope.$index,scope.row)"
               >详情</el-t-button>
-              <i class="el-icon-circle-close color-info"></i>
             </template>
           </el-table-column>
         </el-table>
 
-        <customer-pagination 
-        :pageConfig="pageConfig" 
-        @current-change="changePage" 
-        @size-change="changeSize">
-        </customer-pagination>
-
+        <customer-pagination
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
   </div>
@@ -103,7 +99,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import AsyncUserTag from "@/components/AsyncUserTag";
 import TagsDrawerObj from "@/components/TagsDrawerObj";
 import UserTag from "@/components/UserTag";
-import CustomerPagination from '@/components/CustomerPagination'
+import CustomerPagination from "@/components/CustomerPagination";
 
 export default {
   name: "runWayListAll",
@@ -113,7 +109,7 @@ export default {
     AsyncUserTag,
     TagsDrawerObj,
     UserTag,
-    CustomerPagination
+    CustomerPagination,
   },
   data() {
     return {
@@ -121,7 +117,7 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
@@ -133,19 +129,19 @@ export default {
         userUuid: "",
         startTime: "",
         endTime: "",
-        delFollow: ""
-      }
+        delFollow: "",
+      },
     };
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      loading: state => state.externalUser.loading,
-      runWayListAll: state => state.externalUser.runWayListAll,
-      runWayListAllPage: state => state.externalUser.runWayListAllPage,
-      permissionMap: state => state.permission.permissionMap
-    })
+      tagListAll: (state) => state.tag.tagListAll,
+      loading: (state) => state.externalUser.loading,
+      runWayListAll: (state) => state.externalUser.runWayListAll,
+      runWayListAllPage: (state) => state.externalUser.runWayListAllPage,
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
     this.initDataList(this.query);
@@ -163,11 +159,11 @@ export default {
           this.pageConfig.pageNumber = this.runWayListAllPage.pageNumber + 1;
           this.pageConfig.total = this.runWayListAllPage.total;
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
     },
@@ -179,20 +175,20 @@ export default {
       this.$store
         .dispatch("tag/getListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
 
       this.$store
         .dispatch("user/getUserListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
     },
@@ -200,7 +196,7 @@ export default {
     handleDetail(index, row) {
       this.$router.push({
         path: `/externalUser/detail/${row.externalUser.uuid}`,
-        query: { userId: row.user.userId }
+        query: { userId: row.user.userId },
       });
     },
     handleSearch(val) {
@@ -212,7 +208,7 @@ export default {
         flag,
         startTime,
         endTime,
-        delFollow
+        delFollow,
       } = val;
       if (delFollow === "") {
         this.query.delFollow = "";
@@ -227,9 +223,9 @@ export default {
       this.query.userUuid = userUuid ? userUuid : this.query.userUuid;
       this.query.startTime = startTime ? startTime : this.query.startTime;
       this.query.endTime = endTime ? endTime : this.query.endTime;
-      this.query.page = 0
+      this.query.page = 0;
       // this.query.delFollow = delFollow ? delFollow : this.query.delFollow;
-    //   console.log(val, "handleSearch");
+      //   console.log(val, "handleSearch");
       this.initDataList(this.query);
     },
     handleRefresh() {
@@ -242,14 +238,12 @@ export default {
       this.pageConfig.pageNumber = key - 1;
       this.initDataList(this.query);
     },
-    doExport(val) {
-      ;
+    doExport(val) {},
+    changeSize(val) {
+      this.query.size = val;
+      this.initDataList(this.query);
     },
-    changeSize(val){
-        this.query.size = val
-        this.initDataList(this.query)
-    }
-  }
+  },
 };
 </script>
 

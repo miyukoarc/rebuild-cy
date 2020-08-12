@@ -141,17 +141,17 @@
       </div>
     </el-form-item>
     <div class="text-align-center">
-      <el-button
+      <el-t-button
         v-if="detail.auditState==='TO_BE_REVIEWED'&&!currentUserState(detail.auditUsers)"
         size="small"
         @click="handleAudit(action='reject')"
-      >拒绝</el-button>
-      <el-button
+      >拒绝</el-t-button>
+      <el-t-button
         v-if="detail.auditState==='TO_BE_REVIEWED'&&!currentUserState(detail.auditUsers)"
         type="primary"
         size="small"
         @click="handleAudit(action='access')"
-      >通过</el-button>
+      >通过</el-t-button>
       <el-button
         v-if="detail.auditState!=='TO_BE_REVIEWED'||currentUserState(detail.auditUsers)"
         size="small"

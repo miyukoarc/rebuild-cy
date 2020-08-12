@@ -10,13 +10,15 @@
           <el-t-button
             type="primary"
             :popAuth="true"
-            :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']"
+            v-permission="'audit,audit_batchAuditTagConfirmation'"
+            :auth="'audit,audit_batchAuditTagConfirmation'"
             @click="handleBatch(action='access')"
           >批量通过</el-t-button>
           <el-t-button
             type="primary"
             :popAuth="true"
-            :auth="permissionMap['audit']['audit_batchAuditTagConfirmation']"
+            v-permission="'audit,audit_batchAuditTagConfirmation'"
+            :auth="'audit,audit_batchAuditTagConfirmation'"
             @click="handleBatch(action='reject')"
           >批量拒绝</el-t-button>
         </div>

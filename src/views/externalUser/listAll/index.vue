@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="content-spacing">
+    <el-card class="content-spacing" style="overflow:initial">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 
@@ -57,16 +57,16 @@
           <el-table-column label="添加时间" align="left" prop="createdAt"></el-table-column>
 
           <el-table-column label="操作" align="center" width="80px">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <el-t-button
-                v-if="permissionMap['externalUser']['externalUser_detail']"
+                v-permission="'externalUser,externalUser_detail'"
                 :popAuth="true"
-                :auth="permissionMap['externalUser']['externalUser_detail']"
+                :auth="'externalUser,externalUser_detail'"
                 type="text"
                 size="mini"
-                @click.stop="handleDetail(scope.row)"
+                @click.native.stop="handleDetail(scope.row)"
               >详情</el-t-button>
-              <i class="el-icon-circle-close color-info" v-else></i>
+              <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
             </template>
           </el-table-column>
         </el-table>
@@ -138,9 +138,6 @@ export default {
     this.initDataList(this.query)
     this.initFilter()
   },
-  mounted() {
-    console.log(this.$router.options.routes)
-  },
   methods: {
     /**
      * 初始化表格信息
@@ -149,6 +146,7 @@ export default {
       this.$store
         .dispatch('externalUser/getExternalUserListAll', payload)
         .then(() => {
+          console.log(this.externalUserListAll)
           //初始化分页
           this.pageConfig.pageNumber = this.listAllPage.pageNumber + 1
           this.pageConfig.total = this.listAllPage.total
