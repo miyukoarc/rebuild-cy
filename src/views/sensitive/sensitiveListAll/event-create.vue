@@ -204,7 +204,7 @@ export default {
 
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (this.userSelects.length) {
+          if (this.form.words.length) {
             this.$store
               .dispatch('sensitive/add', payload)
               .then(() => {

@@ -71,7 +71,7 @@
                 v-permission="'externalUser,externalUser_detail'"
                 type="text"
                 size="mini"
-                @click.stop="handleDetail(scope.row)"
+                @click.stop.index="handleDetail(scope.row)"
               >详情</el-t-button>
             </template>
           </el-table-column>

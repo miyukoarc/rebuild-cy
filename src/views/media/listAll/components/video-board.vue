@@ -53,7 +53,7 @@
                 v-if="scope.row.auditStateForOperation==='UNDER_REVCIEW'"
                 class="color-primary"
               >审核中</span>
-              <el-t-button v-else type="text" @click.stop="handleDelete(scope.$index)">删除</el-t-button>
+              <el-t-button v-else type="text" @click.stop.native="handleDelete(scope.$index)">删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>

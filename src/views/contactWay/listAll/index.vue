@@ -93,9 +93,8 @@
                 :auth="'contactWay,contactWay_detail'"
                 type="text"
                 class="button-s"
-                @click.stop="handleDetail(scope.$index,scope.row)"
+                @click.stop.native="handleDetail(scope.$index,scope.row)"
               >详情</el-t-button>
-              <el-divider direction="vertical"></el-divider>
 
               <el-t-button
                 :popAuth="true"
@@ -103,9 +102,8 @@
                 :auth="'contactWay,contactWay_detail'"
                 type="text"
                 class="button-s"
-                @click.stop="downLoad(scope.row)"
+                @click.stop.native="downLoad(scope.row)"
               >下载</el-t-button>
-              <el-divider direction="vertical"></el-divider>
 
               <el-t-button
                 v-permission="'contactWay,contactWay_update'"
@@ -113,9 +111,8 @@
                 :auth="'contactWay,contactWay_update'"
                 type="text"
                 class="button-s"
-                @click.stop="handleEdit(scope.row)"
+                @click.stop.native="handleEdit(scope.row)"
               >编辑</el-t-button>
-              <el-divider direction="vertical"></el-divider>
 
               <el-t-button
                 v-permission="'contactWay,contactWay_delete'"
@@ -124,7 +121,7 @@
                 type="text"
                 size="mini"
                 class="button-s"
-                @click.stop="handleDelete(scope.row)"
+                @click.stop.native="handleDelete(scope.row)"
               >删除</el-t-button>
             </template>
           </el-table-column>

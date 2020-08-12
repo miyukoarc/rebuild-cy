@@ -48,7 +48,7 @@
                     :popAuth="true"
                     :auth="'mediaGroup,mediaGroup_rename'"
                     v-permission="'mediaGroup,mediaGroup_rename'"
-                    @click.stop="handleEditGroup(scope.$index)"
+                    @click.stop.native="handleEditGroup(scope.$index)"
                   >修改</el-t-button>
                   <el-t-button
                     type="text"
@@ -56,7 +56,7 @@
                     :popAuth="true"
                     :auth="'mediaGroup,mediaGroup_delete'"
                     v-permission="'mediaGroup,mediaGroup_delete'"
-                    @click.stop="handleDeleteGroup(scope.$index)"
+                    @click.stop.native="handleDeleteGroup(scope.$index)"
                   >删除</el-t-button>
                 </div>
               </template>

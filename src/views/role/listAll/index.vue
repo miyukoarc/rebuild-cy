@@ -43,28 +43,24 @@
               <el-t-button
                 type="text"
                 size="mini"
-                @click="handlePermission(scope.row)"
+                @click.stop.native="handlePermission(scope.row)"
                 :popAuth="true"
                 :auth="'role,role_update'"
                 v-permission="'role,role_update'"
               >配置权限</el-t-button>
-              <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
-              <!-- <el-divider direction="vertical"></el-divider> -->
               <el-t-button
                 type="text"
                 size="mini"
-                @click="handleEdit(scope.row)"
+                @click.stop.native="handleEdit(scope.row)"
                 :popAuth="true"
                 v-permission="'role,role_update'"
                 :auth="'role,role_update'"
               >编辑</el-t-button>
-              <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
-              <!-- <el-divider direction="vertical"></el-divider> -->
 
               <el-t-button
                 type="text"
                 size="mini"
-                @click="handleDelete(scope.row)"
+                @click.stop.native="handleDelete(scope.row)"
                 :popAuth="true"
                 v-permission="'role,role_delete'"
                 :auth="'role,role_delete'"

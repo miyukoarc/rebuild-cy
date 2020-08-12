@@ -103,7 +103,7 @@
           <el-table-column label="操作" width="80" align="right">
             <template v-slot="{row}">
               <div>
-                <el-t-button type="text" @click="handleAudit(row.uuid)">详细</el-t-button>
+                <el-t-button type="text" @click.stop.native="handleAudit(row.uuid)">详细</el-t-button>
               </div>
             </template>
           </el-table-column>

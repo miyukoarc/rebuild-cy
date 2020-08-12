@@ -43,7 +43,7 @@
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
           <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button>
+              <el-button type="primary" size="mini" @click.stop.native="handleDetail(scope.$index)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>

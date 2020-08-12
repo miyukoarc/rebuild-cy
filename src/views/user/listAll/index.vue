@@ -87,7 +87,7 @@
                 :popAuth="true"
                 v-permission="'user,user_update'"
                 :auth="'user,user_update'"
-                @click.stop="handleDistributeRole(scope.$index)"
+                @click.stop.native="handleDistributeRole(scope.$index)"
               >分配角色</el-t-button>
 
 
@@ -97,7 +97,7 @@
                 :popAuth="true"
                 v-permission="'department,department_allocation'"
                 :auth="'department,department_allocation'"
-                @click.stop="handleDistributeDepartment(scope.$index)"
+                @click.stop.native="handleDistributeDepartment(scope.$index)"
               >分配部门</el-t-button>
 
 
@@ -107,7 +107,7 @@
                 :popAuth="true"
                 v-permission="'user,user_detail'"
                 :auth="'user,user_detail'"
-                @click.stop="handleDetail(scope.$index)"
+                @click.stop.native="handleDetail(scope.$index)"
               >详情</el-t-button>
 
             </template>

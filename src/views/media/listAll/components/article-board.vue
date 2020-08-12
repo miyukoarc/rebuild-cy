@@ -37,10 +37,9 @@
                 <span class="color-primary">审核中</span>
               </div>
               <div v-else>
-                <el-t-button type="text" @click.stop="handleEdit(row.uuid)">编辑</el-t-button>
-                <el-divider direction="vertical"></el-divider>
+                <el-t-button type="text" @click.stop.native="handleEdit(row.uuid)">编辑</el-t-button>
 
-                <el-t-button type="text" @click.stop="handleDelete(row.uuid)">删除</el-t-button>
+                <el-t-button type="text" @click.stop.native="handleDelete(row.uuid)">删除</el-t-button>
               </div>
             </template>
           </el-table-column>

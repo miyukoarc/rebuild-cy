@@ -166,7 +166,7 @@
                       size="mini"
                       type="primary"
                       :disabled="scope.row.lastMsgTime == null"
-                      @click="handleDetail(scope.row)"
+                      @click.stop.native="handleDetail(scope.row)"
                     >聊天记录</el-button>
                   </div>
                 </template>

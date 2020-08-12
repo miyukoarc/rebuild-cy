@@ -51,7 +51,7 @@
                 :popAuth="true"
                 v-permission="'externalUser,externalUser_redistributionExUser'"
                 :auth="'externalUser,externalUser_redistributionExUser'"
-                @click.stop="handleDistributeSingle(scope.$index,scope.row)"
+                @click.stop.native="handleDistributeSingle(scope.$index,scope.row)"
               >分配</el-t-button>
               <!-- <el-t-button :popAuth="true" :auth="permissionMap['externalUser']['externalUser_quitUserRelationExUserList']" type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-t-button> -->
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
