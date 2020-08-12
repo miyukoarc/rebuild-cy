@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-15 15:08:24
- * @LastEditTime: 2020-08-12 14:50:46
+ * @LastEditTime: 2020-08-12 20:47:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\components\ChatInfomation.vue
@@ -10,7 +10,7 @@
   <div class="chat-info display-flex align-items-center">
     <img
       v-if="currnetMember.chatType != 'ROOM'"
-      :src="currnetMember._id == name?currnetMember.fromAvatar: currnetMember.toAvatar"
+      :src="currnetMember._id == currnetMember.fromUserId?currnetMember.fromAvatar: currnetMember.toAvatar"
       alt
     />
     <div v-else class="group-list-left flex-column-center-alinecenter">
@@ -21,13 +21,13 @@
       <p>
         <span
           v-if="currnetMember.chatType != 'ROOM'"
-        >{{currnetMember._id == name?currnetMember.fromName: currnetMember.toName}}</span>
+        >{{currnetMember._id == currnetMember.fromUserId?currnetMember.fromName: currnetMember.toName}}</span>
         <span v-else>{{currnetMember.groupName}}</span>
         <!-- <span>@微信</span> -->
       </p>
       <div
         v-show="currnetMember.toName || currnetMember.fromName"
-      >昵称：{{currnetMember._id == name?currnetMember.fromName: currnetMember.toName}}</div>
+      >昵称：{{currnetMember._id == currnetMember.fromUserId?currnetMember.fromName: currnetMember.toName}}</div>
     </div>
   </div>
 </template>
@@ -39,12 +39,9 @@ export default {
       type: Object,
       default: () => {},
     },
-    name: {
-      type: String,
-    },
   },
   mounted() {
-    console.log(this.currnetMember, "CURR", name);
+    console.log(this.currnetMember, "CURR");
   },
 };
 </script>

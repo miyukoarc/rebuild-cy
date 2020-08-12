@@ -202,7 +202,7 @@ export default {
       auditSetting: (state) => state.sensitive.auditSetting,
     }),
   },
-  created() {
+  activated() {
     this.initDataList()
   },
   mounted() {

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-08-12 15:08:40
+ * @LastEditTime: 2020-08-12 20:48:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -71,7 +71,7 @@
                       >
                         <img
                           v-if="item.chatType != 'ROOM'"
-                          :src="item._id == query.toUserId? item.fromAvatar :item.toAvatar"
+                          :src="item._id == item.fromUserId? item.fromAvatar :item.toAvatar"
                           alt
                         />
                         <div v-else class="group-list-left flex-column-center-alinecenter">
@@ -82,7 +82,7 @@
                           <p class="display-flex justify-content-space-between">
                             <strong
                               v-if="item.chatType != 'ROOM'"
-                            >{{item._id == query.toUserId? item.fromName:item.toName}}</strong>
+                            >{{item._id == item.fromUserId? item.fromName:item.toName}}</strong>
                             <strong v-else>{{item.groupName}}</strong>
                             <span>{{item.msgTime.substr(11)}}</span>
                           </p>
@@ -109,7 +109,7 @@
         <div class="flex-1">
           <!-- 右侧顶部按钮-->
           <div class="right">
-            <chat-information :currnetMember="currnetMember" :name=" query.toUserId"></chat-information>
+            <chat-information :currnetMember="currnetMember"></chat-information>
             <keep-alive>
               <div class="chat-content chat-tab-bar">
                 <el-tabs v-model="chatActiveName" @tab-click="handleClickChatType">
@@ -185,7 +185,7 @@ import docmsgComponent from "./messageTypeComponent/docmsgComponent.vue";
 import chatrecordComponent from "./messageTypeComponent/chatrecordComponent.vue";
 import locationComponent from "./messageTypeComponent/locationComponent.vue";
 import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_callComponent.vue";
-
+ 
 import mixedComponent from "./messageTypeComponent/mixedComponent.vue";
 
 export default {
@@ -212,7 +212,7 @@ export default {
     chatrecordComponent,
     locationComponent,
     meeting_voice_callComponent,
-    mixedComponent,
+    mixedComponent
   },
   data() {
     return {
@@ -318,7 +318,6 @@ export default {
       type: this.$route.query.type,
       uuid: this.$route.query.uuid,
     };
-
     this.initDataList(payload);
   },
   mounted() {},
