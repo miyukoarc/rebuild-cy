@@ -138,5 +138,12 @@ export const alterType = (payload)=>{
 }
 
 
+export const getListSelectTree = ()=>{
+    return request({
+        url: '/department/listSelectTree',
+        method:'get',
+    })
+}
+
 
 

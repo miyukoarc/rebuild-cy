@@ -12,7 +12,6 @@ export default{
       if(this.chart) {
         this.chart.resize()
       }
-      console.log(window.innerWidth,window.innerHeight)
       this.$store.commit('app/SAVE_WINDOWSIZE',{innerWidth:window.innerWidth,innerHeight:window.innerHeight})
       this.$store.commit('app/TOGGLE_ISMAXIMUM',false)
     },100)

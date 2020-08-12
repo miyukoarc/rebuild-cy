@@ -151,7 +151,8 @@
         label-position="left"
       >
         <el-form-item label="通知审核人"></el-form-item>
-        <complex-select v-model="selects" :options="departmentList"></complex-select>
+        <multi-tree-select v-model="selects" :section="'user'" :multiple="true"></multi-tree-select>
+        <!-- <complex-select v-model="selects" :options="departmentList"></complex-select> -->
       </el-form>
 
       <el-form

@@ -44,7 +44,15 @@ const state = {
   /**
    * 全部群发详情
    */
-  batchSendTaskListAllDetail: {},
+  batchSendTaskListAllDetail: {
+    results: [],
+    sender: {
+      name: ""
+    },
+    media: {
+      uuid: null,
+    }
+  },
   listMy: [],
   listMyPage: {
     total: 0,

@@ -126,12 +126,6 @@ export default {
         return []
       },
     },
-    options: {
-      type: Array,
-      default: () => {
-        return []
-      },
-    },
     multiple: {
       type: Boolean,
       default: false,
@@ -173,7 +167,7 @@ export default {
     },
     initData() {
       this.$store
-        .dispatch('department/getDepartmentListAll')
+        .dispatch('department/getListSelectTree')
         .then((res) => {
           this.departmentList = res
         })

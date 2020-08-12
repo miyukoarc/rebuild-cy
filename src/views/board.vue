@@ -63,7 +63,7 @@
     </div>
 
     <div style="margin:30px 0;">
-      <complex-select v-model="selects" :options="departmentList"></complex-select>
+      <!-- <complex-select v-model="selects" :options="departmentList"></complex-select> -->
     </div>
 
     <div class="mb-20">

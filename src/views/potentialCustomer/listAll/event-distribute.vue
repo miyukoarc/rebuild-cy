@@ -80,7 +80,7 @@ export default {
   computed: {
     ...mapState({
       // user: state => state.user.currentRowUserList,
-      departmentList: (state) => state.department.departmentList,
+    //   departmentList: (state) => state.department.departmentList,
       userListSelect: (state) => state.user.listSelect,
     }),
   },

@@ -216,15 +216,15 @@ export default {
           })
         })
 
-      this.$store
-        .dispatch('department/getDepartmentListAll')
-        .then(() => {})
-        .catch((err) => {
-          this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+    //   this.$store
+    //     .dispatch('department/getDepartmentListAll')
+    //     .then(() => {})
+    //     .catch((err) => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: err || '初始化失败',
+    //       })
+    //     })
 
       this.$store
         .dispatch('user/getUserListSelect')
