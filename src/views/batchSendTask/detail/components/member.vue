@@ -27,11 +27,11 @@
                         <i class="el-icon-question"></i>
                       </el-tooltip>
                     </span>
-                  </span> -->
+                  </span>-->
                 </div>
               </div>
               <div class="friends">
-                <p>共{{item.length}}个好友</p>
+                <p>共{{item.results.length}}个好友</p>
               </div>
             </div>
           </div>
@@ -67,13 +67,13 @@ import defaultAvatar from "@/assets/no-menber-result.png";
 
 export default {
   props: {
-    memberData: Array
+    memberData: Array,
   },
   data() {
     return {
-      noMember: defaultAvatar
+      noMember: defaultAvatar,
     };
-  }
+  },
 };
 </script>
 

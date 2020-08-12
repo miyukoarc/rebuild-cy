@@ -55,8 +55,8 @@
         <el-t-button
           size="small"
           :popAuth="true"
-          v-permission="'media,media_add'"
-          :auth="'media,media_add'"
+          v-permission="'media,media_article/update'"
+          :auth="'media,media_article/update'"
           type="primary"
           @click="handleConfirm"
           :throat="5000"

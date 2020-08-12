@@ -33,7 +33,6 @@
           highlight-current-row
           header-row-class-name="el-table-header"
         >
-          <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column prop="name" label="角色名称" align="left"></el-table-column>
           <el-table-column label="备注" align="left">
             <template v-slot="{row}">{{row.remark?row.remark:'--'}}</template>
@@ -102,8 +101,8 @@ export default {
       departmentList: (state) => state.department.departmentList,
       loading: (state) => state.role.loading,
       corpInfo: (state) => state.auth.corpInfo,
-
       permissionMap: (state) => state.permission.permissionMap,
+      listSelect: state => state.department.listSelect
     }),
   },
   activated() {
@@ -125,6 +124,14 @@ export default {
             type: 'error',
             message: '初始化失败',
           })
+        })
+    },
+    initFilter() {
+      this.$store
+        .dispatch('department/getDepartmentListSelect')
+        .then(() => {})
+        .catch((err) => {
+          console.error(err)
         })
     },
     handleChange() {

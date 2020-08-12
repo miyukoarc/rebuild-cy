@@ -166,7 +166,7 @@
                 <i class="el-icon-s-comment" style="margin-right:5px;color:#555"></i>
                 <strong>共{{clientData.length}}位</strong>
               </div>
-              <client-component :clientData="clientData"></client-component>
+              <client-component :clientData="clientData" :member="batchSendTaskListAllDetail"></client-component>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -208,7 +208,15 @@ export default {
       query: {
         uuid: "",
       },
-      memberActiveName: "all",
+      statistics: {
+        NOT_SEND: [],
+        HAS_SEND: [],
+        NOT_FRIEND_FAIL: [],
+        HAS_RECEIVED_FAIL: [],
+        HAS_RECEIVED: [],
+        HAS_READ_ARTICLE: [],
+      },
+
       memberTabs: [
         {
           label: "本次推送全部成员",
@@ -227,24 +235,9 @@ export default {
           name: "3",
         },
       ],
-      statistics: {
-        NOT_SEND: [],
-        HAS_SEND: [],
-        NOT_FRIEND_FAIL: [],
-        HAS_RECEIVED_FAIL: [],
-        HAS_RECEIVED: [],
-        HAS_READ_ARTICLE: [],
-      },
-      memberData: [
-        {
-          name: "陈开元",
-          img:
-            "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-          length: "13",
-        },
-      ],
+      memberActiveName: "all",
+      memberData: [],
 
-      clientActiveName: "all",
       clientTabs: [
         {
           label: "本次推送全部客户",
@@ -267,20 +260,8 @@ export default {
           name: "4",
         },
       ],
-      clientData: [
-        {
-          name: "陈开元",
-          img:
-            "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-          length: "13",
-        },
-        {
-          name: "陆浩然",
-          img:
-            " http://wework.qpic.cn/wwhead/duc2TvpEgSTPk74IwG7Bs1CTrX18wQ9JrSmyhm8dh60HicOr3bNBoHaM1mB9iaNXrY99mCXfrFNBE/0",
-          length: "21",
-        },
-      ],
+      clientActiveName: "all",
+      clientData: [],
     };
   },
   watch: {},
@@ -291,9 +272,11 @@ export default {
       batchAddTaskState: (state) => state.enum.batchAddTaskState,
     }),
   },
-  created() {
+  activated() {
     this.query.uuid = this.$route.params.uuid;
     this.initDetail(this.query.uuid);
+  },
+  created() {
     // let params = {
     //   batchSendTaskUuid: "",
     //   page: this.pageConfig.pageNumber,
@@ -301,9 +284,7 @@ export default {
     // };
     // this.initBatchSendTaskResult();
   },
-  mounted() {
-    console.log(this.batchSendTaskListAllDetail, "batchSendTaskListAllDetail");
-  },
+  mounted() {},
   beforeUpdate() {},
   updated() {},
   methods: {
@@ -316,6 +297,8 @@ export default {
           this.batchSendTaskListAllDetail.results.map((obj) => {
             this.statistics[obj.sendResult].push(obj);
           });
+          this.handleClickClient();
+          this.handleClickMember();
         })
         .catch((err) => {
           this.$message({
@@ -335,76 +318,86 @@ export default {
           });
         });
     },
-    handleClickMember(val, event) {
-      console.log(this.memberActiveName, "memberActiveName");
+    handleClickMember() {
       if (this.memberActiveName == "all") {
         this.memberData = [
           {
-            name: "陈开元",
-            img:
-              "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-            length: "13",
+            name: this.batchSendTaskListAllDetail.sender.name,
+            img: this.batchSendTaskListAllDetail.sender.avatar,
+            results: this.batchSendTaskListAllDetail.results,
           },
         ];
-      }
-      if (this.memberActiveName == 1) {
-        this.memberData = [
-          {
-            name: "陈开元",
-            img:
-              "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-            length: "13",
-          },
-        ];
-      }
-      if (this.memberActiveName == 2) {
-        this.memberData = [];
-      }
-      if (this.memberActiveName == 3) {
+      } else if (this.memberActiveName == 1) {
+        if (this.batchSendTaskListAllDetail.state == "PENDING") {
+          this.memberData = [];
+        } else {
+          this.memberData = [
+            {
+              name: this.batchSendTaskListAllDetail.sender.name,
+              img: this.batchSendTaskListAllDetail.sender.avatar,
+              results: this.batchSendTaskListAllDetail.results,
+            },
+          ];
+        }
+      } else if (this.memberActiveName == 2) {
+        if (this.batchSendTaskListAllDetail.state != "PENDING") {
+          this.memberData = [];
+        } else {
+          this.memberData = [
+            {
+              name: this.batchSendTaskListAllDetail.sender.name,
+              img: this.batchSendTaskListAllDetail.sender.avatar,
+              results: this.batchSendTaskListAllDetail.results,
+            },
+          ];
+        }
+      } else if (this.memberActiveName == 3) {
         this.memberData = [];
       }
     },
     handleClickClient() {
       if (this.clientActiveName == "all") {
-        this.clientData = [
-          {
-            name: "陈开元",
-            img:
-              "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-            length: "13",
-          },
-          {
-            name: "陆浩然",
-            img:
-              " http://wework.qpic.cn/wwhead/duc2TvpEgSTPk74IwG7Bs1CTrX18wQ9JrSmyhm8dh60HicOr3bNBoHaM1mB9iaNXrY99mCXfrFNBE/0",
-            length: "21",
-          },
-        ];
+        this.clientData = [];
+        this.batchSendTaskListAllDetail.results.map((obj) => {
+          this.clientData.push({
+            name: obj.externalUser.name,
+            img: obj.externalUser.avatar,
+            sendResult: obj.sendResult,
+          });
+        });
       }
       if (this.clientActiveName == 1) {
-        this.clientData = [
-          {
-            name: "陈开元",
-            img:
-              "http://wework.qpic.cn/bizmail/VcUTR8AmXd8Eoeicj9SUOGCj7IBTQy5AkgaHzeBJh8jaicxVvicg0v77w/0",
-            length: "13",
-          },
-          {
-            name: "陆浩然",
-            img:
-              " http://wework.qpic.cn/wwhead/duc2TvpEgSTPk74IwG7Bs1CTrX18wQ9JrSmyhm8dh60HicOr3bNBoHaM1mB9iaNXrY99mCXfrFNBE/0",
-            length: "21",
-          },
-        ];
+        this.clientData = [];
+        this.statistics.HAS_SEND.map((obj) => {
+          this.clientData.push({
+            name: obj.externalUser.name,
+            img: obj.externalUser.avatar,
+            sendResult: obj.sendResult,
+          });
+        });
       }
       if (this.clientActiveName == 2) {
         this.clientData = [];
+        this.statistics.NOT_SEND.map((obj) => {
+          this.clientData.push({
+            name: obj.externalUser.name,
+            img: obj.externalUser.avatar,
+            sendResult: obj.sendResult,
+          });
+        });
       }
       if (this.clientActiveName == 3) {
         this.clientData = [];
       }
       if (this.clientActiveName == 4) {
         this.clientData = [];
+        this.statistics.NOT_FRIEND_FAIL.map((obj) => {
+          this.clientData.push({
+            name: obj.externalUser.name,
+            img: obj.externalUser.avatar,
+            sendResult: obj.sendResult,
+          });
+        });
       }
     },
   },

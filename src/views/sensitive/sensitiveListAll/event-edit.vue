@@ -141,6 +141,8 @@ export default {
         this.form.tagType = tagType
         this.form.word = word
 
+        console.log(sensitiveSetTag)
+
         this.form.setTag = sensitiveSetTag
           .reduce((sum, curr) => {
             return sum.concat(curr.tags)
@@ -236,9 +238,9 @@ export default {
       //   } else {
       //     this.form.toRole = this.toRoles
       //   }
-      this.form.setTag = this.tagSelects.reduce((sum, curr) => {
-        return sum.concat(curr)
-      }, [])
+    //   this.form.setTag = this.tagSelects.reduce((sum, curr) => {
+    //     return sum.concat(curr)
+    //   }, [])
       const payload = this.form
 
       this.$refs['form'].validate((valid) => {
@@ -274,7 +276,7 @@ export default {
     handleChange() {},
     handleCloseTag() {},
     handleRefresh() {
-      this.$bus.$emit('handleRefrensh')
+      this.$bus.$emit('handleRefresh')
     },
     handleClose(tag) {
       this.form.words.splice(this.form.words.indexOf(tag), 1)
