@@ -37,9 +37,21 @@
                 <span class="color-primary">审核中</span>
               </div>
               <div v-else>
-                <el-t-button type="text" @click.stop.native="handleEdit(row.uuid)">编辑</el-t-button>
+                <el-t-button
+                  type="text"
+                  v-permission="'media,media_article/update'"
+                  :popAuth="true"
+                  :auth="'media,media_article/update'"
+                  @click.stop.native="handleEdit(row.uuid)"
+                >编辑</el-t-button>
 
-                <el-t-button type="text" @click.stop.native="handleDelete(row.uuid)">删除</el-t-button>
+                <el-t-button
+                  type="text"
+        v-permission="'media,media_deleteMediaIsAudit'"
+        :popAuth="true"
+        :auth="'media,media_deleteMediaIsAudit'"
+                  @click.stop.native="handleDelete(row.uuid)"
+                >删除</el-t-button>
               </div>
             </template>
           </el-table-column>
