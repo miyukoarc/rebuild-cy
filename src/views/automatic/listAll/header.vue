@@ -174,8 +174,8 @@ export default {
   .handle-warp .el-form-item {
     margin-bottom: 0px;
   }
-  .el-date-range-picker {
-    width: auto;
-  }
+}
+.el-date-range-picker {
+  width: auto;
 }
 </style>

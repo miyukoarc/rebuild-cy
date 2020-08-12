@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-27 14:05:27
- * @LastEditTime: 2020-07-29 16:02:40
+ * @LastEditTime: 2020-08-12 15:32:48
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\potentialCustomer\listAll\event-distribute.vue
@@ -22,8 +22,8 @@
       <el-form-item label="分配目标：" prop="userUuid" :rules="rules.userUuid">
         <el-select filterable v-model="form.userUuid" style="width:100%;margin-bottom:20px">
           <el-option
-            v-for="item in userListSelect"
-            :key="item.userId"
+            v-for="(item,index) in userListSelect"
+            :key="index"
             :label="item.name"
             :value="item.uuid"
           ></el-option>
@@ -33,7 +33,7 @@
       <!-- {{user.uuid}} -->
       <div class="text-align-center">
         <el-button size="small" @click="handleCancel">取消</el-button>
-        <el-t-button size="small" type="primary" @click="handleConfrim">确定</el-t-button>
+        <el-t-button size="small" type="primary" @click.native.stop="handleConfrim">确定</el-t-button>
       </div>
     </el-form>
   </div>

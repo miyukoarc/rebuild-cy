@@ -38,7 +38,6 @@
           v-loading="loading"
           :data="listMy"
           style="width: 100%"
-          row-key="uuid"
           stripe
           lazy
           fit
