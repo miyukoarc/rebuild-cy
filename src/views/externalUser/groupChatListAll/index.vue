@@ -32,12 +32,12 @@
           <el-table-column prop="countNum" label="群人数" align="left"></el-table-column>
           <el-table-column label="昨日入群" align="left">
             <template v-slot="scoped">
-              <div>0</div>
+              <div>{{scoped.row.groupNumber && scoped.row.groupNumber.yesterdayIn ? scoped.row.groupNumber.yesterdayIn :"0"}}</div>
             </template>
           </el-table-column>
           <el-table-column label="昨日退群" align="left">
             <template v-slot="scoped">
-              <div>0</div>
+              <div>{{scoped.row.groupNumber && scoped.row.groupNumber.yesterdayOut ? scoped.row.groupNumber.yesterdayOut :"0"}}</div>
             </template>
           </el-table-column>
           <el-table-column label="创建时间" prop="createTime"></el-table-column>

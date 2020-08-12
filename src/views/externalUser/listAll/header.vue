@@ -11,6 +11,7 @@
 
     <el-form-item label="所属员工：">
       <el-select
+        :popper-append-to-body="false"
         v-model="query.userId"
         clearable
         filterable
@@ -27,6 +28,7 @@
 
     <el-form-item label="添加时间：">
       <el-date-picker
+        :append-to-body="false"
         v-model="value"
         type="daterange"
         :value-format="'yyyy-MM-dd HH:mm:ss'"
@@ -40,7 +42,14 @@
 
     <el-form-item label="客户标签：">
       <div class="tag-border">
-        <el-select filterable v-model="query.tagIds" @change="handleSelectedThrottle" size="mini" multiple>
+        <el-select
+          :popper-append-to-body="false"
+          filterable
+          v-model="query.tagIds"
+          @change="handleSelectedThrottle"
+          size="mini"
+          multiple
+        >
           <el-option-group v-for="(item,key) in tagListAll" :key="key" :label="item.groupName">
             <el-option
               v-for="(child,index) in item.tagList"
@@ -84,16 +93,16 @@ export default {
       contractWay: [
         {
           type: "员工主动添加",
-          id: "1"
+          id: "1",
         },
         {
           type: "员工被动添加",
-          id: "2"
+          id: "2",
         },
         {
           type: "二维码扫码添加",
-          id: "3"
-        }
+          id: "3",
+        },
       ],
       query: {
         name: "",
@@ -102,17 +111,17 @@ export default {
         tagIds: [],
         flag: true,
         startTime: "",
-        endTime: ""
+        endTime: "",
       },
-      timer: null
+      timer: null,
     };
   },
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListSelect,
-      userListAll: state => state.user.listSelect
+      tagListAll: (state) => state.tag.tagListSelect,
+      userListAll: (state) => state.user.listSelect,
       //   departments: state => state.department.departments
-    })
+    }),
   },
   methods: {
     handleSelectedTime(val) {
@@ -124,7 +133,7 @@ export default {
         this.query.endTime = "";
       }
 
-    //   this.$emit("handleSearch", this.query);
+      //   this.$emit("handleSearch", this.query);
     },
     handleSelectedThrottle(val) {
       // if (this.timer) {
@@ -145,8 +154,8 @@ export default {
     handleClearable(val) {
       this.query[val] = "";
       // this.$emit("handleSearch", this.query);
-    }
-  }
+    },
+  },
 };
 </script>
 

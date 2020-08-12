@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="content-spacing">
+    <el-card class="content-spacing" style="overflow:initial">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 
@@ -79,7 +79,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="企业标签" align="left">
+          <el-table-column label="适用标签" align="left">
             <template v-slot="{row}">
               <div v-if="row.autoReplyTags.length>0">
                 <strong>{{row.autoReplyTagType=='CONTAIN'?'包含其一':'完全匹配'}}</strong>

@@ -33,7 +33,7 @@
       </el-select>
     </el-form-item>-->
 
-    <el-form-item label="客户标签：">
+    <!-- <el-form-item label="客户标签：">
       <div class="tag-border">
         <el-select filterable v-model="query.tagIds" @change="handleChangeSecond" size="mini" multiple>
           <el-option-group v-for="(item,key) in tagListAll" :key="key" :label="item.groupName">
@@ -59,10 +59,11 @@
           </el-tooltip>
         </span>
       </div>
-    </el-form-item>
+    </el-form-item>-->
 
     <el-form-item label="创建时间：">
       <el-date-picker
+        :append-to-body="false"
         v-model="value"
         type="daterange"
         :value-format="'yyyy-MM-dd HH:mm:ss'"
@@ -125,7 +126,6 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      ;
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
       // this.$emit('handleSearch', this.query)
@@ -173,6 +173,9 @@ export default {
   }
   .handle-warp .el-form-item {
     margin-bottom: 0px;
+  }
+  .el-date-range-picker {
+    width: auto;
   }
 }
 </style>

@@ -216,7 +216,7 @@ export default {
         mediaId: "",
         reply: "",
         rule: "",
-        tagIdList: [0],
+        tagIdList: [],
         // rule: "",
         // keyword: "",
         // tagType: "INSET",
@@ -360,7 +360,7 @@ export default {
             const payload = this.form;
             this.$store
               .dispatch("automatic/add", payload)
-              .then(() => {
+              .then((res) => {
                 this.$message({
                   type: "success",
                   message: "新建成功",
@@ -430,12 +430,12 @@ export default {
     //   return isMP4 && isLt50M;
     // },
     beforeUploadFile(file) {
-      const isLt50M = file.size / 1024 / 1024 < 50;
+      const isLt20M = file.size / 1024 / 1024 < 20;
 
-      if (!isLt50M) {
-        this.$message.error("上传视频大小不能超过 50MB!");
+      if (!isLt20M) {
+        this.$message.error("上传文件大小不能超过 20MB!");
       }
-      return isLt50M;
+      return isLt20M;
     },
     beforeRemoveFile(file) {
       return this.$confirm(`确定移除 ${file.name}？`);
