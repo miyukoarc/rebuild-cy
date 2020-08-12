@@ -307,12 +307,17 @@ export const queue = (tasks,callback)=>{
     tasks.reduce((arr,task)=>{
         return arr.then(()=>{
             return new Promise((resolve,reject)=>{
-                Promise.resolve(task).then(res=>{
-                    if(typeof callback=='function'){
-                        callback(res)                   
-                    }
+                // Promise.resolve(task).then(res=>{
+                //     if(typeof callback=='function'){
+                //         callback(res)                   
+                //     }
+                //     resolve()
+                // })
+                setTimeout(()=>{
+
+                    Promise.resolve(task)
                     resolve()
-                })
+                },500)
             })
         })
     },promise)

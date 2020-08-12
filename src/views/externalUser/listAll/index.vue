@@ -138,9 +138,6 @@ export default {
     this.initDataList(this.query)
     this.initFilter()
   },
-  mounted() {
-    console.log(this.$router.options.routes)
-  },
   methods: {
     /**
      * 初始化表格信息

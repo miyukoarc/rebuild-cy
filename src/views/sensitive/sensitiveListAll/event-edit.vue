@@ -119,14 +119,12 @@ export default {
     transfer: {
       handler(newVal, oldVal) {
         this.tagSelects = this.$options.data().tagSelects
-        console.log(newVal)
       },
       immediate: true,
     },
     currentWord: {
       handler: function (newVal, oldVal) {
         this.tagSelects = this.$options.data().tagSelects
-        console.log(newVal)
         const {
           uuid,
           type,

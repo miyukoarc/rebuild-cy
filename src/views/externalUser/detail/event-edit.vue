@@ -58,7 +58,6 @@ export default {
   watch:{
       transfer:{
           handler(newVal,oldVal){
-              console.log(newVal)
               this.form.uuid = newVal.uuid
               this.form.remark = newVal.remark
           },immediate:true

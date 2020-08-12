@@ -96,7 +96,6 @@ export default {
   watch: {
     'tagListAll.length': {
       handler(newVal, oldVal) {
-        console.log(newVal)
         this.form.sort = newVal + 1
       },
       immediate: true,

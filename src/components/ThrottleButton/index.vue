@@ -59,7 +59,6 @@ export default {
     enable: {
       handler(newVal, oldVal) {
           if(newVal===true){
-              console.log(newVal)
               this.$watch('timer',(newV,oldV)=>{
                   this.disabled = !!newV
               })

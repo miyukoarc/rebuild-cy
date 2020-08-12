@@ -277,7 +277,6 @@ export default {
   watch: {
     'form.type': {
       handler(newVal, oldVal) {
-        console.log(newVal)
         if (newVal == 'DEPT') {
           this.form.orgNode = false
           this.mode = 'NONE'

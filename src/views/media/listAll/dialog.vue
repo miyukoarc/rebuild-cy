@@ -50,7 +50,6 @@ export default {
   watch: {
     eventType: {
       handler(newVal, oldVal) {
-        //   console.log(newVal)
         if (newVal) {
           this.genTitle()
           //   this.toggleComponent(newVal)

@@ -86,7 +86,6 @@ export default {
         this.redirect = route.query && route.query.redirect
       },
       // handler(newVal,oldVal){
-      //     console.log(newVal)
       // },
       immediate: true
     }
