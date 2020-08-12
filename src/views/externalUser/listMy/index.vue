@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="content-spacing">
+    <el-card class="content-spacing" style="overflow:initial">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 

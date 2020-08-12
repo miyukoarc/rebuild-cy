@@ -452,6 +452,12 @@ const actions = {
                             x: state.mouseX,
                             y: state.mouseY,
                         })
+                    } else {
+                        Message({
+                            message: '请为客户设置手机号后重试',
+                            type: 'error'
+                        })
+                        dispatch('clearTask')
                     }
 
                     console.log('开始倒计时')

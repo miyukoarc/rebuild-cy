@@ -314,51 +314,6 @@ export default {
       memberNick: "客户昵称",
     };
   },
-  created() {
-    this.$store
-      .dispatch("media/getArticleListSelect")
-      .then(() => {})
-      .catch((err) => {
-        this.$message({
-          type: "error",
-          message: "初始化失败",
-        });
-      });
-
-    this.$store
-      .dispatch("tag/getListSelect")
-      .then(() => {
-        // 目前先让选择自己
-        this.form.userUuid = this.myUuid;
-        this.changeUser(this.myUuid);
-      })
-      .catch((err) => {
-        this.$message({
-          type: "error",
-          message: err,
-        });
-      });
-
-    this.$store
-      .dispatch("user/getUserListSelect")
-      .then(() => {})
-      .catch((err) => {
-        this.$message({
-          type: "error",
-          message: err,
-        });
-      });
-
-    // this.$store
-    //   .dispatch("media")
-    //   .then(() => {})
-    //   .catch(err => {
-    //     this.$message({
-    //       type: "error",
-    //       message: err
-    //     });
-    //   });
-  },
   watch: {
     "form.text": {
       handler(newVal, oldVal) {
@@ -393,8 +348,45 @@ export default {
       articleListSelect: (state) => state.media.articleListSelect,
     }),
   },
+  created() {
+    this.$store
+      .dispatch("media/getArticleListSelect")
+      .then(() => {})
+      .catch((err) => {
+        this.$message({
+          type: "error",
+          message: "初始化失败",
+        });
+      });
+
+    this.$store
+      .dispatch("tag/getListSelect")
+      .then(() => {
+        // 目前先让选择自己
+        this.form.userUuid = this.myUuid;
+        this.changeUser(this.myUuid);
+      })
+      .catch((err) => {
+        this.$message({
+          type: "error",
+          message: err,
+        });
+      });
+
+    this.$store
+      .dispatch("user/getUserListSelect")
+      .then(() => {})
+      .catch((err) => {
+        this.$message({
+          type: "error",
+          message: err,
+        });
+      });
+  },
+
   methods: {
     changeUser(userUuid) {
+      console.log("这个后：" + userUuid);
       for (let index = 0; index < this.userListAll.length; index++) {
         if (this.userListAll[index].uuid == userUuid) {
           this.query.userId = this.userListAll[index].userId;

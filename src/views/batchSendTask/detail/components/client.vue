@@ -18,11 +18,13 @@
                 <h5>{{item.name}}</h5>
               </div>
               <div class="friends">
-                <el-tag>已送达</el-tag>
+                <el-tag v-if="item.sendResult=='NOT_SEND'">未发送</el-tag>
+                <el-tag v-if="item.sendResult=='HAS_SEND'">已送达</el-tag>
+                <el-tag v-if="item.sendResult=='NOT_FRIEND_FAIL'">非好友</el-tag>
               </div>
             </div>
           </div>
-          <div class="send-by-member">通过陈开元发送</div>
+          <div v-if="item.sendResult=='HAS_SEND'" class="send-by-member">通过{{member.sender.name}}发送</div>
         </div>
         <!-- <div class="unvisible loading-hint full-w flex-row align-center">
           <div
@@ -54,13 +56,14 @@ import defaultAvatar from "@/assets/no-menber-result.png";
 
 export default {
   props: {
-    clientData: Array
+    clientData: Array,
+    member: Object,
   },
   data() {
     return {
-      noMember: defaultAvatar
+      noMember: defaultAvatar,
     };
-  }
+  },
 };
 </script>
 

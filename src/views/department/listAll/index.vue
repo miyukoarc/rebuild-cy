@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="content-spacing">
+    <el-card class="content-spacing" style="overflow:initial">
       <tool-bar
         :hasExport="false"
         :hasImport="false"

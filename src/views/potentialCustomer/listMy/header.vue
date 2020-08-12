@@ -13,10 +13,10 @@
           :value="item.uuid"
         ></el-option>
       </el-select>
-    </el-form-item> -->
+    </el-form-item>-->
 
     <el-form-item label="添加员工：">
-      <el-select v-model="query.creatorUuid" clearable filterable>
+      <el-select v-model="query.creatorUuid" clearable filterable :popper-append-to-body="false">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -28,6 +28,7 @@
 
     <el-form-item label="添加时间：">
       <el-date-picker
+        :append-to-body="false"
         v-model="value"
         type="daterange"
         :value-format="'yyyy-MM-dd HH:mm:ss'"
@@ -91,9 +92,9 @@ export default {
         endTime: "",
         flag: 1,
         max: null,
-        min: null
+        min: null,
       },
-      timer: null
+      timer: null,
     };
   },
   watch: {
@@ -110,19 +111,19 @@ export default {
           });
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      userListAll: state => state.user.listSelect
-    })
+      userListAll: (state) => state.user.listSelect,
+    }),
   },
   methods: {
     handleSelectedTime(val) {
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
-    //   this.$emit("handleSearch", this.query);
+      //   this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
       if (this.timer) {
@@ -164,8 +165,8 @@ export default {
     },
     focusInput() {
       this.query.flag = 2;
-    }
-  }
+    },
+  },
 };
 </script>
 
