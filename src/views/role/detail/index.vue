@@ -48,7 +48,7 @@ import ToolBar from './tool-bar'
 export default {
   name: 'role-detail',
   components: {
-    ToolBar
+    ToolBar,
   },
   data() {
     return {
@@ -58,34 +58,42 @@ export default {
       list: {},
       form: {
         roleUuid: null,
-        permissionUuids: []
-      }
+        permissionUuids: [],
+      },
     }
+  },
+  watch: {
+    $route: {
+      handler(newVal, oldVal) {
+          if (newVal.query.code) {
+        //   console.log(newVal.query.code)
+          const roleCode = newVal.query.code
+          this.form.roleUuid = +newVal.params.uuid
+          this.initData().then(() => {
+            this.initDetail({ roleCode })
+          })
+        }
+      },
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      permissionRenderMap: state => state.permission.permissionRenderMap,
-      permissionMap: state => state.permission.permissionMap,
-      auditSetting: state => state.sensitive.auditSetting,
+      permissionRenderMap: (state) => state.permission.permissionRenderMap,
+      permissionMap: (state) => state.permission.permissionMap,
+      auditSetting: (state) => state.sensitive.auditSetting,
 
-      roleDetail: state => state.enum.roleDetail
-    })
-  },
-  created() {
-    const roleCode = this.$route.query.code
-    this.form.roleUuid = +this.$route.params.uuid
-    this.initData().then(() => {
-      this.initDetail({ roleCode })
-    })
+      roleDetail: (state) => state.enum.roleDetail,
+    }),
   },
   mounted() {},
   methods: {
     initDetail(payload) {
       this.$store
         .dispatch('permission/getRolePermissionList', payload)
-        .then(res => {
+        .then((res) => {
           for (let key in res) {
-            res[key].forEach(item => {
+            res[key].forEach((item) => {
               this.checked[key].push(item.uuid)
             })
 
@@ -94,10 +102,10 @@ export default {
             }
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
     },
@@ -105,7 +113,7 @@ export default {
       return new Promise((resolve, reject) => {
         this.$store
           .dispatch('permission/getListAll')
-          .then(res => {
+          .then((res) => {
             for (let key in res) {
               this.$set(this.checkAll, key, false)
               this.$set(this.isIndeterminate, key, false)
@@ -117,10 +125,10 @@ export default {
             }
             resolve(res)
           })
-          .catch(err => {
+          .catch((err) => {
             this.$message({
               type: 'error',
-              message: err || '初始化失败'
+              message: err || '初始化失败',
             })
 
             reject(err)
@@ -134,7 +142,7 @@ export default {
       } else if (this.checkAll[key] == true) {
         this.checkAll[key] = true
         this.checked[key] = []
-        this.list[key].map(obj => {
+        this.list[key].map((obj) => {
           this.checked[key].push(obj.uuid)
         })
       }
@@ -161,25 +169,25 @@ export default {
 
       this.$store
         .dispatch('permission/roleLinkPermissionIsAudit', this.form)
-        .then(res => {
+        .then((res) => {
           const message = this.auditSetting['permission']
             ? '已提交审核'
             : '已完成'
           this.$message({
             type: 'success',
-            message: message
+            message: message,
           })
           const roleCode = this.$route.query.code
           this.initDetail({ roleCode })
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '操作失败'
+            message: err || '操作失败',
           })
         })
-    }
-  }
+    },
+  },
 }
 </script>
 
