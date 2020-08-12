@@ -131,7 +131,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             getMyInfo().then((res) => {
                 // console.log(res)
-
+                console.log('这个先', res)
                 commit('SET_USERINFO', res)
 
                 resolve(res)
@@ -163,7 +163,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             getAllUserList(payload).then(res => {
                 commit('SAVE_USERLISTALL', res.items)
-                    // console.log(res)
+                // console.log(res)
                 resolve(res.items)
             }).catch(err => {
                 reject(err)
@@ -226,15 +226,15 @@ const actions = {
         })
     },
 
-  user_update({ }, payload) {
-    return new Promise((resolve, reject) => {
-      postUserUpdate(payload).then(res => {
-        resolve(res)
-      }).catch(err => {
-        reject(err)
-      })
-    })
-  }
+    user_update({ }, payload) {
+        return new Promise((resolve, reject) => {
+            postUserUpdate(payload).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    }
 
 }
 
