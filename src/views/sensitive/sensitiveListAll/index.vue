@@ -102,7 +102,7 @@
           </el-table-column>
 
           <el-table-column label="操作" align="center" width="120">
-            <template slot-scope="scope">
+            <template v-slot="{$index}">
               <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
               <el-t-button
                 type="text"
@@ -110,7 +110,7 @@
                 v-permission="'riskManagement,riskManagement_update'"
                 :auth="'riskManagement,riskManagement_update'"
                 size="mini"
-                @click.stop="handleEdit(scope.$index)"
+                @click.stop.native="handleEdit($index)"
               >编辑</el-t-button>
 
               <el-divider direction="vertical"></el-divider>
@@ -120,7 +120,7 @@
                 v-permission="'riskManagement,riskManagement_delete'"
                 :auth="'riskManagement,riskManagement_delete'"
                 size="mini"
-                @click.stop="handleDelete(scope.$index)"
+                @click.stop.native="handleDelete($index)"
               >删除</el-t-button>
             </template>
           </el-table-column>
@@ -309,7 +309,7 @@ export default {
       //   toUser = toUser.map(item => {
       //     return item.userId
       //   })
-      // console.log(toUser)
+      console.log(index)
       //   const payload = { toUser, type, uuid, word }
       let {
         uuid,
@@ -336,6 +336,9 @@ export default {
         word,
       };
       const payload = this.listAll[index];
+
+      console.log(transfer)
+
       this.$store.commit("sensitive/SAVE_CURRENTWORD", payload);
       this.$refs["formDialog"].event = "EditTemplate";
       this.$refs["formDialog"].eventType = "edit";

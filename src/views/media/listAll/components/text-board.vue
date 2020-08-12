@@ -34,7 +34,7 @@
           <el-table-column label="操作" align="center" width="80">
             <template v-slot="{row}">
               <span v-if="row.auditStateForOperation==='UNDER_REVCIEW'" class="color-primary"></span>
-              <el-t-button v-else type="text" @click.stop="handleDelete(row.uuid)">删除</el-t-button>
+              <el-t-button v-else type="text" @click.stop.native="handleDelete(row.uuid)">删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>

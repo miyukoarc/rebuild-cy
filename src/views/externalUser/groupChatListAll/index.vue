@@ -47,7 +47,7 @@
                 v-permission="'externalUser,externalUser_groupDetail'"
                 type="text"
                 size="mini"
-                @click.stop="handleDetail(scope.row)"
+                @click.stop.native="handleDetail(scope.row)"
                 :popAuth="true"
                 :auth="'externalUser,externalUser_groupDetail'"
               >详情</el-t-button>

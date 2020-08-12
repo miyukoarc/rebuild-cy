@@ -47,7 +47,7 @@
                 :popAuth="true"
                 :auth="'batchSendTask,batchSendTask_detail'"
                 type="text"
-                @click.stop="handleDetail(scope.row)"
+                @click.stop.native="handleDetail(scope.row)"
               >详情</el-t-button>
             </template>
           </el-table-column>

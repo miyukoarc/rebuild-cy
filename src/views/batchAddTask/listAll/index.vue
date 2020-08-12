@@ -57,7 +57,7 @@
                 v-permission="'batchAddTask,batchAddTask_detail'"
                 :auth="'batchAddTask,batchAddTask_detail'"
                 :popAuth="true"
-                @click.stop="handleDetail(scope.$index)"
+                @click.stop.native="handleDetail(scope.$index)"
                 v-if="permissionMap['batchAddTask']['batchAddTask_detail']"
               >详情</el-t-button>
               <el-t-button
@@ -67,7 +67,7 @@
                 :popAuth="true"
                 v-permission="'batchAddTask,batchAddTask_cancel'"
                 :auth="'batchAddTask,batchAddTask_cancel'"
-                @click.stop="handleContinue(scope.$index)"
+                @click.stop.native="handleContinue(scope.$index)"
               >继续</el-t-button>
               <el-t-button
                 v-if="scope.row.addStatus != 'CANCELED'"
@@ -76,7 +76,7 @@
                 :popAuth="true"
                 v-permission="'batchAddTask,batchAddTask_cancel'"
                 :auth="'batchAddTask,batchAddTask_cancel'"
-                @click.stop="handleCancel(scope.$index)"
+                @click.stop.native="handleCancel(scope.$index)"
               >取消</el-t-button>
             </template>
           </el-table-column>

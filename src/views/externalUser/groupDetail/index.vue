@@ -99,7 +99,7 @@
                 :auth="'user,user_detail'"
                 v-permission="'user,user_detail'"
                 :popAuth="true"
-                @click.stop="handleDetail(scope.row)"
+                @click.stop.native="handleDetail(scope.row)"
                 :enable="scope.row.visible"
               >详情</el-t-button>
             </template>

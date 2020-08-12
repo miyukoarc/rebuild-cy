@@ -116,7 +116,7 @@
               v-permission="'externalUser,externalUser_detail'"
               :auth="'externalUser,externalUser_detail'"
               size="mini"
-              @click.stop="handleGroupChat(scope.row)"
+              @click.stop.native="handleGroupChat(scope.row)"
             >聊天记录</el-t-button>
             <el-t-button
               type="text"
@@ -124,7 +124,7 @@
               v-permission="'externalUser,externalUser_detail'"
               :auth="'externalUser,externalUser_detail'"
               size="mini"
-              @click.stop="handleDetail(scope.$index)"
+              @click.stop.native="handleDetail(scope.$index)"
             >详情</el-t-button>
           </template>
         </el-table-column>

@@ -78,7 +78,7 @@
               <el-button
                 type="text"
                 size="mini"
-                @click.stop="handleDetail(scope.$index,scope.row)"
+                @click.stop.native="handleDetail(scope.$index,scope.row)"
               >详情</el-button>
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->

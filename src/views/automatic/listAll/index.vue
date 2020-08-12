@@ -114,7 +114,7 @@
                 v-permission="'automatic,automatic_update'"
                 :auth="'automatic,automatic_update'"
                 size="mini"
-                @click.stop="handleEdit(scope.row)"
+                @click.stop.native="handleEdit(scope.row)"
               >编辑</el-t-button>
               <el-divider direction="vertical"></el-divider>
 
@@ -124,7 +124,7 @@
                 v-permission="'automatic,automatic_delete'"
                 :auth="'automatic,automatic_delete'"
                 size="mini"
-                @click.stop="handleDelete(scope.row)"
+                @click.stop.native="handleDelete(scope.row)"
               >删除</el-t-button>
             </template>
           </el-table-column>

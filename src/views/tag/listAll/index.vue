@@ -58,7 +58,7 @@
                 :auth="'tag,tag_update'"
                 type="text"
                 size="mini"
-                @click.stop="handleEdit(scope.$index,scope.row)"
+                @click.stop.native="handleEdit(scope.$index,scope.row)"
               >编辑</el-t-button>
             </template>
           </el-table-column>

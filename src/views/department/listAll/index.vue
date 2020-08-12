@@ -54,7 +54,7 @@
               v-permission="'department,department_update'"
               :auth="'department,department_update'"
               :popAuth="true"
-              @click.stop="handleEdit(scope.$index,scope.row)"
+              @click.stop.native="handleEdit(scope.$index,scope.row)"
             >编辑</el-t-button>
             <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
 
@@ -65,7 +65,7 @@
               v-permission="'department,department_update'"
               :auth="'department,department_update'"
               :popAuth="true"
-              @click.stop="handleChange(scope.$index,scope.row)"
+              @click.stop.native="handleChange(scope.$index,scope.row)"
               :enable="scope.row.type==='DEPT'"
             >变更
             </el-t-button>
@@ -77,7 +77,7 @@
               :auth="'department,department_delete'"
               :popAuth="true"
               size="mini"
-              @click.stop="handleDelete(scope.row)"
+              @click.stop.native="handleDelete(scope.row)"
             >删除</el-t-button>
             <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
           </template>

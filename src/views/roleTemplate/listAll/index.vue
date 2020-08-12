@@ -52,7 +52,7 @@
               <el-t-button
                 type="text"
                 size="mini"
-                @click="handlePermission(scope.row)"
+                @click.stop.native="handlePermission(scope.row)"
                 :popAuth="true"
                 :auth="'roleTemplate,roleTemplate_roleLinkPermission'"
                 v-permission="'roleTemplate,roleTemplate_roleLinkPermission'"

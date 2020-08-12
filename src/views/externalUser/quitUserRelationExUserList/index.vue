@@ -76,9 +76,8 @@
                 :popAuth="true"
                 v-permission="'externalUser,externalUser_redistributionExUser'"
                 :auth="'externalUser,externalUser_redistributionExUser'"
-                @click.stop="handleDistributeSingle(scope.row)"
+                @click.stop.native="handleDistributeSingle(scope.row)"
               >分配</el-t-button>
-              <el-divider direction="vertical"></el-divider>
 
               <el-t-button
                 :popAuth="true"
@@ -86,7 +85,7 @@
                 :auth="'externalUser,externalUser_quitUserRelationExUserList'"
                 type="text"
                 size="mini"
-                @click.stop="handleDetail(scope.row)"
+                @click.stop.native="handleDetail(scope.row)"
               >详情</el-t-button>
 
               <!-- <i class="el-icon-circle-close color-info" v-if="!!permissionMap['externalUser']['externalUser_redistributionExUser']&&!!permissionMap['externalUser']['externalUser_quitUserRelationExUserList']"></i> -->

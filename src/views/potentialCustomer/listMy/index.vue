@@ -98,25 +98,23 @@
                 v-if="'potentialCustomer,potentialCustomer_allocation'"
                 :popAuth="true"
                 :auth="'potentialCustomer,potentialCustomer_allocation'"
-                @click.stop="handleAllocation(scope.row)"
+                @click.stop.native="handleAllocation(scope.row)"
               >分配</el-t-button>
-              <el-divider direction="vertical"></el-divider>
               <el-t-button
                 type="text"
                 size="mini"
                 v-permission="'potentialCustomer,potentialCustomer_update'"
                 :popAuth="true"
                 :auth="'potentialCustomer,potentialCustomer_update'"
-                @click.stop="handleEdit(scope.row)"
+                @click.stop.native="handleEdit(scope.row)"
               >编辑</el-t-button>
-              <el-divider direction="vertical"></el-divider>
               <el-t-button
                 type="text"
                 v-permission="'potentialCustomer,potentialCustomer_delete'"
                 :popAuth="true"
                 :auth="'potentialCustomer,potentialCustomer_delete'"
                 size="mini"
-                @click.stop="handleDelete(scope.row)"
+                @click.stop.native="handleDelete(scope.row)"
               >删除</el-t-button>
             </template>
           </el-table-column>

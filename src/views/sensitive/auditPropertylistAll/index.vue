@@ -53,7 +53,7 @@
               :popAuth="true"
               v-permission="'role,role_update'"
               :auth="'role,role_update'"
-              @click="handleDetail(row)"
+              @click.stop.native="handleDetail(row)"
             >详情</el-t-button>
             <el-divider direction="vertical"></el-divider>
 
@@ -63,7 +63,7 @@
               :popAuth="true"
               v-permission="'role,role_update'"
               :auth="'role,role_update'"
-              @click="handleSetting(row)"
+              @click.stop.native="handleSetting(row)"
             >设置流程</el-t-button>
             <el-divider direction="vertical"></el-divider>
 
@@ -73,7 +73,7 @@
               :popAuth="true"
               v-permission="'role,role_delete'"
               :auth="'role,role_delete'"
-              @click="handleChange($index)"
+              @click.stop.native="handleChange($index)"
             >
               <span v-if="row.openState" class="color-danger">关闭</span>
               <span v-else class="color-success">开启</span>

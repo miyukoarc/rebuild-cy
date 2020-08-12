@@ -39,7 +39,7 @@
               <el-t-button
                 size="mini"
                 type="text"
-                @click.stop="handleEdit(scope.$index)"
+                @click.stop.native="handleEdit(scope.$index)"
                 :popAuth="true"
                 :auth="'media,media_article_update'"
                 v-permission="'media,media_article_update'"
@@ -50,7 +50,7 @@
               <el-t-button
                 size="mini"
                 type="text"
-                @click.stop="handleRecords(scope.$index)"
+                @click.stop.native="handleRecords(scope.$index)"
                 :popAuth="true"
                 :auth="'media,media_browsing_Records'"
                 v-permission="'media,media_browsing_Records'"
