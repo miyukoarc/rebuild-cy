@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="content-spacing">
+    <el-card class="content-spacing" style="overflow:initial">
       <tool-bar :hasExport="true" :hasImport="false" @handleExport="doExport">
         <div slot="left">
           <span class="font-l">{{corpInfo.name}}</span>
@@ -106,7 +106,7 @@ export default {
       permissionMap: (state) => state.permission.permissionMap,
     }),
   },
-  created() {
+  activated() {
     this.initDataList()
   },
   methods: {

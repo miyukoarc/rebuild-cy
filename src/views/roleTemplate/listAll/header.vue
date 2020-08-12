@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-09 18:50:40
+ * @LastEditTime: 2020-08-12 19:27:36
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\roleTemplate\listAll\header.vue
+-->
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item label="员工姓名">
@@ -12,7 +20,7 @@
       <el-input v-model.trim="query.userName"></el-input>
     </el-form-item>
     <el-form-item label="所在部门">
-      <el-select v-model="query.departmentsUuid" @change="handleChangeSecond">
+      <el-select v-model="query.departmentsUuid" @change="handleChangeSecond" :popper-append-to-body="false">
         <el-option
           v-for="item in departments"
           :key="item.uuid"
@@ -22,7 +30,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="员工角色">
-      <el-select v-model="query.roleUuid" @change="handleChangeThird">
+      <el-select v-model="query.roleUuid" @change="handleChangeThird" :popper-append-to-body="false">
         <el-option
           v-for="item in userListAll"
           :key="item.uuid"

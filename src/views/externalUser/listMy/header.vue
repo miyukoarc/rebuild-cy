@@ -13,9 +13,9 @@
           :value="item.id"
         ></el-option>
       </el-select>
-    </el-form-item> -->
+    </el-form-item>-->
 
-    <el-form-item label="所属员工：">
+    <!-- <el-form-item label="所属员工：">
       <el-select v-model="query.userId" clearable @change="handleSelectedChange">
         <el-option
           v-for="item in userListAll"
@@ -24,10 +24,11 @@
           :value="item.userId"
         ></el-option>
       </el-select>
-    </el-form-item>
+    </el-form-item>-->
 
     <el-form-item label="添加时间：">
       <el-date-picker
+        :append-to-body="false"
         v-model="value"
         type="daterange"
         :value-format="'yyyy-MM-dd HH:mm:ss'"
@@ -42,6 +43,7 @@
     <el-form-item label="客户标签：">
       <div class="tag-border">
         <el-select
+          :popper-append-to-body="false"
           v-model="query.tagIds"
           clearable
           @change="handleChangeSecond"
@@ -91,16 +93,16 @@ export default {
       contractWay: [
         {
           type: "员工主动添加",
-          id: "1"
+          id: "1",
         },
         {
           type: "员工被动添加",
-          id: "2"
+          id: "2",
         },
         {
           type: "二维码扫码添加",
-          id: "3"
-        }
+          id: "3",
+        },
       ],
       query: {
         name: "",
@@ -109,21 +111,20 @@ export default {
         tagIds: [],
         flag: true,
         startTime: "",
-        endTime: ""
+        endTime: "",
       },
-      timer: null
+      timer: null,
     };
   },
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListSelect,
-      userListAll: state => state.user.listSelect
+      tagListAll: (state) => state.tag.tagListSelect,
+      userListAll: (state) => state.user.listSelect,
       //   departments: state => state.department.departments
-    })
+    }),
   },
   methods: {
     handleSelectedTime(val) {
-      ;
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
       this.$emit("handleSearch", this.query);
@@ -137,7 +138,6 @@ export default {
       // }, 1000);
     },
     handleSelectedChange(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {
@@ -147,8 +147,8 @@ export default {
       this.$emit("handleRefresh");
       this.value = this.$options.data().value;
       this.query = this.$options.data().query;
-    }
-  }
+    },
+  },
 };
 </script>
 

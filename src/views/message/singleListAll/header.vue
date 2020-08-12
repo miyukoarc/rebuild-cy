@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-28 13:56:22
- * @LastEditTime: 2020-07-17 11:34:34
+ * @LastEditTime: 2020-08-12 19:24:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\header.vue
@@ -14,6 +14,7 @@
 
     <el-form-item label="聊天时间：">
       <el-date-picker
+        :append-to-body="false"
         v-model="value"
         type="daterange"
         :value-format="'yyyy-MM-dd HH:mm:ss'"
@@ -42,34 +43,30 @@ export default {
       query: {
         content: "",
         startTime: "",
-        endTime: ""
+        endTime: "",
       },
-      value: ""
+      value: "",
     };
   },
   computed: {
     ...mapState({
-      roleList: state => state.role.roleList,
-      departmentListSelect: state => state.department.listSelect
-    })
+      roleList: (state) => state.role.roleList,
+      departmentListSelect: (state) => state.department.listSelect,
+    }),
   },
   methods: {
     handleSelectedTime(val) {
-      ;
       this.query.startTime = this.value[0];
       this.query.endTime = this.value[1];
       this.$emit("handleSearch", this.query);
     },
     handleChangeFirst(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleChangeThird(val) {
-      ;
       this.$emit("handleSearch", this.query);
     },
     handleSearch() {
@@ -79,8 +76,8 @@ export default {
       this.$emit("handleRefresh");
       this.value = this.$options.data().value;
       this.query = this.$options.data().query;
-    }
-  }
+    },
+  },
 };
 </script>
 

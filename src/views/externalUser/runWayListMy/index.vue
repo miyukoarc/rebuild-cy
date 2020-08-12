@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="content-spacing">
+    <el-card class="content-spacing" style="overflow:initial">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
 
@@ -124,7 +124,7 @@ export default {
     ToolBar,
     AsyncUserTag,
     TagsDrawerObj,
-    UserTag
+    UserTag,
     // mHeadedr
   },
   data() {
@@ -133,7 +133,7 @@ export default {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
@@ -145,18 +145,18 @@ export default {
         userUuid: "",
         startTime: "",
         endTime: "",
-        delFollow: ""
-      }
+        delFollow: "",
+      },
     };
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      loading: state => state.externalUser.loading,
-      runWayList: state => state.externalUser.runWayList,
-      runWayPage: state => state.externalUser.runWayPage
-    })
+      tagListAll: (state) => state.tag.tagListAll,
+      loading: (state) => state.externalUser.loading,
+      runWayList: (state) => state.externalUser.runWayList,
+      runWayPage: (state) => state.externalUser.runWayPage,
+    }),
   },
   created() {
     this.initDataList(this.query);
@@ -174,11 +174,11 @@ export default {
           this.pageConfig.pageNumber = this.runWayPage.pageNumber + 1;
           this.pageConfig.total = this.runWayPage.total;
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
     },
@@ -190,20 +190,20 @@ export default {
       this.$store
         .dispatch("tag/getListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
 
       this.$store
         .dispatch("user/getUserListSelect")
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
     },
@@ -211,7 +211,7 @@ export default {
     handleDetail(index, row) {
       this.$router.push({
         path: `/externalUser/detail/${row.externalUser.uuid}`,
-        query: { userId: row.user.userId }
+        query: { userId: row.user.userId },
       });
     },
     handleSearch(val) {
@@ -223,7 +223,7 @@ export default {
         flag,
         startTime,
         endTime,
-        delFollow
+        delFollow,
       } = val;
       if (delFollow === "") {
         this.query.delFollow = "";
@@ -252,10 +252,8 @@ export default {
       this.pageConfig.pageNumber = key - 1;
       this.initDataList(this.query);
     },
-    doExport(val) {
-      ;
-    }
-  }
+    doExport(val) {},
+  },
 };
 </script>
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-03 10:13:30
- * @LastEditTime: 2020-08-11 14:59:11
+ * @LastEditTime: 2020-08-12 19:12:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\listAll\event-detail.vue
@@ -372,12 +372,13 @@ export default {
       return isJPG && isLt2M;
     },
     beforeUploadFile(file) {
-      const isLt50M = file.size / 1024 / 1024 < 50;
+      const isLt20M = file.size / 1024 / 1024 < 20;
 
-      if (!isLt50M) {
-        this.$message.error("上传视频大小不能超过 50MB!");
+      if (!isLt20M) {
+        this.$message.error("上传视频大小不能超过 20MB!");
+        return;
       }
-      return isLt50M;
+      return isLt20M;
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -419,9 +420,9 @@ export default {
     // 标签绑定事件
     handleChange() {},
     initDataList() {
-      const payload = {size: 10};
+      const payload = { size: 10 };
       this.$store
-        .dispatch("automatic/getListAll",payload)
+        .dispatch("automatic/getListAll", payload)
         .then(() => {})
         .catch((err) => {
           this.$message({

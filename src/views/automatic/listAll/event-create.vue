@@ -399,6 +399,7 @@ export default {
     //   this.form.mediaId = res.id;
     // },
     handleSetMessageFile(res, file) {
+      console.log('3333',res)
       this.messageFile = URL.createObjectURL(file.raw);
       this.form.mediaId = res.id;
       this.form.fileName = res.name;
@@ -434,10 +435,12 @@ export default {
 
       if (!isLt20M) {
         this.$message.error("上传文件大小不能超过 20MB!");
+        return
       }
       return isLt20M;
     },
     beforeRemoveFile(file) {
+      console.log(file,'3344444')
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     handleClear() {

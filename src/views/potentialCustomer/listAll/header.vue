@@ -6,7 +6,7 @@
 
 
     <el-form-item label="所属员工：">
-      <el-select v-model="query.belongUuid" clearable filterable>
+      <el-select v-model="query.belongUuid" clearable filterable :popper-append-to-body="false">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -17,7 +17,7 @@
     </el-form-item>
 
     <el-form-item label="添加员工：">
-      <el-select v-model="query.creatorUuid" clearable filterable>
+      <el-select v-model="query.creatorUuid" clearable filterable :popper-append-to-body="false">
         <el-option
           v-for="item in userListAll"
           :key="item.userId"
@@ -29,6 +29,7 @@
 
     <el-form-item label="入库时间：">
       <el-date-picker
+      :append-to-body="false"
         v-model="value"
         type="daterange"
         :value-format="'yyyy-MM-dd HH:mm:ss'"
