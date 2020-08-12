@@ -148,7 +148,7 @@ export default {
   },
   computed: {
     ...mapState({
-      departmentList: (state) => state.department.departmentList,
+    //   departmentList: (state) => state.department.departmentList,
       listSelect: (state) => state.role.roleListSelect,
       tagListSelect: (state) => state.tag.tagListSelect,
     }),
@@ -171,15 +171,15 @@ export default {
           })
         })
 
-      this.$store
-        .dispatch('department/getDepartmentListAll')
-        .then(() => {})
-        .catch((err) => {
-          this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+    //   this.$store
+    //     .dispatch('department/getDepartmentListAll')
+    //     .then(() => {})
+    //     .catch((err) => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: err || '初始化失败',
+    //       })
+    //     })
 
       this.$store
         .dispatch('tag/getListSelect')

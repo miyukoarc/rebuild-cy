@@ -21,7 +21,8 @@
           </el-select>
         </div>
         <div v-else>
-          <complex-select v-model="userSelects" :section="'user'" :options="departmentList"></complex-select>
+            <multi-tree-select v-model="userSelects" :section="'user'" :multiple="true"></multi-tree-select>
+          <!-- <complex-select v-model="userSelects" :section="'user'" :options="departmentList"></complex-select> -->
         </div>
       </keep-alive>
       <span class="font-exs color-info">当员工触发敏感词后，除通知以上设置被通知人，触发的员工本人也将收到通知消息。</span>
@@ -73,7 +74,7 @@ export default {
   },
   computed: {
     ...mapState({
-      departmentList: state => state.department.departmentList,
+    //   departmentList: state => state.department.departmentList,
       roleListSelect: state => state.role.roleListSelect
     })
   },
@@ -95,15 +96,15 @@ export default {
           })
         })
 
-      this.$store
-        .dispatch('department/getDepartmentListAll')
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: err || '初始化失败'
-          })
-        })
+    //   this.$store
+    //     .dispatch('department/getDepartmentListAll')
+    //     .then(() => {})
+    //     .catch(err => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: err || '初始化失败'
+    //       })
+    //     })
     },
     handleCancel() {
       this.$parent.$parent.dialogVisible = false

@@ -12,7 +12,8 @@
         </el-select>
       </el-form-item>-->
       <div>
-        <complex-select v-model="selects" :options="departmentList"></complex-select>
+          <multi-tree-select v-model="selects" :section="'department'" :multiple="true"></multi-tree-select>
+        <!-- <complex-select v-model="selects" :options="departmentList"></complex-select> -->
       </div>
       <!-- {{user.uuid}} -->
       <div class="text-align-center">
@@ -67,7 +68,7 @@ export default {
   computed: {
     ...mapState({
       user: state => state.user.currentRowUserList,
-      departmentList: state => state.department.departmentList,
+    //   departmentList: state => state.department.departmentList,
       userListSelect: state => state.user.listSelect,
       quitUserCurrentRow: state => state.externalUser.quitUserCurrentRow
     })

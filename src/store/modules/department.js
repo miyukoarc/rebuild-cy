@@ -9,20 +9,23 @@ import {
   getDepartments,
   getDepartmentListSelect,
   allocation,
-  alterType
+  alterType,
+  getListSelectTree
 } from '@/api/department'
-import { flatten } from '@/utils/common'
+import {
+  flatten
+} from '@/utils/common'
 
 const state = {
   /**
    * 部门列表
    */
-  departmentList: [],//tree
-  departments: [],//list
+  departmentList: [], //tree
+  departments: [], //list
   currentDepartment: {}, //当前行
   loading: false,
 
-  listSelect: []//筛选列表
+  listSelect: [] //筛选列表
 }
 
 const mutations = {
@@ -191,7 +194,9 @@ const actions = {
    * @param {*} param0 
    * @param {*} payload 
    */
-  getDepartments({ commit }, payload) {
+  getDepartments({
+    commit
+  }, payload) {
     return new Promise((resolve, reject) => {
       getDepartments(payload).then(res => {
         commit('SAVE_FLATTENLIST', res.items)
@@ -204,7 +209,9 @@ const actions = {
   /**
    * 部门列表 筛选
    */
-  getDepartmentListSelect({ commit }, payload) {
+  getDepartmentListSelect({
+    commit
+  }, payload) {
     return new Promise((resolve, reject) => {
       getDepartmentListSelect(payload).then(res => {
         commit('SAVE_LISTSELECT', res.items)
@@ -217,7 +224,9 @@ const actions = {
   /**
    * 分配部门
    */
-  allocation({ commit }, payload) {
+  allocation({
+    commit
+  }, payload) {
     return new Promise((resolve, reject) => {
       allocation(payload).then(res => {
         resolve(res)
@@ -231,7 +240,9 @@ const actions = {
    * @param {*} param0 
    * @param {*} payload 
    */
-  addWxDepartment({ commit }, payload) {
+  addWxDepartment({
+    commit
+  }, payload) {
     return new Promise((resolve, reject) => {
       addWxDepartment(payload).then(res => {
         resolve()
@@ -245,14 +256,27 @@ const actions = {
    * @param {*} param0 
    * @param {*} payload 
    */
-  alterType({commit},payload){
-     return new Promise((resolve,reject)=>{
-         alterType(payload).then(res=>{
-             resolve(res)
-         }).catch(err=>{
-             reject(err)
-         })
-     })
+  alterType({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      alterType(payload).then(res => {
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  getListSelectTree({
+    commit
+  }) {
+    return new Promise((resolve, reject) => {
+      getListSelectTree().then(res => {
+        resolve(res.items)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   }
 
 }

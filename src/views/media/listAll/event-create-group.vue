@@ -49,7 +49,7 @@ export default {
   computed: {
     ...mapState({
       listSelect: (state) => state.department.listSelect,
-      departmentList: (state) => state.department.departmentList,
+    //   departmentList: (state) => state.department.departmentList,
       auditSetting: (state) => state.sensitive.auditSetting,
     }),
   },

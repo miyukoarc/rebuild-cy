@@ -120,9 +120,6 @@ export default {
       this.$refs['formDialog'].eventType = 'create'
       this.$refs['formDialog'].dialogVisible = true
     },
-    initFilter() {
-      // this.$store.dispatch
-    },
     initDataList() {
       this.$store
         .dispatch('role/getRoleList')

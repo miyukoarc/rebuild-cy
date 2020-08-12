@@ -155,7 +155,6 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    this.initFilter()
   },
   mounted() {
     this.$bus.$on('handleRefresh', () => {
@@ -173,17 +172,17 @@ export default {
     /**
      * 初始化筛选信息
      */
-    initFilter() {
-      this.$store
-        .dispatch('department/getDepartmentListAll')
-        .then(() => {})
-        .catch((err) => {
-          this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
-    },
+    // initFilter() {
+    //   this.$store
+    //     .dispatch('department/getDepartmentListAll')
+    //     .then(() => {})
+    //     .catch((err) => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: err || '初始化失败',
+    //       })
+    //     })
+    // },
     /**
      * 初始化表格信息
      */
