@@ -5,7 +5,13 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :hasRefresh="true" @handleRefresh="handleRefresh" :usersNumber="userPage.total" @handleExport="doExport" @handleUpdate="handleUpdate"></tool-bar>
+      <tool-bar
+        :hasRefresh="true"
+        @handleRefresh="handleRefresh"
+        :usersNumber="userPage.total"
+        @handleExport="doExport"
+        @handleUpdate="handleUpdate"
+      ></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -45,19 +51,22 @@
             <template slot-scope="scope">
               <!-- :popAuth="true"
               :auth="permissionMap['user']['user_detail']"-->
-              <el-t-button 
-              type="text"
-              size="mini" 
-              :auth="permissionMap['batchAddTask']['batchAddTask_detail']" 
-              :popAuth="true" 
-              @click.stop="handleDetail(scope.$index)" 
-              v-if="permissionMap['batchAddTask']['batchAddTask_detail']">详情</el-t-button>
+              <el-t-button
+                type="text"
+                size="mini"
+                v-permission="'batchAddTask,batchAddTask_detail'"
+                :auth="'batchAddTask,batchAddTask_detail'"
+                :popAuth="true"
+                @click.stop="handleDetail(scope.$index)"
+                v-if="permissionMap['batchAddTask']['batchAddTask_detail']"
+              >详情</el-t-button>
               <el-t-button
                 v-if="scope.row.addStatus == 'INTERRUPT'"
                 type="text"
                 size="mini"
                 :popAuth="true"
-                :auth="permissionMap['batchAddTask']['batchAddTask_cancel']"
+                v-permission="'batchAddTask,batchAddTask_cancel'"
+                :auth="'batchAddTask,batchAddTask_cancel'"
                 @click.stop="handleContinue(scope.$index)"
               >继续</el-t-button>
               <el-t-button
@@ -65,7 +74,8 @@
                 type="text"
                 size="mini"
                 :popAuth="true"
-                :auth="permissionMap['batchAddTask']['batchAddTask_cancel']"
+                v-permission="'batchAddTask,batchAddTask_cancel'"
+                :auth="'batchAddTask,batchAddTask_cancel'"
                 @click.stop="handleCancel(scope.$index)"
               >取消</el-t-button>
             </template>
@@ -80,8 +90,12 @@
           :current-page.sync="pageConfig.pageNumber"
           :page-size="pageConfig.pageSize"
           @current-change="changePage"
-        /> -->
-         <customer-pagination :pageConfig="pageConfig" @current-change="changePage" @size-change="changeSize"></customer-pagination>
+        />-->
+        <customer-pagination
+          :pageConfig="pageConfig"
+          @current-change="changePage"
+          @size-change="changeSize"
+        ></customer-pagination>
       </div>
     </el-card>
 
@@ -102,7 +116,7 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar,
-    CustomerPagination
+    CustomerPagination,
   },
   data() {
     return {

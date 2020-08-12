@@ -72,10 +72,10 @@
           <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-t-button
-                v-if="permissionMap['externalUser']['externalUser_detail']"
+                v-permission="'externalUser,externalUser_detail'"
                 type="text"
                 size="mini"
-                :auth="permissionMap['externalUser']['externalUser_detail']"
+                :auth="'externalUser,externalUser_detail'"
                 :popAuth="true"
                 @click.stop="handleDetail(scope.$index,scope.row)"
               >详情</el-t-button>

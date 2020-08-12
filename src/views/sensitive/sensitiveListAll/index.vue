@@ -15,13 +15,15 @@
           <el-t-button
             type="primary"
             :popAuth="true"
-            :auth="permissionMap['riskManagement']['riskManagement_add']"
+            v-permission="'riskManagement,riskManagement_add'"
+            :auth="'riskManagement,riskManagement_add'"
             @click.stop="handleCreate"
           >新建敏感词</el-t-button>
           <el-t-button
             type="primary"
             :popAuth="true"
-            :auth="permissionMap['riskManagement']['riskManagement_add']"
+            v-permission="'riskManagement,riskManagement_add'"
+            :auth="'riskManagement,riskManagement_add'"
             @click.stop="handleBatchChange"
           >设置通知人</el-t-button>
         </div>
@@ -105,7 +107,8 @@
               <el-t-button
                 type="text"
                 :popAuth="true"
-                :auth="permissionMap['riskManagement']['riskManagement_update']"
+                v-permission="'riskManagement,riskManagement_update'"
+                :auth="'riskManagement,riskManagement_update'"
                 size="mini"
                 @click.stop="handleEdit(scope.$index)"
               >编辑</el-t-button>
@@ -114,7 +117,8 @@
               <el-t-button
                 type="text"
                 :popAuth="true"
-                :auth="permissionMap['riskManagement']['riskManagement_delete']"
+                v-permission="'riskManagement,riskManagement_delete'"
+                :auth="'riskManagement,riskManagement_delete'"
                 size="mini"
                 @click.stop="handleDelete(scope.$index)"
               >删除</el-t-button>

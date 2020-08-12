@@ -234,7 +234,8 @@
                 style="margin:auto 0;"
                 :popAuth="true"
                 size="mini"
-                :auth="permissionMap['externalUserTrends']['externalUserTrends_add']"
+                :auth="'externalUserTrends,externalUserTrends_add'"
+                v-permission="'externalUserTrends,externalUserTrends_add'"
               >添加动态</el-t-button>
             </div>
             <div class="member-status-content margin-top-20">
@@ -251,7 +252,8 @@
                       <p style="margin:0px;text-align:right;">
                         <el-t-button
                           :popAuth="true"
-                          :auth="permissionMap['externalUserTrends']['externalUserTrends_update']"
+                          :auth="'externalUserTrends,externalUserTrends_update'"
+                          v-permission="'externalUserTrends,externalUserTrends_update'"
                           type="text"
                           v-show="item.editable"
                           class="ml-10"
@@ -259,7 +261,8 @@
                         >编辑</el-t-button>
                         <el-t-button
                           :popAuth="true"
-                          :auth="permissionMap['externalUserTrends']['externalUserTrends_delete']"
+                          :auth="'externalUserTrends,externalUserTrends_delete'"
+                          v-permission="'externalUserTrends,externalUserTrends_delete'"
                           type="text"
                           v-show="item.editable"
                           class="ml-10"

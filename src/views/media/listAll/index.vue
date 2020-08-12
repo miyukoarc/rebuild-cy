@@ -18,7 +18,8 @@
             <el-t-button
               type="text"
               :popAuth="true"
-              :auth="permissionMap['mediaGroup']['mediaGroup_add']"
+              :auth="'mediaGroup,mediaGroup_add'"
+              v-permission="'mediaGroup,mediaGroup_add'"
               size="mini"
               @click.stop="handleCreateGroup"
             >
@@ -45,14 +46,16 @@
                     type="text"
                     size="mini"
                     :popAuth="true"
-                    :auth="permissionMap['mediaGroup']['mediaGroup_rename']"
+                    :auth="'mediaGroup,mediaGroup_rename'"
+                    v-permission="'mediaGroup,mediaGroup_rename'"
                     @click.stop="handleEditGroup(scope.$index)"
                   >修改</el-t-button>
                   <el-t-button
                     type="text"
                     size="mini"
                     :popAuth="true"
-                    :auth="permissionMap['mediaGroup']['mediaGroup_delete']"
+                    :auth="'mediaGroup,mediaGroup_delete'"
+                    v-permission="'mediaGroup,mediaGroup_delete'"
                     @click.stop="handleDeleteGroup(scope.$index)"
                   >删除</el-t-button>
                 </div>

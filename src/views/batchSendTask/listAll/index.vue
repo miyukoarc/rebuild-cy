@@ -8,9 +8,9 @@
         <div slot="right">
           <el-t-button
             type="primary"
-            v-if="permissionMap['batchSendTask']['batchSendTask_add']"
+            v-permission="'batchSendTask,batchSendTask_add'"
             :popAuth="true"
-            :auth="permissionMap['batchSendTask']['batchSendTask_add']"
+            :auth="'batchSendTask,batchSendTask_add'"
             @click="actionDepartment"
           >新建群发</el-t-button>
         </div>
@@ -43,9 +43,9 @@
           <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-t-button
-                v-if="permissionMap['batchSendTask']['batchSendTask_detail']"
+                v-permission="'batchSendTask,batchSendTask_detail'"
                 :popAuth="true"
-                :auth="permissionMap['batchSendTask']['batchSendTask_detail']"
+                :auth="'batchSendTask,batchSendTask_detail'"
                 type="text"
                 @click.stop="handleDetail(scope.row)"
               >详情</el-t-button>

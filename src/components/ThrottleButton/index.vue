@@ -12,7 +12,7 @@
         <!-- <div v-if="Object.keys(auth).length" class="container">
           <div v-for="(value,key) in authData" :key="key">{{key}}: {{value}}</div>
         </div>-->
-        <div v-for="(item, index) in resolveAuth(authData)" :key="index">{{item}}</div>
+        <div v-for="(item, index) in resolveAuth(authData(module,permission))" :key="index">{{item}}</div>
       </div>
 
       <el-button v-bind="$attrs" v-on="evet" :disabled="disabled">
@@ -28,6 +28,7 @@
 </template>
 <script>
 import settings from '@/settings'
+import { mapState } from 'vuex'
 export default {
   name: 'el-t-button',
   props: {
@@ -36,8 +37,8 @@ export default {
       default: true,
     }, //节流功能
     auth: {
-      type: Object,
-      default: () => {},
+      type: String,
+      default: '',
     },
     popAuth: {
       type: Boolean,
@@ -52,25 +53,39 @@ export default {
     return {
       timer: null,
       filtedArr: [],
-      disabled: false
+      disabled: false,
+      module: '',
+      permission: '',
     }
   },
   watch: {
     enable: {
       handler(newVal, oldVal) {
-          if(newVal===true){
-              this.$watch('timer',(newV,oldV)=>{
-                  this.disabled = !!newV
-              })
-          }else{
-              this.disabled = true
-
-          }
+        if (newVal === true) {
+          this.$watch('timer', (newV, oldV) => {
+            this.disabled = !!newV
+          })
+        } else {
+          this.disabled = true
+        }
+      },
+      immediate: true,
+    },
+    auth: {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          const arr = newVal.split(',')
+          this.module = arr[0]
+          this.permission = arr[1]
+        }
       },
       immediate: true,
     },
   },
   computed: {
+    ...mapState({
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
     evet() {
       if (this.throttle) {
         if (this.$listeners.click) {
@@ -89,15 +104,20 @@ export default {
     showAuth() {
       return settings.showAuth
     },
-    authData() {
-      return this.auth
-    },
+    // authData() {
+    //   return this.auth
+    // },
   },
-
+  created() {},
   updated() {
     this.filtedArr = this.resolveAuth(this.auth)
   },
   methods: {
+    authData(module, permission) {
+      return (
+        this.permissionMap[module] && this.permissionMap[module][permission]
+      )
+    },
     throat(method) {
       const me = this
       return (...args) => {
