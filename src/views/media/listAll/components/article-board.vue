@@ -38,7 +38,6 @@
               </div>
               <div v-else>
                 <el-t-button type="text" @click.stop.native="handleEdit(row.uuid)">编辑</el-t-button>
-                <el-divider direction="vertical"></el-divider>
 
                 <el-t-button type="text" @click.stop.native="handleDelete(row.uuid)">删除</el-t-button>
               </div>

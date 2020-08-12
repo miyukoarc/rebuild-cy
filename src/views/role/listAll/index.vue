@@ -48,8 +48,6 @@
                 :auth="'role,role_update'"
                 v-permission="'role,role_update'"
               >配置权限</el-t-button>
-              <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
-              <!-- <el-divider direction="vertical"></el-divider> -->
               <el-t-button
                 type="text"
                 size="mini"
@@ -58,8 +56,6 @@
                 v-permission="'role,role_update'"
                 :auth="'role,role_update'"
               >编辑</el-t-button>
-              <!-- <i class="el-icon-circle-close color-info" v-else></i> -->
-              <!-- <el-divider direction="vertical"></el-divider> -->
 
               <el-t-button
                 type="text"

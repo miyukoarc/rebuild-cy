@@ -95,7 +95,6 @@
                 class="button-s"
                 @click.stop.native="handleDetail(scope.$index,scope.row)"
               >详情</el-t-button>
-              <el-divider direction="vertical"></el-divider>
 
               <el-t-button
                 :popAuth="true"
@@ -105,7 +104,6 @@
                 class="button-s"
                 @click.stop.native="downLoad(scope.row)"
               >下载</el-t-button>
-              <el-divider direction="vertical"></el-divider>
 
               <el-t-button
                 v-permission="'contactWay,contactWay_update'"
@@ -115,7 +113,6 @@
                 class="button-s"
                 @click.stop.native="handleEdit(scope.row)"
               >编辑</el-t-button>
-              <el-divider direction="vertical"></el-divider>
 
               <el-t-button
                 v-permission="'contactWay,contactWay_delete'"

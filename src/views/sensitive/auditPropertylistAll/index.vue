@@ -55,7 +55,6 @@
               :auth="'role,role_update'"
               @click.stop.native="handleDetail(row)"
             >详情</el-t-button>
-            <el-divider direction="vertical"></el-divider>
 
             <el-t-button
               type="text"
@@ -65,7 +64,6 @@
               :auth="'role,role_update'"
               @click.stop.native="handleSetting(row)"
             >设置流程</el-t-button>
-            <el-divider direction="vertical"></el-divider>
 
             <el-t-button
               type="text"

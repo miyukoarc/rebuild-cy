@@ -45,8 +45,6 @@
                 v-permission="'media,media_article_update'"
               >编辑</el-t-button>
 
-              <el-divider direction="vertical"></el-divider>
-
               <el-t-button
                 size="mini"
                 type="text"

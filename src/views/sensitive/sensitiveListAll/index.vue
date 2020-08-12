@@ -113,7 +113,6 @@
                 @click.stop.native="handleEdit($index)"
               >编辑</el-t-button>
 
-              <el-divider direction="vertical"></el-divider>
               <el-t-button
                 type="text"
                 :popAuth="true"
