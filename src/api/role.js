@@ -58,10 +58,11 @@ export const updateRole = (payload) => {
  * @param {}  
  */
 
-export const getRoleList = () => {
+export const getRoleList = (payload) => {
     return request({
         url: '/role/listAll',
         method: 'get',
+        params: payload
     })
 }
 

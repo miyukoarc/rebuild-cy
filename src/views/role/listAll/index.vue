@@ -6,7 +6,7 @@
           <span class="font-l">{{corpInfo.name}}</span>
           <!-- :popAuth="true"
           :auth="permissionMap['role']['role_add']"-->
-          <el-t-button size="small" type="text" :enable="false" @click="handleChange">切换企业</el-t-button>
+          <el-t-button size="small" type="text" :enable="true" @click="handleChange">切换企业</el-t-button>
         </div>
         <div slot="right">
           <el-t-button
@@ -108,6 +108,11 @@ export default {
   activated() {
     this.initDataList()
   },
+  mounted(){
+    //   this.$bus.$on('handleRefresh',()=>{
+    //       this.ini
+    //   })
+  },
   methods: {
     doExport() {},
     handleCreate() {
@@ -126,14 +131,7 @@ export default {
           })
         })
     },
-    initFilter() {
-      this.$store
-        .dispatch('department/getDepartmentListSelect')
-        .then(() => {})
-        .catch((err) => {
-          console.error(err)
-        })
-    },
+
     handleChange() {
       this.$refs['formDialog'].event = 'ChangeTemplate'
       this.$refs['formDialog'].eventType = 'change'
