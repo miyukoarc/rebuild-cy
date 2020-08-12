@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-08-12 20:48:13
+ * @LastEditTime: 2020-08-12 21:32:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -185,7 +185,7 @@ import docmsgComponent from "./messageTypeComponent/docmsgComponent.vue";
 import chatrecordComponent from "./messageTypeComponent/chatrecordComponent.vue";
 import locationComponent from "./messageTypeComponent/locationComponent.vue";
 import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_callComponent.vue";
- 
+
 import mixedComponent from "./messageTypeComponent/mixedComponent.vue";
 
 export default {
@@ -212,7 +212,7 @@ export default {
     chatrecordComponent,
     locationComponent,
     meeting_voice_callComponent,
-    mixedComponent
+    mixedComponent,
   },
   data() {
     return {
@@ -330,23 +330,23 @@ export default {
             this.chatSideData = res.allMessageList;
 
             res.allMessageList.forEach((item, index) => {
-              console.log(
-                this.$route.query.userId == item._id,
-                "000",
-                this.$route.query.userId,
-                item._id
-              );
               if (this.$route.query.userId == item._id) {
                 this.activeIdx = index;
                 this.currnetMember = item;
                 console.log(item, "item====", this.currnetMember);
                 this.chatType = item.chatType;
-              } else {
-                this.currnetMember = item;
               }
             });
+            if ((this.currnetMember = "{}")) {
+              this.currnetMember = res.allMessageList[0];
+              console.log(this.currnetMember, "88888");
+            }
             this.query.fromUserId = this.singleLastListAll.userId;
-            this.query.toUserId = this.$route.query.userId;
+            if (this.currnetMember.fromUserId == res.userId) {
+              this.query.toUserId = this.currnetMember.toUserId;
+            } else {
+              this.query.toUserId = this.currnetMember.fromUserId;
+            }
             console.log(this.query.toUserId, "this.query.toUserId");
             this.getsinglelist(this.query)
               .then(() => {})
