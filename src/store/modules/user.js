@@ -233,6 +233,15 @@ const actions = {
                 reject(err)
             })
         })
+    },
+    postUserUpdate({commit},payload){
+       return new Promise((resolve,reject)=>{
+           postUserUpdate(payload).then(res=>{
+               resolve(res)
+           }).catch(err=>{
+               reject(err)
+           })
+       })
     }
 
 }

@@ -7,7 +7,7 @@
     <el-card class="content-spacing">
       <tool-bar :usersNumber="userPage.total" @handleExport="doExport" @handleUpdate="handleUpdate">
         <div slot="right">
-          <el-t-button
+          <!-- <el-t-button
             type="primary"
             :popAuth="true"
             :auth="'user,user_update'"
@@ -20,7 +20,7 @@
             v-permission="'department,department_allocation'"
             :auth="'department,department_allocation'"
             @click="actionDepartment"
-          >批量分配部门</el-t-button>
+          >批量分配部门</el-t-button>-->
         </div>
       </tool-bar>
     </el-card>
@@ -38,7 +38,7 @@
           @selection-change="handleSelectionChange"
           header-row-class-name="el-table-header"
         >
-          <el-table-column type="selection"></el-table-column>
+          <!-- <el-table-column type="selection"></el-table-column> -->
           <el-table-column prop="name" label="员工姓名" align="left"></el-table-column>
 
           <el-table-column label="部门" align="left">
@@ -81,15 +81,14 @@
 
           <el-table-column label="操作" align="left" width="240">
             <template slot-scope="scope">
-              <el-t-button
+              <!-- <el-t-button
                 type="text"
                 size="mini"
                 :popAuth="true"
                 v-permission="'user,user_update'"
                 :auth="'user,user_update'"
                 @click.stop.native="handleDistributeRole(scope.$index)"
-              >分配角色</el-t-button>
-
+              >分配角色</el-t-button> -->
 
               <el-t-button
                 type="text"
@@ -98,8 +97,7 @@
                 v-permission="'department,department_allocation'"
                 :auth="'department,department_allocation'"
                 @click.stop.native="handleDistributeDepartment(scope.$index)"
-              >分配部门</el-t-button>
-
+              >编辑角色</el-t-button>
 
               <el-t-button
                 type="text"
@@ -109,7 +107,6 @@
                 :auth="'user,user_detail'"
                 @click.stop.native="handleDetail(scope.$index)"
               >详情</el-t-button>
-
             </template>
           </el-table-column>
         </el-table>
@@ -174,7 +171,6 @@ export default {
     }),
   },
   created() {
-    this.$store.dispatch('role/getRoleListSelect')
     this.$store.dispatch('department/getDepartmentListSelect')
 
     this.initDataList(this.query)

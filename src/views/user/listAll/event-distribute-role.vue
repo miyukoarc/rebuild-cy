@@ -20,125 +20,137 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
       // 变更为的角色
-      roleUuid: "",
+      roleUuid: '',
       // 单人修改角色
       form: {
-        alias: "",
+        alias: '',
         departmentUuids: [],
-        name: "",
-        position: "",
-        uuid: ""
+        name: '',
+        position: '',
+        uuid: '',
       },
       // 多人修改角色
       forms: [],
       // 是否为多人修改角色，默认为否，即单人
-      isBatchUpdate: false
-    };
+      isBatchUpdate: false,
+    }
   },
   watch: {
     user: {
       handler(newVal, oldVal) {
         if (Object.keys(newVal) != 0) {
-          this.roleUuid = newVal.role.uuid;
-          this.isBatchUpdate = false;
+          this.roleUuid = newVal.role.uuid
+          this.isBatchUpdate = false
 
-          this.form.alias = newVal.alias;
-          this.form.name = newVal.name;
-          this.form.position = newVal.position;
-          this.form.uuid = newVal.uuid;
+          this.form.alias = newVal.alias
+          this.form.name = newVal.name
+          this.form.position = newVal.position
+          this.form.uuid = newVal.uuid
         }
       },
-      immediate: true
+      immediate: true,
     },
     users: {
       handler(newVal, oldVal) {
         if (newVal.length > 0) {
-          this.isBatchUpdate = true;
-          this.roleUuid = newVal[0].role.uuid;
+          this.isBatchUpdate = true
+          this.roleUuid = newVal[0].role.uuid
           newVal.map((obj, index) => {
             this.forms[index] = {
               alias: obj.alias,
               name: obj.name,
               position: obj.position,
-              uuid: obj.uuid
-            };
-          });
+              uuid: obj.uuid,
+            }
+          })
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
       // 修改单个角色
-      user: state => state.user.currentRowUserList,
+      user: (state) => state.user.currentRowUserList,
       // 批量修改多个角色
-      users: state => state.user.currentRowUsers,
-      roleList: state => state.role.roleListSelect
-    })
+      users: (state) => state.user.currentRowUsers,
+      roleList: (state) => state.role.roleListSelect,
+    }),
+  },
+  created() {
+      const tenantId = this.user.tenantId
+      this.initFilter({tenantId})
   },
   methods: {
+    initFilter(payload) {
+      this.$store
+        .dispatch('role/getRoleListSelect',payload)
+        .then(() => {})
+        .catch((err) => {
+          console.error(err)
+        })
+    },
     closeDialog() {
-      this.$parent.$parent.dialogVisible = false;
+      this.$parent.$parent.dialogVisible = false
     },
     handleCancel() {
-      this.closeDialog();
+      this.closeDialog()
     },
 
     handleConfrim() {
       if (!this.isBatchUpdate) {
-        const payload = { ...this.form, roleUuid: this.roleUuid };
+        const payload = { ...this.form, roleUuid: this.roleUuid }
         this.$store
-          .dispatch("user/user_update", payload)
-          .then(res => {
+          .dispatch('user/user_update', payload)
+          .then((res) => {
             this.$message({
-              type: "success",
-              message: "操作成功"
-            });
-            this.$bus.$emit("handleRefresh");
-            this.closeDialog();
+              type: 'success',
+              message: '操作成功',
+            })
+            this.$bus.$emit('handleRefresh')
+            this.closeDialog()
           })
-          .catch(err => {
+          .catch((err) => {
             this.$message({
-              type: "error",
-              message: err
-            });
-          });
+              type: 'error',
+              message: err,
+            })
+          })
       } else {
-        let promiseList = [];
+        let promiseList = []
         this.forms.map((payload, index) => {
-          promiseList[index] = this.$store.dispatch("user/user_update", {
+          promiseList[index] = this.$store.dispatch('user/user_update', {
             ...payload,
-            roleUuid: this.roleUuid
-          });
-        });
+            roleUuid: this.roleUuid,
+          })
+        })
 
         Promise.all(promiseList)
-          .then(res => {
+          .then((res) => {
             this.$message({
-              type: "success",
-              message: "操作成功"
-            });
-            this.$bus.$emit("handleRefresh");
-            this.closeDialog();
+              type: 'success',
+              message: '操作成功',
+            })
+            this.$bus.$emit('handleRefresh')
+            this.closeDialog()
           })
-          .catch(err => {
+          .catch((err) => {
             this.$message({
-              type: "error",
-              message: err
-            });
-            this.$bus.$emit("handleRefresh");
-            this.closeDialog();
-          });
+              type: 'error',
+              message: err,
+            })
+            this.$bus.$emit('handleRefresh')
+            this.closeDialog()
+          })
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style>
