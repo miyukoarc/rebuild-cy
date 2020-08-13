@@ -130,8 +130,7 @@ const actions = {
     }) {
         return new Promise((resolve, reject) => {
             getMyInfo().then((res) => {
-                // console.log(res)
-                console.log('这个先', res)
+
                 commit('SET_USERINFO', res)
 
                 resolve(res)

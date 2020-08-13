@@ -75,7 +75,7 @@ _除非无替代方法，禁止通过污染prototype的方式绑定方法_
 				resolve()
 			}).catch(err=>{
 				
-				reject()
+				reject(err)
 			})
 		})
 	}

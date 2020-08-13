@@ -21,10 +21,8 @@
           :label="item.tenantId"
         >{{item.name}}</el-radio>
       </div>
-      <!-- </el-radio-group> -->
       <div class="text-align-center">
         <el-button type="primary" size="small" @click="handleLogin">确定</el-button>
-        <!-- <el-button type="primary" size="small" @click="$router.push({path: '/welcome'})"></el-button> -->
       </div>
     </div>
   </div>
@@ -62,14 +60,25 @@ export default {
   },
   created() {
     this.initDataList()
+      .then(() => {
+        const tenantId = this.loginList[0].tenantId
+        this.tenantId = this.loginList[0].tenantId
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   },
   mounted() {
-      if(this.$isElectron()){
-          const ipcRenderer = window.electron.ipcRenderer
-          ipcRenderer.on('getUrl',(event,payload)=>{
-              console.log(payload)
-          })
-      }
+    if (this.tenantId) {
+        console.log(this.tenantId)
+    //   this.getQrCode(this.tenantId, 'browser')
+    }
+    if (this.$isElectron()) {
+      const ipcRenderer = window.electron.ipcRenderer
+      ipcRenderer.on('getUrl', (event, payload) => {
+        console.log(payload)
+      })
+    }
   },
   methods: {
     getQrCode(id, target) {
@@ -110,18 +119,22 @@ export default {
     },
     changeCorp(val) {
       window.localStorage.setItem('corp', JSON.stringify(val))
-      //   this.$store.commit('auth/SAVE_LOGGEDCORP', val)
     },
     initDataList() {
-      this.$store
-        .dispatch('auth/getLoginList')
-        .then(() => {})
-        .catch((err) => {
-          this.$message({
-            type: 'error',
-            message: err || '初始化错误',
+      return new Promise((resolve, reject) => {
+        this.$store
+          .dispatch('auth/getLoginList')
+          .then(() => {
+            resolve()
           })
-        })
+          .catch((err) => {
+            this.$message({
+              type: 'error',
+              message: err || '初始化错误',
+            })
+            reject(err)
+          })
+      })
     },
     handleLogin() {
       if (this.tenantId) {
@@ -131,14 +144,13 @@ export default {
         this.loading = true
 
         if (this.$isElectron()) {
-
           const ipcRenderer = window.electron.ipcRenderer
           ipcRenderer.send('qrcode-window', this.tenantId)
 
           this.loading = false
         } else {
-        this.getQrCode(tenantId, 'browser')
-        this.loading = false
+          this.getQrCode(tenantId, 'browser')
+          this.loading = false
         }
       } else {
         this.$message({
