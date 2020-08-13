@@ -91,7 +91,7 @@ export default {
   },
   data() {
     return {
-      corp: '',
+      corpInfo: {},
     }
   },
   watch: {},
@@ -100,18 +100,19 @@ export default {
       roleList: (state) => state.role.roleList,
       departmentList: (state) => state.department.departmentList,
       loading: (state) => state.role.loading,
-      corpInfo: (state) => state.auth.corpInfo,
+      //   corpInfo: (state) => state.auth.corpInfo,
       permissionMap: (state) => state.permission.permissionMap,
-      listSelect: state => state.department.listSelect
+      listSelect: (state) => state.department.listSelect,
     }),
   },
-  activated() {
+  created() {
+    this.$store.dispatch('department/getDepartmentListSelect')
     this.initDataList()
   },
-  mounted(){
-    //   this.$bus.$on('handleRefresh',()=>{
-    //       this.ini
-    //   })
+  mounted() {
+    const corp = JSON.parse(window.localStorage.getItem('corp'))
+    this.corpInfo = corp
+    //   console.log(corp)
   },
   methods: {
     doExport() {},

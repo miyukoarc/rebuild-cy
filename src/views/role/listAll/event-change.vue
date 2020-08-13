@@ -23,15 +23,24 @@
                 :value="item"
             ></el-option>
       </el-select>-->
-      <el-select-tree
+      <!-- <el-select-tree
         :default-expand-all="true"
         :multiple="false"
         :placeholder="'请选择组织/部门'"
         :popover-min-width="100"
         :data="listSelect"
-        :props="{value:'uuid',children:'children',label:'name'}"
+        :props="{value:'tenantId',children:'children',label:'name'}"
         :check-strictly="true"
-        v-model="form.tenantId"
+        v-model="tenantId"
+      ></el-select-tree>-->
+
+      <el-select-tree
+        v-model="tenantId"
+        placeholder="请选择部门"
+        :defaultExpandAll="true"
+        :checkStrictly="true"
+        :data="listSelect"
+        :props="{value:'tenantId',children:'children',label:'name'}"
       ></el-select-tree>
     </el-form-item>
     <!-- <el-form-item label="code" prop="code">
@@ -56,6 +65,7 @@ export default {
 
   data() {
     return {
+      tenantId: '',
       form: {
         name: '',
         code: '',
@@ -66,12 +76,12 @@ export default {
       rules: {
         name: [
           { required: true, message: '请选择节点', trigger: 'blur' },
-        //   {
-        //     min: 3,
-        //     max: 20,
-        //     message: '长度在 3 到 20 个字符',
-        //     trigger: 'blur',
-        //   },
+          //   {
+          //     min: 3,
+          //     max: 20,
+          //     message: '长度在 3 到 20 个字符',
+          //     trigger: 'blur',
+          //   },
         ],
         code: [
           { required: true, message: '请输入角色code', trigger: 'blur' },
@@ -88,11 +98,11 @@ export default {
   watch: {},
   computed: {
     ...mapState({
-        listSelect: state => state.department.listSelect
+      listSelect: (state) => state.department.listSelect,
     }),
   },
   created() {
-    this.initFilter()
+    // this.initFilter()
   },
   mounted() {},
   methods: {
@@ -108,19 +118,19 @@ export default {
         })
     },
     handleConfirm() {
-      const tenantId = this.form.tenantId
+      const tenantId = this.tenantId
 
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.$store
-            .dispatch('role/getRoleList', {tenantId})
+            .dispatch('role/getRoleList', { tenantId })
             .then(() => {
               this.$message({
                 type: 'success',
                 message: '操作成功',
               })
               this.handleCancel()
-            //   this.$bus.$emit('handleRefresh')
+              //   this.$bus.$emit('handleRefresh')
             })
             .catch((err) => {
               this.$message({

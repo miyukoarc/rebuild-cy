@@ -9,7 +9,6 @@
           :checkStrictly="true"
           :data="departmentList"
           :props="departmentProps"
-          @node-click="handleChangeDept"
         ></el-select-tree>
       </el-form-item>
 
