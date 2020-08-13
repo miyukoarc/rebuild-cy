@@ -46,62 +46,50 @@ router.beforeEach(async(to, from, next) => {
             NProgress.done()
         } else {
             // alert('hasLogin')
-
-
             const username = store.getters.name
 
             if (username) {
-
-
-
-
                 next()
             } else {
-                try {
+                // try {
 
-                    let accessed
+                let accessed
+                await store.dispatch('user/getMyInfo').then(async(res) => {
+                    const name = res.name
+                    if (name) {
+                        window.watermark = new Watermark(name)
+                        window.watermark.create()
+                        await store.dispatch('menu/getMyMenuList')
+                        accessed = await store.dispatch('permission/getPermissionListMy')
 
-                    await store.dispatch('user/getMyInfo').then(async(res) => {
-                        const name = res.name
+                        await store.dispatch('sensitive/auditPropertylistAll')
 
-                        if (name) {
-                            window.watermark = new Watermark(name)
-                            window.watermark.create()
-                        }
-
-                    }).catch(err => {
-                        Message({
-                            type: 'error',
-                            message: err || err.message
-                        })
+                        await store.dispatch('websocket/createWebsocket')
+                        router.addRoutes(
+                            [...accessed,
+                                {
+                                    path: '*',
+                                    redirect: '/404',
+                                    hidden: true
+                                }
+                            ]
+                        )
+                    }
+                }).catch(err => {
+                    Message({
+                        type: 'error',
+                        message: err || err.message
                     })
-                    await store.dispatch('menu/getMyMenuList')
-                    accessed = await store.dispatch('permission/getPermissionListMy')
-
-                    await store.dispatch('sensitive/auditPropertylistAll')
-
-                    await store.dispatch('websocket/createWebsocket')
-
-
-                    router.addRoutes(
-                        [...accessed,
-                            {
-                                path: '*',
-                                redirect: '/404',
-                                hidden: true
-                            }
-                        ]
-                    )
-
-                    next({
+                })
+                next({
                         ...to,
                         replace: true
                     })
-                } catch (error) {
-                    Message.error(error || 'Error')
-                    next(`/login?redirect=${to.path}`)
-                    NProgress.done()
-                }
+                    // } catch (error) {
+                    //   Message.error(error || 'Error')
+                    //   next(`/login?redirect=${to.path}`)
+                    //   NProgress.done()
+                    // }
             }
         }
 
