@@ -321,5 +321,22 @@ export const queue = (tasks,callback)=>{
             })
         })
     },promise)
-} 
+}
+
+
+/**
+ *  findtree
+ */
+
+export const  findTree =(arr, uuid) => {
+    if (arr == null) return null
+    for (let obj of arr) {
+      if (obj.uuid == uuid) {
+        return obj
+      }
+      let ret = findTree(obj.children, uuid)
+      if (ret) return ret
+    }
+    return null
+  }
 

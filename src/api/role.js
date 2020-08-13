@@ -71,10 +71,11 @@ export const getRoleList = (payload) => {
  * @param {}  
  */
 
-export const getRoleListSelect = () => {
+export const getRoleListSelect = (payload) => {
     return request({
         url: '/role/listSelect',
         method: 'get',
+        params: payload
     })
 }
 

@@ -7,6 +7,7 @@
       append-to-body
       width="600px"
       center
+      destroy-on-close
       :close-on-click-modal="false"
     >
       <div>
@@ -62,7 +63,7 @@ export default {
       //   }
 
       if (this.eventType === "distribute") {
-        return "分配部门";
+        return "编辑角色";
       } else if (this.eventType === "distributeRole") {
         return "分配角色";
       }

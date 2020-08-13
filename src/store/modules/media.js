@@ -431,7 +431,7 @@ const actions = {
       moveMedieToGroup(payload).then(res => {
         resolve()
       }).catch(err => {
-        reject()
+        reject(err)
       })
     })
   },

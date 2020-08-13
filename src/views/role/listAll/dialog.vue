@@ -68,7 +68,7 @@ components:{
               case 'edit': 
                   return '编辑模板'
               case 'change':
-                  return '切换企业'
+                  return '切换节点'
           }
         //   if(this.eventType==='create'){
         //       return '创建模板'

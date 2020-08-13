@@ -170,7 +170,7 @@ const actions = {
       }).catch(err => {
 
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
@@ -193,7 +193,7 @@ const actions = {
       }).catch(err => {
 
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
@@ -215,7 +215,7 @@ const actions = {
       }).catch(err => {
 
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
@@ -236,7 +236,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   },
@@ -254,7 +254,7 @@ const actions = {
         resolve()
       }).catch(err => {
         commit('TOGGLE_LOADING', false)
-        reject()
+        reject(err)
       })
     })
   }

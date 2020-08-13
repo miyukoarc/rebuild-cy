@@ -130,8 +130,7 @@ const actions = {
     }) {
         return new Promise((resolve, reject) => {
             getMyInfo().then((res) => {
-                // console.log(res)
-                console.log('这个先', res)
+
                 commit('SET_USERINFO', res)
 
                 resolve(res)
@@ -234,6 +233,15 @@ const actions = {
                 reject(err)
             })
         })
+    },
+    postUserUpdate({commit},payload){
+       return new Promise((resolve,reject)=>{
+           postUserUpdate(payload).then(res=>{
+               resolve(res)
+           }).catch(err=>{
+               reject(err)
+           })
+       })
     }
 
 }

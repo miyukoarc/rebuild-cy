@@ -9,11 +9,9 @@ import {
 } from '@/api/permission'
 
 import {
-    constantRoutes
-} from '@/router'
-import {
     setPermissionMap
 } from '@/utils/common'
+
 import Layout from '@/layout'
 
 /**
@@ -124,7 +122,7 @@ const actions = {
             }).catch(err => {
                 console.error(err)
                 commit('TOGGLE_LOADING', false)
-                reject()
+                reject(err)
             })
         })
     },
@@ -145,7 +143,7 @@ const actions = {
             }).catch(err => {
                 console.error(err)
                 commit('TOGGLE_LOADING', false)
-                reject()
+                reject(err)
             })
         })
     },
@@ -169,7 +167,7 @@ const actions = {
             }).catch(err => {
                 console.error(err)
                 commit('TOGGLE_LOADING', false)
-                reject()
+                reject(err)
             })
         })
     },

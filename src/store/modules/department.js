@@ -215,7 +215,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getDepartmentListSelect(payload).then(res => {
         commit('SAVE_LISTSELECT', res.items)
-        resolve()
+        resolve(res.items)
       }).catch(err => {
         reject(err)
       })

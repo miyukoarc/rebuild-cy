@@ -25,9 +25,12 @@
 </head>
 
 <body>
-    <div>
-    </div>
+    <div class="dom"></div>
+    <div class="dom"></div>
+    <div class="dom"></div>
+    <div class="dom"></div>
     <script>
+        /*
         let arr = [1, 2, 3, 4, 5, 6, 7, 8]
 
         function upgrade() {
@@ -82,12 +85,88 @@
             }, promise)
             return promise
         }
+            */
+
+        // const ps = [Promise.resolve('h1'), Promise.resolve('h2'), Promise.resolve('h3')]
+
+        // const go = function* () {
+        //     yield 1;
+        //     yield 2;
+        //     yield 3;
+        // }
+
+        // console.log([...go()])
+
+        // let arrayLike = {
+        //     '0': 'a',
+        //     '1': 'b',
+        //     '2': 'c',
+        //     length: 3
+        // }
+
+        // const arrayLike = document.querySelectorAll('.dom')
+
+        // const alter = Array.prototype.slice.call(arrayLike,0)
 
 
-        const ps = [Promise.resolve('h1'), Promise.resolve('h2'), Promise.resolve('h3')]
+        // let arr = Array.from(arrayLike)
+        // console.log(arr,arrayLike,alter)
+
+        const tree = [{
+            uuid: 1,
+            tenantId: 1,
+            children: [
+                {
+                    uuid: 4,
+                    tenantId: 4
+                },
+                {
+                    uuid: 5,
+                    tenantId: 5
+                }
+            ]
+        },
+        {
+            uuid: 2,
+            tenantId: 2,
+            children: [
+                {
+                    uuid: 3,
+                    tenantId: 3
+                }
+            ]
+        }]
+
+
+        function findTree(arr, uuid) {
+            if (arr == null) return null;
+            for (let obj of arr) {
+                if (obj.uuid == uuid) {
+                    return obj;
+                }
+                let ret = findTree(obj.children, uuid);
+                if (ret) return ret;
+            }
+            return null;
+        }
+
+        // function collect(obj) {
+        //     let ret = [obj.uuid];
+        //     if (obj.children) {
+        //         for (let o of obj.children) {
+        //             ret = [...ret, ...collect(o)]
+        //         }
+        //     }
+        //     return ret;
+        // }
+
+        console.log(findTree(tree,5))
+
 
 
     </script>
+
+
 </body>
 
 </html>

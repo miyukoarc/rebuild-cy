@@ -15,7 +15,9 @@ import {
   Loading
 } from 'element-ui'
 
-import { removeToken } from '@/utils/auth'
+import {
+  removeToken
+} from '@/utils/auth'
 
 // var loadinginstace
 
@@ -73,7 +75,7 @@ service.interceptors.response.use(
   response => {
     const res = response.data
 
-    if (response.status == 400) {
+    if (response.status == 401) {
       // alert('to/login')
 
 
@@ -92,6 +94,13 @@ service.interceptors.response.use(
         // return Promise.reject(new Error(res.message || 'Error'))
 
 
+      }
+
+      if (res.status === 400) {
+        Message({
+          message: res.message || 'Error',
+          type: 'error',
+        })
       }
 
 
