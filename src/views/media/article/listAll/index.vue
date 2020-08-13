@@ -68,13 +68,13 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import ToolBar from '@/components/ToolBar'
-import CustomerPagination from '@/components/CustomerPagination'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import ToolBar from "@/components/ToolBar";
+import CustomerPagination from "@/components/CustomerPagination";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
-  inject: ['reload'],
+  inject: ["reload"],
   components: {
     CustomerPagination,
     ListHeader,
@@ -91,9 +91,9 @@ export default {
       query: {
         page: 0,
         size: 10,
-        title: '',
+        title: "",
       },
-    }
+    };
   },
   watch: {},
   computed: {
@@ -108,129 +108,127 @@ export default {
     }),
   },
   activated() {
-    this.initDataList(this.query)
+    this.initDataList(this.query);
     // this.initFilter()
   },
   methods: {
-    doExport(val) {
-      
-    },
+    doExport(val) {},
     /**
      * 初始化筛选信息
      */
     initFilter() {
       this.$store
-        .dispatch('batchSendTask/getListMy')
+        .dispatch("batchSendTask/getListMy")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
 
       this.$store
-        .dispatch('user/getAllUserList')
+        .dispatch("user/getAllUserList")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('media/getArticleList', payload)
+        .dispatch("media/getArticleList", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     handleDetail(val) {
-      const payload = this.userList[val].uuid
+      const payload = this.userList[val].uuid;
       this.$router.push({
-        path: '/user/detail',
+        path: "/user/detail",
         query: { uuid: payload },
-      })
+      });
     },
     handleSearch(val) {
-      const { title } = val
-      this.query.title = title ? title : this.query.title
-      this.query.page = 0
+      const { title } = val;
+      this.query.title = title ? title : this.query.title;
+      this.query.page = 0;
 
-      this.initDataList(this.query)
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     handleCreate() {
       this.$router.push({
-        path: '/media/article/detail/0',
-      })
+        path: "/media/article/detail/0",
+      });
     },
     handleEdit(index) {
-      const uuid = this.listAll[index].uuid
+      const uuid = this.listAll[index].uuid;
       this.$router.push({
-        path: '/media/article/detail/' + uuid,
-      })
+        path: "/media/article/detail/" + uuid,
+      });
     },
     handleDelete(index) {
-      const uuid = this.listAll[index].uuid
-      this.$confirm('是否删除当前动态', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
+      const uuid = this.listAll[index].uuid;
+      this.$confirm("是否删除当前动态", "Warning", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       })
         .then(async () => {
           await this.$store
-            .dispatch('media/deleteMedia', { uuid })
+            .dispatch("media/deleteMedia", { uuid })
             .then(() => {
               this.$message({
-                type: 'success',
-                message: '操作成功',
-              })
-              this.initDataList()
+                type: "success",
+                message: "操作成功",
+              });
+              this.initDataList();
             })
             .catch((err) => {
               this.$message({
-                type: 'error',
+                type: "error",
                 message: err,
-              })
-            })
+              });
+            });
         })
         .catch((err) => {
-          console.error(err)
-        })
+          console.error(err);
+        });
     },
     handleRecords(index) {
-      const uuid = this.listAll[index].uuid
+      const uuid = this.listAll[index].uuid;
       this.$router.push({
-        path: '/media/browsingRecords/' + uuid,
-      })
+        path: "/media/browsingRecords/" + uuid,
+      });
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
