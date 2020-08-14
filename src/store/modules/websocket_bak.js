@@ -5,7 +5,6 @@ import { listSelectMobil, batchAddTaskHandleTask } from '@/api/batchAddTask'
 import { sendChaoyingMessage, isOnline, sendCustomizeMessage } from '@/api/longRange'
 import { getExternalUserDetail } from '@/api/externalUser'
 import { Message, MessageBox, Loading } from 'element-ui';
-import { queue } from '@/utils/common'
 
 let $ipcRenderer;
 if (isElectron()) {
@@ -25,10 +24,6 @@ const state = {
 
     taskList: [],//队列数组
     taskResult: null,//队列中的当前项
-
-    taskQueue: null,// 新版任务队列
-    currentTask: null,// 当前任务
-
 
     sendMsgContent: null,
     sendMsgContent_autorep_text: null,
@@ -53,9 +48,6 @@ const mutations = {
 const actions = {
     createWebsocket({ state, commit, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
-
-            // state.taskQueue = 
-
             state.sock = new SockJS(state.url, null, {
                 transports: 'websocket'
             })
@@ -380,6 +372,21 @@ const actions = {
     },
 
     openChat({ state, dispatch }) {
+        // if (isElectron() && state.taskResult.externalUser.mobile) {
+        //     $ipcRenderer.send('openChat', {
+        //         mobile: state.taskResult.externalUser.mobile.split(',')[0],
+        //         x: state.mouseX,
+        //         y: state.mouseY,
+        //     })
+        // } else {
+        //     dispatch('clearTask')
+        //     state.loadingInstance.close();
+        //     Message({
+        //         message: "请为群发客户设置完手机号后再试",
+        //         type: 'error'
+        //     })
+        // }
+
         // 1:当前选择人不在群发人中，会自动打开侧边栏  正常操作即可
         // 2:当前选择人不在群发人中，不会自动打开侧边栏  提示用户打开侧边栏后操作
         // 3:当前选择人在群发人中，已打开侧边栏  问侧边栏用户信息
