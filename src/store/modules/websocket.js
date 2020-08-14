@@ -12,23 +12,7 @@ if (isElectron()) {
 }
 
 
-class Queue extends Array {
-    constructor(...args) {
-        super(...args)
-    }
-    push(...args) {
-        console.log('监听数组push：', this)
-        super.push(...args);
-    }
-    shift() {
-        console.log('监听数组shift：', this)
-        super.shift()
-    }
-    say() {
-        console.log('这是Queue中的say方法')
-        console.log(this)
-    }
-}
+
 
 const state = {
     loadingInstance: null,
@@ -41,8 +25,8 @@ const state = {
         article: ''
     },
 
-    taskQueue: null,// 新版任务队列
-    currentTask: null,// 当前任务
+    taskQueue: null, // 新版任务队列
+    currentTask: null, // 当前任务
 
     sendMsgContent: null,
     sendMsgContent_autorep_text: null,
@@ -68,10 +52,29 @@ const mutations = {
 const actions = {
     createWebsocket({ state, commit, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
+            class Queue extends Array {
+                constructor(...args) {
+                    super(...args)
+                }
+                push(...args) {
+                    super.push(...args);
+                    if (args.length == this.length) {
+                        console.log('执行任务')
+                        this.shift()
+                    } else {
+                        console.log('只用添加即可，不需要执行任务')
+                    }
+                }
+                shift() {
+                    state.currentTask = super.shift();
+                    console.log('当前执行任务：' + state.currentTask)
+                    return state.currentTask;
+                }
+            }
+
             state.taskQueue = new Queue()
-            state.taskQueue.push = state.taskQueue.push.bind(state.taskQueue)
-            state.taskQueue.shift = state.taskQueue.shift.bind(state.taskQueue)
-            state.taskQueue.say = state.taskQueue.say.bind(state.taskQueue)
+            state.taskQueue.push = Queue.prototype.push.bind(state.taskQueue)
+            state.taskQueue.shift = Queue.prototype.shift.bind(state.taskQueue)
 
             state.sock = new SockJS(state.url, null, {
                 transports: 'websocket'
@@ -255,52 +258,51 @@ const actions = {
                     dispatch('listSelectMobil', data)
                 }
                 else if (data.type == 'AUTOREP') {
-                    if (data.properties.mobile) {
-                        if (data.properties.content) {
-                            state.sendMsgContent_autorep_text = {
-                                msgtype: "text",
-                                text:
-                                {
-                                    content: data.properties.content,
-                                }
-                            }
-                        }
-                        if (data.properties.autoReplyType == 'IMAGE') {
-                            state.sendMsgContent_autorep_media = {
-                                msgtype: "image",
-                                image:
-                                {
-                                    mediaid: data.properties.mediaId,
-                                }
-                            }
-                        } else if (data.properties.autoReplyType == 'FILE') {
-                            state.sendMsgContent_autorep_media = {
-                                msgtype: "file",
-                                file:
-                                {
-                                    mediaid: data.properties.mediaId,
-                                }
-                            }
-                        } else if (data.properties.autoReplyType == 'ARTICLE') {
-                            state.sendMsgContent_autorep_media = {
-                                msgtype: "news",
-                                news:
-                                {
-                                    link: data.properties.link, //H5消息页面url 必填
-                                    title: data.properties.title, //H5消息标题
-                                    desc: data.properties.desc, //H5消息摘要
-                                    imgUrl: data.properties.imgUrl, //H5消息封面图片URL
-                                }
-                            }
-                        }
-                        if (isElectron()) {
-                            $ipcRenderer.send('openChat', {
-                                mobile: data.properties.mobile,
-                                x: state.mouseX,
-                                y: state.mouseY,
-                            })
-                        }
 
+
+                    if (data.properties.content) {
+                        state.sendMsgContent_autorep_text = {
+                            msgtype: "text",
+                            text:
+                            {
+                                content: data.properties.content,
+                            }
+                        }
+                    }
+                    if (data.properties.autoReplyType == 'IMAGE') {
+                        state.sendMsgContent_autorep_media = {
+                            msgtype: "image",
+                            image:
+                            {
+                                mediaid: data.properties.mediaId,
+                            }
+                        }
+                    } else if (data.properties.autoReplyType == 'FILE') {
+                        state.sendMsgContent_autorep_media = {
+                            msgtype: "file",
+                            file:
+                            {
+                                mediaid: data.properties.mediaId,
+                            }
+                        }
+                    } else if (data.properties.autoReplyType == 'ARTICLE') {
+                        state.sendMsgContent_autorep_media = {
+                            msgtype: "news",
+                            news:
+                            {
+                                link: data.properties.link, //H5消息页面url 必填
+                                title: data.properties.title, //H5消息标题
+                                desc: data.properties.desc, //H5消息摘要
+                                imgUrl: data.properties.imgUrl, //H5消息封面图片URL
+                            }
+                        }
+                    }
+                    if (isElectron()) {
+                        $ipcRenderer.send('openChat', {
+                            mobile: data.properties.mobile,
+                            x: state.mouseX,
+                            y: state.mouseY,
+                        })
                     }
                 }
             }
@@ -388,12 +390,8 @@ const actions = {
 
         // 添加到任务队列中
 
-
         state.taskQueue.push(...list)
-        console.log(state.taskQueue)
-        state.taskQueue.say();
-        state.currentTask = state.taskQueue.shift();
-        console.log(state.currentTask)
+        // state.currentTask = state.taskQueue.shift()
 
         if (state.currentTask) {
             state.articleLink = state.currentTask.contentUrl;
@@ -485,7 +483,7 @@ const actions = {
 
     clearTask() {
         console.log('clearTask')
-        state.taskQueue = new Queue();
+        state.taskQueue.length = 0;
         state.currentTask = null
         state.sendMsgContent = null
         state.mouseX = null
