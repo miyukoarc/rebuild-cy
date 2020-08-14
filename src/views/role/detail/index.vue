@@ -15,7 +15,7 @@
         </tool-bar>
       </el-card>
       <el-card class="content-spacing">
-        <el-form v-if="Object.keys(isIndeterminate).length">
+        <el-form ref="form" v-if="Object.keys(isIndeterminate).length">
           <el-form-item
             v-for="(value, key) in permissionRenderMap"
             :key="key"
@@ -25,6 +25,7 @@
               :indeterminate="isIndeterminate[key]"
               v-model="checkAll[key]"
               @change="handleCheckAllChange(key)"
+              :ref="key"
             >全选</el-checkbox>
             <div style="margin: 15px 0;"></div>
             <el-checkbox-group v-model="checked[key]" @change="handleSingleChange(key)">
@@ -65,8 +66,8 @@ export default {
   watch: {
     $route: {
       handler(newVal, oldVal) {
-          if (newVal.query.code) {
-        //   console.log(newVal.query.code)
+        if (newVal.query.code) {
+          //   console.log(newVal.query.code)
           const roleCode = newVal.query.code
           this.form.roleUuid = +newVal.params.uuid
           this.initData().then(() => {
@@ -86,16 +87,7 @@ export default {
       roleDetail: (state) => state.enum.roleDetail,
     }),
   },
-  activated(){
-      if(this.checked?.media){
-          console.log(this.checked?.media)
-          this.$watch('checked.meida',(newVal,oldVal)=>{
-              if(newVal){
-                  console.log(newVal)
-              }
-          })
-      }
-  },
+  activated() {},
   mounted() {},
   methods: {
     initDetail(payload) {
@@ -146,6 +138,23 @@ export default {
       })
     },
     handleCheckAllChange(key) {
+      if (key == 'media') {
+        if (this.checkAll[key] === true) {
+          console.log(this.checkAll[key])
+          //mediaGroup全选
+          const replace = this.list['mediaGroup'].map((obj) => {
+            return obj.uuid
+          })
+
+          this.checked['mediaGroup'].splice(0, replace.length - 1, ...replace)
+          this.checkAll['mediaGroup'] = true
+        } else {
+          //mediaGroup全反选
+          const len = this.checked['mediaGroup'].length
+          this.checked['mediaGroup'].splice(0, len)
+          this.checkAll['mediaGroup'] = false
+        }
+      }
       if (this.checkAll[key] == false) {
         this.checkAll[key] = false
         this.checked[key] = []
@@ -159,6 +168,23 @@ export default {
       this.isIndeterminate[key] = false
     },
     handleSingleChange(key) {
+      if (key === 'media') {
+        console.log(this.checked['media'].length)
+        if (this.checked['media'].length == 0) {
+          //meidagroup全反选
+          const len = this.checked['mediaGroup'].length
+          this.checked['mediaGroup'].splice(0, len)
+          this.checkAll['mediaGroup'] = false
+        } else {
+          //mediagroup全选
+          const replace = this.list['mediaGroup'].map((obj) => {
+            return obj.uuid
+          })
+
+          this.checked['mediaGroup'].splice(0, replace.length - 1, ...replace)
+          this.checkAll['mediaGroup'] = true
+        }
+      }
       const checkedCount = this.checked[key].length
       this.checkAll[key] = checkedCount === this.list[key].length
       this.isIndeterminate[key] =
