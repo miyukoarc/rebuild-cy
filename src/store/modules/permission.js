@@ -11,7 +11,6 @@ import {
 import {
     setPermissionMap
 } from '@/utils/common'
-
 import Layout from '@/layout'
 
 /**
@@ -37,15 +36,21 @@ function generatePermissionRoutes(routes) {
             if (item.path) {
                 // const url =  item.code.replace('_','/')
                 const part = item.component.slice(2).split('/').slice(1).join("/")
-                let path = item.path.toLocaleLowerCase()
-                let isMy = path.indexOf('my')
+                    // let path = item.path.toLocaleLowerCase()
+                    // let isMy = path.indexOf('my')
+                let active;
+                if (item.route.indexOf('/detail') > 0) {
+                    active = item.route.split('/detail')[0] + '/listAll'
+                } else {
+                    active = item.route
+                }
                 firstObj.children.push({
                     path: item.route,
                     name: item.code,
                     component: view(part),
                     meta: {
                         title: item.menuTitle,
-                        activeMenu: `/${item.module}/${isMy>0?'listMy':'listAll'}`
+                        activeMenu: `${active}`
                     }
 
                 })

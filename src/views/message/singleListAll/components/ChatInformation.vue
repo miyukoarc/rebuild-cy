@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-15 15:08:24
- * @LastEditTime: 2020-08-12 20:47:56
+ * @LastEditTime: 2020-08-13 15:13:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\components\ChatInfomation.vue
@@ -25,9 +25,9 @@
         <span v-else>{{currnetMember.groupName}}</span>
         <!-- <span>@微信</span> -->
       </p>
-      <div
-        v-show="currnetMember.toName || currnetMember.fromName"
-      >昵称：{{currnetMember._id == currnetMember.fromUserId?currnetMember.fromName: currnetMember.toName}}</div>
+      <!-- <div
+        v-if="currnetMember.toName || currnetMember.fromName"
+      >昵称：{{currnetMember._id == currnetMember.fromUserId?currnetMember.fromName: currnetMember.toName}}</div> -->
     </div>
   </div>
 </template>

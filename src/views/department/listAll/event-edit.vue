@@ -71,7 +71,7 @@ export default {
         const { name, uuid } = newVal
         const parentUuid = newVal.parent?.uuid
         this.form.name = name
-        this.form.parentUuid = parentUuid && this.form.parentUuid
+        this.form.parentUuid = parentUuid || this.form.parentUuid
         this.form.uuid = uuid
       },
       immediate: true,

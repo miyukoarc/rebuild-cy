@@ -164,9 +164,9 @@
                   <div>
                     <el-button
                       size="mini"
-                      type="primary"
+                      type="text"
                       :disabled="scope.row.lastMsgTime == null"
-                      @click.stop.native="handleDetail(scope.row)"
+                      @click.native="handleDetail(scope.row)"
                     >聊天记录</el-button>
                   </div>
                 </template>
@@ -353,8 +353,8 @@ export default {
 
     uuid: {
       handler(newVal, oldVal) {
-        if (newVal != 'undefined') {
-          this.initData(newVal)
+        if (newVal != "undefined") {
+          this.initData(newVal);
         }
       },
     },
@@ -840,5 +840,14 @@ export default {
   //   max-height: 600px;
   //   overflow-y: auto;
   // }
+}
+</style>
+<style lang="scss">
+.left-top-info {
+  .edit-info {
+    .el-button--small {
+      padding: 6px 15px;
+    }
+  }
 }
 </style>

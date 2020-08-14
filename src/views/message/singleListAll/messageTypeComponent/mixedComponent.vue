@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-08-10 20:05:12
+ * @LastEditTime: 2020-08-13 15:03:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -17,7 +17,35 @@
           <div>
             <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
             <div class="left">
-              <span>{{ item.msgContent }}</span>
+              <div class="mixed-warp">
+                <div v-for="(message,messageIndex) in item.messageMedias" :key="messageIndex">
+                  <div v-if="message.msgType == 'emotion'">
+                    <div class="image-warp">
+                      <el-popover placement="right" title trigger="hover">
+                        <img :src="message.file" style="width:400px;height:400px" />
+                        <img
+                          slot="reference"
+                          :src="message.file"
+                          alt
+                          style="max-height: 100px;max-width: 150px"
+                        />
+                      </el-popover>
+                    </div>
+                  </div>
+                  <span v-else-if="message.msgType == 'image' ">
+                    <el-popover placement="right" title trigger="hover">
+                      <img :src="message.file" style="width:400px;height:400px" />
+                      <img
+                        slot="reference"
+                        :src="message.file"
+                        alt
+                        style="max-height: 100px;max-width: 150px"
+                      />
+                    </el-popover>
+                  </span>
+                  <div v-else class="mixed-text">{{ message.content }}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -31,7 +59,35 @@
           <div class="chat-name" style="text-align:right">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="right">
-            <span>{{ item.msgContent }}</span>
+            <div class="mixed-warp">
+              <div v-for="(message,messageIndex) in item.messageMedias" :key="messageIndex">
+                <div v-if="message.msgType == 'emotion'">
+                  <div class="image-warp">
+                    <el-popover placement="right" title trigger="hover">
+                      <img :src="message.file" style="width:400px;height:400px" />
+                      <img
+                        slot="reference"
+                        :src="message.file"
+                        alt
+                        style="max-height: 100px;max-width: 150px"
+                      />
+                    </el-popover>
+                  </div>
+                </div>
+                <span v-else-if="message.msgType == 'image' ">
+                  <el-popover placement="right" title trigger="hover">
+                    <img :src="message.file" style="width:400px;height:400px" />
+                    <img
+                      slot="reference"
+                      :src="message.file"
+                      alt
+                      style="max-height: 100px;max-width: 150px"
+                    />
+                  </el-popover>
+                </span>
+                <div v-else class="mixed-text">{{ message.content }}</div>
+              </div>
+            </div>
           </div>
         </div>
         <el-avatar :src="item.fromAvatar" />
@@ -58,6 +114,17 @@ export default {
   font-size: 13px;
   margin-bottom: 5px;
 }
+.mixed-warp {
+  margin: 10px;
+  .image-warp {
+    margin: 5px 0;
+  }
+  .mixed-text {
+    font-size: 13px;
+    line-height: 14px;
+  }
+}
+
 .left,
 .right {
   min-height: 35px;

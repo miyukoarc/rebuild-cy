@@ -12,20 +12,20 @@
             :popAuth="true"
             v-permission="'potentialCustomer,potentialCustomer_add'"
             :auth="'potentialCustomer,potentialCustomer_add'"
-            @click="addBatchTask"
+            @click.native="addBatchTask"
           >批量添加好友</el-t-button>
           <el-t-button
             type="primary"
             v-permission="'potentialCustomer,potentialCustomer_add'"
             :auth="'potentialCustomer,potentialCustomer_add'"
             :popAuth="true"
-            @click.stop="handleCreate"
+            @click.native="handleCreate"
           >新增用户</el-t-button>
           <el-t-button
             v-permission="'potentialCustomer,potentialCustomer_allocation'"
             :auth="'potentialCustomer,potentialCustomer_allocation'"
             :popAuth="true"
-            @click.stop="handleDistribute"
+            @click.native="handleDistribute"
           >分配</el-t-button>
         </div>
       </tool-bar>
@@ -97,7 +97,7 @@
                 v-if="'potentialCustomer,potentialCustomer_allocation'"
                 :popAuth="true"
                 :auth="'potentialCustomer,potentialCustomer_allocation'"
-                @click.stop.native="handleAllocation(scope.row)"
+                @click.native="handleAllocation(scope.row)"
               >分配</el-t-button>
               <el-t-button
                 type="text"
@@ -105,7 +105,7 @@
                 v-permission="'potentialCustomer,potentialCustomer_update'"
                 :popAuth="true"
                 :auth="'potentialCustomer,potentialCustomer_update'"
-                @click.stop.native="handleEdit(scope.row)"
+                @click.native="handleEdit(scope.row)"
               >编辑</el-t-button>
               <el-t-button
                 type="text"
@@ -113,7 +113,7 @@
                 :popAuth="true"
                 :auth="'potentialCustomer,potentialCustomer_delete'"
                 size="mini"
-                @click.stop.native="handleDelete(scope.row)"
+                @click.native="handleDelete(scope.row)"
               >删除</el-t-button>
             </template>
           </el-table-column>

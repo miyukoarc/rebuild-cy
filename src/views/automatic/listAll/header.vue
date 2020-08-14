@@ -178,6 +178,6 @@ export default {
 </style>
 <style>
 .el-date-range-picker {
-  width: auto;
+  width: 520px;
 }
 </style>
