@@ -143,14 +143,12 @@ export default {
       articleDetail: state => state.media.articleDetail
     })
   },
-  created() {
-    // console.log(this.$route.params)
+  activated() {
     const uuid = this.$route?.params?.articleUuid
     this.articleUuid = this.$route?.params?.articleUuid
     const data = this.query
     this.initDataList({ uuid, data })
     this.initArticle(uuid)
-    // this.initFilter()
   },
   methods: {
     doExport(val) {

@@ -79,7 +79,7 @@ service.interceptors.response.use(
       // alert('to/login')
 
 
-      if (res.status === 4000) {
+    //   if (res.status === 4000) {
         // Message({
         //   message: res.message || 'Error',
         //   type: 'error',
@@ -94,15 +94,24 @@ service.interceptors.response.use(
         // return Promise.reject(new Error(res.message || 'Error'))
 
 
-      }
+    //   }
 
-      if (res.status === 400) {
-        Message({
-          message: res.message || 'Error',
-          type: 'error',
-        })
-      }
+      //   if (res.status === 400) {
+      //     Message({
+      //       message: res.message || 'Error',
+      //       type: 'error',
+      //     })
+      //   }
 
+
+      //   return Promise.reject(new Error(res.message || 'Error'))
+
+    } else if (response.status == 400) {
+
+      Message({
+        message: res.message || 'Error',
+        type: 'error',
+      })
 
       return Promise.reject(new Error(res.message || 'Error'))
 

@@ -11,6 +11,7 @@ import {
   update,
   setAuditCloseOrOpen,
   auditPropertylistAll,
+  auditPropertylistSelect,
   setAuditUser,
   auditMediaListAll,
   auditDetail,
@@ -384,10 +385,10 @@ const actions = {
     return new Promise((resolve, reject) => {
       getAuditTaglistAll(payload).then(res => {
         const accessed = res.items.map(item => {
-          const arr1 = JSON.parse(item.tagBeforeChangeContent)||[]
-          const arr2 = JSON.parse(item.tagChangeContent)||[]
+          const arr1 = JSON.parse(item.tagBeforeChangeContent) || []
+          const arr2 = JSON.parse(item.tagChangeContent) || []
           const temp = myFilter(arr1, arr2)
-        //   console.log(temp)
+          //   console.log(temp)
           return {
             ...item,
             auditUsers: JSON.parse(item.auditUsers),
@@ -611,6 +612,26 @@ const actions = {
         reject(err)
       }).finally(() => {
         commit('TOGGLE_LOADING', false)
+      })
+    })
+  },
+  auditPropertylistSelect({
+    commit
+  }, payload) {
+    return new Promise((resolve, reject) => {
+      auditPropertylistSelect(payload).then(res => {
+        const accessed = buildAuditSetting(res.items)
+        const alter = res.items.map(item => {
+          return {
+            ...item,
+            auditUsers: JSON.parse(item.auditUsers)
+          }
+        })
+        commit('SAVE_PROPERLIST', alter)
+        commit('SET_AUDITSETTING', accessed)
+        resolve()
+      }).catch(err => {
+        reject(err)
       })
     })
   },
