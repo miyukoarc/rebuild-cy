@@ -30,7 +30,7 @@
           header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column label="id" align="left" prop="msgId"></el-table-column>
+          <!-- <el-table-column label="id" align="left" prop="msgId"></el-table-column> -->
           <el-table-column label="发送者" align="left">
             <template v-slot="scope">
               <div>{{scope.row.sender.name}}</div>

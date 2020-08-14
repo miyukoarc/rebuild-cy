@@ -10,11 +10,11 @@ function resolve(dir) {
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
 const api_host = defaultSettings.api_host
-    // If your port is set to 80,
-    // use administrator privileges to execute the command line.
-    // For example, Mac: sudo npm run
-    // You can change the port by the following methods:
-    // port = 9528 npm run dev OR npm run dev --port = 9528
+// If your port is set to 80,
+// use administrator privileges to execute the command line.
+// For example, Mac: sudo npm run
+// You can change the port by the following methods:
+// port = 9528 npm run dev OR npm run dev --port = 9528
 const port = process.env.port || process.env.npm_config_port || 9528 // dev port
 
 console.log(process.env.VUE_APP_WORK, process.env.NODE_ENV)
@@ -47,66 +47,66 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
     // 21days 
     // before: require('./mock/mock-server.js')
 } : {
-    port: 80,
-    open: true,
-    overlay: {
-        warnings: false,
-        errors: true
-    },
-    // host: 'www.sdk.com',
-    disableHostCheck: true,
-    proxy: {
-        [process.env.VUE_APP_BASE_API]: {
-            target: api_host,
-            // ws: true,
-            changeOrigin: true,
-            pathRewrite: {
-                ['^' + process.env.VUE_APP_BASE_API]: ''
-            }
+        port: 80,
+        open: true,
+        overlay: {
+            warnings: false,
+            errors: true
         },
-        '/public': {
-            target: api_host,
-            changeOrigin: true,
-        },
-        [process.env.VUE_APP_BASE_API]: {
-            headers: {
-                Host: 'sidebar.cyscrm.com'
+        // host: 'www.sdk.com',
+        disableHostCheck: true,
+        proxy: {
+            [process.env.VUE_APP_BASE_API]: {
+                target: api_host,
+                // ws: true,
+                changeOrigin: true,
+                pathRewrite: {
+                    ['^' + process.env.VUE_APP_BASE_API]: ''
+                }
             },
-            target: api_host,
-            secure: false,
-            // ws: true,
-            pathRewrite: {
-                "^/api": ""
-            }
-        },
-        "/api": {
-            headers: {
-                Host: 'sidebar.cyscrm.com'
+            '/public': {
+                target: api_host,
+                changeOrigin: true,
             },
-            target: api_host,
-            secure: false,
-            // ws: true,
-            pathRewrite: {
-                "^/api": ""
-            }
-        },
-        '/file': {
-            target: `http://192.168.1.198:9000/file`,
-            changeOrigin: true,
-            pathRewrite: {
-                '^/file': '',
+            [process.env.VUE_APP_BASE_API]: {
+                headers: {
+                    Host: 'sidebar.cyscrm.com'
+                },
+                target: api_host,
+                secure: false,
+                // ws: true,
+                pathRewrite: {
+                    "^/api": ""
+                }
             },
-        },
-        // '/ws': {
-        //     target: `http://47.111.161.128:80`,
-        //     changeOrigin: true,
-        //     ws: true,
-        // }
+            "/api": {
+                headers: {
+                    Host: 'sidebar.cyscrm.com'
+                },
+                target: api_host,
+                secure: false,
+                // ws: true,
+                pathRewrite: {
+                    "^/api": ""
+                }
+            },
+            '/file': {
+                target: `http://192.168.1.198:9000/file`,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/file': '',
+                },
+            },
+            // '/ws': {
+            //     target: `http://47.111.161.128:80`,
+            //     changeOrigin: true,
+            //     ws: true,
+            // }
+        }
+
+
+
     }
-
-
-
-}
 
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
@@ -142,16 +142,16 @@ module.exports = {
     },
 
     chainWebpack(config) {
-        config.optimization.minimizer([new TerserPlugin({
-            terserOptions: {
-                mangle: true, // 混淆，默认也是开的，mangle也是可以配置很多选项的，具体看后面的链接
-                compress: {
-                    drop_console: true, //传true就是干掉所有的console.*这些函数的调用.
-                    drop_debugger: true, //干掉那些debugger;
-                    pure_funcs: ['console.log'] // 如果你要干掉特定的函数比如console.info ，又想删掉后保留其参数中的副作用，那用pure_funcs来处理
-                }
-            }
-        })])
+        // config.optimization.minimizer([new TerserPlugin({
+        //     terserOptions: {
+        //         mangle: true, // 混淆，默认也是开的，mangle也是可以配置很多选项的，具体看后面的链接
+        //         compress: {
+        //             drop_console: false, //传true就是干掉所有的console.*这些函数的调用.
+        //             drop_debugger: false, //干掉那些debugger;
+        //             pure_funcs: [] // 如果你要干掉特定的函数比如console.info ，又想删掉后保留其参数中的副作用，那用pure_funcs来处理
+        //         }
+        //     }
+        // })])
 
         config.plugins.delete('preload') // TODO: need test
         config.plugins.delete('prefetch') // TODO: need test
@@ -185,10 +185,10 @@ module.exports = {
             .end()
 
         config
-        // https://webpack.js.org/configuration/devtool/#development
+            // https://webpack.js.org/configuration/devtool/#development
             .when(process.env.NODE_ENV === 'development',
-            config => config.devtool('cheap-source-map')
-        )
+                config => config.devtool('cheap-source-map')
+            )
 
         config
             .when(process.env.NODE_ENV !== 'development',
