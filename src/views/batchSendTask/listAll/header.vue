@@ -139,7 +139,7 @@ export default {
 <style lang="scss" scoped>
 .batchSendTask {
   .el-date-range-picker {
-    width: auto;
+    width: 520px;
   }
 }
 </style>
