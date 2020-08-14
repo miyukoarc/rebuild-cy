@@ -5,38 +5,28 @@ import { listSelectMobil, batchAddTaskHandleTask } from '@/api/batchAddTask'
 import { sendChaoyingMessage, isOnline, sendCustomizeMessage } from '@/api/longRange'
 import { getExternalUserDetail } from '@/api/externalUser'
 import { Message, MessageBox, Loading } from 'element-ui';
-import { queue } from '@/utils/common'
 
 let $ipcRenderer;
 if (isElectron()) {
     $ipcRenderer = window.require('electron').ipcRenderer
 }
 
+
 class Queue extends Array {
     constructor(...args) {
         super(...args)
     }
     push(...args) {
-        super.push(...args);
         console.log('监听数组push：', this)
+        super.push(...args);
     }
     shift() {
-        super.shift()
         console.log('监听数组shift：', this)
-
-        // let taskResult = super.shift();
-        // console.log(taskResult)
-        // if (taskResult != undefined) {
-        //     if (taskResult.type == 'batchSendTask') {
-        //         // ....()
-        //     } else if (taskResult.type == 'autorep') {
-        //         // ....()
-        //     } else if (taskResult.type == 'batchAddTask') {
-        //         // ....()
-        //     }
-        // } else {
-        //     console.log('没有任务')
-        // }
+        super.shift()
+    }
+    say() {
+        console.log('这是Queue中的say方法')
+        console.log(this)
     }
 }
 
@@ -51,12 +41,8 @@ const state = {
         article: ''
     },
 
-    taskList: [],//队列数组
-    taskResult: null,//队列中的当前项
-
     taskQueue: null,// 新版任务队列
     currentTask: null,// 当前任务
-
 
     sendMsgContent: null,
     sendMsgContent_autorep_text: null,
@@ -82,6 +68,10 @@ const mutations = {
 const actions = {
     createWebsocket({ state, commit, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
+            state.taskQueue = new Queue()
+            state.taskQueue.push = state.taskQueue.push.bind(state.taskQueue)
+            state.taskQueue.shift = state.taskQueue.shift.bind(state.taskQueue)
+            state.taskQueue.say = state.taskQueue.say.bind(state.taskQueue)
 
             state.sock = new SockJS(state.url, null, {
                 transports: 'websocket'
@@ -123,14 +113,13 @@ const actions = {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
                         }
-                        if (state.taskList.length <= 0) {
-                            // state.taskList 中没有任务了
+                        if (state.taskQueue.length <= 0) {
                             state.mouseX = null
                             state.mouseY = null
                             state.loadingInstance.close();
                         }
                         // 发送给下一个人
-                        sendResultHasSend({ uuids: [state.taskResult.uuid] }).then(() => {
+                        sendResultHasSend({ uuids: [state.currentTask.uuid] }).then(() => {
                             // 告诉工作台刷新一下列表页，只执行一次即可
                             if (!state.isChangeState) {
                                 state.isChangeState = true
@@ -142,10 +131,10 @@ const actions = {
                                     }
                                 })
                             }
-                            state.taskResult = state.taskList.shift();
-                            state.articleLink = state.taskResult.contentUrl;
-                            if (state.taskResult.externalUser.mobile) {
-                                dispatch('openChat', state.taskResult)
+                            state.currentTask = state.taskQueue.shift();
+                            state.articleLink = state.currentTask.contentUrl;
+                            if (state.currentTask.externalUser.mobile) {
+                                dispatch('openChat', state.currentTask)
                             } else {
                                 dispatch('clearTask')
                                 Message({
@@ -239,16 +228,16 @@ const actions = {
                 }
                 else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID') {
                     getExternalUserDetail(data.properties.userId).then(res => {
-                        console.log(state.taskResult.externalUser.name)
-                        if (state.taskResult.externalUser.name == res.externalUserDetail.externalUserName) {
+                        console.log(state.currentTask.externalUser.name)
+                        if (state.currentTask.externalUser.name == res.externalUserDetail.externalUserName) {
                             console.log('直接发送')
 
                             dispatch('sendChaoyingMessage')
                         } else {
                             console.log("打开openchat")
-                            if (state.taskResult.externalUser.mobile) {
+                            if (state.currentTask.externalUser.mobile) {
                                 $ipcRenderer.send('openChat', {
-                                    mobile: state.taskResult.externalUser.mobile.split(',')[0],
+                                    mobile: state.currentTask.externalUser.mobile.split(',')[0],
                                     x: state.mouseX,
                                     y: state.mouseY,
                                 })
@@ -396,12 +385,18 @@ const actions = {
             }
         }
 
-        // 添加到任务队列中
-        state.taskList = state.taskList.concat(list);
-        state.taskResult = state.taskList.shift();
 
-        if (state.taskResult) {
-            state.articleLink = state.taskResult.contentUrl;
+        // 添加到任务队列中
+
+
+        state.taskQueue.push(...list)
+        console.log(state.taskQueue)
+        state.taskQueue.say();
+        state.currentTask = state.taskQueue.shift();
+        console.log(state.currentTask)
+
+        if (state.currentTask) {
+            state.articleLink = state.currentTask.contentUrl;
             dispatch('openChat')
         }
     },
@@ -432,10 +427,10 @@ const actions = {
                 }
                 // 不在线
                 else {
-                    if (isElectron() && state.taskResult.externalUser.mobile) {
+                    if (isElectron() && state.currentTask.externalUser.mobile) {
                         console.log('打开侧边栏了')
                         $ipcRenderer.send('openChat', {
-                            mobile: state.taskResult.externalUser.mobile.split(',')[0],
+                            mobile: state.currentTask.externalUser.mobile.split(',')[0],
                             x: state.mouseX,
                             y: state.mouseY,
                         })
@@ -462,9 +457,9 @@ const actions = {
                 }
             })
         } else {
-            if (isElectron() && state.taskResult.externalUser.mobile) {
+            if (isElectron() && state.currentTask.externalUser.mobile) {
                 $ipcRenderer.send('openChat', {
-                    mobile: state.taskResult.externalUser.mobile.split(',')[0],
+                    mobile: state.currentTask.externalUser.mobile.split(',')[0],
                     x: state.mouseX,
                     y: state.mouseY,
                 })
@@ -490,8 +485,8 @@ const actions = {
 
     clearTask() {
         console.log('clearTask')
-        state.taskList = []
-        state.taskResult = null
+        state.taskQueue = new Queue();
+        state.currentTask = null
         state.sendMsgContent = null
         state.mouseX = null
         state.mouseY = null
