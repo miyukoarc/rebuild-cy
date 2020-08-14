@@ -12,6 +12,34 @@ if (isElectron()) {
     $ipcRenderer = window.require('electron').ipcRenderer
 }
 
+class Queue extends Array {
+    constructor(...args) {
+        super(...args)
+    }
+    push(...args) {
+        super.push(...args);
+        console.log('监听数组push：', this)
+    }
+    shift() {
+        super.shift()
+        console.log('监听数组shift：', this)
+
+        // let taskResult = super.shift();
+        // console.log(taskResult)
+        // if (taskResult != undefined) {
+        //     if (taskResult.type == 'batchSendTask') {
+        //         // ....()
+        //     } else if (taskResult.type == 'autorep') {
+        //         // ....()
+        //     } else if (taskResult.type == 'batchAddTask') {
+        //         // ....()
+        //     }
+        // } else {
+        //     console.log('没有任务')
+        // }
+    }
+}
+
 const state = {
     loadingInstance: null,
     sock: null,
@@ -46,6 +74,7 @@ const state = {
     isChangeState: false,// 是否把“待发送”变为“发送中”，只需改一次即可
 }
 
+
 const mutations = {
 
 }
@@ -53,8 +82,6 @@ const mutations = {
 const actions = {
     createWebsocket({ state, commit, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
-
-            // state.taskQueue = 
 
             state.sock = new SockJS(state.url, null, {
                 transports: 'websocket'
