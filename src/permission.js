@@ -95,7 +95,7 @@ router.beforeEach(async (to, from, next) => {
           removeToken()
           Message({
             type: 'error',
-            message: 'δ��¼'
+            message: '未登录'
           })
           next(`/login?redirect=${to.path}`)
           NProgress.done()
