@@ -86,6 +86,16 @@ export default {
       roleDetail: (state) => state.enum.roleDetail,
     }),
   },
+  activated(){
+      if(this.checked?.media){
+          console.log(this.checked?.media)
+          this.$watch('checked.meida',(newVal,oldVal)=>{
+              if(newVal){
+                  console.log(newVal)
+              }
+          })
+      }
+  },
   mounted() {},
   methods: {
     initDetail(payload) {

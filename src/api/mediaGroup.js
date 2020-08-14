@@ -6,7 +6,7 @@ import request from '@/utils/request'
  */
 export const addGroup = (payload) => {
     return request({
-        url: '/mediaGroup/add',
+        url: '/media/mediaGroup/add',
         method: 'post',
         data: payload
 
@@ -20,7 +20,7 @@ export const addGroup = (payload) => {
  */
 export const deleteMediaGroup = (payload) => {
     return request({
-        url: '/mediaGroup/delete',
+        url: '/media/mediaGroup/delete',
         method: 'post',
         data: payload
 
@@ -34,7 +34,7 @@ export const deleteMediaGroup = (payload) => {
  */
 export const getMediaGroupListAll = (payload) => {
     return request({
-        url: '/mediaGroup/listAll',
+        url: '/media/mediaGroup/listAll',
         method: 'get',
         params: payload
 
@@ -47,7 +47,7 @@ export const getMediaGroupListAll = (payload) => {
  */
 export const rename = (payload) => {
     return request({
-        url: '/mediaGroup/rename',
+        url: '/media/mediaGroup/rename',
         method: 'post',
         data: payload
 

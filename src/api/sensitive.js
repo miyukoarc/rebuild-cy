@@ -218,5 +218,15 @@ export const batchAuditPermissionConfirmation = (payload)=>{
     })
 }
 
+/**
+ * 无权限获取权限列表
+ */
+export const auditPropertylistSelect = ()=>{
+    return request({
+        url:'/riskManagement/auditPropertylistSelect',
+        method: 'get'  
+    })
+}
+
 
 
