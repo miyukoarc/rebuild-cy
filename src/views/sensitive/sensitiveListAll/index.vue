@@ -59,9 +59,9 @@
               </span>
             </template>
             <template v-slot="{row}">
-              <div v-if="Object.keys(row.toUser).length">
+              <!-- <div v-if="row.toUser && Object.keys(row.toUser).length">
                 <async-user-drawer :hasPop="true" :users="row.toUser"></async-user-drawer>
-              </div>
+              </div>-->
               <div v-if="Object.keys(row.toRole).length">
                 <role-drawer :roles="row.toRole"></role-drawer>
               </div>
@@ -81,7 +81,7 @@
             </template>
             <template v-slot="{row}">
               <div v-if="row.sensitiveSetTag.length>0">
-                <div >{{row.tagType=='INSET'?'包含其一':'全部满足'}}</div>
+                <div>{{row.tagType=='INSET'?'包含其一':'全部满足'}}</div>
                 <tags-drawer :tags="row.sensitiveSetTag"></tags-drawer>
               </div>
               <span v-else>--</span>
@@ -187,7 +187,7 @@ export default {
       permissionMap: (state) => state.permission.permissionMap,
     }),
   },
-  created() {
+  activated() {
     this.initDataList(this.query);
     this.initFilter();
   },
@@ -202,9 +202,7 @@ export default {
   },
 
   methods: {
-    doExport(val) {
-      
-    },
+    doExport(val) {},
     /**
      * 初始化筛选信息
      */
@@ -238,7 +236,7 @@ export default {
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1;
-          this.pageConfig.total = this.page.total;
+          this.pageConfig.total = this.page.total ? this.page.total : "0";
         })
         .catch((err) => {
           this.$message({
@@ -308,7 +306,7 @@ export default {
       //   toUser = toUser.map(item => {
       //     return item.userId
       //   })
-      console.log(index)
+      console.log(index);
       //   const payload = { toUser, type, uuid, word }
       let {
         uuid,
@@ -316,12 +314,12 @@ export default {
         informType,
         tagType,
         sensitiveSetTag,
-        toUser,
+        // toUser,
         toRole,
         word,
       } = this.listAll[index];
       sensitiveSetTag = JSON.parse(JSON.stringify(sensitiveSetTag));
-      toUser = JSON.parse(JSON.stringify(toUser));
+      // toUser = JSON.parse(JSON.stringify(toUser));
       toRole = JSON.parse(JSON.stringify(toRole));
 
       const transfer = {
@@ -330,13 +328,13 @@ export default {
         informType,
         tagType,
         sensitiveSetTag,
-        toUser,
+        // toUser,
         toRole,
         word,
       };
       const payload = this.listAll[index];
 
-      console.log(transfer)
+      console.log(transfer);
 
       this.$store.commit("sensitive/SAVE_CURRENTWORD", payload);
       this.$refs["formDialog"].event = "EditTemplate";
