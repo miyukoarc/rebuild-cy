@@ -35,15 +35,13 @@
               </div>
             </template>
           </el-table-column>
+
           <el-table-column label="所属员工" align="left">
             <template v-slot="scope">
               <async-user-drawer :hasPop="true" :users="scope.row.user"></async-user-drawer>
             </template>
           </el-table-column>
-            <!-- <template v-slot="scope">
-              <user-drawer :hasPop="false" :users="scope.row.user"></user-drawer>
-            </template> -->
-          </el-table-column>
+
           <el-table-column label="企业标签" align="left">
             <template v-slot="scope">
               <tags-drawer-obj
@@ -63,7 +61,7 @@
               <div v-else>--</div>
             </template>
           </el-table-column>-->
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="center" width="80">
             <template slot-scope="scope">
               <el-t-button
                 :popAuth="true"
@@ -71,7 +69,7 @@
                 v-permission="'externalUser,externalUser_detail'"
                 type="text"
                 size="mini"
-                @click.stop.index="handleDetail(scope.row)"
+                @click.stop.native="handleDetail(scope.row)"
               >详情</el-t-button>
             </template>
           </el-table-column>
@@ -97,7 +95,7 @@
 import UserDetail from "./detail.vue";
 import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
-import ToolBar from "./tool-bar";
+import ToolBar from "@/components/ToolBar";
 
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import UserDrawer from "@/components/UserDrawer";

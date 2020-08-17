@@ -7,7 +7,7 @@
             <el-card>
               <div class="card-inner">
                 <div class="content-container">
-                  <div v-if="item.type==='TEXT'">
+                  <div class="text-inner" v-if="item.type==='TEXT'">
                     <span>{{item.content}}</span>
                   </div>
                   <div
@@ -362,6 +362,10 @@ export default {
   .tags {
     flex: 1;
   }
+}
+
+.text-inner{
+    overflow-y: scroll;
 }
 </style>
 

@@ -93,7 +93,7 @@
 
 <script>
 import ListHeader from "./header.vue";
-import ToolBar from "./tool-bar";
+import ToolBar from "@/components/ToolBar";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 import AsyncUserTag from "@/components/AsyncUserTag";

@@ -13,7 +13,7 @@
     <el-form-item label="角色模板：" prop="roleUuidSet">
       <el-select v-model="form.roleUuidSet" multiple filterable>
         <el-option
-          v-for="item in roleTemplates"
+          v-for="item in alterRoleTemplates"
           :key="item.value"
           :label="item.name"
           :value="item.uuid"
@@ -82,9 +82,29 @@ export default {
           { required: true, message: '请选择角色模板', trigger: 'blur' },
         ],
       },
+      alterRoleTemplates: [],
     }
   },
   watch: {
+    'form.type': {
+      handler(newVal, oldval) {
+        if (newVal) {
+            if(newVal=='BRANCH'){
+                this.alterRoleTemplates = this.roleTemplates.filter(item=>{
+                    return item.code.includes('BRANCH')
+                })
+            }
+
+            if(newVal=='BUSINESS'){
+                this.alterRoleTemplates = this.roleTemplates.filter(item=>{
+                    return item.code.includes('BUSINESS')
+                })
+            }
+        }
+        //   console.log(newVal)
+      },
+      immediate: true,
+    },
     transfer: {
       handler(newVal, oldVal) {
         const { name, uuid } = newVal
@@ -122,21 +142,20 @@ export default {
           this.$store
             .dispatch('department/alterType', payload)
             .then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '操作成功'
-                })
-                this.form = this.$options.data().form
-                this.handleCancel()
-                this.$bus.$emit('handleRefresh')
+              this.$message({
+                type: 'success',
+                message: '操作成功',
+              })
+              this.form = this.$options.data().form
+              this.handleCancel()
+              this.$bus.$emit('handleRefresh')
             })
             .catch((err) => {
               console.error(err)
               this.$message({
-                  type: 'error',
-                  message: err
+                type: 'error',
+                message: err,
               })
-              
             })
         } else {
           this.$message({
@@ -150,7 +169,6 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     refresh() {
-      
       const payload = this.$route.params.org
       this.$store
         .dispatch('department/getDepartmentListAll', payload)
