@@ -289,7 +289,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import inputEdit from "@/components/inputEdit";
 
 export default {
-  name: "ContactWayDetail",
+  name: "contactWay_detail",
   components: {
     inputEdit,
   },

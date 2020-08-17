@@ -113,7 +113,7 @@ import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-  name: 'runWayListAll',
+  name: 'externalUser_quitUserRelationExUserList',
   components: {
     ListHeader,
     FormDialog,

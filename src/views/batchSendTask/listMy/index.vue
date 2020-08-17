@@ -50,7 +50,11 @@
           <el-table-column label="创建时间" align="left"></el-table-column>
           <el-table-column label="操作" align="left">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click.stop.native="handleDetail(scope.$index)">详情</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click.stop.native="handleDetail(scope.$index)"
+              >详情</el-button>
               <!-- <el-button type="primary" size="mini">分配部门</el-button> -->
               <!-- <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row)">编辑</el-button> -->
               <!-- <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row)">删除</el-button> -->
@@ -83,6 +87,7 @@ import ToolBar from './tool-bar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+  name: 'batchSendTask_listMy',
   components: {
     ListHeader,
     UserDetail,

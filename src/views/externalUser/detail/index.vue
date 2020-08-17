@@ -294,32 +294,33 @@
 </template>
 
 <script>
-import defaultAvatar from "@/assets/2.jpg";
-import FormDialog from "./dialog";
-import { mapState } from "vuex";
+import defaultAvatar from '@/assets/2.jpg'
+import FormDialog from './dialog'
+import { mapState } from 'vuex'
 
-import { isMobilePhone } from "@/utils/validate.js";
+import { isMobilePhone } from '@/utils/validate.js'
 
 export default {
+  name: 'externalUser_detail',
   components: { FormDialog },
-  inject: ["reload"],
+  inject: ['reload'],
   data() {
     return {
       // 客户资料
       reflect: {
-        source: "来源",
-        qq: "QQ",
-        remarkMobile: "电话",
-        age: "年龄",
-        birthday: "生日",
-        microBlog: "微博",
-        address: "地址",
-        email: "邮箱",
-        createtime: "时间",
+        source: '来源',
+        qq: 'QQ',
+        remarkMobile: '电话',
+        age: '年龄',
+        birthday: '生日',
+        microBlog: '微博',
+        address: '地址',
+        email: '邮箱',
+        createtime: '时间',
       },
-      currentIndex: "",
-      currentInput: "",
-      inputValue: "",
+      currentIndex: '',
+      currentInput: '',
+      inputValue: '',
       // 群
       limited: true,
       // 客户动态
@@ -332,12 +333,12 @@ export default {
       query: {
         page: 0,
         size: 10,
-        uuid: "",
-        startTime: "",
-        endTime: "",
+        uuid: '',
+        startTime: '',
+        endTime: '',
       },
       tempRoute: {},
-    };
+    }
   },
 
   watch: {
@@ -353,8 +354,8 @@ export default {
 
     uuid: {
       handler(newVal, oldVal) {
-        if (newVal != "undefined") {
-          this.initData(newVal);
+        if (newVal != 'undefined') {
+          this.initData(newVal)
         }
       },
     },
@@ -372,13 +373,13 @@ export default {
       externalUserAddwayType: (state) => state.enum.externalUserAddwayType,
     }),
     uuid() {
-      return this.$route.params.uuid;
+      return this.$route.params.uuid
     },
     externalUserTrends() {
-      return this.externalUserDetail?.externalUserTrends?.items;
+      return this.externalUserDetail?.externalUserTrends?.items
     },
     defaultAvatar() {
-      return defaultAvatar;
+      return defaultAvatar
     },
     limitedListGroup() {
       if (this.limited) {
@@ -388,17 +389,17 @@ export default {
           return this.externalUserDetail.externalUserDetailGroupChatsList.slice(
             0,
             1
-          );
+          )
         } else {
-          return [];
+          return []
         }
       } else {
-        return this.externalUserDetail.externalUserDetailGroupChatsList;
+        return this.externalUserDetail.externalUserDetailGroupChatsList
       }
     },
   },
   activated() {
-    this.initData(this.$route.params.uuid);
+    this.initData(this.$route.params.uuid)
     // this.tempRoute = Object.assign({}, this.$route);
   },
   mounted() {
@@ -408,59 +409,59 @@ export default {
     // 初始化详情数据
     initDetail(payload) {
       this.$store
-        .dispatch("externalUser/getExternalUserDetail", payload)
+        .dispatch('externalUser/getExternalUserDetail', payload)
         .then(() => {
           // this.setTagsViewTitle()
         })
         .catch((err) => {
           this.$message({
-            type: "error",
-            message: err || "初始化失败",
-          });
-        });
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
     },
     initData(paramsUuid) {
       if (paramsUuid) {
-        const uuid = paramsUuid;
-        this.query.uuid = paramsUuid;
-        this.initDetail(paramsUuid);
+        const uuid = paramsUuid
+        this.query.uuid = paramsUuid
+        this.initDetail(paramsUuid)
 
-        this.initExternalUserTrendsListAll(this.query);
+        this.initExternalUserTrendsListAll(this.query)
       }
-      document.addEventListener("click", () => {
-        this.currentInput = "";
-        this.currentIndex = "";
-      });
+      document.addEventListener('click', () => {
+        this.currentInput = ''
+        this.currentIndex = ''
+      })
     },
     setTagsViewTitle() {
-      const title = "客户详情";
+      const title = '客户详情'
       const route = Object.assign({}, this.tempRoute, {
         title: `${title}-${this.$route.params.uuid}`,
-      });
-      this.$store.dispatch("tagsView/updateVisitedView", route);
+      })
+      this.$store.dispatch('tagsView/updateVisitedView', route)
     },
     // 初始化客户动态数据
     initExternalUserTrendsListAll(payload) {
       this.$store
-        .dispatch("externalUserTrends/getExternalUserTrendsListAll", payload)
+        .dispatch('externalUserTrends/getExternalUserTrendsListAll', payload)
         .then(() => {
           this.pageConfig.pageNumber =
-            this.externalUserTrendsListAllPage.pageNumber + 1;
-          this.pageConfig.total = this.externalUserTrendsListAllPage.total;
+            this.externalUserTrendsListAllPage.pageNumber + 1
+          this.pageConfig.total = this.externalUserTrendsListAllPage.total
         })
         .catch((err) => {
-          console.error(err);
+          console.error(err)
           this.$message({
-            type: "error",
-            message: err || "初始化失败",
-          });
-        });
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
     },
     // 客户动态翻页
     changePage(key) {
-      this.query.page = key - 1;
-      this.pageConfig.pageNumber = key - 1;
-      this.initExternalUserTrendsListAll(this.query);
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key - 1
+      this.initExternalUserTrendsListAll(this.query)
     },
 
     // initGroupList(payload) {
@@ -478,53 +479,53 @@ export default {
 
     // 用户信息模块 -- 标签
     handleEditTags(payload) {
-      this.$refs["formDialog"].event = "EditTagsTemplate";
-      this.$refs["formDialog"].eventType = "editTags";
-      this.$refs["formDialog"].dialogVisible = true;
-      this.$refs["formDialog"].uuid = payload + "";
+      this.$refs['formDialog'].event = 'EditTagsTemplate'
+      this.$refs['formDialog'].eventType = 'editTags'
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].uuid = payload + ''
       if (this.externalUserDetail?.externalUserDetailCorpTagsList?.corpTags) {
         this.$store.commit(
-          "externalUser/SAVE_EDITTAGSUUID",
+          'externalUser/SAVE_EDITTAGSUUID',
           this.externalUserDetail.externalUserDetailCorpTagsList.corpTags
-        );
+        )
       } else {
-        this.$store.commit("externalUser/SAVE_EDITTAGSUUID");
+        this.$store.commit('externalUser/SAVE_EDITTAGSUUID')
       }
     },
     // 聊天
     handleDetail(row) {
-      const userId = row.userId;
+      const userId = row.userId
       // const externalUserId = this.externalUserDetail.externalUserDetail
       //   .externalUserId;
       const query = {
         uuid: this.query.uuid,
         userId,
-        type: "externalUser",
-      };
+        type: 'externalUser',
+      }
       this.$router.push({
-        path: "/message/singleListAll",
+        path: '/message/singleListAll',
         query,
-      });
+      })
     },
     // 群
     handleGroupRouter(item) {
-      console.log(item);
+      console.log(item)
       this.$router.push({
-        path: "/externalUser/groupDetail/" + item.uuid,
-      });
+        path: '/externalUser/groupDetail/' + item.uuid,
+      })
     },
     mouseEnter(value, key) {
-      this.currentIndex = value.label;
+      this.currentIndex = value.label
     },
     editInfo(value, key, index) {
       if (this.currentIndex == this.currentInput) {
-        if (value.label == "手机号") {
+        if (value.label == '手机号') {
           if (!isMobilePhone(this.inputValue)) {
             this.$message({
-              message: "请输入正确的手机号",
-              type: "warning",
-            });
-            return;
+              message: '请输入正确的手机号',
+              type: 'warning',
+            })
+            return
           }
         }
         if (this.inputValue != value.value) {
@@ -537,113 +538,113 @@ export default {
                 value: this.inputValue,
               },
             ],
-          };
+          }
           this.$store
             .dispatch(
-              "externalUser/propertyUpdateExternalUserProperty",
+              'externalUser/propertyUpdateExternalUserProperty',
               payload
             )
             .then((res) => {
-              this.currentInput = "";
-              this.inputValue = "";
+              this.currentInput = ''
+              this.inputValue = ''
               this.$message({
-                type: "success",
-                message: "操作成功",
-              });
-              this.initDetail(this.query.uuid);
+                type: 'success',
+                message: '操作成功',
+              })
+              this.initDetail(this.query.uuid)
             })
             .catch((err) => {
-              console.log(err);
+              console.log(err)
               this.$message({
-                type: "error",
+                type: 'error',
                 message: err,
-              });
-            });
+              })
+            })
         } else {
-          this.currentInput = "";
-          this.inputValue = "";
+          this.currentInput = ''
+          this.inputValue = ''
         }
       } else {
-        this.currentInput = value.label;
+        this.currentInput = value.label
       }
     },
     // 群 展开
     unlimited() {
-      const current = this.limited;
-      this.limited = !current;
+      const current = this.limited
+      this.limited = !current
     },
     handleCreate() {
-      this.$refs["formDialog"].dialogVisible = true;
-      this.$refs["formDialog"].event = "CreateTemplate";
-      this.$refs["formDialog"].eventType = "create";
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].event = 'CreateTemplate'
+      this.$refs['formDialog'].eventType = 'create'
     },
     handleEditTrend(item) {
-      console.log(item);
-      this.$refs["formDialog"].dialogVisible = true;
-      this.$refs["formDialog"].event = "EditTemplate";
-      this.$refs["formDialog"].eventType = "edit";
-      this.$refs["formDialog"].transfer = item;
+      console.log(item)
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].event = 'EditTemplate'
+      this.$refs['formDialog'].eventType = 'edit'
+      this.$refs['formDialog'].transfer = item
     },
     handleDeleteTrend(item) {
       const payload = {
         uuid: item.uuid,
-      };
+      }
 
-      this.$confirm("是否删除当前动态", "Warning", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('是否删除当前动态', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(async () => {
           await this.$store
-            .dispatch("externalUser/deleteExTrends", payload)
+            .dispatch('externalUser/deleteExTrends', payload)
             .then(() => {
               this.$message({
-                type: "success",
-                message: "操作成功",
-              });
-              this.query.page = 0;
-              this.initExternalUserTrendsListAll(this.query);
+                type: 'success',
+                message: '操作成功',
+              })
+              this.query.page = 0
+              this.initExternalUserTrendsListAll(this.query)
             })
             .catch((err) => {
               this.$message({
-                type: "error",
+                type: 'error',
                 message: err,
-              });
-            });
+              })
+            })
         })
-        .catch((err) => {});
+        .catch((err) => {})
     },
     handleScroll() {
       var scrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop;
+        document.documentElement.scrollTop || document.body.scrollTop
       var windowHeitht =
-        document.documentElement.clientHeight || document.body.clientHeight;
+        document.documentElement.clientHeight || document.body.clientHeight
       var scrollHeight =
-        document.documentElement.scrollHeight || document.body.scrollHeight;
+        document.documentElement.scrollHeight || document.body.scrollHeight
       //是否滚动到底部的判断
       if (scrollTop + windowHeitht == scrollHeight) {
         if (this.pageno <= this.totalnum) {
-          console.log("8888");
+          console.log('8888')
           // $("#address_manager_alert").show();
           // this.getSpecialData();
         } else {
-          return;
+          return
         }
       }
     },
     load() {
-      let a = Math.ceil(this.page.total / this.page.pageSize);
-      this.query.page++;
+      let a = Math.ceil(this.page.total / this.page.pageSize)
+      this.query.page++
       if (this.query.page >= a) {
       }
       if (this.query.page < a) {
-        console.log("0009999");
-        this.initExternalUserTrendsListAll(this.query, "push");
+        console.log('0009999')
+        this.initExternalUserTrendsListAll(this.query, 'push')
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

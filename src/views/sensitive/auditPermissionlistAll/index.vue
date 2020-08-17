@@ -109,6 +109,7 @@ import ToolBar from '@/components/ToolBar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+    name: 'riskManagement_auditPermissionlistAll',
   components: {
     ListHeader,
     FormDialog,

@@ -189,7 +189,7 @@ import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_ca
 import mixedComponent from "./messageTypeComponent/mixedComponent.vue";
 
 export default {
-  name: "ListSingleAll",
+  name: "message_singleListAll",
   components: {
     CustomerPagination,
     FormDialog,

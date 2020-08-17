@@ -93,6 +93,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import { getExternalUserListAll } from '@/api/externalUser'
 
 export default {
+  name: 'externalUser_listAll',
   components: {
     AsyncUserDrawer,
     ListHeader,

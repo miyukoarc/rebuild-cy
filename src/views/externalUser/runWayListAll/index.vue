@@ -102,7 +102,7 @@ import UserTag from "@/components/UserTag";
 import CustomerPagination from "@/components/CustomerPagination";
 
 export default {
-  name: "runWayListAll",
+  name: "externalUser_runWayListAll",
   components: {
     ListHeader,
     ToolBar,

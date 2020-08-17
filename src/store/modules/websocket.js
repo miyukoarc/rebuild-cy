@@ -69,9 +69,9 @@ const actions = {
     createWebsocket({ state, commit, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
             state.taskQueue = new Queue()
-            state.taskQueue.push = state.taskQueue.push.bind(state.taskQueue)
-            state.taskQueue.shift = state.taskQueue.shift.bind(state.taskQueue)
-            state.taskQueue.say = state.taskQueue.say.bind(state.taskQueue)
+            // state.taskQueue.push = state.taskQueue.push.bind(state.taskQueue)
+            // state.taskQueue.shift = state.taskQueue.shift.bind(state.taskQueue)
+            // state.taskQueue.say = state.taskQueue.say.bind(state.taskQueue)
 
             state.sock = new SockJS(state.url, null, {
                 transports: 'websocket'

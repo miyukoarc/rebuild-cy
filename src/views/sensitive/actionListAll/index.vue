@@ -67,6 +67,7 @@ import ToolBar from './tool-bar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+    name: 'riskManagement_actionListAll',
   components: {
     ListHeader,
     UserDetail,

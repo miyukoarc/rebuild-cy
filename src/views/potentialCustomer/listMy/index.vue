@@ -141,6 +141,7 @@ import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+    name: 'potentialCustomer_listMy',
   components: {
     ListHeader,
     FormDialog,

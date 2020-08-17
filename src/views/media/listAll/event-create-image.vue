@@ -85,7 +85,6 @@ export default {
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        //   console.log()
         const { uuid } = newVal
         this.data.groupUuid = uuid
       },

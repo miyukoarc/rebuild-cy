@@ -343,7 +343,6 @@ export default {
                 this.isSetAuto = false;
                 this.initData();
                 // this.handleCancel();
-                // this.refresh();
               })
               .catch((err) => {
                 this.$message({
@@ -489,20 +488,7 @@ export default {
     },
     // 标签绑定事件
     handleChange() {},
-    // 刷新
-    refresh() {
-      this.$store
-        .dispatch("sensitive/getSensitiveListAll")
-        .then(() => {
-          this.reload();
-        })
-        .catch((err) => {
-          this.$message({
-            type: "error",
-            message: err,
-          });
-        });
-    },
+    
   },
 };
 </script>

@@ -88,7 +88,7 @@ export default {
     },
     refresh() {
         this.reload()
-      console.log('刷新')
+      
     //   this.$store
     //     .dispatch('role/getRoleList')
     //     .then(() => {

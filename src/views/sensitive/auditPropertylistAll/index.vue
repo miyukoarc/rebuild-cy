@@ -97,7 +97,7 @@ import RoleDrawer from '@/components/RoleDrawer'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-  name: 'AuditPropertyListAll',
+  name: 'riskManagement_auditPropertylistAll',
   components: {
     FormDialog,
     ToolBar,
