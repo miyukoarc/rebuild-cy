@@ -2,7 +2,7 @@
   <div>
 
       <div>
-          <el-t-button :throttle="true" @click="handleClick" :enable="false">点击</el-t-button>
+          <el-t-button type="text" :throttle="true" @click="handleClick" :enable="false">点击</el-t-button>
       </div>
     <div>
       <tags-drawer :tags="tagGroups"></tags-drawer>
@@ -550,7 +550,8 @@ export default {
     },
 
     handleClick(){
-        Promise.resolve('点击').then(res=>{console.log(res)})
+        console.log('点击')
+        // Promise.resolve('点击').then(res=>{console.log(res)})
     }
   },
 }

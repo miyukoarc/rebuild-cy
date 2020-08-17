@@ -162,7 +162,7 @@ export default {
       return this.form.toUser;
     },
   },
-  activated() {
+  created() {
     this.initFilter();
   },
   methods: {

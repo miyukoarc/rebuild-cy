@@ -21,19 +21,6 @@
       </el-select>
     </el-form-item>
 
-    <!-- <el-form-item label="上级">
-      <el-select-tree
-        :default-expand-all="true"
-        :multiple="false"
-        :placeholder="'请选择组织/部门'"
-        :popover-min-width="100"
-        :data="departmentList"
-        :props="{value:'uuid',children:'children',label:'name'}"
-        :check-strictly="true"
-        v-model="form.parentUuid"
-      ></el-select-tree>
-    </el-form-item>-->
-
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
       <el-t-button type="primary" size="small" @click="handleConfirm">确定</el-t-button>
@@ -44,7 +31,6 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  //   inject: ['reload'],
   props: {
     transfer: {
       type: Object,
@@ -89,17 +75,17 @@ export default {
     'form.type': {
       handler(newVal, oldval) {
         if (newVal) {
-            if(newVal=='BRANCH'){
-                this.alterRoleTemplates = this.roleTemplates.filter(item=>{
-                    return item.code.includes('BRANCH')
-                })
-            }
+          if (newVal == 'BRANCH') {
+            this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+              return item.code.includes('BRANCH')
+            })
+          }
 
-            if(newVal=='BUSINESS'){
-                this.alterRoleTemplates = this.roleTemplates.filter(item=>{
-                    return item.code.includes('BUSINESS')
-                })
-            }
+          if (newVal == 'BUSINESS') {
+            this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+              return item.code.includes('BUSINESS')
+            })
+          }
         }
         //   console.log(newVal)
       },
