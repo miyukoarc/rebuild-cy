@@ -128,7 +128,7 @@ export default {
       handler(newVal, oldVal) {
         const payload = newVal.params.uuid;
         console.log(payload);
-        this.$once("hook:created", () => {
+        this.$once("hook:activated", () => {
           this.initDetail(payload);
         });
       },

@@ -35,10 +35,13 @@
                 企业标签
                 <span class="side-title">
                   <span>最新更新{{ externalUserDetail.updatedAt }}</span>
-                  <el-button
+                  <el-t-button
                     type="text"
-                    @click="handleEditTags(externalUserDetail.externalUserDetail.externalUuid)"
-                  >编辑</el-button>
+                    :popAuth="true"
+                    :auth="'externalUser,externalUser_updateTag'"
+                    v-permission="'externalUser,externalUser_updateTag'"
+                    @click.native="handleEditTags(externalUserDetail.externalUserDetail.externalUuid)"
+                  >编辑</el-t-button>
                 </span>
               </h4>
               <div
@@ -87,6 +90,9 @@
                       <span class="value" v-else>{{ item.value ? item.value : "--" }}</span>
 
                       <el-t-button
+                        :popAuth="true"
+                        :auth="'property,property_updateExternalUserProperty'"
+                        v-permission="'property,property_updateExternalUserProperty'"
                         type="text"
                         class="edit-info"
                         v-if="(item.label == currentIndex) || currentInput===item.label"
@@ -162,12 +168,15 @@
               <el-table-column label="操作" align="left">
                 <template v-slot="scope">
                   <div>
-                    <el-button
+                    <el-t-button
                       size="mini"
                       type="text"
+                      :popAuth="true"
+                      :auth="'message,message_singleLastListAll'"
+                      v-permission="'message,message_singleLastListAll'"
                       :disabled="scope.row.lastMsgTime == null"
                       @click.native="handleDetail(scope.row)"
-                    >聊天记录</el-button>
+                    >聊天记录</el-t-button>
                   </div>
                 </template>
               </el-table-column>
