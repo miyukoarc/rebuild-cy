@@ -54,6 +54,7 @@ import ToolBar from '@/components/ToolBar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+  name: 'riskManagement_logListAll',
   components: {
     ListHeader,
     FormDialog,
@@ -97,9 +98,7 @@ export default {
   },
   methods: {
     //   ...mapActions('log',['getLogListAll']),
-    doExport(val) {
-      
-    },
+    doExport(val) {},
     /**
      * 初始化筛选信息
      */
@@ -150,7 +149,7 @@ export default {
       })
     },
     handleSearch(val) {
-      const { tagIds, name,endTime,startTime } = val
+      const { tagIds, name, endTime, startTime } = val
       this.query.tagIds = tagIds ? tagIds : this.query.tagIds
       this.query.name = name ? name : this.query.name
       this.query.endTime = endTime ? endTime : this.query.endTime

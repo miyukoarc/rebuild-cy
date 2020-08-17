@@ -107,6 +107,7 @@ import TagsDrawerObj from "@/components/TagsDrawerObj";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
+    name: 'externalUser_listMy',
   components: {
     AsyncUserDrawer,
     ListHeader,

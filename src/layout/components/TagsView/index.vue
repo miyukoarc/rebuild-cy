@@ -32,6 +32,7 @@
 <script>
 import ScrollPane from './ScrollPane'
 import path from 'path'
+import { mapGetters } from 'vuex'
 
 export default {
   components: { ScrollPane },
@@ -42,15 +43,17 @@ export default {
       left: 0,
       selectedTag: {},
       affixTags: [],
+      alterRoutes: [],
     }
   },
   computed: {
+    ...mapGetters(['routes']),
     visitedViews() {
       return this.$store.state.tagsView.visitedViews
     },
-    routes() {
-      return this.$store.state.permission.routes
-    },
+    // alterRoutes() {
+    //   return
+    // },
   },
   watch: {
     $route(oldVal, newVal) {
@@ -65,6 +68,22 @@ export default {
         document.body.removeEventListener('click', this.closeMenu)
       }
     },
+  },
+  created() {
+    this.alterRoutes = this.routes
+      .reduce((sum, curr) => {
+        if (curr.children) {
+          return sum.concat(curr.children)
+        }
+      }, [])
+      .concat([
+        {
+          name: 'Dashboard',
+          path: '/dashboard',
+          title: '首页',
+          meta: { icon: 'dashboard', title: '首页', affix: true },
+        },
+      ])
   },
   mounted() {
     this.initTags()

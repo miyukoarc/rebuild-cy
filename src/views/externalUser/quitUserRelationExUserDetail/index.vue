@@ -86,7 +86,7 @@ import ToolBar from "./tool-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: "runWayListAll",
+  name: "externalUser_quitUserRelationExUserDetail",
   components: {
     ListHeader,
     UserDetail,

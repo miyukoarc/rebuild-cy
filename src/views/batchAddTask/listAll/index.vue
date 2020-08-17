@@ -112,6 +112,7 @@ import { mapState } from 'vuex'
 import { cancelBatchAddTask } from '@/api/potentialCustomer'
 
 export default {
+    name:'batchAddTask_listAll',
   components: {
     ListHeader,
     FormDialog,

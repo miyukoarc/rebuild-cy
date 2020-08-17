@@ -141,6 +141,7 @@
 import { mapState } from 'vuex'
 import dayjs from 'dayjs'
 export default {
+    name: 'user_detail',
   data() {
     return {
       value: [],

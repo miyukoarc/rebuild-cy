@@ -73,6 +73,7 @@ import ToolBar from '@/components/ToolBar'
 import CustomerPagination from '@/components/CustomerPagination'
 
 export default {
+  name: 'externalUser_groupChatListAll',
   components: {
     ListHeader,
     ToolBar,

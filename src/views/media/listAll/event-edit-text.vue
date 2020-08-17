@@ -41,7 +41,6 @@ export default {
   watch: {
       transfer:{
           handler(newVal,oldVal){
-            //   console.log()
             const {uuid} = newVal
             this.form.groupUuid = uuid
           },immediate:true

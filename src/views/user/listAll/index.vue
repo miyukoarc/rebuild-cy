@@ -88,7 +88,7 @@
                 v-permission="'user,user_update'"
                 :auth="'user,user_update'"
                 @click.stop.native="handleDistributeRole(scope.$index)"
-              >分配角色</el-t-button> -->
+              >分配角色</el-t-button>-->
 
               <el-t-button
                 type="text"
@@ -131,6 +131,7 @@ import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+  name: 'user_listAll',
   components: {
     ListHeader,
     FormDialog,

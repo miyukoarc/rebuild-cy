@@ -10,9 +10,9 @@
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
       <el-scrollbar>
-        <keep-alive >
-        <!-- <keep-alive :include="cachedViews"> -->
-          <router-view></router-view>
+        <!-- <keep-alive > -->
+        <keep-alive :include="cachedViews">
+          <router-view :key="key"></router-view>
         </keep-alive>
         <!-- <router-view v-else></router-view>  -->
       </el-scrollbar>
@@ -35,9 +35,9 @@ export default {
         return JSON.stringify(this.routes).includes(item);
       });
     },
-    // key() {
-    //   return this.$route.path
-    // }
+    key() {
+      return this.$route.path
+    }
   },
 };
 </script>

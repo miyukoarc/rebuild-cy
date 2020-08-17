@@ -80,6 +80,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import Sortable from 'sortablejs'
 
 export default {
+    name: 'tag_listAll',
   inject: ['reload'],
   components: {
     ListHeader,

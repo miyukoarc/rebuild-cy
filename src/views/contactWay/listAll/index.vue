@@ -148,6 +148,7 @@ import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+    name: 'contactWay_listAll',
   components: {
     ListHeader,
     FormDialog,

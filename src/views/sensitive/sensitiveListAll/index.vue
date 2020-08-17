@@ -149,6 +149,7 @@ import CustomerPagination from "@/components/CustomerPagination";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
+    name: 'riskManagement_sensitiveListAll',
   components: {
     ListHeader,
     FormDialog,

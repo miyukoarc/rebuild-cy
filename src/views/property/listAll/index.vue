@@ -98,7 +98,7 @@
 import FormDialog from "./dialog";
 import { mapState } from "vuex";
 export default {
-  name: "propertyListAll",
+  name: "property_listAll",
   components: {
     FormDialog
   },

@@ -138,7 +138,7 @@ import FileBoard from './components/file-board'
 import AllBoard from './components/all-board'
 import { mapState } from 'vuex'
 export default {
-  name: 'MediaListAll',
+  name: 'media_listAll',
   components: {
     ListHeader,
     FormDialog,

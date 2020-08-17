@@ -92,6 +92,7 @@ import ToolBar from './tool-bar'
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
+    name: 'roleTemplate_listAll',
   components: {
     ListHeader,
     FormDialog,

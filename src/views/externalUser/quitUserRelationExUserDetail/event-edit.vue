@@ -117,7 +117,7 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     refresh() {
-      console.log('刷新')
+      
       this.$store
         .dispatch('role/getRoleList')
         .then(() => {

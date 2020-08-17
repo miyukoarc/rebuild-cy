@@ -139,6 +139,7 @@ import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+    name: "riskManagement_auditBatchSendTaklistAll",
   components: {
     ListHeader,
     FormDialog,
@@ -182,7 +183,7 @@ export default {
       page: (state) => state.sensitive.auditBatchSendTaskPage,
     }),
   },
-  created() {
+  activated() {
     this.initDataList(this.query)
   },
   mounted(){

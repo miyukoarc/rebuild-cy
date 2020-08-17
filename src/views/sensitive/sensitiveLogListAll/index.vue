@@ -55,6 +55,7 @@ import AsyncUserTag from '@/components/AsyncUserTag'
 import ToolBar from '@/components/ToolBar'
 
 export default {
+    name: 'riskManagement_sensitiveLogListAll',
   components: {
     ListHeader,
     AsyncUserTag,

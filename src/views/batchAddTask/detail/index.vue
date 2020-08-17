@@ -77,6 +77,7 @@ import {
 import { mapState } from "vuex";
 
 export default {
+    name:'batchAddTask_detail',
   components: {
     EventDialog,
     UserTag,

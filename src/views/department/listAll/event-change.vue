@@ -150,7 +150,7 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     refresh() {
-      console.log('刷新')
+      
       const payload = this.$route.params.org
       this.$store
         .dispatch('department/getDepartmentListAll', payload)

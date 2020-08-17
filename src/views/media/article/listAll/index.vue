@@ -74,6 +74,7 @@ import CustomerPagination from "@/components/CustomerPagination";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
+    name: 'media_browsing_Records',
   inject: ["reload"],
   components: {
     CustomerPagination,

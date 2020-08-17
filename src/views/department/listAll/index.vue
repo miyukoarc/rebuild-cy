@@ -99,6 +99,7 @@ import Cascader from '@/components/Cascader'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+    name: 'department_listAll',
   components: {
     ListHeader,
     UserDetail,
