@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-08-12 21:32:23
+ * @LastEditTime: 2020-08-14 17:52:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -542,6 +542,7 @@ export default {
       this.query.startTime = startTime ? startTime : "";
       this.query.endTime = endTime ? endTime : "";
       console.log(val, "点击搜索");
+      this.query.page = 0;
       this.getsinglelist(this.query);
     },
     handleRefresh() {

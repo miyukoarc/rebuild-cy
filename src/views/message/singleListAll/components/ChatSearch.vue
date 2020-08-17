@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-28 13:56:22
- * @LastEditTime: 2020-07-30 17:53:28
+ * @LastEditTime: 2020-08-14 17:58:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\header.vue
@@ -9,7 +9,14 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px">
     <el-form-item>
-      <el-input v-model.trim="query.content" size="mini" placeholder="请输入搜索聊天内容" style="width:180px">
+      <el-input
+        v-model.trim="query.content"
+        clearable
+        size="mini"
+        @clear="handleSearch"
+        placeholder="请输入搜索聊天内容"
+        style="width:180px"
+      >
         <i slot="prefix" class="el-input__icon el-icon-search search-icon" @click="handleSearch"></i>
       </el-input>
     </el-form-item>
@@ -28,7 +35,7 @@
       ></el-date-picker>
     </el-form-item>
     <el-form-item>
-      <el-t-button type="primary" size="mini" @click="handleReport">导出</el-t-button>
+      <!-- <el-t-button type="primary" size="mini" @click="handleReport">导出</el-t-button> -->
     </el-form-item>
   </el-form>
 </template>

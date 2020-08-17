@@ -111,17 +111,17 @@ export default {
     /**
      * 初始化筛选信息
      */
-    initFilter() {
-      this.$store
-        .dispatch("tag/getListSelect")
-        .then(() => {})
-        .catch(err => {
-          this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
-    },
+    // initFilter() {
+    //   this.$store
+    //     .dispatch("tag/getListSelect")
+    //     .then(() => {})
+    //     .catch(err => {
+    //       this.$message({
+    //         type: "error",
+    //         message: "初始化失败"
+    //       });
+    //     });
+    // },
     // 选择标签
     handleCheckedTagsChange(tag, index) {
       this.checkboxGroup = tag;

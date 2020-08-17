@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 16:41:29
- * @LastEditTime: 2020-07-31 18:16:13
- * @LastEditors: your name
+ * @LastEditTime: 2020-08-14 16:26:18
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\RoleDrawer\index.vue
 --> 
@@ -18,7 +18,7 @@
       <i class="el-icon-user-solid"></i>
       <span class="font-exs">{{role.name}}</span>
     </el-tag>
-    <div class="text-align-center">
+    <div class="text-align-left">
       <span class="font-exs color-info">共{{total}}个角色</span>
       <el-button v-if="roles.length>2" type="text" size="mini" @click="curly=!curly">
         {{curly?'展开':'收起'}}
