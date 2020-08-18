@@ -98,9 +98,9 @@
                 size="mini"
                 :auth="'user,user_detail'"
                 v-permission="'user,user_detail'"
-                :enable="scope.row.visible"
                 :popAuth="true"
                 @click.native="handleDetail(scope.row)"
+                :enable="!scope.row.visible"
               >详情</el-t-button>
             </template>
           </el-table-column>
@@ -123,18 +123,34 @@ export default {
       loading: (state) => state.externalUser.loading,
       permissionMap: (state) => state.permission.permissionMap,
     }),
+    // uuid() {
+    //   console.log(this.$route.params.uuid, "666666");
+    //   return this.$route.params.uuid;
+    // },
   },
   watch: {
+    // uuid: {
+    //   handler(newVal, oldVal) {
+    //     console.log(newVal, "44444444");
+    //     if (newVal != "undefined") {
+    //       console.log(newVal, "5555555");
+    //       this.initDetail(newVal);
+    //     }
+
+    //   },
+    // },
     $route: {
       handler(newVal, oldVal) {
         const payload = newVal.params.uuid;
-        console.log(payload);
-        this.$once("hook:activated", () => {
-          this.initDetail(payload);
-        });
+        if (payload) this.initDetail(payload);
       },
       immediate: true,
     },
+  },
+  activated() {
+    if (this.$route.params.uuid) {
+      this.initDetail(this.$route.params.uuid);
+    }
   },
   methods: {
     initDetail(payload) {
@@ -150,7 +166,7 @@ export default {
         });
     },
     handleDetail(row) {
-      if (row.visible) return;
+      if (!row.visible) return;
       if (row.type == 1) {
         const uuid = row.uuid;
         this.$router.push({
