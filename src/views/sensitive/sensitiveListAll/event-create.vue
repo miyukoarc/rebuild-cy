@@ -136,21 +136,7 @@ export default {
         }
       },
       immediate: true,
-    },
-    // toUser: {
-    //   handler(newValue, oldVal) {
-    //     this.toUserTags = this.userListSelect.filter(item => {
-    //       return newValue.some(key => {
-    //         return item.userId === key
-    //       })
-    //     })
-    //   },
-    //   deep: true
-    // },
-    toUserTags: {
-      handler(newValue, oldVal) {},
-      deep: true,
-    },
+    }
   },
   computed: {
     ...mapState({

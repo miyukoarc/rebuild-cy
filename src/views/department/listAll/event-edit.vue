@@ -4,25 +4,19 @@
       <el-input v-model.trim="form.name"></el-input>
     </el-form-item>
 
-    <el-form-item label="上级">
+    <el-form-item label="上级" v-if="type!=='HEAD'">
       <el-select-tree
         :default-expand-all="true"
         :multiple="false"
         :placeholder="'请选择组织/部门'"
         :popover-min-width="100"
         :data="departmentList"
+        :disabledValues="disabledValues"
         :props="{value:'uuid',children:'children',label:'name'}"
         :check-strictly="true"
+        :disabled="type=='BRANCH'"
         v-model="form.parentUuid"
       ></el-select-tree>
-      <!-- <el-select v-model="form.parentUuid" placeholder="请选择">
-        <el-option
-          v-for="item in listSelect"
-          :key="item.uuid"
-          :label="item.name"
-          :value="item.uuid"
-        ></el-option>
-      </el-select>-->
     </el-form-item>
 
     <div class="text-align-center">
@@ -34,8 +28,8 @@
 
 <script>
 import { mapState } from 'vuex'
+import { flattenTree } from '@/utils/common'
 export default {
-  //   inject: ['reload'],
   props: {
     transfer: {
       type: Object,
@@ -46,10 +40,10 @@ export default {
   },
   data() {
     return {
+      type: 'HEAD',
       form: {
         name: '',
         parentUuid: 1,
-        // parent: 0,
         uuid: '',
       },
       rules: {
@@ -63,19 +57,43 @@ export default {
           },
         ],
       },
+      businessBanded: [],
+      disabledValues: []
     }
   },
   watch: {
     transfer: {
       handler(newVal, oldVal) {
-        const { name, uuid } = newVal
-        const parentUuid = newVal.parent?.uuid
-        this.form.name = name
-        this.form.parentUuid = parentUuid || this.form.parentUuid
-        this.form.uuid = uuid
+        if (newVal.uuid) {
+          const { name, uuid, type } = newVal
+          const parentUuid = newVal.parent?.uuid
+          this.type = type
+          this.form.name = name
+          this.form.parentUuid = parentUuid || this.form.parentUuid
+          this.form.uuid = uuid
+        }
       },
       immediate: true,
     },
+    type:{
+        handler(newVal,oldVal){
+            if(newVal==='HEAD'){
+                // this.$delete(this.form,'parentUuid')
+                this.form.parentUuid = null
+            }
+            if(newVal==='BRANCH'){
+
+            }
+
+            if(newVal==='BUSINESS'){
+                this.disabledValues = this.businessBanded
+            }
+
+            if(newVal==='DEPT'){
+                this.disabledValues =[]
+            }
+        },immediate:true
+    }
   },
   computed: {
     ...mapState({
@@ -83,6 +101,15 @@ export default {
       listSelect: (state) => state.department.listSelect,
       departmentList: (state) => state.department.departmentList,
     }),
+  },
+  created() {
+    console.log(this.departmentList)
+    if (this.departmentList.length) {
+      const arr = flattenTree(this.departmentList)
+      const businessBanded = arr.filter(item=>{return item.type=='DEPT'||item.type=='BUSINESS'}).map(item=>{return item.uuid})
+      this.businessBanded = businessBanded
+    //   console.log(arr,businessBanded)
+    }
   },
   methods: {
     handleConfirm() {

@@ -1,22 +1,22 @@
 <template>
-  <div>
+  <div class="form-container">
     <div class="process-container">
       <el-steps v-if="mode=='COMPLEX'" :active="process[mode]" align-center>
         <el-step title="基础信息" description></el-step>
         <el-step title="关联企微" description></el-step>
         <el-step title="角色配置" description></el-step>
-        <el-step title="审核通知人" description></el-step>
+        <el-step title="准备提交" description></el-step>
       </el-steps>
 
       <el-steps v-if="mode=='SIMPLE'" :active="process[mode]" align-center>
         <el-step title="基础信息" description></el-step>
         <el-step title="角色配置" description></el-step>
-        <el-step title="审核通知人" description></el-step>
+        <el-step title="准备提交" description></el-step>
       </el-steps>
 
       <el-steps v-if="mode=='NONE'" :active="process[mode]" align-center>
         <el-step title="基础信息" description></el-step>
-        <el-step title="审核通知人" description></el-step>
+        <el-step title="准备提交" description></el-step>
       </el-steps>
     </div>
     <transition-group name="fade-transform">
@@ -40,7 +40,7 @@
                 <span class="radio-tips">在上级所在的企业微信中，直接创建新的组织或部门</span>
               </el-radio>
             </div>
-            <div class="radio-item">
+            <!-- <div class="radio-item">
               <el-radio v-model="mode" label="COMPLEX">
                 <span class="title">以新的企业微信号关联</span>
                 <br />
@@ -48,7 +48,7 @@
                   class="radio-tips"
                 >若新建的组织或部门已有自己的企业微信账号，请选择该方式进行关联。同时该企业微信管理员需要参考文档对该企业微信后台进行配置。</span>
               </el-radio>
-            </div>
+            </div>-->
           </div>
         </div>
         <el-form-item label="上级" prop="parentUuid">
@@ -60,6 +60,8 @@
             :data="departmentList"
             :props="{value:'uuid',children:'children',label:'name'}"
             :check-strictly="true"
+            :disabledValues="disabledValues"
+            :disabled="form.type=='BRANCH'"
             v-model="form.parentUuid"
           ></el-select-tree>
         </el-form-item>
@@ -131,7 +133,6 @@
           <el-input v-model.trim="formNext.privateKey"></el-input>
         </el-form-item>
 
-
         <el-form-item label="侧边栏url">
           <el-input v-model.trim="formNext.sidebarUrl"></el-input>
         </el-form-item>
@@ -150,9 +151,49 @@
         label-width="150px"
         label-position="left"
       >
-        <el-form-item label="通知审核人"></el-form-item>
-        <multi-tree-select v-model="selects" :section="'user'" :multiple="true"></multi-tree-select>
-        <!-- <complex-select v-model="selects" :options="departmentList"></complex-select> -->
+
+          <el-form-item label="上级" prop="parentUuid">
+            <el-select-tree
+              :default-expand-all="true"
+              :multiple="false"
+              :placeholder="'请选择组织/部门'"
+              :popover-min-width="100"
+              :data="departmentList"
+              :props="{value:'uuid',children:'children',label:'name'}"
+              :check-strictly="true"
+              :disabledValues="disabledValues"
+              :disabled="true"
+              v-model="form.parentUuid"
+            ></el-select-tree>
+          </el-form-item>
+
+          <el-form-item label="创建类型">
+            <el-select v-model="form.type" placeholder="请选择" disabled>
+              <el-option
+                v-for="item in orgTypes"
+                :key="item.code"
+                :label="item.label"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="名称" prop="name">
+            <el-input v-model.trim="form.name" disabled></el-input>
+          </el-form-item>
+
+          <el-form-item label="角色模板" v-if="form.type!=='DEPT'">
+            <el-select multiple v-model="formRole.roleUuidSet" disabled>
+              <el-option
+                v-for="item in alterRoleTemplates"
+                :key="item.uuid"
+                :value="item.uuid"
+                :label="item.name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+        <!-- <multi-tree-select v-model="selects" :section="'user'" :multiple="true"></multi-tree-select> -->
       </el-form>
 
       <el-form
@@ -167,7 +208,7 @@
         <el-form-item label="角色模板">
           <el-select multiple v-model="formRole.roleUuidSet">
             <el-option
-              v-for="item in roleTemplates"
+              v-for="item in alterRoleTemplates"
               :key="item.uuid"
               :value="item.uuid"
               :label="item.name"
@@ -190,40 +231,38 @@
 
 <script>
 import { mapState } from 'vuex'
-import ComplexSelect from '@/components/ComplexSelect'
+import { flattenTree } from '@/utils/common'
+
 export default {
   inject: ['reload'],
-  components: {
-    ComplexSelect
-  },
   data() {
     return {
       process: {
         SIMPLE: 1, //DEPT
         COMPLEX: 1, //BRANCH||BUSSINESS
-        NONE: 1
+        NONE: 1,
       },
       mode: 'NONE', //new //old
       orgTypes: [
         {
           code: 'BRANCH',
-          label: '分公司'
+          label: '分公司',
         },
         {
           code: 'BUSINESS',
-          label: '营业部'
+          label: '营业部',
         },
         {
           code: 'DEPT',
-          label: '普通部门'
-        }
+          label: '普通部门',
+        },
       ],
       selects: [],
       form: {
         name: '',
         orgNode: false,
         parentUuid: '',
-        type: 'DEPT'
+        type: 'DEPT',
       },
       formNext: {
         addressBookEncodingAESKey: '', //通讯录EncodingAESKey
@@ -242,37 +281,53 @@ export default {
         privateKey: '', //会话存档私钥
         // publicIp: '', //公网地址
         sidebarUrl: '', //侧边栏url
-        superUserId: '' //预设超级管理员的userid
+        superUserId: '', //预设超级管理员的userid
       },
       formRole: {
-        roleUuidSet: []
+        roleUuidSet: [],
       },
       rulesNext: {},
       type: 'WX',
       types: [
         {
           code: 'WX',
-          label: '分公司/营业部'
+          label: '分公司/营业部',
         },
         {
           code: 'NORMAL',
-          label: '部门'
-        }
+          label: '部门',
+        },
       ],
       rulesRole: {},
       rules: {
         parentUuid: [
-          { required: true, message: '请选择上级部门', trigger: 'blur' }
+          { required: true, message: '请选择上级部门', trigger: 'blur' },
         ],
         name: [
           { required: true, message: '请输入部门名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          {
+            min: 3,
+            max: 20,
+            message: '长度在 3 到 20 个字符',
+            trigger: 'blur',
+          },
         ],
         code: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-        ]
-      }
+          {
+            min: 3,
+            max: 20,
+            message: '长度在 3 到 20 个字符',
+            trigger: 'blur',
+          },
+        ],
+      },
+      alterRoleTemplates: [],
+      //
+      flattenDepartments: [],
+      businessBanded: [],
+
+      disabledValues: [],
     }
   },
   watch: {
@@ -281,37 +336,65 @@ export default {
         if (newVal == 'DEPT') {
           this.form.orgNode = false
           this.mode = 'NONE'
+          this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+            return item.code.includes('DEPT')
+          })
+          this.disabledValues = []
         }
         if (newVal == 'BRANCH') {
+          //分公司初始化
           this.form.orgNode = true
           this.mode = 'SIMPLE'
+          this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+            return item.code.includes('BRANCH')
+          })
         }
         if (newVal == 'BUSINESS') {
+          //营业部初始化
           this.form.orgNode = true
           this.mode = 'SIMPLE'
+          this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+            return item.code.includes('BUSINESS')
+          })
+
+          this.disabledValues = this.businessBanded
         }
       },
-      immediate: true
+      immediate: true,
     },
     parentUuid: {
       handler(newVal, oldVal) {
         this.formNext.parentUuid = newVal
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
-      listSelect: state => state.department.listSelect, //list
-      departmentList: state => state.department.departmentList, //tree
-      roleTemplates: state => state.roleTemplate.listAll
+      listSelect: (state) => state.department.listSelect, //list
+      departmentList: (state) => state.department.departmentList, //tree
+      roleTemplates: (state) => state.roleTemplate.listAll,
     }),
     parentUuid() {
       return this.form.parentUuid
-    }
+    },
   },
   created() {
     this.initData()
+
+    if (this.departmentList.length) {
+      const arr = flattenTree(this.departmentList)
+      this.flattenDepartments = arr
+      const businessBanded = arr
+        .filter((item) => {
+          return item.type == 'DEPT' || item.type == 'BUSINESS'
+        })
+        .map((item) => {
+          return item.uuid
+        })
+      this.businessBanded = businessBanded
+      //   console.log(arr,businessBanded)
+    }
   },
   mounted() {},
   methods: {
@@ -319,7 +402,7 @@ export default {
       this.$store
         .dispatch('roleTemplate/getListAll')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           console.error(err)
         })
     },
@@ -350,15 +433,15 @@ export default {
             .then(() => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               this.handleCancel()
               this.reload()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: err
+                message: err,
               })
             })
         }
@@ -371,15 +454,15 @@ export default {
             .then(() => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               this.handleCancel()
               this.reload()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: err
+                message: err,
               })
             })
           console.log('create nomal branch & business')
@@ -395,15 +478,15 @@ export default {
             .then(() => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               this.handleCancel()
               this.reload()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: err
+                message: err,
               })
             })
           console.log('create new wx branch & business')
@@ -415,13 +498,13 @@ export default {
         this.process['NONE'] != 2
       ) {
         if (this.process[this.mode] == 1) {
-          this.$refs['form'].validate(valid => {
+          this.$refs['form'].validate((valid) => {
             if (valid) {
               this.process[this.mode]++
             } else {
               this.$message({
                 type: 'error',
-                message: '请检查输入'
+                message: '请检查输入',
               })
             }
           })
@@ -435,7 +518,7 @@ export default {
     },
     handleConfirmNext() {
       const payload = this.formNext
-      this.$refs['formNext'].validate(valid => {
+      this.$refs['formNext'].validate((valid) => {
         if (valid) {
           console.log(payload)
           this.$store
@@ -443,21 +526,21 @@ export default {
             .then(() => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               this.handleCancel()
               this.reload()
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: '操作失败'
+                message: '操作失败',
               })
             })
         } else {
           this.$message({
             type: 'error',
-            message: '请检查输入'
+            message: '请检查输入',
           })
         }
       })
@@ -468,14 +551,14 @@ export default {
         .then(() => {
           //   this.reload()
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -501,5 +584,11 @@ export default {
 
 .process-container {
   margin-bottom: 20px;
+}
+</style>
+
+<style lang="scss">
+.form-container .el-input.is-disabled .el-input__inner {
+    color: #606266;
 }
 </style>

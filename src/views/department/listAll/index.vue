@@ -39,12 +39,14 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="员工人数">
-            <template slot-scope="{row}">
-                <span>{{row.users.length?row.users.length:'--'}}</span>
+
+        <el-table-column label="员工人数" align="left">
+            <template v-slot="{row}">
+                <div>{{row.users.length||'--'}}</div>
             </template>
         </el-table-column>
-        <el-table-column label="操作" align="left" width="240">
+        
+        <el-table-column label="操作" align="center" width="240">
           <template slot-scope="scope">
             <el-t-button
               type="text"
@@ -53,7 +55,10 @@
               :auth="'department,department_update'"
               :popAuth="true"
               @click.stop.native="handleEdit(scope.$index,scope.row)"
+              v-if="scope.row.type!=='HEAD'"
             >编辑</el-t-button>
+
+            <span v-else class="font-exs color-info">编辑</span>
 
             <el-t-button
               type="text"
@@ -61,9 +66,10 @@
               v-permission="'department,department_update'"
               :auth="'department,department_update'"
               :popAuth="true"
-              @click.native="handleChange(scope.$index,scope.row)"
-              :enable="scope.row.type==='DEPT'"
+              @click.stop="handleChange(scope.$index,scope.row)"
+              v-if="scope.row.type==='DEPT'"
             >变更</el-t-button>
+            <span v-else class="font-exs color-info">变更</span>
             <el-t-button
               type="text"
               v-permission="'department,department_delete'"
@@ -96,7 +102,7 @@ import Cascader from "@/components/Cascader";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: "department_listAll",
+  name: 'department_listAll',
   components: {
     ListHeader,
     UserDetail,
@@ -124,17 +130,17 @@ export default {
     // this.initFilter()
   },
   mounted() {
-    this.$bus.$on("showFormDialog", (target) => {
-      this.$refs["formDialog"].event = "CreateTemplate";
-      this.$refs["formDialog"].eventType = "create";
-      this.$refs["formDialog"].dialogVisible = true;
-    });
-    this.$bus.$on("handleRefresh", () => {
-      this.initDataList();
-    });
-    this.$once("hook:beforeDestroy", () => {
-      this.$bus.$off("handleRefresh");
-    });
+    this.$bus.$on('showFormDialog', (target) => {
+      this.$refs['formDialog'].event = 'CreateTemplate'
+      this.$refs['formDialog'].eventType = 'create'
+      this.$refs['formDialog'].dialogVisible = true
+    })
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList()
+    })
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
   },
   beforeDestroy() {
     this.$bus.$off("showFormDialog");
@@ -253,5 +259,8 @@ export default {
 }
 header .el-header button {
   margin-right: 5px;
+}
+.cell {
+  user-select: none;
 }
 </style>

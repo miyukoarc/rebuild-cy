@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-card class="content-spacing" style="overflow:initial">
-      <tool-bar :hasExport="true" :hasImport="false" @handleExport="doExport">
+      <tool-bar :hasRefresh="true" @handleRefresh="handleRefresh" :hasExport="true" :hasImport="false" @handleExport="doExport">
         <div slot="left">
           <span class="font-l">{{corpInfo.name}}</span>
           <!-- :popAuth="true"
@@ -78,7 +78,7 @@
 <script>
 import ListHeader from './header.vue'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 
 import { mapState, mapMutations, mapActions } from 'vuex'
 

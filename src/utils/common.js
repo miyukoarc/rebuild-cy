@@ -302,25 +302,25 @@ export const upgrade = (arr) => {
 }
 
 
-export const queue = (tasks,callback)=>{
-    let promise = Promise.resolve()
-    tasks.reduce((arr,task)=>{
-        return arr.then(()=>{
-            return new Promise((resolve,reject)=>{
-                // Promise.resolve(task).then(res=>{
-                //     if(typeof callback=='function'){
-                //         callback(res)                   
-                //     }
-                //     resolve()
-                // })
-                setTimeout(()=>{
+export const queue = (tasks, callback) => {
+  let promise = Promise.resolve()
+  tasks.reduce((arr, task) => {
+    return arr.then(() => {
+      return new Promise((resolve, reject) => {
+        // Promise.resolve(task).then(res=>{
+        //     if(typeof callback=='function'){
+        //         callback(res)                   
+        //     }
+        //     resolve()
+        // })
+        setTimeout(() => {
 
-                    Promise.resolve(task)
-                    resolve()
-                },500)
-            })
-        })
-    },promise)
+          Promise.resolve(task)
+          resolve()
+        }, 500)
+      })
+    })
+  }, promise)
 }
 
 
@@ -328,15 +328,27 @@ export const queue = (tasks,callback)=>{
  *  findtree
  */
 
-export const  findTree =(arr, uuid) => {
-    if (arr == null) return null
-    for (let obj of arr) {
-      if (obj.uuid == uuid) {
-        return obj
-      }
-      let ret = findTree(obj.children, uuid)
-      if (ret) return ret
+export const findTree = (arr, uuid) => {
+  if (arr == null) return null
+  for (let obj of arr) {
+    if (obj.uuid == uuid) {
+      return obj
     }
-    return null
+    let ret = findTree(obj.children, uuid)
+    if (ret) return ret
   }
+  return null
+}
 
+export const flattenTree = (data) => {
+  return data.reduce((arr, {
+    type,
+    name,
+    uuid,
+    children = []
+  }) => arr.concat([{
+    type,
+    name,
+    uuid
+  }], flattenTree(children)), [])
+};

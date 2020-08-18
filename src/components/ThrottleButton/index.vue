@@ -87,12 +87,14 @@ export default {
       permissionMap: (state) => state.permission.permissionMap,
     }),
     evet() {
-      if (this.throttle) {
-        if (this.$listeners.click) {
-          this.$listeners.click = this.throat('click')
+      if (this.enable) {
+        if (this.throttle) {
+          if (this.$listeners.click) {
+            this.$listeners.click = this.throat('click')
+          }
         }
+        return this.$listeners
       }
-      return this.$listeners
     },
     // disabled() {
     //   if (this.timer) {
