@@ -103,21 +103,14 @@
           <el-table-column label="操作" width="80" align="right">
             <template v-slot="{row}">
               <div>
-                <el-t-button type="text" @click.stop.native="handleAudit(row.uuid)">详细</el-t-button>
+                <el-t-button type="text" @click.stop.native="handleAudit(row.uuid)">
+                    <span v-if="row.auditState==='TO_BE_REVIEWED'">审核</span>
+                  <span v-else>详细</span>
+                </el-t-button>
               </div>
             </template>
           </el-table-column>
         </el-table>
-
-        <!-- <el-pagination
-          background
-          class="pager"
-          layout="total,prev, pager, next,jumper"
-          :total="pageConfig.total"
-          :current-page.sync="pageConfig.pageNumber"
-          :page-size="pageConfig.pageSize"
-          @current-change="changePage"
-        />-->
         <customer-pagination
           :pageConfig="pageConfig"
           @current-change="changePage"

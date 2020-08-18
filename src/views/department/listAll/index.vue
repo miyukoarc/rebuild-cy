@@ -63,7 +63,7 @@
               v-permission="'department,department_update'"
               :auth="'department,department_update'"
               :popAuth="true"
-              @click.stop.native="handleChange(scope.$index,scope.row)"
+              @click.stop="handleChange(scope.$index,scope.row)"
               :enable="scope.row.type==='DEPT'"
             >变更
             </el-t-button>

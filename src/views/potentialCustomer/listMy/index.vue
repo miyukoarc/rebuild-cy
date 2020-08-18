@@ -136,7 +136,7 @@ import ListHeader from './header.vue'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import TagsDrawer from '@/components/TagsDrawer'
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 

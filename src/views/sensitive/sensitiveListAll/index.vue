@@ -103,7 +103,6 @@
 
           <el-table-column label="操作" align="center" width="120">
             <template v-slot="{$index}">
-              <!-- <el-button type="primary" size="mini" @click.stop="handleDetail(scope.$index)">详情</el-button> -->
               <el-t-button
                 type="text"
                 :popAuth="true"

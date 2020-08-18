@@ -83,7 +83,10 @@
           <el-table-column label="操作" align="center" width="80">
             <template v-slot="{row}">
               <div>
-                <el-t-button type="text" @click.stop.native="handleAudit(row.uuid)">详细</el-t-button>
+                <el-t-button type="text" @click.stop.native="handleAudit(row.uuid)">
+                  <span v-if="row.auditState==='TO_BE_REVIEWED'">审核</span>
+                  <span v-else>详细</span>
+                </el-t-button>
               </div>
             </template>
           </el-table-column>
@@ -109,7 +112,7 @@ import ToolBar from '@/components/ToolBar'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-    name: 'riskManagement_auditPermissionlistAll',
+  name: 'riskManagement_auditPermissionlistAll',
   components: {
     ListHeader,
     FormDialog,
@@ -168,9 +171,7 @@ export default {
     })
   },
   methods: {
-    doExport(val) {
-      
-    },
+    doExport(val) {},
     /**
      * 初始化筛选信息
      */
