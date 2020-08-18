@@ -102,7 +102,7 @@ export default {
     })
   },
   created() {
-    this.initFilter();
+    // this.initFilter();
   },
   mounted() {
     this.form.belongUuid = this.uuid;

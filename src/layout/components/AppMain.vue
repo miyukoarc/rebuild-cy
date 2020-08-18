@@ -1,23 +1,24 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-13 12:05:38
- * @LastEditTime: 2020-08-12 15:05:45
+ * @LastEditTime: 2020-08-17 19:49:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\layout\components\AppMain.vue
 -->
 <template>
   <section class="app-main">
-    <transition name="fade-transform" mode="out-in">
-      <el-scrollbar>
+    <el-scrollbar>
+      <transition name="fade-transform" mode="out-in">
         <!-- <keep-alive > -->
         <keep-alive :include="cachedViews">
-          <router-view :key="key"></router-view>
+          <router-view :key="key" />
         </keep-alive>
         <!-- <router-view v-else></router-view>  -->
-      </el-scrollbar>
-      <!-- <router-view :key="key" /> -->
-    </transition>
+
+        <!-- <router-view :key="key" /> -->
+      </transition>
+    </el-scrollbar>
   </section>
 </template>
 
@@ -36,8 +37,8 @@ export default {
       });
     },
     key() {
-      return this.$route.path
-    }
+      return this.$route.path;
+    },
   },
 };
 </script>

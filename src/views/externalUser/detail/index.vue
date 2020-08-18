@@ -174,7 +174,7 @@
                       :popAuth="true"
                       :auth="'message,message_singleLastListAll'"
                       v-permission="'message,message_singleLastListAll'"
-                      :disabled="scope.row.lastMsgTime == null"
+                      :enable="!scope.row.lastMsgTime ==null"
                       @click.native="handleDetail(scope.row)"
                     >聊天记录</el-t-button>
                   </div>
@@ -503,6 +503,7 @@ export default {
     },
     // 聊天
     handleDetail(row) {
+      if(!row.lastMsgTime)return;
       const userId = row.userId
       // const externalUserId = this.externalUserDetail.externalUserDetail
       //   .externalUserId;

@@ -94,13 +94,13 @@
           <el-table-column label="操作" align="left">
             <template v-slot="scope">
               <el-t-button
-                type="primary"
+                type="text"
                 size="mini"
                 :auth="'user,user_detail'"
                 v-permission="'user,user_detail'"
-                :popAuth="true"
-                @click.stop.native="handleDetail(scope.row)"
                 :enable="scope.row.visible"
+                :popAuth="true"
+                @click.native="handleDetail(scope.row)"
               >详情</el-t-button>
             </template>
           </el-table-column>
@@ -111,11 +111,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
-  name: 'externalUser_groupDetail',
+  name: "externalUser_groupDetail",
   data() {
-    return {}
+    return {};
   },
   computed: {
     ...mapState({
@@ -139,45 +139,46 @@ export default {
   methods: {
     initDetail(payload) {
       this.$store
-        .dispatch('externalUser/getGroupDetail', payload)
+        .dispatch("externalUser/getGroupDetail", payload)
         .then(() => {})
         .catch((err) => {
-          console.error(err)
+          console.error(err);
           this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
     handleDetail(row) {
+      if (row.visible) return;
       if (row.type == 1) {
-        const uuid = row.uuid
+        const uuid = row.uuid;
         this.$router.push({
-          path: '/user/detail/' + uuid,
-        })
+          path: "/user/detail/" + uuid,
+        });
       }
       if (row.type == 2) {
-        const uuid = row.uuid
+        const uuid = row.uuid;
         this.$router.push({
-          path: '/externalUser/detail/' + uuid,
-        })
+          path: "/externalUser/detail/" + uuid,
+        });
       }
     },
     toGroupChat() {
-      console.log(this.groupDetail.chatId, '4444')
-      let userId = this.groupDetail.chatId
+      console.log(this.groupDetail.chatId, "4444");
+      let userId = this.groupDetail.chatId;
       const query = {
         uuid: this.groupDetail.owner.uuid,
         userId,
-        type: 'user',
-      }
+        type: "user",
+      };
       this.$router.push({
-        path: '/message/singleListAll',
+        path: "/message/singleListAll",
         query,
-      })
+      });
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -223,7 +224,7 @@ export default {
         }
       }
       .data-item::after {
-        content: '';
+        content: "";
         width: 1px;
         height: 38px;
         background: #e9e9e9;
