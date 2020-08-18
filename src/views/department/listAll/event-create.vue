@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="form-container">
     <div class="process-container">
       <el-steps v-if="mode=='COMPLEX'" :active="process[mode]" align-center>
         <el-step title="基础信息" description></el-step>
@@ -584,5 +584,11 @@ export default {
 
 .process-container {
   margin-bottom: 20px;
+}
+</style>
+
+<style lang="scss">
+.form-container .el-input.is-disabled .el-input__inner {
+    color: #606266;
 }
 </style>

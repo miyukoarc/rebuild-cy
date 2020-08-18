@@ -5,7 +5,12 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :hasRefresh="true" @handleRefresh="handleRefresh" :usersNumber="userPage.total" @handleExport="doExport" @handleUpdate="handleUpdate">
+      <tool-bar
+        :hasRefresh="true"
+        @handleRefresh="handleUpdateList"
+        :usersNumber="userPage.total"
+        @handleExport="doExport"
+        >
         <div slot="right">
           <!-- <el-t-button
             type="primary"
@@ -140,7 +145,6 @@ export default {
   },
   data() {
     return {
-        
       pageConfig: {
         total: 0,
         pageNumber: 1,
@@ -342,6 +346,22 @@ export default {
     changeSize(val) {
       this.query.size = val
       this.initDataList(this.query)
+    },
+    handleUpdateList() {
+        console.log('!!')
+      const userList = this.userList.map((item) => {
+        return item.userId
+      }).join(',')
+      this.$store
+        .dispatch('user/userMaintain', { userList })
+        .then(() => {})
+        .catch((err) => {
+          console.error(err)
+          this.$message({
+            type: 'error',
+            message: err,
+          })
+        })
     },
   },
 }

@@ -5,6 +5,7 @@ import {
     getDetail,
     getUserListSelect,
     postUserUpdate,
+    userMaintain
 } from '@/api/user'
 import {
     getToken,
@@ -237,6 +238,15 @@ const actions = {
     postUserUpdate({commit},payload){
        return new Promise((resolve,reject)=>{
            postUserUpdate(payload).then(res=>{
+               resolve(res)
+           }).catch(err=>{
+               reject(err)
+           })
+       })
+    },
+    userMaintain({commit},payload){
+       return new Promise((resolve,reject)=>{
+           userMaintain(payload).then(res=>{
                resolve(res)
            }).catch(err=>{
                reject(err)

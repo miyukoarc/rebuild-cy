@@ -114,3 +114,16 @@ export const postUserUpdate = (payload) => {
     data: payload
   })
 }
+
+
+/**
+ * 
+ * @param {object} payload 
+ */
+export const userMaintain = (payload)=>{
+    return request({
+        url: '/user/userMaintain',
+        method: 'get',
+        params: payload
+    })
+}
