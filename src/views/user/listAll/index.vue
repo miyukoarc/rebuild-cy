@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :usersNumber="userPage.total" @handleExport="doExport" @handleUpdate="handleUpdate">
+      <tool-bar :hasRefresh="true" @handleRefresh="handleRefresh" :usersNumber="userPage.total" @handleExport="doExport" @handleUpdate="handleUpdate">
         <div slot="right">
           <!-- <el-t-button
             type="primary"
@@ -79,7 +79,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" align="left" width="240">
+          <el-table-column label="操作" align="center" width="120">
             <template slot-scope="scope">
               <!-- <el-t-button
                 type="text"
@@ -140,6 +140,7 @@ export default {
   },
   data() {
     return {
+        
       pageConfig: {
         total: 0,
         pageNumber: 1,
