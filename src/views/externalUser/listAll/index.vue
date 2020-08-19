@@ -30,11 +30,19 @@
                 <el-image
                   :src="scope.row.avatar"
                   lazy
-                  style="width:30px;height:30px;margin-right:10px"
+                  style="width:32px;height:32px;margin-right:10px"
                 ></el-image>
                 <div class="client-info">
-                  <span class="remark">{{scope.row.remarkName}}</span>
-                  <div>{{scope.row.wxNickName}}</div>
+                  <div>
+                    {{scope.row.wxNickName}}
+                    <span
+                      class="ml-5"
+                      :class="scope.row.wxType == 'WX'?'wx-color':'other-color'"
+                    >{{scope.row.wxType == 'WX'?'@微信':'@企业微信'}}</span>
+                  </div>
+                  <span
+                    class="remark"
+                  >昵称：{{scope.row.remarkName?scope.row.remarkName:scope.row.wxNickName}}</span>
                 </div>
               </div>
             </template>
@@ -82,18 +90,18 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import ToolBar from '@/components/ToolBar'
-import AsyncUserDrawer from '@/components/AsyncUserDrawer'
-import UserDrawer from '@/components/UserDrawer'
-import TagsDrawerObj from '@/components/TagsDrawerObj'
-import CustomerPagination from '@/components/CustomerPagination'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import ToolBar from "@/components/ToolBar";
+import AsyncUserDrawer from "@/components/AsyncUserDrawer";
+import UserDrawer from "@/components/UserDrawer";
+import TagsDrawerObj from "@/components/TagsDrawerObj";
+import CustomerPagination from "@/components/CustomerPagination";
+import { mapState, mapMutations, mapActions } from "vuex";
 
-import { getExternalUserListAll } from '@/api/externalUser'
+import { getExternalUserListAll } from "@/api/externalUser";
 
 export default {
-  name: 'externalUser_listAll',
+  name: "externalUser_listAll",
   components: {
     AsyncUserDrawer,
     ListHeader,
@@ -114,16 +122,16 @@ export default {
         page: 0,
         size: 10,
         flag: true,
-        name: '',
+        name: "",
         tagIds: [],
-        userId: '',
-        startTime: '',
-        endTime: '',
-        contractWayId: '',
+        userId: "",
+        startTime: "",
+        endTime: "",
+        contractWayId: "",
       },
 
       downloadLoading: false,
-    }
+    };
   },
   watch: {},
   computed: {
@@ -136,8 +144,8 @@ export default {
     }),
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   methods: {
     /**
@@ -145,19 +153,19 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getExternalUserListAll', payload)
+        .dispatch("externalUser/getExternalUserListAll", payload)
         .then(() => {
-          console.log(this.externalUserListAll)
+          console.log(this.externalUserListAll);
           //初始化分页
-          this.pageConfig.pageNumber = this.listAllPage.pageNumber + 1
-          this.pageConfig.total = this.listAllPage.total
+          this.pageConfig.pageNumber = this.listAllPage.pageNumber + 1;
+          this.pageConfig.total = this.listAllPage.total;
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
 
     /**
@@ -165,31 +173,31 @@ export default {
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListSelect')
+        .dispatch("tag/getListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
 
       this.$store
-        .dispatch('user/getUserListSelect')
+        .dispatch("user/getUserListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
 
     handleDetail(row) {
-      const uuid = row.externalUuid
+      const uuid = row.externalUuid;
       this.$router.push({
-        path: '/externalUser/detail/' + uuid,
-      })
+        path: "/externalUser/detail/" + uuid,
+      });
     },
     handleSearch(val) {
       const {
@@ -200,33 +208,33 @@ export default {
         endTime,
         contractWayId,
         flag,
-      } = val
-      this.query.tagIds = tagIds ? tagIds + '' : this.query.tagIds
-      this.query.name = name ? name : ''
-      this.query.userId = userId ? userId : ''
-      this.query.startTime = startTime ? startTime : ''
-      this.query.flag = flag ? true : false
-      this.query.endTime = endTime ? endTime : ''
-      this.query.page = 0
+      } = val;
+      this.query.tagIds = tagIds ? tagIds + "" : this.query.tagIds;
+      this.query.name = name ? name : "";
+      this.query.userId = userId ? userId : "";
+      this.query.startTime = startTime ? startTime : "";
+      this.query.flag = flag ? true : false;
+      this.query.endTime = endTime ? endTime : "";
+      this.query.page = 0;
 
       // this.query.contractWayId = contractWayId
       //   ? contractWayId
       //   : this.query.contractWayId;
 
-      this.initDataList(this.query)
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
     },
     handleExport(val) {
       //   const payload = this.query
@@ -260,16 +268,16 @@ export default {
     formatJson(filterVal, jsonData) {
       return jsonData.map((v) =>
         filterVal.map((j) => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
+          if (j === "timestamp") {
+            return parseTime(v[j]);
           } else {
-            return v[j]
+            return v[j];
           }
         })
-      )
+      );
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

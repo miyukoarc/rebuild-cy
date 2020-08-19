@@ -66,7 +66,7 @@
               v-permission="'department,department_update'"
               :auth="'department,department_update'"
               :popAuth="true"
-              @click.stop="handleChange(scope.$index,scope.row)"
+              @click="handleChange(scope.$index,scope.row)"
               v-if="scope.row.type==='DEPT'"
             >变更</el-t-button>
             <span v-else class="font-exs color-info">变更</span>
@@ -231,7 +231,7 @@ export default {
         .catch((err) => {});
     },
     handleChange(index, row) {
-      if (row.type === "DEPT") return;
+      // if (row.type === "DEPT") return;
       this.$refs["formDialog"].event = "ChangeTemplate";
       this.$refs["formDialog"].eventType = "change";
       this.$refs["formDialog"].dialogVisible = true;

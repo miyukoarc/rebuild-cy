@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 16:41:29
- * @LastEditTime: 2020-08-14 16:26:18
+ * @LastEditTime: 2020-08-19 17:01:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\RoleDrawer\index.vue
@@ -14,8 +14,9 @@
       type="info"
       v-for="role in alterRoles"
       :key="role.uuid"
+      effect="plain"
     >
-      <i class="el-icon-user-solid"></i>
+      <i class="el-icon-user-solid color-primary"></i>
       <span class="font-exs">{{role.name}}</span>
     </el-tag>
     <div class="text-align-left">

@@ -99,8 +99,9 @@
                   type="info"
                   :key="item.uuid"
                   :uuid="item.uuid"
+                  effect="plain"
                 >
-                  <i class="el-icon-user-solid"></i>
+                  <i class="el-icon-user-solid color-primary"></i>
                   {{item.name}}
                 </async-user-tag>
               </div>

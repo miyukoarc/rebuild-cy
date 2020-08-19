@@ -26,11 +26,11 @@
                 <el-image
                   :src="scope.row.avatar"
                   lazy
-                  style="width:30px;height:30px;margin-right:10px"
+                  style="width:32px;height:32px;margin-right:10px"
                 ></el-image>
                 <div class="client-info">
-                  <span class="remark">{{scope.row.remarkName}}</span>
-                  <div>{{scope.row.wxNickName}}</div>
+                  <div>{{scope.row.wxNickName}}<span class="ml-5" :class="scope.row.wxType == 'WX'?'wx-color':'other-color'">{{scope.row.wxType == 'WX'?'@微信':'@企业微信'}}</span></div>
+                  <span class="remark">昵称：{{scope.row.remarkName?scope.row.remarkName:scope.row.wxNickName}}</span>
                 </div>
               </div>
             </template>

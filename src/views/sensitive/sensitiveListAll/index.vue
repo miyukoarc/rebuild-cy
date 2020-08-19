@@ -92,8 +92,8 @@
           <el-table-column label="创建人" align="left">
             <template v-slot="{row}">
               <div v-if="Object.keys(row.creator).length">
-                <async-user-tag :uuid="row.creator.uuid" size="small" type="info">
-                  <i class="el-icon-user-solid"></i>
+                <async-user-tag :uuid="row.creator.uuid" size="small" type="info" effect="plain">
+                  <i class="el-icon-user-solid  color-primary"></i>
                   {{row.creator.name}}
                 </async-user-tag>
               </div>

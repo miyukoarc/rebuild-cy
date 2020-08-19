@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-12 18:03:04
+ * @LastEditTime: 2020-08-19 16:09:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -305,7 +305,10 @@ export default {
     initData() {
       this.$store
         .dispatch("automatic/automaticDefaultDetail")
-        .then(() => {})
+        .then((res) => {
+          this.repeat = res.replyInterval === "true";
+          this.repeatTime = res.replyIntervalTime?res.replyIntervalTime:'30';
+        })
         .catch((err) => {});
     },
     initFilter() {
@@ -445,7 +448,7 @@ export default {
       const isLt20M = file.size / 1024 / 1024 < 20;
       if (!isLt20M) {
         this.$message.error("上传视频大小不能超过 20MB!");
-        return
+        return;
       }
       return isLt20M;
     },
@@ -488,7 +491,6 @@ export default {
     },
     // 标签绑定事件
     handleChange() {},
-    
   },
 };
 </script>

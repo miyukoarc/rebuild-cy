@@ -99,9 +99,10 @@
                 :auth="'user,user_detail'"
                 v-permission="'user,user_detail'"
                 :popAuth="true"
-                @click.native="handleDetail(scope.row)"
-                :enable="!scope.row.visible"
-              >详情</el-t-button>
+                @click="handleDetail(scope.row)"
+                v-if="scope.row.visible"
+              >{{scope.row.type == 1 ? "员工":"客户"}}详情</el-t-button>
+              <span v-else>{{scope.row.type == 1 ? "员工":"客户"}}详情</span>
             </template>
           </el-table-column>
         </el-table>
@@ -166,7 +167,6 @@ export default {
         });
     },
     handleDetail(row) {
-      if (!row.visible) return;
       if (row.type == 1) {
         const uuid = row.uuid;
         this.$router.push({

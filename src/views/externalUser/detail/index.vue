@@ -27,6 +27,7 @@
                   </div>
                   <span
                     class="tips"
+                    :class="externalUserDetail.externalUserDetail.wxType == 'WX'?'wx-color':'other-color'"
                   >{{externalUserDetail.externalUserDetail.wxType == 'WX'? "@微信":'@企业微信'}}</span>
                 </div>
               </div>
@@ -179,8 +180,9 @@
                     :auth="'message,message_singleLastListAll'"
                     v-permission="'message,message_singleLastListAll'"
                     @click.native="handleDetail(scope.row)"
-                    :enable="scope.row.lastMsgTime !== null"
+                    v-if="scope.row.lastMsgTime !== null"
                   >聊天记录</el-t-button>
+                  <span v-else class="color-info">聊天记录</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -218,7 +220,14 @@
                     </div>
                   </div>
                 </div>
-                <span class="check-chatting-detail" @click="handleGroupRouter(item)">查看</span>
+                <el-t-button
+                  size="mini"
+                  type="text"
+                  :popAuth="true"
+                  :auth="'externalUser,externalUser_groupDetail'"
+                  v-permission="'externalUser,externalUser_groupDetail'"
+                  @click="handleGroupRouter(item)"
+                >查看</el-t-button>
               </div>
               <!-- </transition-group> -->
               <div class="open-all" @click="unlimited">
@@ -644,25 +653,22 @@ export default {
         }
       }
     },
-    handleExternalUserRefreshInfo(){
-      let payload ={
-        uuid:this.query.uuid
-      } 
+    handleExternalUserRefreshInfo() {
+      let payload = {
+        uuid: this.query.uuid,
+      };
       this.$store
-            .dispatch(
-              "externalUser/externalUserRefreshInfo",
-              payload
-            )
-            .then((res) => {
-              this.$message({
-                type: "success",
-                message: "更新成功",
-              });
-              this.initDetail(this.query.uuid);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+        .dispatch("externalUser/externalUserRefreshInfo", payload)
+        .then((res) => {
+          this.$message({
+            type: "success",
+            message: "更新成功",
+          });
+          this.initDetail(this.query.uuid);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     load() {
       let a = Math.ceil(this.page.total / this.page.pageSize);
@@ -719,7 +725,6 @@ export default {
 .tips {
   font-size: 13px;
   line-height: 22px;
-  color: #a4ecd1;
 }
 .tag-container {
   font-size: 14px;
