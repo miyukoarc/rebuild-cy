@@ -18,8 +18,8 @@
             <el-t-button
               type="text"
               :popAuth="true"
-              :auth="'mediaGroup,mediaGroup_add'"
-              v-permission="'mediaGroup,mediaGroup_add'"
+              :auth="'media,media_add_group'"
+              v-permission="'media,media_add_group'"
               size="mini"
               @click.stop="handleCreateGroup"
             >

@@ -104,7 +104,8 @@ export default {
                 message: '操作成功'
               })
               this.handleCancel()
-              this.refresh()
+            //   this.refresh()
+            this.$bus.$emit('handleRefresh')
             })
             .catch(err => {
               

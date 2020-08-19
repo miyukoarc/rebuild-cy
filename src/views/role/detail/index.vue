@@ -16,11 +16,11 @@
       </el-card>
       <el-card class="content-spacing">
         <el-form ref="form" v-if="Object.keys(isIndeterminate).length">
-          <el-form-item
+          <!-- <el-form-item
             v-for="(value, key) in permissionRenderMap"
             :key="key"
             :label="roleDetail[key]"
-          >
+           >
             <el-checkbox
               :indeterminate="isIndeterminate[key]"
               v-model="checkAll[key]"
@@ -36,7 +36,9 @@
               >{{item.title}}</el-checkbox>
             </el-checkbox-group>
             <el-divider></el-divider>
-          </el-form-item>
+          </el-form-item>-->
+
+          <el-tree :data="permissionTree" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
         </el-form>
       </el-card>
     </div>
@@ -61,6 +63,12 @@ export default {
         roleUuid: null,
         permissionUuids: [],
       },
+
+      permissionTree: [],
+      defaultProps: {
+          children: 'children',
+          label: 'title'
+      }
     }
   },
   watch: {
@@ -87,7 +95,16 @@ export default {
       roleDetail: (state) => state.enum.roleDetail,
     }),
   },
-  activated() {},
+  created() {
+    this.$store
+      .dispatch('permission/getPermissionListTree')
+      .then((res) => {
+        this.permissionTree = res
+      })
+      .catch((err) => {
+        throw new Error(err)
+      })
+  },
   mounted() {},
   methods: {
     initDetail(payload) {
@@ -223,6 +240,7 @@ export default {
           })
         })
     },
+    handleNodeClick(){}
   },
 }
 </script>

@@ -76,7 +76,7 @@
             </ul>
           </div>
 
-          <div v-else class="chat-warp no-data">暂无数据</div>
+          <div v-else class="chat-warp no-data user-select-none">暂无数据</div>
         </el-tab-pane>
       </el-tabs>
     </div>

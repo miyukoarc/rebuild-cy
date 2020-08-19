@@ -1,12 +1,18 @@
 <template>
   <div class="app-container">
     <el-card class="content-spacing" style="overflow:initial">
-      <tool-bar :hasRefresh="true" @handleRefresh="handleRefresh" :hasExport="true" :hasImport="false" @handleExport="doExport">
+      <tool-bar
+        :hasRefresh="true"
+        @handleRefresh="handleRefresh"
+        :hasExport="true"
+        :hasImport="false"
+        @handleExport="doExport"
+      >
         <div slot="left">
-          <span class="font-l">{{corpInfo.name}}</span>
+          <!-- <span class="font-l">{{corpInfo.name}}</span> -->
           <!-- :popAuth="true"
           :auth="permissionMap['role']['role_add']"-->
-          <el-t-button size="small" type="text" :enable="true" @click="handleChange">切换节点</el-t-button>
+          <!-- <el-t-button size="small" type="text" :enable="true" @click="handleChange">切换节点</el-t-button> -->
         </div>
         <div slot="right">
           <el-t-button
@@ -111,9 +117,12 @@ export default {
     this.initDataList()
   },
   mounted() {
-    const corp = JSON.parse(window.localStorage.getItem('corp'))
-    this.corpInfo = corp
     //   console.log(corp)
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList()
+    })
+
+    this.$bus.$off('handleRefresh')
   },
   methods: {
     doExport() {},
@@ -183,6 +192,9 @@ export default {
         path: '/role/detail/' + uuid,
         query: { code },
       })
+    },
+    handleRefresh() {
+      this.initDataList()
     },
   },
 }

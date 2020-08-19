@@ -80,7 +80,7 @@
     </el-checkbox-group>
 
     <div v-else class="text-align-center">
-      <span class="tips font-exs color-info">暂无数据</span>
+      <span class="tips font-exs color-info user-select-none">暂无数据</span>
     </div>
     <!-- 预览框 -->
     <el-dialog :visible.sync="dialogVisible" :width="width" center title="适用标签" destroy-on-close>
