@@ -242,16 +242,16 @@ export const getGroupDetail = (payload) => {
  * @param {object} payload 
  */
 export const externalUserUpdateTag = (payload) => {
-    return request({
-        url: '/externalUser/updateTag',
-        method: 'post',
-        data: payload
-    })
-}
-/**
- * 批量添加好友listMy
- * @param {object} payload 
- */
+        return request({
+            url: '/externalUser/updateTag',
+            method: 'post',
+            data: payload
+        })
+    }
+    /**
+     * 批量添加好友listMy
+     * @param {object} payload 
+     */
 export const getListMy = (payload) => {
     return request({
         url: '/batchAddTask/listMy',
@@ -269,5 +269,17 @@ export const getResultList = (payload) => {
         url: `/batchAddTask/result/${payload.uuid}`,
         method: 'get',
         params: payload
+    })
+}
+
+/**
+ * 刷新客户基本信息
+ * @param {object} payload 
+ */
+export const externalUserRefreshInfo = (payload) => {
+    return request({
+        url: `/externalUser/refresh`,
+        method: 'post',
+        data: payload
     })
 }

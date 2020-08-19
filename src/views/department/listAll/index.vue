@@ -39,17 +39,13 @@
             </span>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="标签">
-            <template v-slot="{row}">
-            
-                <span>{{row.orgNode?'组织':'部门'}}</span>
-            </template>
-        </el-table-column>-->
+
         <el-table-column label="员工人数" align="left">
             <template v-slot="{row}">
                 <div>{{row.users.length||'--'}}</div>
             </template>
         </el-table-column>
+        
         <el-table-column label="操作" align="center" width="240">
           <template slot-scope="scope">
             <el-t-button
@@ -97,13 +93,13 @@
 
 <script>
 // import mHeadedr from "./header";
-import UserDetail from './detail.vue'
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import Cascader from '@/components/Cascader'
+import UserDetail from "./detail.vue";
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import Cascader from "@/components/Cascader";
 
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   name: 'department_listAll',
@@ -117,7 +113,7 @@ export default {
   data() {
     return {
       total: 0,
-    }
+    };
   },
   watch: {},
   computed: {
@@ -129,8 +125,8 @@ export default {
       permissionMap: (state) => state.permission.permissionMap,
     }),
   },
-  created() {
-    this.initDataList()
+  activated() {
+    this.initDataList();
     // this.initFilter()
   },
   mounted() {
@@ -147,106 +143,107 @@ export default {
     })
   },
   beforeDestroy() {
-    this.$bus.$off('showFormDialog')
+    this.$bus.$off("showFormDialog");
   },
   methods: {
     handleClick(val, e) {
-      e.stopPropagation()
-      this.handleDelete(val.uuid)
-      alert('点击')
+      e.stopPropagation();
+      this.handleDelete(val.uuid);
+      alert("点击");
     },
 
     handleRowClick(value) {
-      this.$store.commit('department/SAVE_DETAIL', value)
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
-      this.$refs['formDialog'].dialogVisible = true
+      this.$store.commit("department/SAVE_DETAIL", value);
+      this.$refs["formDialog"].event = "EditTemplate";
+      this.$refs["formDialog"].eventType = "edit";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     sortChange(val) {
-      this.initDataList()
+      this.initDataList();
     },
     pageChange() {
-      this.initDataList()
+      this.initDataList();
     },
     initFilter() {
       this.$store
-        .dispatch('department/getDepartmentListSelect')
+        .dispatch("department/getDepartmentListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
+            type: "error",
             message: err,
-          })
-        })
+          });
+        });
     },
     initDataList() {
       this.$store
-        .dispatch('department/getDepartmentListAll')
+        .dispatch("department/getDepartmentListAll")
         .then((res) => {
-          const { total } = res
-          this.total = total
+          const { total } = res;
+          this.total = total;
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
+            type: "error",
             message: err,
-          })
-        })
+          });
+        });
     },
     handleEdit(index, row) {
       //   const payload = this.departmentList[index]
       //   console.log(row)
       //   this.$store.commit('department/SAVE_DETAIL', row)
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
-      this.$refs['formDialog'].dialogVisible = true
-      this.$refs['formDialog'].transfer = row
+      this.$refs["formDialog"].event = "EditTemplate";
+      this.$refs["formDialog"].eventType = "edit";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = row;
     },
     handleDelete(val) {
-      console.log(val.uuid)
-      const uuid = val.uuid
+      console.log(val.uuid);
+      const uuid = val.uuid;
 
       const payload = {
         uuid: uuid,
-      }
+      };
 
-      this.$confirm('是否删除当前部门', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
+      this.$confirm("是否删除当前部门", "Warning", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       })
         .then(async () => {
           await this.$store
-            .dispatch('department/deleteDepartment', payload)
+            .dispatch("department/deleteDepartment", payload)
             .then(() => {
               this.$message({
-                type: 'success',
-                message: '操作成功',
-              })
-              this.initDataList()
+                type: "success",
+                message: "操作成功",
+              });
+              this.initDataList();
             })
             .catch((err) => {
               this.$message({
-                type: 'error',
+                type: "error",
                 message: err,
-              })
-            })
+              });
+            });
         })
-        .catch((err) => {})
+        .catch((err) => {});
     },
     handleChange(index, row) {
-      this.$refs['formDialog'].event = 'ChangeTemplate'
-      this.$refs['formDialog'].eventType = 'change'
-      this.$refs['formDialog'].dialogVisible = true
-      this.$refs['formDialog'].transfer = row
+      if (row.type === "DEPT") return;
+      this.$refs["formDialog"].event = "ChangeTemplate";
+      this.$refs["formDialog"].eventType = "change";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].transfer = row;
     },
     handleCreate() {
-      this.$refs['formDialog'].event = 'CreateTemplate'
-      this.$refs['formDialog'].eventType = 'create'
-      this.$refs['formDialog'].dialogVisible = true
+      this.$refs["formDialog"].event = "CreateTemplate";
+      this.$refs["formDialog"].eventType = "create";
+      this.$refs["formDialog"].dialogVisible = true;
     },
   },
-}
+};
 </script>
 
 <style lang="scss">

@@ -14,7 +14,8 @@ import {
     externalUserUpdateTag,
     getCustomerStatistics,
     getListMy,
-    getResultList
+    getResultList,
+    externalUserRefreshInfo
 } from '@/api/externalUser'
 
 import {
@@ -879,6 +880,24 @@ const actions = {
                 commit('SET_RESULT_PAGE', res)
                 commit('TOGGLE_LOADING', false)
                 resolve()
+            }).catch(err => {
+                commit('TOGGLE_LOADING', false)
+                reject(err)
+            })
+        })
+    },
+
+    /**
+     * 批量添加好友接口，获取list列表
+     */
+    externalUserRefreshInfo({
+        commit
+    }, payload) {
+        commit('TOGGLE_LOADING', true)
+        return new Promise((resolve, reject) => {
+            externalUserRefreshInfo(payload).then(res => {
+                commit('TOGGLE_LOADING', false)
+                resolve(res)
             }).catch(err => {
                 commit('TOGGLE_LOADING', false)
                 reject(err)

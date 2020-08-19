@@ -5,30 +5,35 @@
         <el-col :span="16">
           <!-- 客户基本信息 -->
           <el-card class="left-top-info">
-            <div
-              class="info-name display-flex align-items-center"
-              v-if="externalUserDetail.externalUserDetail"
-            >
-              <el-image
-                style="width:64px;height:64px;border-radius: 100%;"
-                :src="
+            <div class="flex-between-alinecenter">
+              <div
+                class="info-name display-flex align-items-center"
+                v-if="externalUserDetail.externalUserDetail"
+              >
+                <el-image
+                  style="width:64px;height:64px;border-radius: 100%;"
+                  :src="
                   externalUserDetail.externalUserDetail.externalUserAvatar
                     ? externalUserDetail.externalUserDetail.externalUserAvatar
                     : defaultAvatar
                 "
-                alt
-              />
-              <div style="margin-left:10px;">
-                <div v-if="externalUserDetail.externalUserDetail" style="margin-bottom: 10px;">
-                  {{
-                  externalUserDetail.externalUserDetail.externalUserName
-                  }}
+                  alt
+                />
+                <div style="margin-left:10px;">
+                  <div v-if="externalUserDetail.externalUserDetail" style="margin-bottom: 10px;">
+                    {{
+                    externalUserDetail.externalUserDetail.externalUserName
+                    }}
+                  </div>
+                  <span
+                    class="tips"
+                  >{{externalUserDetail.externalUserDetail.wxType == 'WX'? "@微信":'@企业微信'}}</span>
                 </div>
-                <span
-                  class="tips"
-                >{{externalUserDetail.externalUserDetail.wxType == 'WX'? "@微信":'@企业微信'}}</span>
               </div>
+              <div v-else></div>
+              <el-t-button type="primary" @click="handleExternalUserRefreshInfo">更新客户信息</el-t-button>
             </div>
+
             <!-- 企业标签 -->
             <div class="tag-container">
               <h4>
@@ -638,6 +643,26 @@ export default {
           return;
         }
       }
+    },
+    handleExternalUserRefreshInfo(){
+      let payload ={
+        uuid:this.query.uuid
+      } 
+      this.$store
+            .dispatch(
+              "externalUser/externalUserRefreshInfo",
+              payload
+            )
+            .then((res) => {
+              this.$message({
+                type: "success",
+                message: "更新成功",
+              });
+              this.initDetail(this.query.uuid);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
     },
     load() {
       let a = Math.ceil(this.page.total / this.page.pageSize);
