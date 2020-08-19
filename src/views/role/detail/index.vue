@@ -15,17 +15,16 @@
         </tool-bar>
       </el-card>
       <el-card class="content-spacing">
-        <el-form ref="form" v-if="Object.keys(isIndeterminate).length">
-          <!-- <el-form-item
+        <el-form v-if="Object.keys(isIndeterminate).length">
+          <el-form-item
             v-for="(value, key) in permissionRenderMap"
             :key="key"
-            :label="roleDetail[key]"
-           >
+            :label="key"
+          >
             <el-checkbox
               :indeterminate="isIndeterminate[key]"
               v-model="checkAll[key]"
               @change="handleCheckAllChange(key)"
-              :ref="key"
             >全选</el-checkbox>
             <div style="margin: 15px 0;"></div>
             <el-checkbox-group v-model="checked[key]" @change="handleSingleChange(key)">
@@ -33,12 +32,10 @@
                 v-for="item in list[key]"
                 :key="item.code"
                 :label="item.uuid"
-              >{{item.title}}</el-checkbox>
+              >{{item.title}}&nbsp;&nbsp;{{item.code}}</el-checkbox>
             </el-checkbox-group>
             <el-divider></el-divider>
-          </el-form-item>-->
-
-          <el-tree :data="permissionTree" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+          </el-form-item>
         </el-form>
       </el-card>
     </div>
@@ -49,9 +46,9 @@
 import { mapState } from 'vuex'
 import ToolBar from './tool-bar'
 export default {
-  name: 'role_role',
+  name: 'role-detail',
   components: {
-    ToolBar,
+    ToolBar
   },
   data() {
     return {
@@ -61,58 +58,34 @@ export default {
       list: {},
       form: {
         roleUuid: null,
-        permissionUuids: [],
-      },
-
-      permissionTree: [],
-      defaultProps: {
-          children: 'children',
-          label: 'title'
+        permissionUuids: []
       }
     }
   },
-  watch: {
-    $route: {
-      handler(newVal, oldVal) {
-        if (newVal.query.code) {
-          //   console.log(newVal.query.code)
-          const roleCode = newVal.query.code
-          this.form.roleUuid = +newVal.params.uuid
-          this.initData().then(() => {
-            this.initDetail({ roleCode })
-          })
-        }
-      },
-      immediate: true,
-    },
-  },
   computed: {
     ...mapState({
-      permissionRenderMap: (state) => state.permission.permissionRenderMap,
-      permissionMap: (state) => state.permission.permissionMap,
-      auditSetting: (state) => state.sensitive.auditSetting,
+      permissionRenderMap: state => state.permission.permissionRenderMap,
+      permissionMap: state => state.permission.permissionMap,
+      auditSetting: state => state.sensitive.auditSetting,
 
-      roleDetail: (state) => state.enum.roleDetail,
-    }),
+      roleDetail: state => state.enum.roleDetail
+    })
   },
   created() {
-    this.$store
-      .dispatch('permission/getPermissionListTree')
-      .then((res) => {
-        this.permissionTree = res
-      })
-      .catch((err) => {
-        throw new Error(err)
-      })
+    const roleCode = this.$route.query.code
+    this.form.roleUuid = +this.$route.params.uuid
+    this.initData().then(() => {
+      this.initDetail({ roleCode })
+    })
   },
   mounted() {},
   methods: {
     initDetail(payload) {
       this.$store
         .dispatch('permission/getRolePermissionList', payload)
-        .then((res) => {
+        .then(res => {
           for (let key in res) {
-            res[key].forEach((item) => {
+            res[key].forEach(item => {
               this.checked[key].push(item.uuid)
             })
 
@@ -121,10 +94,10 @@ export default {
             }
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败',
+            message: err || '初始化失败'
           })
         })
     },
@@ -132,7 +105,7 @@ export default {
       return new Promise((resolve, reject) => {
         this.$store
           .dispatch('permission/getListAll')
-          .then((res) => {
+          .then(res => {
             for (let key in res) {
               this.$set(this.checkAll, key, false)
               this.$set(this.isIndeterminate, key, false)
@@ -144,10 +117,10 @@ export default {
             }
             resolve(res)
           })
-          .catch((err) => {
+          .catch(err => {
             this.$message({
               type: 'error',
-              message: err || '初始化失败',
+              message: err || '初始化失败'
             })
 
             reject(err)
@@ -155,53 +128,19 @@ export default {
       })
     },
     handleCheckAllChange(key) {
-      if (key == 'media') {
-        if (this.checkAll[key] === true) {
-          console.log(this.checkAll[key])
-          //mediaGroup全选
-          const replace = this.list['mediaGroup'].map((obj) => {
-            return obj.uuid
-          })
-
-          this.checked['mediaGroup'].splice(0, replace.length - 1, ...replace)
-          this.checkAll['mediaGroup'] = true
-        } else {
-          //mediaGroup全反选
-          const len = this.checked['mediaGroup'].length
-          this.checked['mediaGroup'].splice(0, len)
-          this.checkAll['mediaGroup'] = false
-        }
-      }
       if (this.checkAll[key] == false) {
         this.checkAll[key] = false
         this.checked[key] = []
       } else if (this.checkAll[key] == true) {
         this.checkAll[key] = true
         this.checked[key] = []
-        this.list[key].map((obj) => {
+        this.list[key].map(obj => {
           this.checked[key].push(obj.uuid)
         })
       }
       this.isIndeterminate[key] = false
     },
     handleSingleChange(key) {
-      if (key === 'media') {
-        console.log(this.checked['media'].length)
-        if (this.checked['media'].length == 0) {
-          //meidagroup全反选
-          const len = this.checked['mediaGroup'].length
-          this.checked['mediaGroup'].splice(0, len)
-          this.checkAll['mediaGroup'] = false
-        } else {
-          //mediagroup全选
-          const replace = this.list['mediaGroup'].map((obj) => {
-            return obj.uuid
-          })
-
-          this.checked['mediaGroup'].splice(0, replace.length - 1, ...replace)
-          this.checkAll['mediaGroup'] = true
-        }
-      }
       const checkedCount = this.checked[key].length
       this.checkAll[key] = checkedCount === this.list[key].length
       this.isIndeterminate[key] =
@@ -222,26 +161,25 @@ export default {
 
       this.$store
         .dispatch('permission/roleLinkPermissionIsAudit', this.form)
-        .then((res) => {
+        .then(res => {
           const message = this.auditSetting['permission']
             ? '已提交审核'
             : '已完成'
           this.$message({
             type: 'success',
-            message: message,
+            message: message
           })
           const roleCode = this.$route.query.code
           this.initDetail({ roleCode })
         })
-        .catch((err) => {
+        .catch(err => {
           this.$message({
             type: 'error',
-            message: err || '操作失败',
+            message: err || '操作失败'
           })
         })
-    },
-    handleNodeClick(){}
-  },
+    }
+  }
 }
 </script>
 
