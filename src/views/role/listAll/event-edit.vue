@@ -6,7 +6,7 @@
     <el-form-item label="code" prop="code">
       <el-input v-model.trim="form.code"></el-input>
     </el-form-item>
-        <el-form-item label="备注">
+    <el-form-item label="备注">
       <el-input v-model.trim="form.remark"></el-input>
     </el-form-item>
 
@@ -23,8 +23,8 @@ export default {
   props: {
     transfer: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   inject: ['reload'],
   data() {
@@ -34,24 +34,34 @@ export default {
         code: '',
         name: '',
         remark: '',
-        uuid: ''
+        uuid: '',
       },
       rules: {
         name: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          {
+            min: 2,
+            max: 20,
+            message: '长度在 2 到 20 个字符',
+            trigger: 'blur',
+          },
         ],
         code: [
           { required: true, message: '请输入角色code', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-        ]
-      }
+          {
+            min: 3,
+            max: 20,
+            message: '长度在 3 到 20 个字符',
+            trigger: 'blur',
+          },
+        ],
+      },
     }
   },
   computed: {
     ...mapState({
-      currentRole: state => state.role.currentRole
-    })
+      currentRole: (state) => state.role.currentRole,
+    }),
   },
   watch: {
     // transfer: {
@@ -71,13 +81,13 @@ export default {
     //   deep: true
     // }
   },
-  mounted () {
+  mounted() {
     this.initData()
     // console.log(this.currentRole,'currentRole')
   },
   methods: {
     initData() {
-      const { code, name, uuid,remark } = this.currentRole;
+      const { code, name, uuid, remark } = this.currentRole
       this.form.code = code
       this.form.name = name
       this.form.remark = remark
@@ -93,7 +103,7 @@ export default {
     handleConfirm() {
       const payload = this.form
 
-      this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate((valid) => {
         if (valid) {
           console.log(payload)
           this.$store
@@ -101,22 +111,21 @@ export default {
             .then(() => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               this.handleCancel()
-              this.refresh()
+              this.$bus.$emit('handleRefresh')
             })
-            .catch(err => {
-              
+            .catch((err) => {
               this.$message({
                 type: 'error',
-                message: '操作失败'
+                message: '操作失败',
               })
             })
         } else {
           this.$message({
             type: 'error',
-            message: '请检查输入'
+            message: '请检查输入',
           })
         }
       })
@@ -125,20 +134,19 @@ export default {
       this.$parent.$parent.dialogVisible = false
     },
     refresh() {
-      
       this.$store
         .dispatch('role/getRoleList')
         .then(() => {
           this.reload()
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err
+            message: err,
           })
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

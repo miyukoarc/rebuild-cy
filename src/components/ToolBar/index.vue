@@ -66,6 +66,7 @@ export default {
 
   .middle-left {
     flex: 1;
+    line-height: 30px;
   }
   .right {
     flex: 1;

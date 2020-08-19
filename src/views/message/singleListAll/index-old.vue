@@ -40,7 +40,7 @@
               </div>
             </div>
           </keep-alive>
-          <div v-if="listData.length<=0" class="no-data">暂无数据</div>
+          <div v-if="listData.length<=0" class="no-data user-select-none">暂无数据</div>
         </el-tab-pane>
       </el-tabs>
       <el-pagination

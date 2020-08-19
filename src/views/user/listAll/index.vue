@@ -10,7 +10,7 @@
         @handleRefresh="handleUpdateList"
         :usersNumber="userPage.total"
         @handleExport="doExport"
-        >
+      >
         <div slot="right">
           <!-- <el-t-button
             type="primary"
@@ -102,7 +102,7 @@
                 v-permission="'department,department_allocation'"
                 :auth="'department,department_allocation'"
                 @click.stop.native="handleDistributeDepartment(scope.$index)"
-              >编辑角色</el-t-button>
+              >部门/角色</el-t-button>
 
               <el-t-button
                 type="text"
@@ -348,10 +348,11 @@ export default {
       this.initDataList(this.query)
     },
     handleUpdateList() {
-        console.log('!!')
-      const userList = this.userList.map((item) => {
-        return item.userId
-      }).join(',')
+      const userList = this.userList
+        .map((item) => {
+          return item.userId
+        })
+        .join(',')
       this.$store
         .dispatch('user/userMaintain', { userList })
         .then(() => {})

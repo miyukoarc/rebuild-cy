@@ -99,7 +99,7 @@
                       ></chat-side-bar-item>-->
                     </ul>
                   </div>
-                  <div v-else class="chat-warp no-data">暂无数据</div>
+                  <div v-else class="chat-warp no-data user-select-none">暂无数据</div>
                 </el-tab-pane>
               </el-tabs>
             </div>
@@ -137,7 +137,7 @@
                         />
                       </div>
                     </div>
-                    <div v-show="singleListAllData.length<=0" class="no-chat-data">暂无数据</div>
+                    <div v-show="singleListAllData.length<=0" class="no-chat-data user-select-none">暂无数据</div>
                   </el-tab-pane>
                 </el-tabs>
                 <customer-pagination

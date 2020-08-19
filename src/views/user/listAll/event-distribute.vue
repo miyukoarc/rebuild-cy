@@ -1,6 +1,9 @@
 <template>
   <div>
     <el-form ref="form" label-width="120px" label-position="left" inline>
+        <el-form-item label="姓名：">
+            <el-input :value="user.name"></el-input>
+        </el-form-item>
       <el-form-item label="部门：" prop="name">
         <el-select-tree
           v-model="depUuid"
@@ -76,6 +79,7 @@ export default {
           this.isBatchUpdate = false
 
           this.form.userId = newVal.userId
+          this.roleUuid = newVal.role.uuid
           const { tenantId } = newVal
 
           const uuid = this.depUuid
@@ -133,7 +137,7 @@ export default {
       this.$store
         .dispatch('role/getRoleListSelect', payload)
         .then(() => {
-          this.roleUuid = this.roleList[0].uuid
+        //   this.roleUuid = this.roleList[0].uuid
         })
         .catch((err) => {
           console.error(err)

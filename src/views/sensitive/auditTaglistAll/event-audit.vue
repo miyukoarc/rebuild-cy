@@ -92,12 +92,14 @@
         v-if="detail.auditState==='TO_BE_REVIEWED'&&!currentUserState(detail.auditUsers)"
         size="small"
         @click="handleAudit(action='reject')"
+        v-permission="'audit,audit_batchAuditTagConfirmation'"
       >拒绝</el-t-button>
       <el-t-button
         v-if="detail.auditState==='TO_BE_REVIEWED'&&!currentUserState(detail.auditUsers)"
         type="primary"
         size="small"
         @click="handleAudit(action='access')"
+        v-permission="'audit,audit_batchAuditTagConfirmation'"
       >通过</el-t-button>
       <el-button
         v-if="detail.auditState!=='TO_BE_REVIEWED'||currentUserState(detail.auditUsers)"

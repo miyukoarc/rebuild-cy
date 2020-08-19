@@ -106,3 +106,15 @@ export const getRoleTemplatePermissionList = (payload)=>{
         params: payload
     })
 }
+
+/**
+ * 获取所有权限树状结构
+ * @param {object} payload 
+ */
+export const getPermissionListTree = (payload)=>{
+    return request({
+        url: '/permission/listTree',
+        method: 'get',
+        params: payload
+    })
+}
