@@ -236,7 +236,7 @@ export default {
         .then(() => {
           //初始化分页
           this.pageConfig.pageNumber = this.page.pageNumber + 1;
-          this.pageConfig.total = this.page.total ? this.page.total : "0";
+          this.pageConfig.total = this.page.total ? this.page.total : 0;
         })
         .catch((err) => {
           this.$message({

@@ -43,7 +43,7 @@
           <el-table-column label="备注" align="left">
             <template v-slot="{row}">{{row.remark?row.remark:'--'}}</template>
           </el-table-column>
-          <el-table-column label="操作" align="left">
+          <el-table-column label="操作" align="center" width="240">
             <template slot-scope="scope">
               <el-t-button
                 type="text"
@@ -122,7 +122,9 @@ export default {
       this.initDataList()
     })
 
-    this.$bus.$off('handleRefresh')
+    this.$once('hool:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
   },
   methods: {
     doExport() {},

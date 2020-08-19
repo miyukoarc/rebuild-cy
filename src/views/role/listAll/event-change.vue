@@ -130,7 +130,7 @@ export default {
                 message: '操作成功',
               })
               this.handleCancel()
-                this.$bus.$emit('handleRefresh')
+              this.$bus.$emit('handleRefresh')
             })
             .catch((err) => {
               this.$message({

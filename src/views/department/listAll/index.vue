@@ -125,7 +125,7 @@ export default {
       permissionMap: (state) => state.permission.permissionMap,
     }),
   },
-  activated() {
+  created() {
     this.initDataList();
     // this.initFilter()
   },
@@ -151,18 +151,11 @@ export default {
       this.handleDelete(val.uuid);
       alert("点击");
     },
-
     handleRowClick(value) {
       this.$store.commit("department/SAVE_DETAIL", value);
       this.$refs["formDialog"].event = "EditTemplate";
       this.$refs["formDialog"].eventType = "edit";
       this.$refs["formDialog"].dialogVisible = true;
-    },
-    sortChange(val) {
-      this.initDataList();
-    },
-    pageChange() {
-      this.initDataList();
     },
     initFilter() {
       this.$store
@@ -199,7 +192,6 @@ export default {
       this.$refs["formDialog"].transfer = row;
     },
     handleDelete(val) {
-      console.log(val.uuid);
       const uuid = val.uuid;
 
       const payload = {
@@ -231,7 +223,8 @@ export default {
         .catch((err) => {});
     },
     handleChange(index, row) {
-      if (row.type === "DEPT") return;
+    //   if (row.type !== "HEAD") return;
+    //   console.log('1')
       this.$refs["formDialog"].event = "ChangeTemplate";
       this.$refs["formDialog"].eventType = "change";
       this.$refs["formDialog"].dialogVisible = true;

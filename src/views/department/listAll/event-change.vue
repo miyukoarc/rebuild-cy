@@ -13,7 +13,7 @@
     <el-form-item label="角色模板：" prop="roleUuidSet">
       <el-select v-model="form.roleUuidSet" multiple filterable>
         <el-option
-          v-for="item in alterRoleTemplates"
+          v-for="item in roleListSelect"
           :key="item.value"
           :label="item.name"
           :value="item.uuid"
@@ -74,19 +74,19 @@ export default {
   watch: {
     'form.type': {
       handler(newVal, oldval) {
-        if (newVal) {
-          if (newVal == 'BRANCH') {
-            this.alterRoleTemplates = this.roleTemplates.filter((item) => {
-              return item.code.includes('BRANCH')
-            })
-          }
+        // if (newVal) {
+        //   if (newVal == 'BRANCH') {
+        //     this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+        //       return item.code.includes('BRANCH')
+        //     })
+        //   }
 
-          if (newVal == 'BUSINESS') {
-            this.alterRoleTemplates = this.roleTemplates.filter((item) => {
-              return item.code.includes('BUSINESS')
-            })
-          }
-        }
+        //   if (newVal == 'BUSINESS') {
+        //     this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+        //       return item.code.includes('BUSINESS')
+        //     })
+        //   }
+        // }
         //   console.log(newVal)
       },
       immediate: true,
@@ -105,6 +105,7 @@ export default {
       currentDepartment: (state) => state.department.currentDepartment,
       listSelect: (state) => state.department.listSelect,
       departmentList: (state) => state.department.departmentList,
+      roleListSelect: state => state.role.roleListSelect,
       roleTemplates: (state) => state.roleTemplate.listAll,
     }),
   },
@@ -114,7 +115,7 @@ export default {
   methods: {
     initData() {
       this.$store
-        .dispatch('roleTemplate/getListAll', { size: 100 })
+        .dispatch('role/getRoleListSelect', { size: 100 })
         .then(() => {})
         .catch((err) => {
           console.error(err)

@@ -64,9 +64,9 @@ components:{
           const type = this.eventType
           switch(type){
               case 'create':
-                  return '创建模板'
+                  return '创建角色'
               case 'edit': 
-                  return '编辑模板'
+                  return '编辑角色'
               case 'change':
                   return '切换节点'
           }
