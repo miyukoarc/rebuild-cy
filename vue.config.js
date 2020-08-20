@@ -10,11 +10,11 @@ function resolve(dir) {
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
 const api_host = defaultSettings.api_host
-// If your port is set to 80,
-// use administrator privileges to execute the command line.
-// For example, Mac: sudo npm run
-// You can change the port by the following methods:
-// port = 9528 npm run dev OR npm run dev --port = 9528
+    // If your port is set to 80,
+    // use administrator privileges to execute the command line.
+    // For example, Mac: sudo npm run
+    // You can change the port by the following methods:
+    // port = 9528 npm run dev OR npm run dev --port = 9528
 const port = process.env.port || process.env.npm_config_port || 9528 // dev port
 
 console.log(process.env.VUE_APP_WORK, process.env.NODE_ENV)
@@ -47,66 +47,66 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
     // 21days 
     // before: require('./mock/mock-server.js')
 } : {
-        port: 80,
-        open: true,
-        overlay: {
-            warnings: false,
-            errors: true
+    port: 80,
+    open: true,
+    overlay: {
+        warnings: false,
+        errors: true
+    },
+    // host: 'www.sdk.com',
+    disableHostCheck: true,
+    proxy: {
+        [process.env.VUE_APP_BASE_API]: {
+            target: api_host,
+            // ws: true,
+            changeOrigin: true,
+            pathRewrite: {
+                ['^' + process.env.VUE_APP_BASE_API]: ''
+            }
         },
-        // host: 'www.sdk.com',
-        disableHostCheck: true,
-        proxy: {
-            [process.env.VUE_APP_BASE_API]: {
-                target: api_host,
-                // ws: true,
-                changeOrigin: true,
-                pathRewrite: {
-                    ['^' + process.env.VUE_APP_BASE_API]: ''
-                }
+        '/public': {
+            target: api_host,
+            changeOrigin: true,
+        },
+        [process.env.VUE_APP_BASE_API]: {
+            headers: {
+                Host: 'sidebar.cyscrm.com'
             },
-            '/public': {
-                target: api_host,
-                changeOrigin: true,
+            target: api_host,
+            secure: false,
+            // ws: true,
+            pathRewrite: {
+                "^/api": ""
+            }
+        },
+        "/api": {
+            headers: {
+                Host: 'sidebar.cyscrm.com'
             },
-            [process.env.VUE_APP_BASE_API]: {
-                headers: {
-                    Host: 'sidebar.cyscrm.com'
-                },
-                target: api_host,
-                secure: false,
-                // ws: true,
-                pathRewrite: {
-                    "^/api": ""
-                }
+            target: api_host,
+            secure: false,
+            // ws: true,
+            pathRewrite: {
+                "^/api": ""
+            }
+        },
+        '/file': {
+            target: `http://192.168.1.198:9000/file`,
+            changeOrigin: true,
+            pathRewrite: {
+                '^/file': '',
             },
-            "/api": {
-                headers: {
-                    Host: 'sidebar.cyscrm.com'
-                },
-                target: api_host,
-                secure: false,
-                // ws: true,
-                pathRewrite: {
-                    "^/api": ""
-                }
-            },
-            '/file': {
-                target: `http://192.168.1.198:9000/file`,
-                changeOrigin: true,
-                pathRewrite: {
-                    '^/file': '',
-                },
-            },
-            // '/ws': {
-            //     target: `http://47.111.161.128:80`,
-            //     changeOrigin: true,
-            //     ws: true,
-            // }
-        }
-
-
-
+        },
+        // '/ws': {
+        //     target: `http://47.111.161.128:80`,
+        //     changeOrigin: true,
+        //     ws: true,
+        // }
     }
+
+
+
+}
 
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
@@ -185,10 +185,10 @@ module.exports = {
             .end()
 
         config
-            // https://webpack.js.org/configuration/devtool/#development
+        // https://webpack.js.org/configuration/devtool/#development
             .when(process.env.NODE_ENV === 'development',
-                config => config.devtool('cheap-source-map')
-            )
+            config => config.devtool('cheap-source-map')
+        )
 
         config
             .when(process.env.NODE_ENV !== 'development',
@@ -229,6 +229,18 @@ module.exports = {
                 }
             )
     },
+    // pluginOptions: {
+    //     // ...
+    //     pwa: {
+    //       iconPaths: {
+    //         favicon32: './favicon.ico',
+    //         favicon16: './favicon.ico',
+    //         appleTouchIcon: './favicon.ico',
+    //         maskIcon: './favicon.ico',
+    //         msTileImage: './favicon.ico'
+    //       }
+    //     },
+    //   }
     //   pluginOptions: {
     //     electronBuilder: {
     //       // List native deps here if they don't work
