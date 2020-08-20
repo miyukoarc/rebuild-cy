@@ -5,7 +5,7 @@ import {
     getListRole,
     getRolePermissionList,
     getRoleTemplatePermissionList,
-    getPermissionListTree,
+    getPermissionListGroup,
     roleLinkPermissionIsAudit
 } from '@/api/permission'
 
@@ -258,9 +258,9 @@ const actions = {
             })
         })
     },
-    getPermissionListTree({commit},payload){
+    getPermissionListGroup({commit},payload){
        return new Promise((resolve,reject)=>{
-           getPermissionListTree(payload).then(res=>{
+           getPermissionListGroup(payload).then(res=>{
 
                resolve(res.items)
            }).catch(err=>{

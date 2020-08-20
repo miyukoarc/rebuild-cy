@@ -148,7 +148,7 @@ import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-    name: 'contactWay_listAll',
+  name: 'contactWay_listAll',
   components: {
     ListHeader,
     FormDialog,
@@ -184,6 +184,10 @@ export default {
     }),
   },
   activated() {
+    this.initDataList(this.query)
+    this.initFilter()
+  },
+  created() {
     this.initDataList(this.query)
     this.initFilter()
   },

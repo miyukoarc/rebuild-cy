@@ -68,7 +68,7 @@ export default {
           { required: true, message: '请选择角色模板', trigger: 'blur' },
         ],
       },
-      alterRoleTemplates: [],
+    //   alterRoleTemplates: [],
     }
   },
   watch: {
@@ -106,7 +106,7 @@ export default {
       listSelect: (state) => state.department.listSelect,
       departmentList: (state) => state.department.departmentList,
       roleListSelect: state => state.role.roleListSelect,
-      roleTemplates: (state) => state.roleTemplate.listAll,
+    //   roleTemplates: (state) => state.roleTemplate.listAll,
     }),
   },
   created() {
@@ -115,7 +115,7 @@ export default {
   methods: {
     initData() {
       this.$store
-        .dispatch('role/getRoleListSelect', { size: 100 })
+        .dispatch('role/getRoleListSelect')
         .then(() => {})
         .catch((err) => {
           console.error(err)

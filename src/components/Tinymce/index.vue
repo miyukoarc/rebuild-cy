@@ -90,7 +90,7 @@ export default {
   mounted() {
     this.init()
   },
-  activated() {
+  created() {
     if (window.tinymce) {
       this.initTinymce()
     }

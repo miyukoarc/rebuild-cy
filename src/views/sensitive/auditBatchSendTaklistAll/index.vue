@@ -104,7 +104,7 @@
             <template v-slot="{row}">
               <div>
                 <el-t-button type="text" @click.stop.native="handleAudit(row.uuid)">
-                    <span v-if="row.auditState==='TO_BE_REVIEWED'">审核</span>
+                  <span v-if="row.auditState==='TO_BE_REVIEWED'">审核</span>
                   <span v-else>详细</span>
                 </el-t-button>
               </div>
@@ -132,7 +132,7 @@ import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-    name: "riskManagement_auditBatchSendTaklistAll",
+  name: 'riskManagement_auditBatchSendTaklistAll',
   components: {
     ListHeader,
     FormDialog,
@@ -179,19 +179,20 @@ export default {
   activated() {
     this.initDataList(this.query)
   },
-  mounted(){
-      this.$bus.$on('handleRefresh',()=>{
-          this.initDataList(this.query)
-      })
+  created() {
+    this.initDataList(this.query)
+  },
+  mounted() {
+    this.$bus.$on('handleRefresh', () => {
+      this.initDataList(this.query)
+    })
 
-      this.$once('hook:beforeDestroy',()=>{
-          this.$bus.$off('handleRefresh')
-      })
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleRefresh')
+    })
   },
   methods: {
-    doExport(val) {
-      
-    },
+    doExport(val) {},
 
     /**
      * 初始化表格信息

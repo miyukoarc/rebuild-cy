@@ -1,9 +1,12 @@
 <template>
   <div>
+    <div>
+      <union-checkbox :code="'media_add'" :deps="'media_detail,user_detail,user_edit'" v-model="uni" @change="handleUnionCheck">12312</union-checkbox>
+    </div>
 
-      <div>
-          <el-t-button type="text" :throttle="true" @click="handleClick" :enable="false">点击</el-t-button>
-      </div>
+    <div>
+      <el-t-button type="text" :throttle="true" @click="handleClick" :enable="false">点击</el-t-button>
+    </div>
     <div>
       <tags-drawer :tags="tagGroups"></tags-drawer>
     </div>
@@ -92,9 +95,11 @@ import ComplexSelect from '@/components/ComplexSelect'
 import TagSelect from '@/components/TagSelect'
 import TagMultiSelect from '@/components/TagMultiSelect'
 import MultiTreeSelect from '@/components/MultiTreeSelect'
+import UnionCheckbox from '@/components/UnionCheckbox'
 import { mapState } from 'vuex'
 export default {
   components: {
+    UnionCheckbox,
     TagsDrawer,
     UserDrawer,
     Cascader,
@@ -109,6 +114,7 @@ export default {
   },
   data() {
     return {
+      uni: '',
       multiSelects: [],
       selectTags: [84],
       result: [],
@@ -518,15 +524,15 @@ export default {
     this.initData()
   },
   mounted() {
-    //   console.log( document.querySelector('#loading'))
   },
   methods: {
+    handleUnionCheck(val) {
+      console.log(val)
+    },
     handleDetail(uuid) {
       console.log(uuid)
     },
-    handleChange(val) {
-      
-    },
+    handleChange(val) {},
     initData() {
       this.$store
         .dispatch('department/getDepartmentListAll')
@@ -549,10 +555,10 @@ export default {
         })
     },
 
-    handleClick(){
-        console.log('点击')
-        // Promise.resolve('点击').then(res=>{console.log(res)})
-    }
+    handleClick() {
+      console.log('点击')
+      // Promise.resolve('点击').then(res=>{console.log(res)})
+    },
   },
 }
 </script>

@@ -52,6 +52,7 @@ const mutations = {
 const actions = {
     createWebsocket({ state, commit, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
+            // 自动化任务队列，自动回复的优先级最高，群发和批量添加好友按时间先后排
             class Queue extends Array {
                 constructor(...args) {
                     super(...args)
@@ -66,9 +67,33 @@ const actions = {
                     }
                 }
                 shift() {
+                    // 当前
                     state.currentTask = super.shift();
-                    console.log('当前执行任务：' + state.currentTask)
-                    return state.currentTask;
+                    if (typeof state.currentTask == 'undefined') {
+                        // 任务队列全部执行完成，清空列表
+                        dispatch('clearTask')
+                    } else {
+                        // 群发队列
+                        if (state.currentTask.automationType == "BatchSendTask") {
+                            state.articleLink = state.currentTask.contentUrl;
+                            dispatch('openChat')
+                        }
+                        // 自动回复队列
+                        else if (state.currentTask.automationType == 'AUTOREP') {
+                            if (isElectron()) {
+                                $ipcRenderer.send('openChat', {
+                                    mobile: state.currentTask.mobile,
+                                    x: state.mouseX,
+                                    y: state.mouseY,
+                                })
+                            }
+                        }
+                        // 批量添加好友队列
+                        else if (state.currentTask.automationType == 'ADDTASK') {
+
+                        }
+                        return state.currentTask;
+                    }
                 }
             }
 
@@ -82,12 +107,14 @@ const actions = {
             state.sock.onopen = function () {
                 if (isElectron()) {
                     $ipcRenderer.on('reply-openChat', (event, arg) => {
-                        console.log('reply-openChat', arg)
                         if (arg.err) {
+                            console.log('reply-openChat', arg)
                             // 群发出错，任务状态设为“中断”
-                            batchSendTaskSuspend({
-                                uuids: [state.batchSendTaskDetail.uuid]
-                            })
+                            if (state.currentTask.automationType == 'BatchSendTask') {
+                                batchSendTaskSuspend({
+                                    uuids: [state.batchSendTaskDetail.uuid]
+                                })
+                            }
                             dispatch('clearTask')
                             Message({
                                 message: arg.err.message,
@@ -100,12 +127,14 @@ const actions = {
                         }
                     })
                     $ipcRenderer.on('reply-inputEnter', (event, arg) => {
-                        console.log('reply-inputEnter', arg)
                         if (arg.err) {
-                            // 群发出错，任务状态设为“中断”
-                            batchSendTaskSuspend({
-                                uuids: [state.batchSendTaskDetail.uuid]
-                            })
+                            console.log('reply-inputEnter', arg)
+                            if (state.currentTask.automationType == 'BatchSendTask') {
+                                // 群发出错，任务状态设为“中断”
+                                batchSendTaskSuspend({
+                                    uuids: [state.batchSendTaskDetail.uuid]
+                                })
+                            }
                             dispatch('clearTask')
                             Message({
                                 message: arg.err.message,
@@ -134,19 +163,7 @@ const actions = {
                                     }
                                 })
                             }
-                            state.currentTask = state.taskQueue.shift();
-                            state.articleLink = state.currentTask.contentUrl;
-                            if (state.currentTask.externalUser.mobile) {
-                                dispatch('openChat', state.currentTask)
-                            } else {
-                                dispatch('clearTask')
-                                Message({
-                                    message: "请为群发客户设置完手机号后再试",
-                                    type: 'error'
-                                })
-                            }
-                        }).catch(e => {
-                            dispatch('clearTask')
+                            state.taskQueue.shift();
                         })
                     })
                     $ipcRenderer.on('reply-AddCustomerByMobiles', (event, arg) => {
@@ -186,8 +203,7 @@ const actions = {
                     }).catch(err => {
                         return false
                     })
-                }
-                else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
+                } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
                     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
                         title: "确认发送",
                         cancelButtonText: '放弃'
@@ -199,11 +215,9 @@ const actions = {
                     }).catch(err => {
                         return false
                     })
-                }
-                else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
+                } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
                     state.isOpenedSidebar = true;
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
-                        console.log('onReady')
                         dispatch('sendChaoyingMessage')
                     }
                     if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
@@ -222,19 +236,16 @@ const actions = {
                             state.sendMsgContent_autorep_text = null
                         })
                     }
-                }
-                else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
+                } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
                     $ipcRenderer.send('inputEnter', {
                         x: state.mouseX,
                         y: state.mouseY
                     })
-                }
-                else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID') {
+                } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID') {
                     getExternalUserDetail(data.properties.userId).then(res => {
                         console.log(state.currentTask.externalUser.name)
                         if (state.currentTask.externalUser.name == res.externalUserDetail.externalUserName) {
                             console.log('直接发送')
-
                             dispatch('sendChaoyingMessage')
                         } else {
                             console.log("打开openchat")
@@ -253,18 +264,13 @@ const actions = {
                             }
                         }
                     })
-                }
-                else if (data.type == 'ADDTASK') {
+                } else if (data.type == 'ADDTASK') {
                     dispatch('listSelectMobil', data)
-                }
-                else if (data.type == 'AUTOREP') {
-
-
+                } else if (data.type == 'AUTOREP') {
                     if (data.properties.content) {
                         state.sendMsgContent_autorep_text = {
                             msgtype: "text",
-                            text:
-                            {
+                            text: {
                                 content: data.properties.content,
                             }
                         }
@@ -272,24 +278,21 @@ const actions = {
                     if (data.properties.autoReplyType == 'IMAGE') {
                         state.sendMsgContent_autorep_media = {
                             msgtype: "image",
-                            image:
-                            {
+                            image: {
                                 mediaid: data.properties.mediaId,
                             }
                         }
                     } else if (data.properties.autoReplyType == 'FILE') {
                         state.sendMsgContent_autorep_media = {
                             msgtype: "file",
-                            file:
-                            {
+                            file: {
                                 mediaid: data.properties.mediaId,
                             }
                         }
                     } else if (data.properties.autoReplyType == 'ARTICLE') {
                         state.sendMsgContent_autorep_media = {
                             msgtype: "news",
-                            news:
-                            {
+                            news: {
                                 link: data.properties.link, //H5消息页面url 必填
                                 title: data.properties.title, //H5消息标题
                                 desc: data.properties.desc, //H5消息摘要
@@ -297,13 +300,11 @@ const actions = {
                             }
                         }
                     }
-                    if (isElectron()) {
-                        $ipcRenderer.send('openChat', {
-                            mobile: data.properties.mobile,
-                            x: state.mouseX,
-                            y: state.mouseY,
-                        })
-                    }
+
+                    state.taskQueue.push({
+                        automationType: "AUTOREP",
+                        mobile: data.properties.mobile
+                    })
                 }
             }
             state.sock.onclose = function () {
@@ -336,7 +337,6 @@ const actions = {
                 })
                 dispatch('clearTask')
             }
-
         })
     },
     sendMessage({ state, dispatch }, list) {
@@ -387,16 +387,19 @@ const actions = {
             }
         }
 
-
         // 添加到任务队列中
+        let newList = list.map(obj => {
+            return {
+                ...obj,
+                automationType: 'BatchSendTask'
+            }
+        })
+        state.taskQueue.push(...newList)
 
-        state.taskQueue.push(...list)
-        // state.currentTask = state.taskQueue.shift()
-
-        if (state.currentTask) {
-            state.articleLink = state.currentTask.contentUrl;
-            dispatch('openChat')
-        }
+        // if (state.currentTask) {
+        //     state.articleLink = state.currentTask.contentUrl;
+        //     dispatch('openChat')
+        // }
     },
 
     openChat({ state, dispatch }) {
@@ -408,7 +411,7 @@ const actions = {
         // 每次群发只需判断当前聊天框状态(即只需判断一次)
         if (!state.isCheckOpenedSidebar) {
             console.log('检查侧边栏是否在线')
-            state.isOpenedSidebar = false
+            state.isOpenedSidebar = false;
             isOnline('SIDEBAR').then(res => {
                 console.log('是否在线：' + res)
                 state.isCheckOpenedSidebar = true;
@@ -448,8 +451,6 @@ const actions = {
                                 type: 'error'
                             })
                             dispatch('clearTask')
-                        } else {
-                            console.log('111111')
                         }
                     }, 10000);
                 }
@@ -494,8 +495,9 @@ const actions = {
         state.isCheckOpenedSidebar = false
         state.isOpenedSidebar = false
         state.isChangeState = false
-        state.loadingInstance.close();
-
+        if (state.loadingInstance) {
+            state.loadingInstance.close();
+        }
         // 告诉工作台刷新一下列表页
         sendCustomizeMessage({
             toUserId: state.batchSendTaskDetail.sender.userId,

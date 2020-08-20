@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-08-20 11:13:30
+ * @LastEditTime: 2020-08-20 17:07:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\api\message.js
@@ -118,9 +118,9 @@ export const getRoleTemplatePermissionList = (payload) => {
  * 获取所有权限树状结构
  * @param {object} payload 
  */
-export const getPermissionListTree = (payload) => {
+export const getPermissionListGroup = (payload) => {
     return request({
-        url: '/permission/listTree',
+        url: '/permission/listGroup',
         method: 'get',
         params: payload
     })

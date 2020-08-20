@@ -355,7 +355,9 @@ export default {
         .join(',')
       this.$store
         .dispatch('user/userMaintain', { userList })
-        .then(() => {})
+        .then(() => {
+          this.initDataList(this.query)
+        })
         .catch((err) => {
           console.error(err)
           this.$message({

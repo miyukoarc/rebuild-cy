@@ -70,8 +70,8 @@ export default {
   },
   mounted() {
     if (this.tenantId) {
-        console.log(this.tenantId)
-    //   this.getQrCode(this.tenantId, 'browser')
+      console.log(this.tenantId)
+      //   this.getQrCode(this.tenantId, 'browser')
     }
     if (this.$isElectron()) {
       const ipcRenderer = window.electron.ipcRenderer
@@ -143,15 +143,15 @@ export default {
 
         this.loading = true
 
-        if (this.$isElectron()) {
-          const ipcRenderer = window.electron.ipcRenderer
-          ipcRenderer.send('qrcode-window', this.tenantId)
+        // if (this.$isElectron()) {
+        //   const ipcRenderer = window.electron.ipcRenderer
+        //   ipcRenderer.send('qrcode-window', this.tenantId)
 
-          this.loading = false
-        } else {
-          this.getQrCode(tenantId, 'browser')
-          this.loading = false
-        }
+        //   this.loading = false
+        // } else {
+        this.getQrCode(tenantId, 'browser')
+        this.loading = false
+        // }
       } else {
         this.$message({
           type: 'warning',
