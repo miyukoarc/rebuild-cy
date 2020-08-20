@@ -140,7 +140,7 @@ export default {
       this.$store
         .dispatch('media/getArticleDetail', uuid)
         .then((res) => {
-          const {
+          let {
             imgId,
             imgUrl,
             articleContent,
@@ -149,9 +149,13 @@ export default {
             matchFormat,
             toTags,
           } = res
-          this.form.tagUuids = res.toTags.map((item) => {
+
+          if(!Object.keys(toTags).length){
+              toTags = []
+          }
+          this.form.tagUuids = toTags.map((item) => {
             return item.uuid
-          })
+          })||[]
           const groupUuid = res?.mediaGroup?.uuid
           this.form.imgId = imgId
           this.coverUrl = imgUrl
