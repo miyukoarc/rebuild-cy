@@ -21,8 +21,8 @@
             size="small"
             type="primary"
             :popAuth="true"
-            :auth="'mediamedia_add'"
-            v-permission="'mediamedia_add'"
+            :auth="'media,media_add'"
+            v-permission="'media,media_add'"
           >选取文件</el-t-button>
         </el-upload>
       </el-form-item>

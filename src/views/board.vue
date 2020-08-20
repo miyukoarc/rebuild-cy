@@ -8,8 +8,7 @@
         :code="item.code"
         :deps="item.deps"
         v-model="use[index]"
-        @click="handleUnionCheck"
-
+        @change="handleUnionCheck"
       >12312</union-checkbox>
       <!-- <union-checkbox
         :code="'media_add'"
