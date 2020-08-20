@@ -521,68 +521,51 @@ const actions = {
     },
 
     openChat_autorep({ state, dispatch }) {
-        if (!state.isCheckOpenedSidebar) {
-            console.log('检查侧边栏是否在线')
-            state.isOpenedSidebar = false;
-            isOnline('SIDEBAR').then(res => {
-                console.log('是否在线：' + res)
-                state.isCheckOpenedSidebar = true;
-                // 这是在线情况
-                if (res) {
-                    console.log("请问你打开的是谁的页面")
-                    sendCustomizeMessage({
-                        toUserId: state.currentTask.toUserId,
-                        clientGroup: "SIDEBAR",
-                        properties: {
-                            code: 'WHOSE_WINDOW_DO_YO_OPEN_AUTOREP'
-                        }
+        console.log('检查侧边栏是否在线')
+        state.isOpenedSidebar = false;
+        isOnline('SIDEBAR').then(res => {
+            console.log('是否在线：' + res)
+            state.isCheckOpenedSidebar = true;
+            // 这是在线情况
+            if (res) {
+                console.log("请问你打开的是谁的页面")
+                sendCustomizeMessage({
+                    toUserId: state.currentTask.toUserId,
+                    clientGroup: "SIDEBAR",
+                    properties: {
+                        code: 'WHOSE_WINDOW_DO_YO_OPEN_AUTOREP'
+                    }
+                })
+            }
+            // 不在线
+            else {
+                if (isElectron() && state.currentTask.mobile) {
+                    console.log('打开侧边栏了')
+                    $ipcRenderer.send('openChat', {
+                        mobile: state.currentTask.mobile.split(',')[0],
+                        x: state.mouseX,
+                        y: state.mouseY,
                     })
+                } else {
+                    Message({
+                        message: '请为客户设置手机号后重试',
+                        type: 'error'
+                    })
+                    dispatch('clearTask')
                 }
-                // 不在线
-                else {
-                    if (isElectron() && state.currentTask.mobile) {
-                        console.log('打开侧边栏了')
-                        $ipcRenderer.send('openChat', {
-                            mobile: state.currentTask.mobile.split(',')[0],
-                            x: state.mouseX,
-                            y: state.mouseY,
-                        })
-                    } else {
+
+                console.log('开始倒计时')
+                setTimeout(() => {
+                    if (state.isOpenedSidebar == false) {
                         Message({
-                            message: '请为客户设置手机号后重试',
+                            message: '请打开侧边栏后重试',
                             type: 'error'
                         })
                         dispatch('clearTask')
                     }
-
-                    console.log('开始倒计时')
-                    setTimeout(() => {
-                        if (state.isOpenedSidebar == false) {
-                            Message({
-                                message: '请打开侧边栏后重试',
-                                type: 'error'
-                            })
-                            dispatch('clearTask')
-                        }
-                    }, 10000);
-                }
-            })
-        } else {
-            console.log('检查过一次了')
-            if (isElectron() && state.currentTask.mobile) {
-                $ipcRenderer.send('openChat', {
-                    mobile: state.currentTask.mobile.split(',')[0],
-                    x: state.mouseX,
-                    y: state.mouseY,
-                })
-            } else {
-                Message({
-                    message: '请为客户设置手机号后重试',
-                    type: 'error'
-                })
-                dispatch('clearTask')
+                }, 10000);
             }
-        }
+        })
     },
 
     sendChaoyingMessage({ state }) {
