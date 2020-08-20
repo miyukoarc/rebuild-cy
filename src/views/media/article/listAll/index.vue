@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :hasExport="false">
+      <tool-bar :hasExport="false" :hasRefresh="true" @handleRefresh="handleRefresh">
         <div slot="right">
           <el-t-button
             type="primary"
@@ -74,7 +74,7 @@ import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-  name: 'media_browsing_Records',
+  name: 'media_article_listAll',
   inject: ['reload'],
   components: {
     CustomerPagination,
