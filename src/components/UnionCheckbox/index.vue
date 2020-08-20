@@ -32,7 +32,8 @@ export default {
       return this.$listeners
     },
     ...mapState({
-        dependMap: state => state.unionCheckbox.dependMap
+        dependMap: state => state.unionCheckbox.dependMap,
+        dependencyMap: state => state.unionCheckbox.dependencyMap
     })
   },
   created() {
@@ -42,6 +43,12 @@ export default {
     if (deps) {
       deps = this.grouping(deps)
       this.$store.commit('unionCheckbox/SET_DEPENDMAP', { code, deps })
+    }
+
+    if(!this.dependencyMap[this.module]){
+        console.log('不存在模块')
+    }else{
+        
     }
 
     // console.log(arr)

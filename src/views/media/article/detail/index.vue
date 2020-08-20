@@ -77,7 +77,7 @@ import TagMultiSelect from '@/components/TagMultiSelect'
 import defaultCover from '@/assets/2.jpg'
 import { mapState } from 'vuex'
 export default {
-    name: 'media_article_detail',
+  name: 'media_article_detail',
   components: {
     Tinymce,
     MDinput,
@@ -111,6 +111,8 @@ export default {
           this.$set(this.form, 'uuid', uuid)
           this.initDetail(uuid)
         } else {
+          console.log('create')
+          Object.assign(this.$data, this.$options.data())
           this.mode = 'CREATE'
         }
       },

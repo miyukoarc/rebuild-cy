@@ -2,7 +2,8 @@
   const state = {
       dependMap:{
 
-      }
+      },
+      dependencyMap: {}
 
   }
   const mutations = {
@@ -10,6 +11,11 @@
           const {code,deps} = payload
           console.log(payload)
           state.dependMap[code] = deps
+        //   Object.assign(state,)
+          console.log(deps)
+      },
+      SET_DEPENDENCY(state,payload){
+          
       }
   }
   
