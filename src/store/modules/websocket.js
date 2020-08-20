@@ -36,7 +36,7 @@ const state = {
     mouseY: null,
 
     selectMobiles: [],
-    selectMobile: null,
+    addTaskCount: 0,
     articleLink: null,
 
     isCheckOpenedSidebar: false,// 只需要第一次打开侧边栏检查即可
@@ -50,7 +50,7 @@ const mutations = {
 }
 
 const actions = {
-    createWebsocket({ state, commit, dispatch, rootState }) {
+    createWebsocket({ state, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
             // 自动化任务队列，自动回复的优先级最高，群发和批量添加好友按时间先后排
             class Queue extends Array {
@@ -67,7 +67,6 @@ const actions = {
                     }
                 }
                 shift() {
-                    // 当前
                     state.currentTask = super.shift();
                     if (typeof state.currentTask == 'undefined') {
                         // 任务队列全部执行完成，清空列表
@@ -80,21 +79,23 @@ const actions = {
                         }
                         // 自动回复队列
                         else if (state.currentTask.automationType == 'AUTOREP') {
-                            if (isElectron()) {
-                                $ipcRenderer.send('openChat', {
-                                    mobile: state.currentTask.mobile,
-                                    x: state.mouseX,
-                                    y: state.mouseY,
-                                })
-                            }
+                            dispatch('openChat_autorep')
                         }
                         // 批量添加好友队列
                         else if (state.currentTask.automationType == 'ADDTASK') {
-
+                            $ipcRenderer.send('AddCustomerByMobiles', {
+                                mobiles: [state.currentTask.mobile],
+                                x: state.mouseX,
+                                y: state.mouseY,
+                            })
                         }
                         return state.currentTask;
                     }
                 }
+                // unshift() {
+                //     console.log("自定义的unshift");
+                //     super.unshift();
+                // }
             }
 
             state.taskQueue = new Queue()
@@ -145,47 +146,57 @@ const actions = {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
                         }
-                        if (state.taskQueue.length <= 0) {
-                            state.mouseX = null
-                            state.mouseY = null
-                            state.loadingInstance.close();
+                        if (state.currentTask.automationType == 'BatchSendTask') {
+                            // 设置状态为已发送
+                            sendResultHasSend({ uuids: [state.currentTask.uuid] }).then(() => {
+                                // 告诉工作台刷新一下列表页，只执行一次即可
+                                if (!state.isChangeState) {
+                                    state.isChangeState = true
+                                    sendCustomizeMessage({
+                                        toUserId: state.batchSendTaskDetail.sender.userId,
+                                        clientGroup: "WORKSPACE",
+                                        properties: {
+                                            code: 'REFRESH_TASKLIST'
+                                        }
+                                    })
+                                }
+                            })
                         }
-                        // 发送给下一个人
-                        sendResultHasSend({ uuids: [state.currentTask.uuid] }).then(() => {
-                            // 告诉工作台刷新一下列表页，只执行一次即可
-                            if (!state.isChangeState) {
-                                state.isChangeState = true
-                                sendCustomizeMessage({
-                                    toUserId: state.batchSendTaskDetail.sender.userId,
-                                    clientGroup: "WORKSPACE",
-                                    properties: {
-                                        code: 'REFRESH_TASKLIST'
-                                    }
-                                })
-                            }
-                            state.taskQueue.shift();
-                        })
+
+                        // 执行队列中的下一个任务
+                        state.taskQueue.shift();
                     })
                     $ipcRenderer.on('reply-AddCustomerByMobiles', (event, arg) => {
-                        console.log('reply-AddCustomerByMobiles', arg)
                         if (arg.err) {
-                            dispatch('clearTask')
+                            console.log('reply-AddCustomerByMobiles', arg)
+                            let payload = state.selectMobiles.slice(0, state.addTaskCount).map(obj => {
+                                return {
+                                    addResult: "SUCCESS",
+                                    uuid: obj.uuid
+                                }
+                            })
+                            batchAddTaskHandleTask(payload)
                             Message({
                                 message: arg.err.message,
                                 type: 'error'
                             })
-                            return;
-                        }
-                        let payload = [];
-                        state.selectMobiles.map(obj => {
-                            payload.push({
-                                addResult: "SUCCESS",
-                                uuid: obj.uuid
-                            })
-                        })
-                        batchAddTaskHandleTask(payload).then().catch(() => {
                             dispatch('clearTask')
-                        })
+                            return;
+                        } else {
+                            state.addTaskCount++;
+                            if (state.selectMobiles.length == state.addTaskCount) {
+                                let payload = state.selectMobiles.map(obj => {
+                                    return {
+                                        addResult: "SUCCESS",
+                                        uuid: obj.uuid
+                                    }
+                                })
+                                batchAddTaskHandleTask(payload)
+                                state.selectMobiles = [];
+                                state.addTaskCount = 0;
+                            }
+                            state.taskQueue.shift();
+                        }
                     })
                 }
             }
@@ -216,6 +227,7 @@ const actions = {
                         return false
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
+                    // 侧边栏已打开
                     state.isOpenedSidebar = true;
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
                         dispatch('sendChaoyingMessage')
@@ -237,6 +249,7 @@ const actions = {
                         })
                     }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
+                    console.log('CONTENT_READY')
                     $ipcRenderer.send('inputEnter', {
                         x: state.mouseX,
                         y: state.mouseY
@@ -252,6 +265,45 @@ const actions = {
                             if (state.currentTask.externalUser.mobile) {
                                 $ipcRenderer.send('openChat', {
                                     mobile: state.currentTask.externalUser.mobile.split(',')[0],
+                                    x: state.mouseX,
+                                    y: state.mouseY,
+                                })
+                            } else {
+                                Message({
+                                    message: '请先填写对面手机号便于查找用户',
+                                    type: 'error'
+                                })
+                                dispatch('clearTask')
+                            }
+                        }
+                    })
+                } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID_AUTOREP') {
+                    getExternalUserDetail(data.properties.userId).then(res => {
+                        console.log(state.currentTask.toUserId)
+                        if (state.currentTask.toUserId == res.externalUserDetail.externalUserName) {
+                            console.log('直接发送')
+
+                            if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
+                                console.log('sendMsgContent_autorep_media')
+                                sendChaoyingMessage({
+                                    sendChatMessage: state.sendMsgContent_autorep_media
+                                }).then(() => {
+                                    state.sendMsgContent_autorep_media = null
+                                })
+                            }
+                            if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
+                                console.log('sendMsgContent_autorep_text')
+                                sendChaoyingMessage({
+                                    sendChatMessage: state.sendMsgContent_autorep_text
+                                }).then(() => {
+                                    state.sendMsgContent_autorep_text = null
+                                })
+                            }
+                        } else {
+                            console.log("打开openchat")
+                            if (state.currentTask.mobile) {
+                                $ipcRenderer.send('openChat', {
+                                    mobile: state.currentTask.mobile.split(',')[0],
                                     x: state.mouseX,
                                     y: state.mouseY,
                                 })
@@ -303,7 +355,8 @@ const actions = {
 
                     state.taskQueue.push({
                         automationType: "AUTOREP",
-                        mobile: data.properties.mobile
+                        mobile: data.properties.mobile,
+                        toUserId: data.toUserId
                     })
                 }
             }
@@ -395,11 +448,6 @@ const actions = {
             }
         })
         state.taskQueue.push(...newList)
-
-        // if (state.currentTask) {
-        //     state.articleLink = state.currentTask.contentUrl;
-        //     dispatch('openChat')
-        // }
     },
 
     openChat({ state, dispatch }) {
@@ -472,6 +520,71 @@ const actions = {
         }
     },
 
+    openChat_autorep({ state, dispatch }) {
+        if (!state.isCheckOpenedSidebar) {
+            console.log('检查侧边栏是否在线')
+            state.isOpenedSidebar = false;
+            isOnline('SIDEBAR').then(res => {
+                console.log('是否在线：' + res)
+                state.isCheckOpenedSidebar = true;
+                // 这是在线情况
+                if (res) {
+                    console.log("请问你打开的是谁的页面")
+                    sendCustomizeMessage({
+                        toUserId: state.currentTask.toUserId,
+                        clientGroup: "SIDEBAR",
+                        properties: {
+                            code: 'WHOSE_WINDOW_DO_YO_OPEN_AUTOREP'
+                        }
+                    })
+                }
+                // 不在线
+                else {
+                    if (isElectron() && state.currentTask.mobile) {
+                        console.log('打开侧边栏了')
+                        $ipcRenderer.send('openChat', {
+                            mobile: state.currentTask.mobile.split(',')[0],
+                            x: state.mouseX,
+                            y: state.mouseY,
+                        })
+                    } else {
+                        Message({
+                            message: '请为客户设置手机号后重试',
+                            type: 'error'
+                        })
+                        dispatch('clearTask')
+                    }
+
+                    console.log('开始倒计时')
+                    setTimeout(() => {
+                        if (state.isOpenedSidebar == false) {
+                            Message({
+                                message: '请打开侧边栏后重试',
+                                type: 'error'
+                            })
+                            dispatch('clearTask')
+                        }
+                    }, 10000);
+                }
+            })
+        } else {
+            console.log('检查过一次了')
+            if (isElectron() && state.currentTask.mobile) {
+                $ipcRenderer.send('openChat', {
+                    mobile: state.currentTask.mobile.split(',')[0],
+                    x: state.mouseX,
+                    y: state.mouseY,
+                })
+            } else {
+                Message({
+                    message: '请为客户设置手机号后重试',
+                    type: 'error'
+                })
+                dispatch('clearTask')
+            }
+        }
+    },
+
     sendChaoyingMessage({ state }) {
         console.log(state.batchSendTaskDetail)
         if (state.batchSendTaskDetail.media.type == 'ARTICLE' && state.sendMsgContent) {
@@ -490,22 +603,27 @@ const actions = {
         state.mouseX = null
         state.mouseY = null
         state.selectMobiles = []
-        state.selectMobile = null
+        state.addTaskCount = 0
         state.articleLink = null
         state.isCheckOpenedSidebar = false
         state.isOpenedSidebar = false
         state.isChangeState = false
+
         if (state.loadingInstance) {
             state.loadingInstance.close();
         }
-        // 告诉工作台刷新一下列表页
-        sendCustomizeMessage({
-            toUserId: state.batchSendTaskDetail.sender.userId,
-            clientGroup: "WORKSPACE",
-            properties: {
-                code: 'REFRESH_TASKLIST'
-            }
-        })
+
+        if (state.batchSendTaskDetail && state.batchSendTaskDetail.sender) {
+            // 告诉工作台刷新一下列表页
+            sendCustomizeMessage({
+                toUserId: state.batchSendTaskDetail.sender.userId,
+                clientGroup: "WORKSPACE",
+                properties: {
+                    code: 'REFRESH_TASKLIST'
+                }
+            })
+        }
+
     },
 
     listSelectMobil({ dispatch }, data) {
@@ -516,16 +634,15 @@ const actions = {
 
     AddCustomerByMobiles({ state }, list) {
         if (isElectron()) {
-            state.selectMobiles = list
-            let mobiles = [];
-            list.map(obj => {
-                mobiles.push(obj.potentialCustomer.mobile)
+            state.selectMobiles.push(...list)
+            let addTasks = list.map(obj => {
+                return {
+                    uuid: obj.uuid,
+                    mobile: obj.potentialCustomer.mobile,
+                    automationType: "ADDTASK"
+                }
             })
-            $ipcRenderer.send('AddCustomerByMobiles', {
-                mobiles: mobiles,
-                x: state.mouseX,
-                y: state.mouseY,
-            })
+            state.taskQueue.push(...addTasks)
         }
     },
 }
