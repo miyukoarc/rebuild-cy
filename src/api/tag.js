@@ -1,10 +1,20 @@
+/*
+ * @Author: your name
+ * @Date: 2020-07-06 17:42:41
+ * @LastEditTime: 2020-08-20 11:22:56
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\api\property.js
+ * 标签管理接口 Tag Controller
+ */
+
 import request from '@/utils/request'
 
 /**
  * 公共标签列表
  * @param {object} payload
  */
-export const getTagList =(payload)=>{
+export const getTagList = (payload) => {
     return request({
         url: '/tag/listAll',
         method: 'get',
@@ -15,7 +25,7 @@ export const getTagList =(payload)=>{
 /**
  * 标签列表页数据
  */
-export const getListSelect =()=>{
+export const getListSelect = () => {
     return request({
         url: '/tag/listSelect',
         method: 'get',
@@ -27,7 +37,7 @@ export const getListSelect =()=>{
  * 我的标签列表
  * @param {object} payload 
  */
-export const getTagListMy =(payload)=>{
+export const getTagListMy = (payload) => {
     return request({
         url: '/tag/listMy',
         method: 'get',
@@ -39,7 +49,7 @@ export const getTagListMy =(payload)=>{
  * 添加标签包含是否审核
  * @param {object} payload 
  */
-export const addTagIsAudit=(payload)=>{
+export const addTagIsAudit = (payload) => {
     return request({
         url: '/tag/addTagIsAudit',
         method: 'post',
@@ -51,7 +61,7 @@ export const addTagIsAudit=(payload)=>{
  * 删除标签组包含是否审核
  * @param {object} payload 
  */
-export const deleteTagIsAudit=(payload)=>{
+export const deleteTagIsAudit = (payload) => {
     return request({
         url: '/tag/deleteTagIsAudit',
         method: 'post',
@@ -63,7 +73,7 @@ export const deleteTagIsAudit=(payload)=>{
  * 编辑标签包含是否审核
  * @param {object} payload 
  */
-export const updateTagIsAudit = (payload)=>{
+export const updateTagIsAudit = (payload) => {
     return request({
         url: '/tag/updateTagIsAudit',
         method: 'post',
@@ -87,7 +97,7 @@ export const updateTagIsAudit = (payload)=>{
  * 改变标签组序号
  * @param {*} payload 
  */
-export const updateTagSort = (payload)=>{
+export const updateTagSort = (payload) => {
     return request({
         url: '/tag/updateTagSort',
         method: 'post',

@@ -1,3 +1,13 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-24 10:23:46
+ * @LastEditTime: 2020-08-20 11:06:53
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\api\contactWay.js
+ * 远距离控制 Long Range Controller
+ */
+
 import request from '@/utils/request'
 
 /**
@@ -10,7 +20,6 @@ export const isOnline = (uuid) => {
         method: 'get'
     })
 }
-
 
 /**
  * 控制管理端发送批量任务
@@ -47,4 +56,3 @@ export const sendCustomizeMessage = (payload) => {
         data: payload
     })
 }
-

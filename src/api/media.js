@@ -1,3 +1,13 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-24 10:23:46
+ * @LastEditTime: 2020-08-20 11:08:24
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\api\contactWay.js
+ * 素材管理 Media Controller
+ */
+
 import request from '@/utils/request'
 import qs from 'qs'
 /**
@@ -22,7 +32,6 @@ export const addMedia = (payload) => {
         data: payload
     })
 }
-
 
 /**
  * 新建素材包含是否审核
@@ -55,7 +64,6 @@ export const addArticleIsAudit = (payload) => {
     })
 }
 
-
 /**
  * 通过id查询的文章详情页
  * @param {string} uuid
@@ -66,7 +74,6 @@ export const getArticleDetail = (uuid) => {
         method: 'get'
     })
 }
-
 
 // /**
 //  * 通过id查询的文章详情页
@@ -79,7 +86,6 @@ export const getArticleDetail = (uuid) => {
 //     })
 // }
 
-
 /**
  * 获取文章列表
  */
@@ -89,7 +95,6 @@ export const getArticleListSelect = () => {
         method: 'get'
     })
 }
-
 
 /**
  * 添加文章
@@ -114,7 +119,6 @@ export const deleteArticle = (payload) => {
         data: payload
     })
 }
-
 
 /**
  * 文章列表
@@ -149,11 +153,11 @@ export const browsingRecords = (payload) => {
     return request({
         url: '/media/browsingRecords/' + payload.uuid,
         method: 'get',
-        params: {...payload.data }
+        params: {
+            ...payload.data
+        }
     })
 }
-
-
 
 /**
  * 删除
@@ -167,8 +171,6 @@ export const deleteMedia = (payload) => {
     })
 }
 
-
-
 /**
  * 获取图片文件url
  * @param {string} payload
@@ -180,7 +182,6 @@ export const deleteMedia = (payload) => {
 //         data: payload
 //     })
 // }
-
 
 /**
  * 素材列表
@@ -206,7 +207,6 @@ export const getArticleListAll = (payload) => {
     })
 }
 
-
 /**
  * 删除素材是否够需要审核
  * @param {string} payload
@@ -218,7 +218,6 @@ export const deleteMediaIsAudit = (payload) => {
         data: payload
     })
 }
-
 
 /**
  * 批量删除素材是否够需要审核

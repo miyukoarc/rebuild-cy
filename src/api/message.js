@@ -1,13 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-08-07 16:05:09
+ * @LastEditTime: 2020-08-20 11:12:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\api\message.js
+ * 聊天留痕 Message Controller
  */
-import request from '@/utils/request'
 
+import request from '@/utils/request'
 
 /**
  * 群聊留痕
@@ -33,7 +34,6 @@ export const getMessageSingleListAll = (payload) => {
     })
 }
 
-
 /**
  * 单聊留痕 last
  * @param {object} payload 
@@ -45,7 +45,6 @@ export const getMessageSingleLastListAll = (payload) => {
         params: payload
     })
 }
-
 
 /**
  * 下载文件

@@ -1,11 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2020-07-06 17:42:41
- * @LastEditTime: 2020-07-21 16:28:09
+ * @LastEditTime: 2020-08-20 11:16:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\api\property.js
+ * 属性配置 Property Controller
  */
+
 import request from '@/utils/request'
 
 /**
@@ -19,7 +21,6 @@ export const propertyUpdateExternalUserProperty = (payload) => {
         data: payload
     })
 }
-
 
 /**
  * 新增客户属性配置

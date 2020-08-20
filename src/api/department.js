@@ -1,3 +1,13 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-24 10:23:46
+ * @LastEditTime: 2020-08-20 11:01:44
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\api\contactWay.js
+ * 部门管理 Department Controller
+ */
+
 import request from '@/utils/request'
 
 /**
@@ -74,7 +84,6 @@ export const getDepartmentListSelect = (payload) => {
     })
 }
 
-
 /**
  * 分配部门主管
  * @param {object} payload 
@@ -99,8 +108,6 @@ export const updateDepartment = (payload) => {
     })
 }
 
-
-
 /**
  * 更新部门
  * 
@@ -111,7 +118,6 @@ export const getDepartments = () => {
         method: 'get',
     })
 }
-
 
 /**
  * 分配部门
@@ -126,10 +132,10 @@ export const allocation = (payload) => {
 }
 
 /**
- * 
+ * 更改节点类型
  * @param {object} payload 
  */
-export const alterType = (payload)=>{
+export const alterType = (payload) => {
     return request({
         url: '/department/alterType',
         method: 'post',
@@ -137,13 +143,13 @@ export const alterType = (payload)=>{
     })
 }
 
-
-export const getListSelectTree = ()=>{
+/**
+ * 部门列表用于列表筛选
+ * @param {object} payload 
+ */
+export const getListSelectTree = () => {
     return request({
         url: '/department/listSelectTree',
-        method:'get',
+        method: 'get',
     })
 }
-
-
-

@@ -1,3 +1,13 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-24 10:23:46
+ * @LastEditTime: 2020-08-20 11:15:17
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\api\message.js
+ * 潜在客户管理接口 Potential Customer Controller
+ */
+
 import request from '@/utils/request'
 
 /**
@@ -12,7 +22,6 @@ export const getDetail = (uuid) => {
     })
 }
 
-
 /**
  * 分配潜在客户
  * @param {object} payload 
@@ -26,12 +35,10 @@ export const allocation = (payload) => {
     })
 }
 
-
 /**
  * 批量添加潜在客户，根据手机号
  * @param {object} payload 
  */
-
 export const batchAdd = (payload) => {
     return request({
         url: '/potentialCustomer/batchAdd',
@@ -40,12 +47,10 @@ export const batchAdd = (payload) => {
     })
 }
 
-
 /**
  * 删除潜在客户
  * @param {object} payload 
  */
-
 export const deletePotentialCustomer = (payload) => {
     return request({
         url: '/potentialCustomer/delete',
@@ -58,7 +63,6 @@ export const deletePotentialCustomer = (payload) => {
  * 更新潜在客户
  * @param {object} payload 
  */
-
 export const potentialCustomerUpdate = (payload) => {
     return request({
         url: '/potentialCustomer/update',
@@ -67,12 +71,10 @@ export const potentialCustomerUpdate = (payload) => {
     })
 }
 
-
 /**
  * 所有潜在客户列表
  * @param {object} payload 
  */
-
 export const getList = (payload) => {
     return request({
         url: '/potentialCustomer/listAll',
@@ -81,12 +83,10 @@ export const getList = (payload) => {
     })
 }
 
-
 /**
  * 我的潜在客户列表
  * @param {object} payload 
  */
-
 export const getListMy = (payload) => {
     return request({
         url: '/potentialCustomer/listMy',
@@ -94,7 +94,6 @@ export const getListMy = (payload) => {
         params: payload
     })
 }
-
 
 /**
  * 分配潜在客户
@@ -119,6 +118,7 @@ export const batchAddTask = (payload) => {
         data: payload
     })
 }
+
 /**
  * 取消批量添加好友任务
  * @param {object} payload 

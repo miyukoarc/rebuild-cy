@@ -1,11 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2020-07-17 23:18:57
- * @LastEditTime: 2020-08-03 16:45:09
+ * @LastEditTime: 2020-08-20 10:56:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\api\automatic.js
+ * 自动回复管理接口 Automatic Controller
  */
+
 import requset from '@/utils/request'
 
 /**
@@ -20,7 +22,6 @@ export const getListAll = (payload) => {
     })
 }
 
-
 /**
  * 添加自动回复
  * @param {object} payload 
@@ -32,7 +33,6 @@ export const add = (payload) => {
         data: payload
     })
 }
-
 
 /**
  * 删除自动回复

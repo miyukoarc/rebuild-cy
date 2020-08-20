@@ -1,3 +1,13 @@
+/*
+ * @Author: your name
+ * @Date: 2020-08-10 14:32:48
+ * @LastEditTime: 2020-08-20 10:59:04
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\api\auth.js
+ * 批量发送任务管理 Batch Send Task Controller
+ */
+
 import request from '@/utils/request'
 
 
@@ -12,7 +22,6 @@ export const getBatchSendTaskDetail = (payload) => {
     })
 }
 
-
 /**
  * 添加企业的群发消息任务
  * @param {object} payload 
@@ -24,7 +33,6 @@ export const add = (payload) => {
         data: payload
     })
 }
-
 
 /**
  * 添加企业的群发消息任务包含是否审核
@@ -51,7 +59,6 @@ export const batchSendTaskSuspend = (payload) => {
     })
 }
 
-
 /**
  * 全部任务
  * @param {object} payload 
@@ -64,7 +71,6 @@ export const getBatchSendTaskListAll = (payload) => {
     })
 }
 
-
 /**
  * 群发任务结果列表
  * @param {object} payload 
@@ -76,7 +82,6 @@ export const getListBatchSendTaskResult = (payload) => {
         params: payload
     })
 }
-
 
 /**
  * 我的群发任务

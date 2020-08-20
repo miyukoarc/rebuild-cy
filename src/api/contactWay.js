@@ -1,11 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-08-06 15:27:35
+ * @LastEditTime: 2020-08-20 10:59:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\api\contactWay.js
+ * 渠道管理接口 Contact Way Controller
  */
+
 import request from '@/utils/request'
 
 /**
@@ -60,16 +62,17 @@ export const getList = (payload) => {
  * @param {object} payload 
  */
 export const contactWayUpdate = (payload) => {
-        return request({
-            url: '/contactWay/update',
-            method: 'post',
-            data: payload
-        })
-    }
-    /**
-     * 默认欢迎语
-     * @param {object} payload 
-     */
+    return request({
+        url: '/contactWay/update',
+        method: 'post',
+        data: payload
+    })
+}
+
+/**
+ * 默认欢迎语
+ * @param {object} payload 
+ */
 export const contactWayEditDefaultWelcome = (payload) => {
     return request({
         url: '/contactWay/editDefaultWelcome',

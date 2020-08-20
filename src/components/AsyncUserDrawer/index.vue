@@ -75,7 +75,7 @@
     <div class="text-align-center" v-show="total>1">
       <span class="font-exs color-info">共{{total}}人</span>
       <el-button v-if="users.length>2" type="text" size="mini" @click="curly=!curly">
-        展开
+        <span>{{curly?'展开':'收起'}}</span>
         <i :class="[curly?'el-icon-caret-bottom':'el-icon-caret-top']"></i>
       </el-button>
     </div>

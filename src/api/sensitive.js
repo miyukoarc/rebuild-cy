@@ -1,5 +1,14 @@
-import request from '@/utils/request'
+/*
+ * @Author: your name
+ * @Date: 2020-07-06 17:42:41
+ * @LastEditTime: 2020-08-20 11:21:41
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\api\property.js
+ * 风控管理 Sensitive Controller
+ */
 
+import request from '@/utils/request'
 
 /**
  * 添加敏感词
@@ -37,8 +46,6 @@ export const update = (payload) => {
     })
 }
 
-
-
 /**
  * 权限审核列表
  * @param {object} payload 
@@ -50,7 +57,6 @@ export const getAuditPermissionlistAll = (payload) => {
         params: payload
     })
 }
-
 
 /**
  * 群发审核列表
@@ -64,9 +70,6 @@ export const getAuditBatchSendTaklistAll = (payload) => {
     })
 }
 
-
-
-
 /**
  * 审核列表
  * @param {object} payload 
@@ -78,7 +81,6 @@ export const getAuditList = (payload) => {
         params: payload
     })
 }
-
 
 /**
  * 标签审核列表
@@ -104,7 +106,6 @@ export const getSensitiveListAll = (payload) => {
     })
 }
 
-
 /**
  * 敏感词行为
  * @param {object} payload 
@@ -116,7 +117,6 @@ export const getActionListAll = (payload) => {
         params: payload
     })
 }
-
 
 /**
  * 敏感词操作记录
@@ -130,7 +130,6 @@ export const getLog = (payload) => {
     })
 }
 
-
 /**
  * 批量设置通知人
  * @param {object} payload 
@@ -142,7 +141,6 @@ export const updateNoticeUser = (payload) => {
         data: payload
     })
 }
-
 
 /**
  * 设置审核开启关闭
@@ -168,7 +166,6 @@ export const auditPropertylistAll = (payload) => {
     })
 }
 
-
 /**
  * 设置审核人
  * @param {object} payload 
@@ -180,7 +177,6 @@ export const setAuditUser = (payload) => {
         data: payload
     })
 }
-
 
 /**
  * 素材审核列表
@@ -198,19 +194,18 @@ export const auditMediaListAll = (payload) => {
  * 审核配置详情
  * @param {string} uuid 
  */
-export const auditDetail = (uuid)=>{
+export const auditDetail = (uuid) => {
     return request({
-        url: '/riskManagement/'+uuid,
+        url: '/riskManagement/' + uuid,
         method: 'get'
     })
 }
-
 
 /**
  * 审核配置详情
  * @param {string} uuid 
  */
-export const batchAuditPermissionConfirmation = (payload)=>{
+export const batchAuditPermissionConfirmation = (payload) => {
     return request({
         url: '/riskManagement/batchAuditPermissionConfirmation',
         method: 'post',
@@ -221,12 +216,9 @@ export const batchAuditPermissionConfirmation = (payload)=>{
 /**
  * 无权限获取权限列表
  */
-export const auditPropertylistSelect = ()=>{
+export const auditPropertylistSelect = () => {
     return request({
-        url:'/riskManagement/auditPropertylistSelect',
-        method: 'get'  
+        url: '/riskManagement/auditPropertylistSelect',
+        method: 'get'
     })
 }
-
-
-

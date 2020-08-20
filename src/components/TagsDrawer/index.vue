@@ -23,7 +23,7 @@
       <!-- </div> -->
       <div class="text-align-center" v-if="tags.length>2">
         <el-button type="text" size="mini" @click="curly=!curly">
-          展开
+          <span>{{curly?'展开':'收起'}}</span>
           <i :class="[curly?'el-icon-caret-bottom':'el-icon-caret-top']"></i>
         </el-button>
       </div>

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-05 18:04:25
- * @LastEditTime: 2020-07-06 15:16:34
+ * @LastEditTime: 2020-08-20 10:45:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\components\UserDrawer\index.vue
@@ -15,7 +15,7 @@
     <div class="text-align-center" v-if="total>2">
       <span class="font-exs color-info">等{{total}}人</span>
       <el-button type="text" size="mini" @click="curly=!curly">
-        展开
+        <span>{{curly?'展开':'收起'}}</span>
         <i :class="[curly?'el-icon-caret-bottom':'el-icon-caret-top']"></i>
       </el-button>
     </div>

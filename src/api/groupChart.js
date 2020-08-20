@@ -1,3 +1,13 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-24 10:23:46
+ * @LastEditTime: 2020-08-20 11:05:00
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\api\contactWay.js
+ * 群管理接口 Group Chat Controller
+ */
+
 import request from '@/utils/request'
 
 
@@ -7,11 +17,10 @@ import request from '@/utils/request'
  */
 export const getGroupChartDetail = (uuid) => {
     return request({
-        url: '/groupChart/'+uuid,
+        url: '/groupChart/' + uuid,
         method: 'get',
     })
 }
-
 
 /**
  * 所有客户群列表

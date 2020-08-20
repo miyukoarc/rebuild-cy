@@ -1,3 +1,13 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-24 10:23:46
+ * @LastEditTime: 2020-08-20 11:03:26
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\api\contactWay.js
+ * 客户的接口 External User Controller
+ */
+
 import request from '@/utils/request'
 
 /**
@@ -11,8 +21,6 @@ export const getExternalUserDetail = (uuid) => {
         method: 'get',
     })
 }
-
-
 
 /**
  * 添加客户标签
@@ -148,7 +156,6 @@ export const getRunWayList = (payload) => {
     })
 }
 
-
 /**
  * 所有流失客户列表
  * @param {object} payload 
@@ -173,8 +180,6 @@ export const update = (payload) => {
     })
 }
 
-
-
 /**
  * 获取群列表
  * @param {object} payload 
@@ -186,7 +191,6 @@ export const getListGroup = (payload) => {
         params: payload
     })
 }
-
 
 /**
  * 获取所有人列表
@@ -200,7 +204,6 @@ export const getListOwner = (payload) => {
     })
 }
 
-
 /**
  * 敏感词列表
  * @param {object} payload 
@@ -212,7 +215,6 @@ export const getSensitiveListAll = (payload) => {
         params: payload
     })
 }
-
 
 /**
  * 离职员工的客户列表
@@ -242,16 +244,17 @@ export const getGroupDetail = (payload) => {
  * @param {object} payload 
  */
 export const externalUserUpdateTag = (payload) => {
-        return request({
-            url: '/externalUser/updateTag',
-            method: 'post',
-            data: payload
-        })
-    }
-    /**
-     * 批量添加好友listMy
-     * @param {object} payload 
-     */
+    return request({
+        url: '/externalUser/updateTag',
+        method: 'post',
+        data: payload
+    })
+}
+
+/**
+ * 批量添加好友listMy
+ * @param {object} payload 
+ */
 export const getListMy = (payload) => {
     return request({
         url: '/batchAddTask/listMy',
