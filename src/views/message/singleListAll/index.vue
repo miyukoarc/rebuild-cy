@@ -316,7 +316,6 @@ export default {
       chatContentType: (state) => state.enum.chatContentType,
     }),
   },
-  activated() {},
   created() {
     let payload = {
       type: this.$route.query.type,

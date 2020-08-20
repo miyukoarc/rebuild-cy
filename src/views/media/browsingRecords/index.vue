@@ -141,7 +141,6 @@ export default {
       articleDetail: (state) => state.media.articleDetail,
     }),
   },
-  activated() {},
   created() {
     const uuid = this.$route?.params?.articleUuid
     this.articleUuid = this.$route?.params?.articleUuid

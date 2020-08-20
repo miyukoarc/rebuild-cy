@@ -273,7 +273,6 @@ export default {
       batchAddTaskState: (state) => state.enum.batchAddTaskState,
     }),
   },
-  activated() {},
   created() {
     this.query.uuid = this.$route.params.uuid
     this.initDetail(this.query.uuid)

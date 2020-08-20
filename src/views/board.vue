@@ -1,13 +1,22 @@
 <template>
   <div>
     <div>
-      <union-checkbox :code="'user_detail'" v-model="use" @change="handleUnionCheck">12312</union-checkbox>
+      <!-- <el-t-button>123</el-t-button> -->
       <union-checkbox
+        v-for="(item,index) in items"
+        :key="index"
+        :code="item.code"
+        :deps="item.deps"
+        v-model="use[index]"
+        @click="handleUnionCheck"
+
+      >12312</union-checkbox>
+      <!-- <union-checkbox
         :code="'media_add'"
         :deps="'media_detail,user_detail,user_edit'"
         v-model="uni"
         @change="handleUnionCheck"
-      >12312</union-checkbox>
+      >12312</union-checkbox>-->
     </div>
 
     <div>
@@ -120,8 +129,18 @@ export default {
   },
   data() {
     return {
-      use: '',
-      uni: '',
+      items: [
+        {
+          code: 'user_detail',
+          deps: '',
+        },
+        {
+          code: 'media_add',
+          deps: 'media_detail,user_detail,user_edit',
+        },
+      ],
+      use: ['', ''],
+      //   uni: '',
       multiSelects: [],
       selectTags: [84],
       result: [],

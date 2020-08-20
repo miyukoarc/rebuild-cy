@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'UnionCheckbox',
   props: {
@@ -24,9 +25,15 @@ export default {
   },
   computed: {
     event() {
-      //   console.log(this.$listeners)
+        console.log(this.$listeners)
+    //   if(this.$listeners.change){
+    //       console.log(this.code)
+    //   }
       return this.$listeners
     },
+    ...mapState({
+        dependMap: state => state.unionCheckbox.dependMap
+    })
   },
   created() {
     let { code, deps } = this
@@ -34,9 +41,9 @@ export default {
 
     if (deps) {
       deps = this.grouping(deps)
-
       this.$store.commit('unionCheckbox/SET_DEPENDMAP', { code, deps })
     }
+
     // console.log(arr)
   },
   methods: {

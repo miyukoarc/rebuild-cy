@@ -419,10 +419,6 @@ export default {
       }
     },
   },
-  activated() {
-    this.initData(this.$route.params.uuid)
-    // this.tempRoute = Object.assign({}, this.$route);
-  },
   created() {
     this.initData(this.$route.params.uuid)
   },

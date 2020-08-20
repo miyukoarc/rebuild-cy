@@ -148,7 +148,7 @@ export default {
       immediate: true,
     },
   },
-  activated() {},
+
   created() {
     if (this.$route.params.uuid) {
       this.initDetail(this.$route.params.uuid)

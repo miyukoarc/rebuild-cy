@@ -176,9 +176,6 @@ export default {
       page: (state) => state.sensitive.auditBatchSendTaskPage,
     }),
   },
-  activated() {
-    this.initDataList(this.query)
-  },
   created() {
     this.initDataList(this.query)
   },

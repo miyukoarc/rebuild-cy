@@ -108,9 +108,6 @@ export default {
       permissionMap: (state) => state.permission.permissionMap,
     }),
   },
-  activated() {
-    // this.initFilter()
-  },
   created() {
     this.initDataList(this.query)
   },

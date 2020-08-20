@@ -46,16 +46,16 @@
                     type="text"
                     size="mini"
                     :popAuth="true"
-                    :auth="'mediaGroup,mediaGroup_rename'"
-                    v-permission="'mediaGroup,mediaGroup_rename'"
+                    :auth="'media,media_mediaGroup_listAll'"
+                    v-permission="'media,media_mediaGroup_listAll'"
                     @click.stop.native="handleEditGroup(scope.$index)"
                   >修改</el-t-button>
                   <el-t-button
                     type="text"
                     size="mini"
                     :popAuth="true"
-                    :auth="'mediaGroup,mediaGroup_delete'"
-                    v-permission="'mediaGroup,mediaGroup_delete'"
+                    :auth="'media,media_deleteGroup'"
+                    v-permission="'media,media_deleteGroup'"
                     @click.stop.native="handleDeleteGroup(scope.$index)"
                   >删除</el-t-button>
                 </div>
@@ -202,7 +202,6 @@ export default {
       auditSetting: (state) => state.sensitive.auditSetting,
     }),
   },
-  activated() {},
   created() {
     this.initDataList()
   },
