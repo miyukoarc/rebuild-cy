@@ -208,7 +208,7 @@
         <el-form-item label="角色模板">
           <el-select multiple v-model="formRole.roleUuidSet">
             <el-option
-              v-for="item in alterRoleTemplates"
+              v-for="item in roleListSelect"
               :key="item.uuid"
               :value="item.uuid"
               :label="item.name"
@@ -336,26 +336,26 @@ export default {
         if (newVal == 'DEPT') {
           this.form.orgNode = false
           this.mode = 'NONE'
-          this.alterRoleTemplates = this.roleTemplates.filter((item) => {
-            return item.code.includes('DEPT')
-          })
+        //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+        //     return item.code.includes('DEPT')
+        //   })
           this.disabledValues = []
         }
         if (newVal == 'BRANCH') {
           //分公司初始化
           this.form.orgNode = true
           this.mode = 'SIMPLE'
-          this.alterRoleTemplates = this.roleTemplates.filter((item) => {
-            return item.code.includes('BRANCH')
-          })
+        //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+        //     return item.code.includes('BRANCH')
+        //   })
         }
         if (newVal == 'BUSINESS') {
           //营业部初始化
           this.form.orgNode = true
           this.mode = 'SIMPLE'
-          this.alterRoleTemplates = this.roleTemplates.filter((item) => {
-            return item.code.includes('BUSINESS')
-          })
+        //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+        //     return item.code.includes('BUSINESS')
+        //   })
 
           this.disabledValues = this.businessBanded
         }
@@ -374,6 +374,7 @@ export default {
       listSelect: (state) => state.department.listSelect, //list
       departmentList: (state) => state.department.departmentList, //tree
       roleTemplates: (state) => state.roleTemplate.listAll,
+      roleListSelect: state => state.roleListSelect
     }),
     parentUuid() {
       return this.form.parentUuid
@@ -400,7 +401,7 @@ export default {
   methods: {
     initData() {
       this.$store
-        .dispatch('roleTemplate/getListAll')
+        .dispatch('role/getRoleListSelect')
         .then(() => {})
         .catch((err) => {
           console.error(err)

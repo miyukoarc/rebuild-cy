@@ -103,12 +103,10 @@ export default {
     }),
   },
   created() {
-    console.log(this.departmentList)
     if (this.departmentList.length) {
       const arr = flattenTree(this.departmentList)
       const businessBanded = arr.filter(item=>{return item.type=='DEPT'||item.type=='BUSINESS'}).map(item=>{return item.uuid})
       this.businessBanded = businessBanded
-    //   console.log(arr,businessBanded)
     }
   },
   methods: {
