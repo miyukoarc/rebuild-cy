@@ -90,7 +90,7 @@ const actions = {
                         }
                         // 批量添加好友队列
                         else if (state.currentTask.automationType == 'ADDTASK') {
-                            
+
                         }
                         return state.currentTask;
                     }
