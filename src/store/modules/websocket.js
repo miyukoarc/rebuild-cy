@@ -279,8 +279,9 @@ const actions = {
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID_AUTOREP') {
                     getExternalUserDetail(data.properties.userId).then(res => {
-                        console.log(state.currentTask.toUserId)
-                        if (state.currentTask.toUserId == res.externalUserDetail.externalUserName) {
+                        console.log(state.currentTask.fromUser)
+                        console.log(res.externalUserDetail.externalUserName)
+                        if (state.currentTask.fromUser == res.externalUserDetail.externalUserName) {
                             console.log('直接发送')
 
                             if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
@@ -356,7 +357,8 @@ const actions = {
                     state.taskQueue.push({
                         automationType: "AUTOREP",
                         mobile: data.properties.mobile,
-                        toUserId: data.toUserId
+                        toUserId: data.toUserId,
+                        fromUser: data.properties.fromUser
                     })
                 }
             }
