@@ -73,12 +73,12 @@ export default {
       console.log(this.tenantId)
       //   this.getQrCode(this.tenantId, 'browser')
     }
-    if (this.$isElectron()) {
-      const ipcRenderer = window.electron.ipcRenderer
-      ipcRenderer.on('getUrl', (event, payload) => {
-        console.log(payload)
-      })
-    }
+    // if (this.$isElectron()) {
+    //   const ipcRenderer = window.electron.ipcRenderer
+    //   ipcRenderer.on('getUrl', (event, payload) => {
+    //     console.log(payload)
+    //   })
+    // }
   },
   methods: {
     getQrCode(id, target) {

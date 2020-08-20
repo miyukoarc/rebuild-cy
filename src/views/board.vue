@@ -1,7 +1,13 @@
 <template>
   <div>
     <div>
-      <union-checkbox :code="'media_add'" :deps="'media_detail,user_detail,user_edit'" v-model="uni" @change="handleUnionCheck">12312</union-checkbox>
+      <union-checkbox :code="'user_detail'" v-model="use" @change="handleUnionCheck">12312</union-checkbox>
+      <union-checkbox
+        :code="'media_add'"
+        :deps="'media_detail,user_detail,user_edit'"
+        v-model="uni"
+        @change="handleUnionCheck"
+      >12312</union-checkbox>
     </div>
 
     <div>
@@ -114,6 +120,7 @@ export default {
   },
   data() {
     return {
+      use: '',
       uni: '',
       multiSelects: [],
       selectTags: [84],
@@ -523,8 +530,7 @@ export default {
     }, 10)
     this.initData()
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     handleUnionCheck(val) {
       console.log(val)

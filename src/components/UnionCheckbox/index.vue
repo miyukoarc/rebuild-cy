@@ -10,12 +10,17 @@ export default {
   props: {
     code: {
       type: String,
-      default: 'AEC',
+      default: '',
     },
     deps: {
       type: String,
-      default: 'BEC',
+      default: '',
     },
+  },
+  data(){
+      return {
+          module: '',
+      }
   },
   computed: {
     event() {
@@ -25,10 +30,14 @@ export default {
   },
   created() {
     let { code, deps } = this
-    // deps = deps.split(',')
-    deps = this.grouping(deps)
+    this.module = code.split('_')[0]//解析自己属于哪个module
+
+    if (deps) {
+      deps = this.grouping(deps)
+
+      this.$store.commit('unionCheckbox/SET_DEPENDMAP', { code, deps })
+    }
     // console.log(arr)
-    this.$store.commit('unionCheckbox/SET_DEPENDMAP', { code, deps })
   },
   methods: {
     grouping(str) {
