@@ -21,8 +21,8 @@
             size="small"
             type="primary"
             :popAuth="true"
-            :auth="'media,media_add'"
-            v-permission="'media,media_add'"
+            :auth="'media,media_addMediaIsAudit'"
+            v-permission="'media,media_addMediaIsAudit'"
           >选取文件</el-t-button>
           <!-- <el-t-button
             size="small"
