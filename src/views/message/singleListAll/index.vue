@@ -137,7 +137,10 @@
                         />
                       </div>
                     </div>
-                    <div v-show="singleListAllData.length<=0" class="no-chat-data user-select-none">暂无数据</div>
+                    <div
+                      v-show="singleListAllData.length<=0"
+                      class="no-chat-data user-select-none"
+                    >暂无数据</div>
                   </el-tab-pane>
                 </el-tabs>
                 <customer-pagination
@@ -160,36 +163,36 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from "vuex";
-import FormDialog from "./dialog";
-import ChatSideBar from "./components/ChatSideBar.vue";
+import { mapState, mapMutations, mapActions } from 'vuex'
+import FormDialog from './dialog'
+import ChatSideBar from './components/ChatSideBar.vue'
 
-import ChatInformation from "./components/ChatInformation.vue";
-import ChatTabBar from "./components/ChatTabBar.vue";
+import ChatInformation from './components/ChatInformation.vue'
+import ChatTabBar from './components/ChatTabBar.vue'
 
-import ChatSearch from "./components/ChatSearch.vue";
-import CustomerPagination from "@/components/CustomerPagination";
+import ChatSearch from './components/ChatSearch.vue'
+import CustomerPagination from '@/components/CustomerPagination'
 
-import textComponent from "./messageTypeComponent/textComponent.vue";
-import imageComponent from "./messageTypeComponent/imageComponent.vue";
-import emotionComponent from "./messageTypeComponent/emotionComponent.vue";
-import voiceComponent from "./messageTypeComponent/voiceComponent.vue";
-import videoComponent from "./messageTypeComponent/videoComponent.vue";
-import agreeComponent from "./messageTypeComponent/agreeComponent.vue";
-import cardComponent from "./messageTypeComponent/cardComponent.vue";
-import linkComponent from "./messageTypeComponent/linkComponent.vue";
-import weappComponent from "./messageTypeComponent/weappComponent.vue";
-import fileComponent from "./messageTypeComponent/fileComponent.vue";
+import textComponent from './messageTypeComponent/textComponent.vue'
+import imageComponent from './messageTypeComponent/imageComponent.vue'
+import emotionComponent from './messageTypeComponent/emotionComponent.vue'
+import voiceComponent from './messageTypeComponent/voiceComponent.vue'
+import videoComponent from './messageTypeComponent/videoComponent.vue'
+import agreeComponent from './messageTypeComponent/agreeComponent.vue'
+import cardComponent from './messageTypeComponent/cardComponent.vue'
+import linkComponent from './messageTypeComponent/linkComponent.vue'
+import weappComponent from './messageTypeComponent/weappComponent.vue'
+import fileComponent from './messageTypeComponent/fileComponent.vue'
 // import revokeComponent from "./messageTypeComponent/revokeComponent.vue";
-import docmsgComponent from "./messageTypeComponent/docmsgComponent.vue";
-import chatrecordComponent from "./messageTypeComponent/chatrecordComponent.vue";
-import locationComponent from "./messageTypeComponent/locationComponent.vue";
-import meeting_voice_callComponent from "./messageTypeComponent/meeting_voice_callComponent.vue";
+import docmsgComponent from './messageTypeComponent/docmsgComponent.vue'
+import chatrecordComponent from './messageTypeComponent/chatrecordComponent.vue'
+import locationComponent from './messageTypeComponent/locationComponent.vue'
+import meeting_voice_callComponent from './messageTypeComponent/meeting_voice_callComponent.vue'
 
-import mixedComponent from "./messageTypeComponent/mixedComponent.vue";
+import mixedComponent from './messageTypeComponent/mixedComponent.vue'
 
 export default {
-  name: "message_singleListAll",
+  name: 'message_singleListAll',
   components: {
     CustomerPagination,
     FormDialog,
@@ -216,7 +219,7 @@ export default {
   },
   data() {
     return {
-      currentView: "locationComponent",
+      currentView: 'locationComponent',
       pageConfig: {
         total: 0,
         pageNumber: 0,
@@ -225,83 +228,83 @@ export default {
       query: {
         page: 0,
         size: 10,
-        fromUserId: "",
-        msgType: "all",
-        toUserId: "",
-        content: "",
-        startTime: "",
-        endTime: "",
+        fromUserId: '',
+        msgType: 'all',
+        toUserId: '',
+        content: '',
+        startTime: '',
+        endTime: '',
       },
       groupQuery: {
         page: 0,
         size: 10,
-        msgType: "all",
-        chatId: "",
-        content: "",
-        startTime: "",
-        endTime: "",
+        msgType: 'all',
+        chatId: '',
+        content: '',
+        startTime: '',
+        endTime: '',
       },
-      chatType: "",
+      chatType: '',
       currnetMember: {},
       chatMembers: [],
       // 聊天侧边顶部切换
       singleListAllData: [],
-      sideTabActiveName: "1",
-      currentActiveName: "",
+      sideTabActiveName: '1',
+      currentActiveName: '',
       sideBarTabs: [
         {
-          label: "全部",
-          name: "1",
+          label: '全部',
+          name: '1',
         },
         {
-          label: "单聊",
-          name: "2",
+          label: '单聊',
+          name: '2',
         },
         {
-          label: "群聊",
-          name: "3",
+          label: '群聊',
+          name: '3',
         },
       ],
-      sideBarsearchValue: "",
-      active: "",
+      sideBarsearchValue: '',
+      active: '',
       chatSideData: [],
-      toUserId: "",
-      fromUserId: "",
+      toUserId: '',
+      fromUserId: '',
       activeIdx: 0,
 
       // 聊天内容
-      chatActiveName: "all",
+      chatActiveName: 'all',
       chatTypeTabs: [
         {
-          label: "全部",
-          name: "all",
+          label: '全部',
+          name: 'all',
         },
         {
-          label: "文件",
-          name: "file",
+          label: '文件',
+          name: 'file',
         },
         {
-          label: "链接",
-          name: "link",
+          label: '链接',
+          name: 'link',
         },
         {
-          label: "图片",
-          name: "image",
+          label: '图片',
+          name: 'image',
         },
         {
-          label: "视频",
-          name: "video",
+          label: '视频',
+          name: 'video',
         },
         {
-          label: "语音",
-          name: "voice",
+          label: '语音',
+          name: 'voice',
         },
         {
-          label: "视频语音通话",
-          name: "meeting_voice_call",
+          label: '视频语音通话',
+          name: 'meeting_voice_call',
         },
       ],
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -313,269 +316,270 @@ export default {
       chatContentType: (state) => state.enum.chatContentType,
     }),
   },
-  activated() {
+  activated() {},
+  created() {
     let payload = {
       type: this.$route.query.type,
       uuid: this.$route.query.uuid,
-    };
-    this.initDataList(payload);
+    }
+    this.initDataList(payload)
   },
   mounted() {},
   methods: {
     initDataList(payload) {
       this.$store
-        .dispatch("message/getMessageSingleLastListAll", payload)
+        .dispatch('message/getMessageSingleLastListAll', payload)
         .then((res) => {
           if (res) {
-            this.chatSideData = res.allMessageList;
+            this.chatSideData = res.allMessageList
 
             res.allMessageList.forEach((item, index) => {
               if (this.$route.query.userId == item._id) {
-                this.activeIdx = index;
-                this.currnetMember = item;
-                console.log(item, "item====", this.currnetMember);
-                this.chatType = item.chatType;
+                this.activeIdx = index
+                this.currnetMember = item
+                console.log(item, 'item====', this.currnetMember)
+                this.chatType = item.chatType
               }
-            });
-            if ((this.currnetMember = "{}")) {
-              this.currnetMember = res.allMessageList[0];
-              console.log(this.currnetMember, "88888");
+            })
+            if ((this.currnetMember = '{}')) {
+              this.currnetMember = res.allMessageList[0]
+              console.log(this.currnetMember, '88888')
             }
-            this.query.fromUserId = this.singleLastListAll.userId;
+            this.query.fromUserId = this.singleLastListAll.userId
             if (this.currnetMember.fromUserId == res.userId) {
-              this.query.toUserId = this.currnetMember.toUserId;
+              this.query.toUserId = this.currnetMember.toUserId
             } else {
-              this.query.toUserId = this.currnetMember.fromUserId;
+              this.query.toUserId = this.currnetMember.fromUserId
             }
-            console.log(this.query.toUserId, "this.query.toUserId");
+            console.log(this.query.toUserId, 'this.query.toUserId')
             this.getsinglelist(this.query)
               .then(() => {})
               .catch((err) => {
-                console.log(err);
-              });
+                console.log(err)
+              })
           }
         })
-        .catch((err) => {});
+        .catch((err) => {})
     },
     getsinglelist(payload) {
       this.$store
-        .dispatch("message/getMessageSingleListAll", payload)
+        .dispatch('message/getMessageSingleListAll', payload)
         .then((res) => {
-          this.singleListAllData = res.item;
-          this.pageConfig.pageNumber = this.singleListPage.pageNumber + 1;
-          this.pageConfig.total = this.singleListPage.total;
+          this.singleListAllData = res.item
+          this.pageConfig.pageNumber = this.singleListPage.pageNumber + 1
+          this.pageConfig.total = this.singleListPage.total
         })
         .catch((err) => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
     getGrouplist(payload) {
       this.$store
-        .dispatch("message/getMessageGroupListAll", payload)
+        .dispatch('message/getMessageGroupListAll', payload)
         .then((res) => {
-          console.log(res, "res====");
-          this.singleListAllData = res.item;
-          this.pageConfig.pageNumber = this.groupListAll.pageNumber + 1;
-          this.pageConfig.total = this.groupListAll.total;
+          console.log(res, 'res====')
+          this.singleListAllData = res.item
+          this.pageConfig.pageNumber = this.groupListAll.pageNumber + 1
+          this.pageConfig.total = this.groupListAll.total
         })
         .catch((err) => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
     handleClickSearch() {
-      console.log("搜索s");
+      console.log('搜索s')
     },
     handleClickViewMore(val) {
-      console.log(val, "val====");
-      this.$refs["formDialog"].dialogVisible = true;
-      this.$refs["formDialog"].event = "showMoreTemplate";
-      this.$refs["formDialog"].eventType = "showMore";
-      this.$refs["formDialog"].transfer = val;
+      console.log(val, 'val====')
+      this.$refs['formDialog'].dialogVisible = true
+      this.$refs['formDialog'].event = 'showMoreTemplate'
+      this.$refs['formDialog'].eventType = 'showMore'
+      this.$refs['formDialog'].transfer = val
     },
     handleClickSideBarTab(e) {
-      console.log(e.label, "点击侧边栏tab切换");
-      this.activeIdx = 0;
+      console.log(e.label, '点击侧边栏tab切换')
+      this.activeIdx = 0
       if (this.currentActiveName != this.sideTabActiveName) {
-        this.currentActiveName = this.sideTabActiveName;
+        this.currentActiveName = this.sideTabActiveName
         this.$nextTick(() => {
-          this.chatActiveName = "all";
-        });
+          this.chatActiveName = 'all'
+        })
       }
-      if (e.label == "全部") {
+      if (e.label == '全部') {
         this.getChangeSideTabMemberChatData(
           this.singleLastListAll.allMessageList
-        );
+        )
       }
-      if (e.label == "单聊") {
+      if (e.label == '单聊') {
         this.getChangeSideTabMemberChatData(
           this.singleLastListAll.singleMessageList
-        );
+        )
       }
-      if (e.label == "群聊") {
+      if (e.label == '群聊') {
         this.getChangeSideTabMemberChatData(
           this.singleLastListAll.groupMessageList
-        );
+        )
       }
     },
     getChangeSideTabMemberChatData(memberList) {
-      console.log(memberList, "memberList 点击侧边栏上tab");
+      console.log(memberList, 'memberList 点击侧边栏上tab')
       if (memberList.length > 0) {
-        this.chatSideData = memberList;
+        this.chatSideData = memberList
         // let userId = "";
         memberList.forEach((item, index) => {
           if (this.activeIdx == index) {
-            this.query.toUserId = item._id;
-            this.currnetMember = item;
+            this.query.toUserId = item._id
+            this.currnetMember = item
             // console.log(item,'ddddd')
             // this.chatType = item.
           }
-        });
-        console.log(this.currnetMember, "this.currnetMember");
-        this.query.msgType = "all";
-        this.groupQuery.msgType = "all";
-        this.chatActiveName = "all";
-        this.query.page = 0;
-        if (this.currnetMember.chatType === "ROOM") {
-          console.log("群聊", this.currnetMember._id);
-          this.groupQuery.chatId = this.currnetMember._id;
-          this.groupQuery.page = 0;
-          this.getGrouplist(this.groupQuery);
+        })
+        console.log(this.currnetMember, 'this.currnetMember')
+        this.query.msgType = 'all'
+        this.groupQuery.msgType = 'all'
+        this.chatActiveName = 'all'
+        this.query.page = 0
+        if (this.currnetMember.chatType === 'ROOM') {
+          console.log('群聊', this.currnetMember._id)
+          this.groupQuery.chatId = this.currnetMember._id
+          this.groupQuery.page = 0
+          this.getGrouplist(this.groupQuery)
         } else {
-          this.getsinglelist(this.query);
+          this.getsinglelist(this.query)
         }
       } else {
-        this.chatSideData = [];
-        this.singleListAllData = [];
+        this.chatSideData = []
+        this.singleListAllData = []
       }
     },
 
     handleSidebarItem(item, index, tab) {
-      console.log(item, index, tab, "item, index, tab");
+      console.log(item, index, tab, 'item, index, tab')
       let payload = {
         type: this.$route.query.type,
         uuid: this.$route.query.uuid,
-      };
+      }
       this.$store
-        .dispatch("message/getMessageSingleLastListAll", payload)
+        .dispatch('message/getMessageSingleLastListAll', payload)
         .then((res) => {
           if (res) {
-            if (tab.label == "全部") {
-              this.chatSideData = res.allMessageList;
+            if (tab.label == '全部') {
+              this.chatSideData = res.allMessageList
             }
-            if (tab.label == "单聊") {
-              this.chatSideData = res.singleMessageList;
+            if (tab.label == '单聊') {
+              this.chatSideData = res.singleMessageList
             }
-            if (tab.label == "群聊") {
-              this.chatSideData = res.groupMessageList;
+            if (tab.label == '群聊') {
+              this.chatSideData = res.groupMessageList
             }
-            console.log(item, "点击侧边栏用户", index, tab);
-            this.activeIdx = index;
-            this.currnetMember = item;
-            this.chatType = item.chatType;
-            this.query.toUserId = item._id;
+            console.log(item, '点击侧边栏用户', index, tab)
+            this.activeIdx = index
+            this.currnetMember = item
+            this.chatType = item.chatType
+            this.query.toUserId = item._id
             // let payload = {
             //   type: "externalUser",
             //   uuid: this.$route.query.uuid,
             // };
             // this.initDataList(payload);
-            if (item.chatType === "ROOM") {
-              console.log("群聊", item._id);
-              this.groupQuery.chatId = item._id;
-              this.chatType = item.chatType;
-              this.groupQuery.page = 0;
-              this.getGrouplist(this.groupQuery);
+            if (item.chatType === 'ROOM') {
+              console.log('群聊', item._id)
+              this.groupQuery.chatId = item._id
+              this.chatType = item.chatType
+              this.groupQuery.page = 0
+              this.getGrouplist(this.groupQuery)
             } else {
-              this.getsinglelist(this.query);
+              this.getsinglelist(this.query)
             }
           }
         })
-        .catch((err) => {});
+        .catch((err) => {})
     },
 
     handleClickChatType() {
-      console.log("点击右侧类型", this.chatActiveName);
+      console.log('点击右侧类型', this.chatActiveName)
       if (this.chatSideData.length > 0) {
         let payload = {
           type: this.$route.query.type,
           uuid: this.$route.query.uuid,
-        };
+        }
         this.$store
-          .dispatch("message/getMessageSingleLastListAll", payload)
+          .dispatch('message/getMessageSingleLastListAll', payload)
           .then((res) => {
             if (res) {
-              if (this.sideTabActiveName == "1") {
-                this.chatSideData = res.allMessageList;
-                if (this.chatType == "ROOM") {
-                  this.groupQuery.page = 0;
-                  this.groupQuery.msgType = this.chatActiveName;
-                  this.getGrouplist(this.groupQuery);
+              if (this.sideTabActiveName == '1') {
+                this.chatSideData = res.allMessageList
+                if (this.chatType == 'ROOM') {
+                  this.groupQuery.page = 0
+                  this.groupQuery.msgType = this.chatActiveName
+                  this.getGrouplist(this.groupQuery)
                 } else {
-                  this.query.msgType = this.chatActiveName;
-                  this.query.page = 0;
-                  this.groupQuery.page = 0;
-                  this.getsinglelist(this.query);
+                  this.query.msgType = this.chatActiveName
+                  this.query.page = 0
+                  this.groupQuery.page = 0
+                  this.getsinglelist(this.query)
                 }
               }
-              if (this.sideTabActiveName == "2") {
-                this.chatSideData = res.singleMessageList;
-                this.query.msgType = this.chatActiveName;
-                this.query.page = 0;
-                this.getsinglelist(this.query);
+              if (this.sideTabActiveName == '2') {
+                this.chatSideData = res.singleMessageList
+                this.query.msgType = this.chatActiveName
+                this.query.page = 0
+                this.getsinglelist(this.query)
               }
-              if (this.sideTabActiveName == "3") {
-                this.chatSideData = res.groupMessageList;
-                this.groupQuery.msgType = this.chatActiveName;
-                this.groupQuery.page = 0;
+              if (this.sideTabActiveName == '3') {
+                this.chatSideData = res.groupMessageList
+                this.groupQuery.msgType = this.chatActiveName
+                this.groupQuery.page = 0
                 // this.groupQuery.chatId = this.currnetMember._id;
-                this.getGrouplist(this.groupQuery);
-                console.log(this.sideTabActiveName, "this.sideTabActiveName");
+                this.getGrouplist(this.groupQuery)
+                console.log(this.sideTabActiveName, 'this.sideTabActiveName')
               }
             }
           })
-          .catch((err) => {});
+          .catch((err) => {})
       }
     },
 
     handleSearch(val) {
-      const { content, startTime, endTime } = val;
-      this.query.content = content ? content : "";
-      this.query.startTime = startTime ? startTime : "";
-      this.query.endTime = endTime ? endTime : "";
-      console.log(val, "点击搜索");
-      this.query.page = 0;
-      this.getsinglelist(this.query);
+      const { content, startTime, endTime } = val
+      this.query.content = content ? content : ''
+      this.query.startTime = startTime ? startTime : ''
+      this.query.endTime = endTime ? endTime : ''
+      console.log(val, '点击搜索')
+      this.query.page = 0
+      this.getsinglelist(this.query)
     },
     handleRefresh() {
-      console.log("刷新");
-      this.query = this.$options.data().query;
-      this.getsinglelist(this.query);
+      console.log('刷新')
+      this.query = this.$options.data().query
+      this.getsinglelist(this.query)
     },
     resetForm() {
-      console.log("重置");
+      console.log('重置')
       this.searchFrom = {
-        keyword: "",
+        keyword: '',
         planStatu: null,
-      };
+      }
     },
     changeSize(val) {
-      this.query.size = val;
-      this.getsinglelist(this.query);
+      this.query.size = val
+      this.getsinglelist(this.query)
     },
     changePage(page) {
-      console.log(page, "点击分页", this.groupQuery);
+      console.log(page, '点击分页', this.groupQuery)
 
-      this.pageConfig.pageNumber = page - 1;
+      this.pageConfig.pageNumber = page - 1
 
-      if (this.chatType == "ROOM") {
-        this.groupQuery.page = page - 1;
-        this.getGrouplist(this.groupQuery);
+      if (this.chatType == 'ROOM') {
+        this.groupQuery.page = page - 1
+        this.getGrouplist(this.groupQuery)
       } else {
-        this.query.page = page - 1;
-        this.getsinglelist(this.query);
+        this.query.page = page - 1
+        this.getsinglelist(this.query)
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

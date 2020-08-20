@@ -176,14 +176,14 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters } from 'vuex'
 
-import EventDialog from "./dialog";
-import memberComponent from "./components/member";
-import clientComponent from "./components/client";
+import EventDialog from './dialog'
+import memberComponent from './components/member'
+import clientComponent from './components/client'
 
 export default {
-    name: 'batchSendTask_detail',
+  name: 'batchSendTask_detail',
   components: {
     EventDialog,
     memberComponent,
@@ -192,14 +192,14 @@ export default {
   data() {
     return {
       ruleForm: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
         delivery: false,
         type: [],
-        resource: "",
-        desc: "",
+        resource: '',
+        desc: '',
       },
       pageConfig: {
         total: 0,
@@ -207,7 +207,7 @@ export default {
         pageSize: 10,
       },
       query: {
-        uuid: "",
+        uuid: '',
       },
       statistics: {
         NOT_SEND: [],
@@ -220,50 +220,50 @@ export default {
 
       memberTabs: [
         {
-          label: "本次推送全部成员",
-          name: "all",
+          label: '本次推送全部成员',
+          name: 'all',
         },
         {
-          label: "已发送成员",
-          name: "1",
+          label: '已发送成员',
+          name: '1',
         },
         {
-          label: "未发送成员",
-          name: "2",
+          label: '未发送成员',
+          name: '2',
         },
         {
-          label: "发送失败",
-          name: "3",
+          label: '发送失败',
+          name: '3',
         },
       ],
-      memberActiveName: "all",
+      memberActiveName: 'all',
       memberData: [],
 
       clientTabs: [
         {
-          label: "本次推送全部客户",
-          name: "all",
+          label: '本次推送全部客户',
+          name: 'all',
         },
         {
-          label: "已送达",
-          name: "1",
+          label: '已送达',
+          name: '1',
         },
         {
-          label: "未送达客户",
-          name: "2",
+          label: '未送达客户',
+          name: '2',
         },
         {
-          label: "客户接收达上限",
-          name: "3",
+          label: '客户接收达上限',
+          name: '3',
         },
         {
-          label: "已不是好友客户",
-          name: "4",
+          label: '已不是好友客户',
+          name: '4',
         },
       ],
-      clientActiveName: "all",
+      clientActiveName: 'all',
       clientData: [],
-    };
+    }
   },
   watch: {},
   computed: {
@@ -273,11 +273,10 @@ export default {
       batchAddTaskState: (state) => state.enum.batchAddTaskState,
     }),
   },
-  activated() {
-    this.query.uuid = this.$route.params.uuid;
-    this.initDetail(this.query.uuid);
-  },
+  activated() {},
   created() {
+    this.query.uuid = this.$route.params.uuid
+    this.initDetail(this.query.uuid)
     // let params = {
     //   batchSendTaskUuid: "",
     //   page: this.pageConfig.pageNumber,
@@ -292,45 +291,45 @@ export default {
     // 初始化详情数据
     initDetail(payload) {
       this.$store
-        .dispatch("batchSendTask/getBatchSendTaskDetail", payload)
+        .dispatch('batchSendTask/getBatchSendTaskDetail', payload)
         .then(() => {
-          Object.assign(this.$data.statistics, this.$options.data().statistics);
+          Object.assign(this.$data.statistics, this.$options.data().statistics)
           this.batchSendTaskListAllDetail.results.map((obj) => {
-            this.statistics[obj.sendResult].push(obj);
-          });
-          this.handleClickClient();
-          this.handleClickMember();
+            this.statistics[obj.sendResult].push(obj)
+          })
+          this.handleClickClient()
+          this.handleClickMember()
         })
         .catch((err) => {
           this.$message({
-            type: "error",
-            message: err || "初始化失败",
-          });
-        });
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
     },
     initBatchSendTaskResult(payload) {
       this.$store
-        .dispatch("getListBatchSendTaskResult", payload)
+        .dispatch('getListBatchSendTaskResult', payload)
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: "error",
-            message: err || "初始化失败",
-          });
-        });
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
     },
     handleClickMember() {
-      if (this.memberActiveName == "all") {
+      if (this.memberActiveName == 'all') {
         this.memberData = [
           {
             name: this.batchSendTaskListAllDetail.sender.name,
             img: this.batchSendTaskListAllDetail.sender.avatar,
             results: this.batchSendTaskListAllDetail.results,
           },
-        ];
+        ]
       } else if (this.memberActiveName == 1) {
-        if (this.batchSendTaskListAllDetail.state == "PENDING") {
-          this.memberData = [];
+        if (this.batchSendTaskListAllDetail.state == 'PENDING') {
+          this.memberData = []
         } else {
           this.memberData = [
             {
@@ -338,11 +337,11 @@ export default {
               img: this.batchSendTaskListAllDetail.sender.avatar,
               results: this.batchSendTaskListAllDetail.results,
             },
-          ];
+          ]
         }
       } else if (this.memberActiveName == 2) {
-        if (this.batchSendTaskListAllDetail.state != "PENDING") {
-          this.memberData = [];
+        if (this.batchSendTaskListAllDetail.state != 'PENDING') {
+          this.memberData = []
         } else {
           this.memberData = [
             {
@@ -350,59 +349,59 @@ export default {
               img: this.batchSendTaskListAllDetail.sender.avatar,
               results: this.batchSendTaskListAllDetail.results,
             },
-          ];
+          ]
         }
       } else if (this.memberActiveName == 3) {
-        this.memberData = [];
+        this.memberData = []
       }
     },
     handleClickClient() {
-      if (this.clientActiveName == "all") {
-        this.clientData = [];
+      if (this.clientActiveName == 'all') {
+        this.clientData = []
         this.batchSendTaskListAllDetail.results.map((obj) => {
           this.clientData.push({
             name: obj.externalUser.name,
             img: obj.externalUser.avatar,
             sendResult: obj.sendResult,
-          });
-        });
+          })
+        })
       }
       if (this.clientActiveName == 1) {
-        this.clientData = [];
+        this.clientData = []
         this.statistics.HAS_SEND.map((obj) => {
           this.clientData.push({
             name: obj.externalUser.name,
             img: obj.externalUser.avatar,
             sendResult: obj.sendResult,
-          });
-        });
+          })
+        })
       }
       if (this.clientActiveName == 2) {
-        this.clientData = [];
+        this.clientData = []
         this.statistics.NOT_SEND.map((obj) => {
           this.clientData.push({
             name: obj.externalUser.name,
             img: obj.externalUser.avatar,
             sendResult: obj.sendResult,
-          });
-        });
+          })
+        })
       }
       if (this.clientActiveName == 3) {
-        this.clientData = [];
+        this.clientData = []
       }
       if (this.clientActiveName == 4) {
-        this.clientData = [];
+        this.clientData = []
         this.statistics.NOT_FRIEND_FAIL.map((obj) => {
           this.clientData.push({
             name: obj.externalUser.name,
             img: obj.externalUser.avatar,
             sendResult: obj.sendResult,
-          });
-        });
+          })
+        })
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
