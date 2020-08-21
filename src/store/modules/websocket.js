@@ -36,7 +36,7 @@ const state = {
     addTaskCount: 0,
 
     isCheckOpenedSidebar: false, // 只需要第一次打开侧边栏检查即可
-    isOpenedSidebar: false, // 是否打开侧边栏，如果10秒没反应，则就是未开启侧边栏
+    isOpenedSidebar: null, // 是否打开侧边栏，如果10秒没反应，则就是未开启侧边栏
     isChangeState: false, // 是否把“待发送”变为“发送中”，只需改一次即可
 
     isInProgress: false, // 当前是否处于任务执行期间：默认否
@@ -50,7 +50,6 @@ const mutations = {
 const actions = {
     createWebsocket({ state, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
-            // 自动化任务队列，自动回复的优先级最高，群发和批量添加好友按时间先后排
             class Queue extends Array {
                 constructor(...args) {
                     super(...args)
@@ -70,12 +69,12 @@ const actions = {
                         // 任务是否进行中：否
                         state.isInProgress = false
                         // 任务队列全部执行完成，清空列表
+                        console.log('任务队列全部执行完成，清空列表')
                         dispatch('clearTask')
                     } else {
                         state.isInProgress = true;
-
                         // 锁屏开始执行任务
-                        $ipcRenderer.send('LockScreen', {})
+                        // $ipcRenderer.send('LockScreen', {})
 
                         // 群发队列
                         if (state.currentTask.automationType == "BatchSendTask") {
@@ -151,7 +150,6 @@ const actions = {
                             state.mouseY = arg.res.y
                         }
                     })
-
                     $ipcRenderer.on('reply-openChat', (event, arg) => {
                         if (arg.err) {
                             console.log('reply-openChat', arg)
@@ -276,8 +274,8 @@ const actions = {
                         return false
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
-                    // 侧边栏已打开
-                    state.isOpenedSidebar = true;
+                    state.isOpenedSidebar = true;// 侧边栏已打开
+
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
                         dispatch('sendChaoyingMessage')
                     }
@@ -298,7 +296,6 @@ const actions = {
                         })
                     }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
-                    console.log('CONTENT_READY')
                     $ipcRenderer.send('inputEnter', {
                         x: state.mouseX,
                         y: state.mouseY
@@ -471,7 +468,6 @@ const actions = {
     openChat({ state, dispatch }) {
         // 每次群发只需判断当前聊天框状态(即只需判断一次)
         if (!state.isCheckOpenedSidebar) {
-            state.isOpenedSidebar = false;
             isOnline('SIDEBAR').then(res => {
                 console.log('是否在线：' + res)
                 state.isCheckOpenedSidebar = true;
@@ -485,6 +481,7 @@ const actions = {
                         }
                     })
                 } else {
+                    state.isOpenedSidebar = false;
                     if (isElectron() && state.currentTask.externalUser.mobile) {
                         console.log('打开侧边栏了')
                         $ipcRenderer.send('openChat', {
@@ -565,7 +562,6 @@ const actions = {
         dispatch('openChat_autorep')
     },
     openChat_autorep({ state, dispatch }) {
-        state.isOpenedSidebar = false;
         isOnline('SIDEBAR').then(res => {
             console.log('是否在线：' + res)
             if (res) {
@@ -578,6 +574,7 @@ const actions = {
                     }
                 })
             } else {
+                state.isOpenedSidebar = false;
                 if (isElectron() && state.currentTask.data.properties.mobile) {
                     console.log('打开侧边栏了')
                     $ipcRenderer.send('openChat', {
@@ -608,7 +605,6 @@ const actions = {
     },
 
     sendChaoyingMessage({ state }) {
-        console.log(state.batchSendTaskDetail)
         if (state.batchSendTaskDetail.media.type == 'ARTICLE' && state.sendMsgContent) {
             state.sendMsgContent.news.link = state.currentTask.contentUrl
         }
@@ -620,7 +616,7 @@ const actions = {
     clearTask() {
         console.log('clearTask')
         // 解除锁屏
-        $ipcRenderer.send('UnlockScreen', {})
+        // $ipcRenderer.send('UnlockScreen', {})
         // 初始化数据
         state.taskQueue.length = 0;
         state.currentTask = null
@@ -630,7 +626,7 @@ const actions = {
         state.selectMobiles = []
         state.addTaskCount = 0
         state.isCheckOpenedSidebar = false
-        state.isOpenedSidebar = false
+        state.isOpenedSidebar = null
         state.isChangeState = false
         // 清除加载图标
         if (state.loadingInstance) {
