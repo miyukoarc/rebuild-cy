@@ -10,7 +10,7 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item label="角色模板：" prop="roleUuidSet">
+    <!-- <el-form-item label="角色模板：" prop="roleUuidSet">
       <el-select v-model="form.roleUuidSet" multiple filterable>
         <el-option
           v-for="item in roleListSelect"
@@ -19,7 +19,7 @@
           :value="item.uuid"
         ></el-option>
       </el-select>
-    </el-form-item>
+    </el-form-item> -->
 
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
@@ -44,7 +44,7 @@ export default {
       name: '',
       form: {
         type: '',
-        roleUuidSet: [],
+        // roleUuidSet: [],
         deptUuid: 0,
       },
       types: [

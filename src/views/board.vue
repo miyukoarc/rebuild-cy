@@ -551,7 +551,7 @@ export default {
   mounted() {},
   methods: {
     handleUnionCheck(val) {
-      console.log(val)
+    //   console.log(val)
     },
     handleDetail(uuid) {
       console.log(uuid)

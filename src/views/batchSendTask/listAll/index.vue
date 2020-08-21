@@ -36,7 +36,7 @@
               <div>{{scope.row.sender.name}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="群发类型" align="left" prop="sendType"></el-table-column>
+          <el-table-column label="群发类型" align="left" prop="sendType" :formatter="sendTypeFormatter"></el-table-column>
           <el-table-column label="内容" align="left" prop="textContent"></el-table-column>
           <el-table-column label="修改时间" align="left" prop="updatedAt"></el-table-column>
           <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
@@ -66,15 +66,15 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from '@/components/ToolBar'
-import CustomerPagination from '@/components/CustomerPagination'
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "@/components/ToolBar";
+import CustomerPagination from "@/components/CustomerPagination";
 
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: 'batchSendTask_listAll',
+  name: "batchSendTask_listAll",
   components: {
     ListHeader,
     FormDialog,
@@ -92,7 +92,7 @@ export default {
         page: 0,
         size: 10,
       },
-    }
+    };
   },
   watch: {},
   computed: {
@@ -107,97 +107,100 @@ export default {
     }),
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   mounted() {
-    this.$bus.$on('handleRefresh', () => {
-      this.initDataList(this.query)
-    })
+    this.$bus.$on("handleRefresh", () => {
+      this.initDataList(this.query);
+    });
 
-    this.$once('hook:beforeDestroy', () => {
-      this.$bus.$off('handleRefresh')
-    })
+    this.$once("hook:beforeDestroy", () => {
+      this.$bus.$off("handleRefresh");
+    });
   },
   methods: {
+    sendTypeFormatter(row, column) {
+      return row.sendType == "MY" ? "超盈群发" : "企业微信群发";
+    },
     doExport(val) {},
     /**
      * 初始化筛选信息
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListSelect')
+        .dispatch("tag/getListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
 
       this.$store
-        .dispatch('user/getAllUserList')
+        .dispatch("user/getAllUserList")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     /**
      * 初始化表格信息
      */
     initDataList(payload) {
       this.$store
-        .dispatch('batchSendTask/getBatchSendTaskListAll', payload)
+        .dispatch("batchSendTask/getBatchSendTaskListAll", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     handleDetail(val) {
-      this.$router.push(`/batchSendTask/detail/${val.uuid}`)
+      this.$router.push(`/batchSendTask/detail/${val.uuid}`);
     },
     handleSearch(val) {
-      const { state, sendType, senderUuid, startTime, endTime } = val
-      this.query.state = state ? state : this.query.state
-      this.query.sendType = sendType ? sendType : this.query.sendType
-      this.query.senderUuid = senderUuid ? senderUuid : this.query.senderUuid
-      this.query.startTime = startTime ? startTime : this.query.startTime
-      this.query.endTime = endTime ? endTime : this.query.endTime
-      this.query.page = 0
-      this.initDataList(this.query)
+      const { state, sendType, senderUuid, startTime, endTime } = val;
+      this.query.state = state ? state : this.query.state;
+      this.query.sendType = sendType ? sendType : this.query.sendType;
+      this.query.senderUuid = senderUuid ? senderUuid : this.query.senderUuid;
+      this.query.startTime = startTime ? startTime : this.query.startTime;
+      this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.query.page = 0;
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
 
     actionDepartment() {
-      this.$refs.formDialog.dialogVisible = true
-      this.$refs.formDialog.event = 'addBatchSendTaskTemplate'
-      this.$refs.formDialog.eventType = 'addBatchSendTask'
-      this.$refs.formDialog.dialogWidth = '70%'
+      this.$refs.formDialog.dialogVisible = true;
+      this.$refs.formDialog.event = "addBatchSendTaskTemplate";
+      this.$refs.formDialog.eventType = "addBatchSendTask";
+      this.$refs.formDialog.dialogWidth = "70%";
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

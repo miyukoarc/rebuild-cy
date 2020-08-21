@@ -16,11 +16,7 @@
       </el-card>
       <el-card class="content-spacing">
         <el-form v-if="Object.keys(isIndeterminate).length">
-          <el-form-item
-            v-for="(value, key) in renderMap"
-            :key="key"
-            :label="key"
-          >
+          <el-form-item v-for="(value, key) in permissionRenderMap" :key="key" :label="key">
             <el-checkbox
               :indeterminate="isIndeterminate[key]"
               v-model="checkAll[key]"
@@ -48,7 +44,7 @@ import ToolBar from './tool-bar'
 export default {
   name: 'role-detail',
   components: {
-    ToolBar
+    ToolBar,
   },
   data() {
     return {
@@ -58,20 +54,17 @@ export default {
       list: {},
       form: {
         roleUuid: null,
-        permissionUuids: []
+        permissionUuids: [],
       },
-
-      renderMap:{} 
     }
   },
   computed: {
     ...mapState({
-      permissionRenderMap: state => state.permission.permissionRenderMap,
-      permissionMap: state => state.permission.permissionMap,
-      auditSetting: state => state.sensitive.auditSetting,
-
-      roleDetail: state => state.enum.roleDetail
-    })
+      permissionRenderMap: (state) => state.permission.permissionRenderMap,
+      permissionMap: (state) => state.permission.permissionMap,
+      auditSetting: (state) => state.sensitive.auditSetting,
+      roleDetail: (state) => state.enum.roleDetail,
+    }),
   },
   created() {
     const roleCode = this.$route.query.code
@@ -79,15 +72,22 @@ export default {
     this.initData().then(() => {
       this.initDetail({ roleCode })
     })
+
+    this.$store
+      .dispatch('permission/getPermissionListTree')
+      .then(() => {})
+      .catch((err) => {
+        throw new Error(err)
+      })
   },
   mounted() {},
   methods: {
     initDetail(payload) {
       this.$store
         .dispatch('permission/getRolePermissionList', payload)
-        .then(res => {
+        .then((res) => {
           for (let key in res) {
-            res[key].forEach(item => {
+            res[key].forEach((item) => {
               this.checked[key].push(item.uuid)
             })
 
@@ -96,18 +96,18 @@ export default {
             }
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '初始化失败'
+            message: err || '初始化失败',
           })
         })
     },
     initData() {
       return new Promise((resolve, reject) => {
         this.$store
-          .dispatch('permission/getPermissionListGroup')
-          .then(res => {
+          .dispatch('permission/getListAll')
+          .then((res) => {
             for (let key in res) {
               this.$set(this.checkAll, key, false)
               this.$set(this.isIndeterminate, key, false)
@@ -117,13 +117,12 @@ export default {
               // const arr = res[key].map(item=)
               this.$set(this.list, key, res[key])
             }
-            this.renderMap = res
             resolve(res)
           })
-          .catch(err => {
+          .catch((err) => {
             this.$message({
               type: 'error',
-              message: err || '初始化失败'
+              message: err || '初始化失败',
             })
 
             reject(err)
@@ -137,7 +136,7 @@ export default {
       } else if (this.checkAll[key] == true) {
         this.checkAll[key] = true
         this.checked[key] = []
-        this.list[key].map(obj => {
+        this.list[key].map((obj) => {
           this.checked[key].push(obj.uuid)
         })
       }
@@ -164,25 +163,25 @@ export default {
 
       this.$store
         .dispatch('permission/roleLinkPermissionIsAudit', this.form)
-        .then(res => {
+        .then((res) => {
           const message = this.auditSetting['permission']
             ? '已提交审核'
             : '已完成'
           this.$message({
             type: 'success',
-            message: message
+            message: message,
           })
           const roleCode = this.$route.query.code
           this.initDetail({ roleCode })
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             type: 'error',
-            message: err || '操作失败'
+            message: err || '操作失败',
           })
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

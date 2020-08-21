@@ -116,7 +116,15 @@ export default {
       groupListAll: (state) => state.media.mediaGroupListAll,
     }),
   },
-  mounted() {},
+  mounted() {
+      this.$bus.$on('handleInit',()=>{
+          this.selects = this.$options.data().selects
+      })
+
+      this.$once('hook:beforeDestroy',()=>{
+          this.$bus.$off('handleInit')
+      })
+  },
   methods: {
     handleEdit(val) {},
     handleDelete(val) {

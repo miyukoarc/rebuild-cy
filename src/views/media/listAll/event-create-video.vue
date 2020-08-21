@@ -62,7 +62,8 @@
           <el-radio v-model="data.matchFormat" label="PERFECT_MATCH">完全匹配</el-radio>
         </div>
       </el-form-item>
-      <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select>
+      <tag-multi-select v-model="tagSelects"></tag-multi-select>
+      <!-- <tag-select v-model="tagSelects" :options="tagListSelect"></tag-select> -->
 
       <!-- <el-form-item label="引用条例"></el-form-item> -->
 
@@ -76,10 +77,12 @@
 
 <script>
 import { mapState } from 'vuex'
-import TagSelect from '@/components/TagSelect'
+// import TagSelect from '@/components/TagSelect'
+import TagMultiSelect from '@/components/TagMultiSelect'
 export default {
   components: {
-    TagSelect,
+    // TagSelect,
+    TagMultiSelect
   },
   props: {
     transfer: {

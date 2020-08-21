@@ -47,9 +47,9 @@
 
                 <el-t-button
                   type="text"
-        v-permission="'media,media_deleteMediaIsAudit'"
-        :popAuth="true"
-        :auth="'media,media_deleteMediaIsAudit'"
+                  v-permission="'media,media_deleteMediaIsAudit'"
+                  :popAuth="true"
+                  :auth="'media,media_deleteMediaIsAudit'"
                   @click.stop.native="handleDelete(row.uuid)"
                 >删除</el-t-button>
               </div>
@@ -109,6 +109,15 @@ export default {
       mediaType: (state) => state.enum.mediaType,
       groupListAll: (state) => state.media.mediaGroupListAll,
     }),
+  },
+  mounted() {
+    this.$bus.$on('handleInit', () => {
+      this.selects = this.$options.data().selects
+    })
+
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleInit')
+    })
   },
   methods: {
     handleEdit(uuid) {

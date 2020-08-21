@@ -33,13 +33,17 @@
           <el-table-column label="创建时间" prop="createdAt"></el-table-column>
           <el-table-column label="操作" align="center" width="80">
             <template v-slot="{row}">
+              <span v-if="row.auditStateForOperation==='UNDER_REVCIEW'" class="color-primary">审核中</span>
 
-                <span v-if="row.auditStateForOperation==='UNDER_REVCIEW'" class="color-primary">审核中</span>
-                
               <!-- <el-t-button type="text" @click.stop="handleEdit(scope.$index)">编辑</el-t-button> -->
-              <el-t-button         v-permission="'media,media_deleteMediaIsAudit'"
-        :popAuth="true"
-        :auth="'media,media_deleteMediaIsAudit'" v-else type="text" @click.stop.native="handleDelete(row.uuid)">删除</el-t-button>
+              <el-t-button
+                v-permission="'media,media_deleteMediaIsAudit'"
+                :popAuth="true"
+                :auth="'media,media_deleteMediaIsAudit'"
+                v-else
+                type="text"
+                @click.stop.native="handleDelete(row.uuid)"
+              >删除</el-t-button>
             </template>
           </el-table-column>
         </el-table>
@@ -97,6 +101,15 @@ export default {
       mediaType: (state) => state.enum.mediaType,
       groupListAll: (state) => state.media.mediaGroupListAll,
     }),
+  },
+  mounted() {
+    this.$bus.$on('handleInit', () => {
+      this.selects = this.$options.data().selects
+    })
+
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleInit')
+    })
   },
   methods: {
     handleAddMedia() {

@@ -16,7 +16,7 @@
       </el-card>
       <el-card class="content-spacing">
         <el-form v-if="Object.keys(isIndeterminate).length">
-          <el-form-item v-for="(value, key) in permissionRenderMap" :key="key" :label="key">
+          <el-form-item v-for="(value, key) in renderMap" :key="key" :label="key">
             <el-checkbox
               :indeterminate="isIndeterminate[key]"
               v-model="checkAll[key]"
@@ -28,6 +28,7 @@
                 v-for="item in list[key]"
                 :key="item.code"
                 :label="item.uuid"
+                @click.stop.native="handleClick($event,item)"
               >{{item.title}}&nbsp;&nbsp;{{item.code}}</el-checkbox>
             </el-checkbox-group>
             <el-divider></el-divider>
@@ -56,6 +57,8 @@ export default {
         roleUuid: null,
         permissionUuids: [],
       },
+
+      renderMap: {},
     }
   },
   computed: {
@@ -63,6 +66,7 @@ export default {
       permissionRenderMap: (state) => state.permission.permissionRenderMap,
       permissionMap: (state) => state.permission.permissionMap,
       auditSetting: (state) => state.sensitive.auditSetting,
+
       roleDetail: (state) => state.enum.roleDetail,
     }),
   },
@@ -72,13 +76,6 @@ export default {
     this.initData().then(() => {
       this.initDetail({ roleCode })
     })
-
-    this.$store
-      .dispatch('permission/getPermissionListTree')
-      .then(() => {})
-      .catch((err) => {
-        throw new Error(err)
-      })
   },
   mounted() {},
   methods: {
@@ -106,7 +103,7 @@ export default {
     initData() {
       return new Promise((resolve, reject) => {
         this.$store
-          .dispatch('permission/getListAll')
+          .dispatch('permission/getPermissionListGroup')
           .then((res) => {
             for (let key in res) {
               this.$set(this.checkAll, key, false)
@@ -117,6 +114,7 @@ export default {
               // const arr = res[key].map(item=)
               this.$set(this.list, key, res[key])
             }
+            this.renderMap = res
             resolve(res)
           })
           .catch((err) => {
@@ -143,10 +141,65 @@ export default {
       this.isIndeterminate[key] = false
     },
     handleSingleChange(key) {
+      this.checkDepends(key)
       const checkedCount = this.checked[key].length
       this.checkAll[key] = checkedCount === this.list[key].length
       this.isIndeterminate[key] =
         checkedCount > 0 && checkedCount < this.list[key].length
+    },
+    checkDepends(key) {
+      console.log(key)
+    },
+    handleClick(e, item) {
+      if (e.target.tagName === 'INPUT') return
+      const { module, uuid } = item
+
+      const flag = this.checked[module].includes(uuid) //正选or反选
+
+      let deps = this.grouping(item.dependsOn) //分组后的依赖权限
+
+      if (!flag) {
+        //正选
+        console.log('正选')
+
+        for (let key in deps) {
+          // console.log(deps[key], this.list[key])
+          let uuids = this.list[key]
+            .filter((item) => {
+              return deps[key].includes(item.code)
+            })
+            .map((_) => {
+              return _.uuid
+            }) //依赖permission的uuid数组
+
+          let temp = Array.from(new Set(this.checked[key].concat(uuids))) //已选+当前组依赖permission
+
+          this.checked[key].splice(0, temp.length, ...temp) //正向替换
+        }
+      } else {
+        console.log('反选')
+        for (let key in deps) {
+          let uuids = this.list[key]
+            .filter((item) => {
+              return deps[key].includes(item.code)
+            })
+            .map((_) => {
+              return _.uuid
+            }) //依赖permission的uuid数组
+
+          let temp = Array.from(
+            new Set(
+              this.checked[key].filter((item) => {
+                return !uuids.includes(item)
+              })
+            )
+          )
+
+          this.checked[key].splice(0,this.checked[key].length)
+
+          this.checked[key].splice(0, temp.length, ...temp)
+        }
+      }
     },
     doExport() {},
     handleConfirm() {
@@ -158,8 +211,6 @@ export default {
       )
 
       this.form.permissionUuids = permissionUuids
-
-      //   const payload = await this.form
 
       this.$store
         .dispatch('permission/roleLinkPermissionIsAudit', this.form)
@@ -180,6 +231,27 @@ export default {
             message: err || '操作失败',
           })
         })
+    },
+
+    grouping(str) {
+      let temp = {}
+      if (str) {
+        let arr = str.split(',')
+        arr.forEach((item) => {
+          const group = item.split('_')[0]
+          if (!temp[group]) {
+            Object.defineProperty(temp, group, {
+              writable: true,
+              value: [],
+              configurable: true,
+              enumerable: true,
+            })
+          }
+
+          temp[group].push(item)
+        })
+      }
+      return temp
     },
   },
 }
