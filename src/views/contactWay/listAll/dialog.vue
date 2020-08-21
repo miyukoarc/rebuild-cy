@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-08-06 15:48:22
+ * @LastEditTime: 2020-08-21 15:24:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\contactWay\listAll\dialog.vue
@@ -13,7 +13,7 @@
       :visible.sync="dialogVisible"
       :modal-append-to-body="false"
       append-to-body
-      width="600px"
+      width="700px"
       center
       @close="close"
       destroy-on-close

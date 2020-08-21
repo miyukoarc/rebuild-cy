@@ -309,9 +309,9 @@ export default {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 100px;
-  height: 100px;
-  line-height: 100px;
+  width: 150px;
+  height: 150px;
+  line-height: 150px;
   text-align: center;
   border: 1px dashed #d9d9d9;
 }
@@ -319,8 +319,8 @@ export default {
   border-color: #409eff;
 }
 .avatar {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   display: block;
 }
 .fix {
@@ -330,8 +330,8 @@ export default {
   z-index: 999999;
 }
 .avatar {
-  width: 178px;
-  height: 178px;
+  width: 150x;
+  height: 150px;
   display: block;
 }
 .select-zoom {

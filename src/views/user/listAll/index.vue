@@ -129,14 +129,14 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from '@/components/ToolBar'
-import CustomerPagination from '@/components/CustomerPagination'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "@/components/ToolBar";
+import CustomerPagination from "@/components/CustomerPagination";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: 'user_listAll',
+  name: "user_listAll",
   components: {
     ListHeader,
     FormDialog,
@@ -154,9 +154,9 @@ export default {
       query: {
         page: 0,
         size: 10,
-        userName: '',
-        departmentsUuid: '',
-        roleUuid: '',
+        userName: "",
+        departmentsUuid: "",
+        roleUuid: "",
 
         isFollowUser: null,
         isMessageUser: null,
@@ -164,7 +164,7 @@ export default {
       },
 
       checkedUserList: [],
-    }
+    };
   },
   watch: {},
   computed: {
@@ -177,92 +177,93 @@ export default {
     }),
   },
   created() {
-    this.$store.dispatch('department/getDepartmentListSelect')
+    this.$store.dispatch("department/getDepartmentListSelect");
 
-    this.initDataList(this.query)
+    this.initDataList(this.query);
+    this.initFilter();
   },
   mounted() {
-    this.$bus.$on('handleRefresh', () => {
-      this.initDataList(this.query)
-    })
+    this.$bus.$on("handleRefresh", () => {
+      this.initDataList(this.query);
+    });
   },
   beforeDestroy() {
-    this.$bus.$off('handleRefresh')
+    this.$bus.$off("handleRefresh");
   },
   methods: {
     handleSelectionChange(val) {
-      this.checkedUserList = val
+      this.checkedUserList = val;
     },
     doExport(val) {
       if (this.checkedUserList.length == 0) {
-        console.log('请求接口导出全部')
+        console.log("请求接口导出全部");
       } else {
         let header = [
-          '员工姓名',
-          '部门',
-          '角色',
-          '会话存档授权',
-          '允许登陆',
-          '通讯录授权',
-        ]
-        let data = []
+          "员工姓名",
+          "部门",
+          "角色",
+          "会话存档授权",
+          "允许登陆",
+          "通讯录授权",
+        ];
+        let data = [];
 
         this.checkedUserList.map((obj) => {
           data.push([
             obj.name,
             obj.departments[obj.departments.length - 1].name,
             obj.role.name,
-            obj.isMessageUser ? '已授权' : '未授权',
-            obj.visible ? '已授权' : '未授权',
-            obj.isFollowUser ? '已授权' : '未授权',
-          ])
-        })
+            obj.isMessageUser ? "已授权" : "未授权",
+            obj.visible ? "已授权" : "未授权",
+            obj.isFollowUser ? "已授权" : "未授权",
+          ]);
+        });
 
-        import('@/vendor/Export2Excel').then((excel) => {
+        import("@/vendor/Export2Excel").then((excel) => {
           excel.export_json_to_excel({
             header, //表头 必填
             data, //具体数据 必填
-            filename: 'excel-list', //非必填
+            filename: "excel-list", //非必填
             autoWidth: true, //非必填
-            bookType: 'xlsx', //非必填
-          })
-        })
+            bookType: "xlsx", //非必填
+          });
+        });
       }
     },
     handleUpdate() {
-      this.initDataList(this.query)
+      this.initDataList(this.query);
     },
 
     // 分配角色
     handleDistributeRole(index) {
-      const payload = this.userList[index]
-      this.$store.commit('user/SAVE_CURRENTROW', payload)
-      this.$refs['formDialog'].event = 'DistributeRoleTemplate'
-      this.$refs['formDialog'].eventType = 'distributeRole'
-      this.$refs['formDialog'].dialogVisible = true
+      const payload = this.userList[index];
+      this.$store.commit("user/SAVE_CURRENTROW", payload);
+      this.$refs["formDialog"].event = "DistributeRoleTemplate";
+      this.$refs["formDialog"].eventType = "distributeRole";
+      this.$refs["formDialog"].dialogVisible = true;
     },
 
     // 分配部门
     handleDistributeDepartment(index) {
-      const payload = this.userList[index]
-      this.$store.commit('user/SAVE_CURRENTROW', payload)
-      this.$refs['formDialog'].event = 'DistributeTemplate'
-      this.$refs['formDialog'].eventType = 'distribute'
-      this.$refs['formDialog'].dialogVisible = true
+      const payload = this.userList[index];
+      this.$store.commit("user/SAVE_CURRENTROW", payload);
+      this.$refs["formDialog"].event = "DistributeTemplate";
+      this.$refs["formDialog"].eventType = "distribute";
+      this.$refs["formDialog"].dialogVisible = true;
     },
 
     // 批量分配角色
     actionRole() {
       if (this.checkedUserList.length) {
-        this.$store.commit('user/SAVE_CURRENTROWS', this.checkedUserList)
-        this.$refs['formDialog'].event = 'DistributeRoleTemplate'
-        this.$refs['formDialog'].eventType = 'distributeRole'
-        this.$refs['formDialog'].dialogVisible = true
+        this.$store.commit("user/SAVE_CURRENTROWS", this.checkedUserList);
+        this.$refs["formDialog"].event = "DistributeRoleTemplate";
+        this.$refs["formDialog"].eventType = "distributeRole";
+        this.$refs["formDialog"].dialogVisible = true;
       } else {
         this.$message({
-          type: 'warning',
-          message: '请选择至少一项',
-        })
+          type: "warning",
+          message: "请选择至少一项",
+        });
       }
     },
 
@@ -270,48 +271,62 @@ export default {
     actionDepartment() {
       if (!this.$refs.listHeader.query.departmentsUuid) {
         this.$message({
-          type: 'warning',
-          message: '请先选择部门',
-        })
+          type: "warning",
+          message: "请先选择部门",
+        });
       } else if (this.checkedUserList.length) {
-        this.$store.commit('user/SAVE_CURRENTROWS', this.checkedUserList)
-        this.$refs['formDialog'].event = 'DistributeTemplate'
-        this.$refs['formDialog'].eventType = 'distribute'
-        this.$refs['formDialog'].dialogVisible = true
+        this.$store.commit("user/SAVE_CURRENTROWS", this.checkedUserList);
+        this.$refs["formDialog"].event = "DistributeTemplate";
+        this.$refs["formDialog"].eventType = "distribute";
+        this.$refs["formDialog"].dialogVisible = true;
       } else {
         this.$message({
-          type: 'error',
-          message: '请选择至少一项',
-        })
+          type: "error",
+          message: "请选择至少一项",
+        });
       }
     },
     sortChange(val) {
-      this.initDataList()
+      this.initDataList();
     },
     pageChange() {
-      this.initDataList()
+      this.initDataList();
     },
     initDataList(payload) {
       this.$store
-        .dispatch('user/getUserList', payload)
+        .dispatch("user/getUserList", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.userPage.pageNumber + 1
-          this.pageConfig.total = this.userPage.total
+          this.pageConfig.pageNumber = this.userPage.pageNumber + 1;
+          this.pageConfig.total = this.userPage.total;
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
+    },
+    /**
+     * 初始化筛选信息
+     */
+    initFilter() {
+      this.$store
+        .dispatch("role/getRoleListSelect")
+        .then(() => {})
+        .catch((err) => {
+          this.$message({
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
     handleDetail(val) {
-      const uuid = this.userList[val].uuid
+      const uuid = this.userList[val].uuid;
       this.$router.push({
-        path: '/user/detail/' + uuid,
+        path: "/user/detail/" + uuid,
         // query: { uuid: payload }
-      })
+      });
     },
     handleSearch(val) {
       const {
@@ -321,53 +336,53 @@ export default {
         isFollowUser,
         isMessageUser,
         visible,
-      } = val
-      this.query.userName = userName ? userName : userName
+      } = val;
+      this.query.userName = userName ? userName : userName;
       this.query.departmentsUuid = departmentsUuid
         ? departmentsUuid
-        : departmentsUuid
-      this.query.roleUuid = roleUuid ? roleUuid : roleUuid
+        : departmentsUuid;
+      this.query.roleUuid = roleUuid ? roleUuid : roleUuid;
 
-      this.query.isFollowUser = isFollowUser ? isFollowUser : isFollowUser
-      this.query.isMessageUser = isMessageUser ? isMessageUser : isMessageUser
-      this.query.visible = visible ? visible : visible
-      this.query.page = 0
-      this.initDataList(this.query)
+      this.query.isFollowUser = isFollowUser ? isFollowUser : isFollowUser;
+      this.query.isMessageUser = isMessageUser ? isMessageUser : isMessageUser;
+      this.query.visible = visible ? visible : visible;
+      this.query.page = 0;
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key;
+      this.initDataList(this.query);
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
     },
     handleUpdateList() {
       const userList = this.userList
         .map((item) => {
-          return item.userId
+          return item.userId;
         })
-        .join(',')
+        .join(",");
       this.$store
-        .dispatch('user/userMaintain', { userList })
+        .dispatch("user/userMaintain", { userList })
         .then(() => {
-          this.initDataList(this.query)
+          this.initDataList(this.query);
         })
         .catch((err) => {
-          console.error(err)
+          console.error(err);
           this.$message({
-            type: 'error',
+            type: "error",
             message: err,
-          })
-        })
+          });
+        });
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

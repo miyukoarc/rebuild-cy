@@ -1,5 +1,15 @@
 <template>
-  <el-form :model="form" ref="form" :rules="rules" label-width="120px" label-position="left">
+  <el-form
+    :model="form"
+    ref="form"
+    :rules="rules"
+    label-width="120px"
+    label-position="left"
+    v-loading="loading"
+    element-loading-text="正在上传中..."
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
     <el-form-item label="规则名称" prop="rule" maxlength="15" show-word-limit>
       <el-input v-model.trim="form.rule" placeholder="请输入规则名称"></el-input>
     </el-form-item>
@@ -199,6 +209,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       fileList: [],
       type: "",
       // userSelects: [],
@@ -347,6 +358,7 @@ export default {
     handleConfirm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          this.loading = true;
           if (this.form.autoReplyType != "FILE") {
             this.form.fileName = "";
           }
@@ -361,12 +373,15 @@ export default {
             this.$store
               .dispatch("automatic/add", payload)
               .then((res) => {
-                this.$message({
-                  type: "success",
-                  message: "新建成功",
-                });
-                this.handleCancel();
-                this.initDataList();
+                if (res) {
+                  this.loading = false;
+                  this.$message({
+                    type: "success",
+                    message: "新建成功",
+                  });
+                  this.handleCancel();
+                  this.initDataList();
+                }
               })
               .catch((err) => {
                 this.$message({
@@ -399,7 +414,7 @@ export default {
     //   this.form.mediaId = res.id;
     // },
     handleSetMessageFile(res, file) {
-      console.log('3333',res)
+      console.log("3333", res);
       this.messageFile = URL.createObjectURL(file.raw);
       this.form.mediaId = res.id;
       this.form.fileName = res.name;
@@ -435,12 +450,12 @@ export default {
 
       if (!isLt20M) {
         this.$message.error("上传文件大小不能超过 20MB!");
-        return
+        return;
       }
       return isLt20M;
     },
     beforeRemoveFile(file) {
-      console.log(file,'3344444')
+      console.log(file, "3344444");
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     handleClear() {
