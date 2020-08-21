@@ -79,7 +79,8 @@ const actions = {
                         }
                         // 自动回复队列
                         else if (state.currentTask.automationType == 'AUTOREP') {
-                            dispatch('openChat_autorep')
+                            dispatch('beforeAutoRep')
+                            // dispatch('openChat_autorep')
                         }
                         // 批量添加好友队列
                         else if (state.currentTask.automationType == 'ADDTASK') {
@@ -280,8 +281,8 @@ const actions = {
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID_AUTOREP') {
                     getExternalUserDetail(data.properties.userId).then(res => {
                         console.log(state.currentTask.fromUser)
-                        console.log(res.externalUserDetail.externalUserName)
-                        if (state.currentTask.fromUser == res.externalUserDetail.externalUserName) {
+                        console.log(res.externalUserDetail.externalUserId)
+                        if (state.currentTask.fromUser == res.externalUserDetail.externalUserId) {
                             console.log('直接发送')
 
                             if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
@@ -300,6 +301,7 @@ const actions = {
                                     state.sendMsgContent_autorep_text = null
                                 })
                             }
+
                         } else {
                             console.log("打开openchat")
                             if (state.currentTask.mobile) {
@@ -320,45 +322,12 @@ const actions = {
                 } else if (data.type == 'ADDTASK') {
                     dispatch('listSelectMobil', data)
                 } else if (data.type == 'AUTOREP') {
-                    if (data.properties.content) {
-                        state.sendMsgContent_autorep_text = {
-                            msgtype: "text",
-                            text: {
-                                content: data.properties.content,
-                            }
-                        }
-                    }
-                    if (data.properties.autoReplyType == 'IMAGE') {
-                        state.sendMsgContent_autorep_media = {
-                            msgtype: "image",
-                            image: {
-                                mediaid: data.properties.mediaId,
-                            }
-                        }
-                    } else if (data.properties.autoReplyType == 'FILE') {
-                        state.sendMsgContent_autorep_media = {
-                            msgtype: "file",
-                            file: {
-                                mediaid: data.properties.mediaId,
-                            }
-                        }
-                    } else if (data.properties.autoReplyType == 'ARTICLE') {
-                        state.sendMsgContent_autorep_media = {
-                            msgtype: "news",
-                            news: {
-                                link: data.properties.link, //H5消息页面url 必填
-                                title: data.properties.title, //H5消息标题
-                                desc: data.properties.desc, //H5消息摘要
-                                imgUrl: data.properties.imgUrl, //H5消息封面图片URL
-                            }
-                        }
-                    }
-
                     state.taskQueue.push({
                         automationType: "AUTOREP",
-                        mobile: data.properties.mobile,
-                        toUserId: data.toUserId,
-                        fromUser: data.properties.fromUser
+                        data: data,
+                        // mobile: data.properties.mobile,
+                        // toUserId: data.toUserId,
+                        // fromUser: data.properties.fromUser
                     })
                 }
             }
@@ -521,13 +490,48 @@ const actions = {
             }
         }
     },
-
+    beforeAutoRep({ state, dispatch }) {
+        let data = state.currentTask.data;
+        if (data.properties.content) {
+            state.sendMsgContent_autorep_text = {
+                msgtype: "text",
+                text: {
+                    content: data.properties.content,
+                }
+            }
+        }
+        if (data.properties.autoReplyType == 'IMAGE') {
+            state.sendMsgContent_autorep_media = {
+                msgtype: "image",
+                image: {
+                    mediaid: data.properties.mediaId,
+                }
+            }
+        } else if (data.properties.autoReplyType == 'FILE') {
+            state.sendMsgContent_autorep_media = {
+                msgtype: "file",
+                file: {
+                    mediaid: data.properties.mediaId,
+                }
+            }
+        } else if (data.properties.autoReplyType == 'ARTICLE') {
+            state.sendMsgContent_autorep_media = {
+                msgtype: "news",
+                news: {
+                    link: data.properties.link, //H5消息页面url 必填
+                    title: data.properties.title, //H5消息标题
+                    desc: data.properties.desc, //H5消息摘要
+                    imgUrl: data.properties.imgUrl, //H5消息封面图片URL
+                }
+            }
+        }
+        dispatch('openChat_autorep')
+    },
     openChat_autorep({ state, dispatch }) {
         console.log('检查侧边栏是否在线')
         state.isOpenedSidebar = false;
         isOnline('SIDEBAR').then(res => {
             console.log('是否在线：' + res)
-            state.isCheckOpenedSidebar = true;
             // 这是在线情况
             if (res) {
                 console.log("请问你打开的是谁的页面")
