@@ -348,6 +348,7 @@ export default {
           })
           this.initMediaList(this.query)
           this.$refs[target].closeDialog()
+          this.$bus.$emit('handleInit')
           //   Object.assign(this.$data, this.$options.data())
         })
         .catch((err) => {

@@ -156,6 +156,14 @@ export default {
         }
       }
     })
+
+    this.$bus.$on('handleInit', () => {
+      this.selects = this.$options.data().selects
+    })
+
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('handleInit')
+    })
   },
   methods: {
     handleAddMedia() {

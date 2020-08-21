@@ -1,31 +1,34 @@
+const state = {
+  dependMap: {
 
-  const state = {
-      dependMap:{
+  },
+  dependencyMap: {}
 
-      },
-      dependencyMap: {}
+}
+const mutations = {
+  SET_DEPENDMAP(state, payload) {
+    const {
+      code,
+      deps
+    } = payload
+    state.dependMap[code] = deps
+  },
+  SET_DEPENDENCY_MODULE(state, payload) {
 
+    state.dependencyMap = Object.assign(state.dependencyMap, payload)
+  },
+  SET_DEPENDENCY_PERMISSION(state, payload) {
+    console.log(payload)
+    const {module,code} = payload
+    state.dependencyMap[module].push(code)
   }
-  const mutations = {
-      SET_DEPENDMAP(state,payload){
-          const {code,deps} = payload
-          console.log(payload)
-          state.dependMap[code] = deps
-        //   Object.assign(state,)
-          console.log(deps)
-      },
-      SET_DEPENDENCY(state,payload){
-          
-      }
-  }
-  
-  const actions = {
-  }
-  
-  export default {
-    namespaced: true,
-    state,
-    mutations,
-    actions
-  }
-  
+}
+
+const actions = {}
+
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions
+}
