@@ -19,6 +19,7 @@
           highlight-current-row
           :show-header="true"
           header-row-class-name="el-table-header"
+          row-key="uuid"
           @selection-change="handleSelectionChange"
         >
           <el-table-column :selectable="selectable" type="selection" width="55"></el-table-column>
@@ -59,7 +60,7 @@
                 :auth="'media,media_deleteMediaIsAudit'"
                 v-else
                 type="text"
-                @click.stop.native="handleDelete(scope.$index)"
+                @click.stop.native="handleDelete(scope.row.uuid)"
               >删除</el-t-button>
             </template>
           </el-table-column>

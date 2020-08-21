@@ -388,4 +388,7 @@ export default {
     line-height: 30px;
   }
 }
+.el-table__empty-text{
+    user-select: none;
+}
 </style>
