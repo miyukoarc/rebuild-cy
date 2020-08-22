@@ -42,6 +42,7 @@ const state = {
     isInProgress: false, // 当前是否处于任务执行期间：默认否
 
     isLock: null,
+    isLockTemp: false
 }
 
 
@@ -76,7 +77,10 @@ const actions = {
                     } else {
                         state.isInProgress = true;
                         // 锁屏开始执行任务
-                        $ipcRenderer.send('IsLock', {})
+                        if (state.isLock) {
+                            $ipcRenderer.send('UnlockScreen', {})
+                            state.isLockTemp = true
+                        }
 
                         // 群发队列
                         if (state.currentTask.automationType == "BatchSendTask") {
@@ -589,8 +593,9 @@ const actions = {
 
     clearTask() {
         console.log('clearTask')
-        // 解除锁屏
-        // $ipcRenderer.send('UnlockScreen', {})
+        if (state.isLockTemp) {
+            $ipcRenderer.send('LockScreen', {})
+        }
         // 初始化数据
         state.taskQueue.length = 0;
         state.currentTask = null
@@ -603,6 +608,7 @@ const actions = {
         state.isOpenedSidebar = null
         state.isChangeState = false
         state.isInProgress = false
+        state.isLockTemp = false
         // 清除加载图标
         if (state.loadingInstance) {
             state.loadingInstance.close();
