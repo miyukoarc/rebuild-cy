@@ -628,6 +628,7 @@ const actions = {
         state.isCheckOpenedSidebar = false
         state.isOpenedSidebar = null
         state.isChangeState = false
+        state.isInProgress = false
         // 清除加载图标
         if (state.loadingInstance) {
             state.loadingInstance.close();
