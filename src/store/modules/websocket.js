@@ -110,46 +110,46 @@ const actions = {
             })
             state.sock.onopen = function () {
                 if (isElectron()) {
-                    $ipcRenderer.on('reply-LockScreen', (event, arg) => {
-                        console.log('reply-LockScreen', arg)
-                        if (arg.err) {
-                            // 群发出错，任务状态设为“中断”
-                            if (state.currentTask.automationType == 'BatchSendTask') {
-                                batchSendTaskSuspend({
-                                    uuids: [state.batchSendTaskDetail.uuid]
-                                })
-                            }
-                            dispatch('clearTask')
-                            Message({
-                                message: arg.err.message,
-                                type: 'error'
-                            })
-                            return;
-                        } else {
-                            state.mouseX = arg.res.x
-                            state.mouseY = arg.res.y
-                        }
-                    })
-                    $ipcRenderer.on('reply-UnlockScreen', (event, arg) => {
-                        console.log('reply-UnlockScreen', arg)
-                        if (arg.err) {
-                            // 群发出错，任务状态设为“中断”
-                            if (state.currentTask.automationType == 'BatchSendTask') {
-                                batchSendTaskSuspend({
-                                    uuids: [state.batchSendTaskDetail.uuid]
-                                })
-                            }
-                            dispatch('clearTask')
-                            Message({
-                                message: arg.err.message,
-                                type: 'error'
-                            })
-                            return;
-                        } else {
-                            state.mouseX = arg.res.x
-                            state.mouseY = arg.res.y
-                        }
-                    })
+                    // $ipcRenderer.on('reply-LockScreen', (event, arg) => {
+                    //     console.log('reply-LockScreen', arg)
+                    //     if (arg.err) {
+                    //         // 群发出错，任务状态设为“中断”
+                    //         if (state.currentTask.automationType == 'BatchSendTask') {
+                    //             batchSendTaskSuspend({
+                    //                 uuids: [state.batchSendTaskDetail.uuid]
+                    //             })
+                    //         }
+                    //         dispatch('clearTask')
+                    //         Message({
+                    //             message: arg.err.message,
+                    //             type: 'error'
+                    //         })
+                    //         return;
+                    //     } else {
+                    //         state.mouseX = arg.res.x
+                    //         state.mouseY = arg.res.y
+                    //     }
+                    // })
+                    // $ipcRenderer.on('reply-UnlockScreen', (event, arg) => {
+                    //     console.log('reply-UnlockScreen', arg)
+                    //     if (arg.err) {
+                    //         // 群发出错，任务状态设为“中断”
+                    //         if (state.currentTask.automationType == 'BatchSendTask') {
+                    //             batchSendTaskSuspend({
+                    //                 uuids: [state.batchSendTaskDetail.uuid]
+                    //             })
+                    //         }
+                    //         dispatch('clearTask')
+                    //         Message({
+                    //             message: arg.err.message,
+                    //             type: 'error'
+                    //         })
+                    //         return;
+                    //     } else {
+                    //         state.mouseX = arg.res.x
+                    //         state.mouseY = arg.res.y
+                    //     }
+                    // })
                     $ipcRenderer.on('reply-openChat', (event, arg) => {
                         if (arg.err) {
                             console.log('reply-openChat', arg)
@@ -258,7 +258,7 @@ const actions = {
                             text: "请保持鼠标静止状态，否则任务会中断。"
                         });
                         dispatch('getDetail', data)
-                    }).catch(err => {
+                    }).catch(() => {
                         return false
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
@@ -270,30 +270,27 @@ const actions = {
                             text: "请保持鼠标静止状态，否则任务会中断。"
                         });
                         dispatch('getDetail', data)
-                    }).catch(err => {
+                    }).catch(() => {
                         return false
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
                     state.isOpenedSidebar = true;// 侧边栏已打开
-
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
-                        dispatch('sendChaoyingMessage')
+                        dispatch('sendChaoyingMessage', state.sendMsgContent)
                     }
                     if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
                         console.log('sendMsgContent_autorep_media')
-                        sendChaoyingMessage({
-                            sendChatMessage: state.sendMsgContent_autorep_media
-                        }).then(() => {
-                            state.sendMsgContent_autorep_media = null
-                        })
+                        // sendChaoyingMessage({
+                        //     sendChatMessage: state.sendMsgContent_autorep_media
+                        // })
+                        dispatch('sendChaoyingMessage', state.sendMsgContent_autorep_media)
                     }
                     if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
                         console.log('sendMsgContent_autorep_text')
-                        sendChaoyingMessage({
-                            sendChatMessage: state.sendMsgContent_autorep_text
-                        }).then(() => {
-                            state.sendMsgContent_autorep_text = null
-                        })
+                        // sendChaoyingMessage({
+                        //     sendChatMessage: state.sendMsgContent_autorep_text
+                        // })
+                        dispatch('sendChaoyingMessage', state.sendMsgContent_autorep_text)
                     }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
                     $ipcRenderer.send('inputEnter', {
@@ -302,12 +299,10 @@ const actions = {
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID') {
                     getExternalUserDetail(data.properties.userId).then(res => {
-                        console.log(state.currentTask.externalUser.name)
                         if (state.currentTask.externalUser.name == res.externalUserDetail.externalUserName) {
                             console.log('直接发送')
-                            dispatch('sendChaoyingMessage')
+                            dispatch('sendChaoyingMessage', state.sendMsgContent)
                         } else {
-                            console.log("打开openchat")
                             if (state.currentTask.externalUser.mobile) {
                                 $ipcRenderer.send('openChat', {
                                     mobile: state.currentTask.externalUser.mobile.split(',')[0],
@@ -325,29 +320,23 @@ const actions = {
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID_AUTOREP') {
                     getExternalUserDetail(data.properties.userId).then(res => {
-                        console.log(state.currentTask.data.properties.fromUser)
-                        console.log(res.externalUserDetail.externalUserId)
                         if (state.currentTask.data.properties.fromUser == res.externalUserDetail.externalUserId) {
                             console.log('直接发送')
                             if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
                                 console.log('sendMsgContent_autorep_media')
-                                sendChaoyingMessage({
-                                    sendChatMessage: state.sendMsgContent_autorep_media
-                                }).then(() => {
-                                    state.sendMsgContent_autorep_media = null
-                                })
+                                // sendChaoyingMessage({
+                                //     sendChatMessage: state.sendMsgContent_autorep_media
+                                // })
+                                dispatch('sendChaoyingMessage', state.sendMsgContent_autorep_media)
                             }
                             if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
                                 console.log('sendMsgContent_autorep_text')
-                                sendChaoyingMessage({
-                                    sendChatMessage: state.sendMsgContent_autorep_text
-                                }).then(() => {
-                                    state.sendMsgContent_autorep_text = null
-                                })
+                                // sendChaoyingMessage({
+                                //     sendChatMessage: state.sendMsgContent_autorep_text
+                                // })
+                                dispatch('sendChaoyingMessage', state.sendMsgContent_autorep_text)
                             }
-
                         } else {
-                            console.log("打开openchat")
                             if (state.currentTask.data.properties.mobile) {
                                 $ipcRenderer.send('openChat', {
                                     mobile: state.currentTask.data.properties.mobile.split(',')[0],
@@ -369,9 +358,6 @@ const actions = {
                     state.taskQueue.push({
                         automationType: "AUTOREP",
                         data: data,
-                        // mobile: data.properties.mobile,
-                        // toUserId: data.toUserId,
-                        // fromUser: data.properties.fromUser
                     })
                 }
             }
@@ -472,7 +458,6 @@ const actions = {
                 console.log('是否在线：' + res)
                 state.isCheckOpenedSidebar = true;
                 if (res) {
-                    console.log("请问你打开的是谁的页面")
                     sendCustomizeMessage({
                         toUserId: state.batchSendTaskDetail.sender.userId,
                         clientGroup: "SIDEBAR",
@@ -565,7 +550,6 @@ const actions = {
         isOnline('SIDEBAR').then(res => {
             console.log('是否在线：' + res)
             if (res) {
-                console.log("请问你打开的是谁的页面")
                 sendCustomizeMessage({
                     toUserId: state.currentTask.data.toUserId,
                     clientGroup: "SIDEBAR",
@@ -604,12 +588,15 @@ const actions = {
         })
     },
 
-    sendChaoyingMessage({ state }) {
+    sendChaoyingMessage({ state }, sendMsgContent) {
+        console.log(111)
+        console(sendMsgContent)
+        console.log(222)
         if (state.batchSendTaskDetail.media.type == 'ARTICLE' && state.sendMsgContent) {
             state.sendMsgContent.news.link = state.currentTask.contentUrl
         }
         sendChaoyingMessage({
-            sendChatMessage: state.sendMsgContent
+            sendChatMessage: sendMsgContent
         })
     },
 
