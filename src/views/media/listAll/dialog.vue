@@ -26,7 +26,6 @@ import CreateFileTemplate from './event-create-file.vue'
 // import CreateArticleTemplate from './event-create-article.vue'
 import CreateVideoTemplate from './event-create-video.vue'
 
-import EditTextTemplate from './event-edit-text'
 
 import { mapState } from 'vuex'
 export default {
@@ -34,7 +33,6 @@ export default {
     CreateGroupTemplate,
     EditGroupTemplate,
     CreateTextTemplate,
-    EditTextTemplate,
     CreateImageTemplate,
     CreateFileTemplate,
     CreateVideoTemplate

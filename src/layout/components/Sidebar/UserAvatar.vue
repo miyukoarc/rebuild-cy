@@ -43,15 +43,17 @@ export default {
   },
   methods: {
     async logout() {
-      this.removeToken()
-      window.watermark.remove()
-      await this.$store.dispatch('auth/logout')
-      window.location.reload()
-    //   this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    },
-    removeToken() {
-      return removeToken()
-    },
+      removeToken()
+      if(window.watermark){
+
+          window.watermark.remove()
+      }
+      await this.$store.dispatch('auth/logout').then(()=>{
+
+          this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      })
+    //   window.location.reload()
+    }
   },
 }
 </script>

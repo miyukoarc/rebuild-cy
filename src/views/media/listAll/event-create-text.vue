@@ -79,7 +79,7 @@ export default {
           { required: true, message: '请输入内容', trigger: 'blur' },
           {
             min: 1,
-            max: 15,
+            max: 4000,
             message: '长度在 1 到 4000 个字符',
             trigger: 'blur',
           },
