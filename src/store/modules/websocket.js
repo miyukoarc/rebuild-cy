@@ -115,8 +115,6 @@ const actions = {
                     $ipcRenderer.on('reply-IsLock', (event, arg) => {
                         console.log('reply-IsLock', arg)
                         state.isLock = arg.res
-                        console.log('state.isLock', state.isLock)
-                        console.log(rootState.user.userId)
                         sendCustomizeMessage({
                             toUserId: rootState.user.userId,
                             clientGroup: "WORKSPACE",
