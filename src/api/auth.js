@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-10 14:32:48
- * @LastEditTime: 2020-08-20 11:14:05
+ * @LastEditTime: 2020-08-22 17:21:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\api\auth.js
@@ -36,6 +36,16 @@ export const getLoginList = () => {
 export function wxLogin(tenantId) {
     return request({
         url: '/login/' + tenantId,
+        method: 'get'
+    })
+}
+
+/**
+ * 版本号
+ */
+export function publicVersion() {
+    return request({
+        url: 'public/version',
         method: 'get'
     })
 }

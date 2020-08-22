@@ -1,56 +1,92 @@
-import {getLoginList,logout} from '@/api/auth'
+/*
+ * @Author: your name
+ * @Date: 2020-08-10 14:32:48
+ * @LastEditTime: 2020-08-22 17:32:34
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\store\modules\auth.js
+ */
+import {
+    getLoginList,
+    logout,
+    publicVersion
+} from '@/api/auth'
 
 
 const state = {
     loginList: [],
     loggedCorp: '',
-    corpInfo: {}
-
+    corpInfo: {},
+    publicVersion: ''
 }
 
 const mutations = {
-    SAVE_LIST(state,payload){
+    SAVE_LIST(state, payload) {
         state.loginList = payload
     },
-    SAVE_LOGGEDCORP(state,payload){
+    SAVE_LOGGEDCORP(state, payload) {
         state.loggedCorp = payload
     },
-    SAVE_CORPINFO(state,payload){
+    SAVE_CORPINFO(state, payload) {
         state.corpInfo = payload
-    }
+    },
+    SAVE_PUBLICVERSION(state, payload) {
+        state.publicVersion = payload
+        console.log(state.publicVersion, '---')
+    },
 }
 
 const actions = {
-        // user logout
-        logout({
-            commit,
-        }) {
-            return new Promise((resolve, reject) => {
-                logout().then(() => {
-                     // must remove  token  first
-                    // commit('RESET_STATE')
-                    resolve()
-                }).catch(error => {
-                    reject(error)
-                })
+    // user logout
+    logout({
+        commit,
+    }) {
+        return new Promise((resolve, reject) => {
+            logout().then(() => {
+                // must remove  token  first
+                // commit('RESET_STATE')
+                resolve()
+            }).catch(error => {
+                reject(error)
             })
-        },
+        })
+    },
+
     /**
      * 登录列表
      * @param {*} param0 
      *
      */
-    getLoginList({commit}){
-        return new Promise((resolve,reject)=>{
-            getLoginList().then(res=>{
-                commit('SAVE_LIST',res)
+    getLoginList({
+        commit
+    }) {
+        return new Promise((resolve, reject) => {
+            getLoginList().then(res => {
+                commit('SAVE_LIST', res)
                 resolve()
-            }).catch(err=>{
-                
+            }).catch(err => {
                 reject(err)
             })
         })
-    }
+    },
+
+    /**
+     * 版本号
+     *
+     */
+    publicVersion({
+        commit
+    }) {
+        return new Promise((resolve, reject) => {
+            publicVersion().then(res => {
+                commit('SAVE_PUBLICVERSION', res)
+                resolve()
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
+
 }
 
 
@@ -59,5 +95,4 @@ export default {
     state,
     mutations,
     actions
-  }
-  
+}
