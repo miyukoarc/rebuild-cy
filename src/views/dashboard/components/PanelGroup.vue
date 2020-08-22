@@ -6,10 +6,13 @@
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            客户总数
-          </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <div class="card-panel-text">客户总数</div>
+          <count-to
+            :start-val="0"
+            :end-val="externalUser.externalUserCount"
+            :duration="2600"
+            class="card-panel-num"
+          />
         </div>
       </div>
     </el-col>
@@ -19,10 +22,13 @@
           <svg-icon icon-class="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            会话总数
-          </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+          <div class="card-panel-text">会话总数</div>
+          <count-to
+            :start-val="0"
+            :end-val="externalUser.messageCount"
+            :duration="3000"
+            class="card-panel-num"
+          />
         </div>
       </div>
     </el-col>
@@ -32,10 +38,13 @@
           <svg-icon icon-class="department" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            流失客户
-          </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+          <div class="card-panel-text">流失客户</div>
+          <count-to
+            :start-val="0"
+            :end-val="externalUser.runWayCount"
+            :duration="3200"
+            class="card-panel-num"
+          />
         </div>
       </div>
     </el-col>
@@ -45,10 +54,13 @@
           <svg-icon icon-class="wenjian" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            违规次数
-          </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <div class="card-panel-text">违规次数</div>
+          <count-to
+            :start-val="0"
+            :end-val="externalUser.violationCount"
+            :duration="3600"
+            class="card-panel-num"
+          />
         </div>
       </div>
     </el-col>
@@ -56,17 +68,36 @@
 </template>
 
 <script>
-import CountTo from'vue-count-to'
-
-export default{
-  components:{
-    CountTo
+import CountTo from 'vue-count-to'
+import { getDashboard } from '@/api/dashboard'
+export default {
+  components: {
+    CountTo,
   },
-  methods:{
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData',type)
+  data() {
+    return {
+      externalUser: {
+        externalUserCount: 0,
+        messageCount: 0,
+        runWayCount: 0,
+        violationCount: 0,
+      },
     }
-  }
+  },
+  created() {
+    getDashboard()
+      .then((res) => {
+        this.externalUser = { ...res }
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  },
+  methods: {
+    handleSetLineChartData(type) {
+      this.$emit('handleSetLineChartData', type)
+    },
+  },
 }
 </script>
 
@@ -86,8 +117,8 @@ export default{
     overflow: hidden;
     color: #666;
     background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-    border-color: rgba(0, 0, 0, .05);
+    box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.05);
 
     &:hover {
       .card-panel-icon-wrapper {
@@ -107,7 +138,7 @@ export default{
       }
 
       .icon-shopping {
-        background: #34bfa3
+        background: #34bfa3;
       }
     }
 
@@ -124,7 +155,7 @@ export default{
     }
 
     .icon-shopping {
-      color: #34bfa3
+      color: #34bfa3;
     }
 
     .card-panel-icon-wrapper {
@@ -160,7 +191,7 @@ export default{
   }
 }
 
-@media (max-width:550px) {
+@media (max-width: 550px) {
   .card-panel-description {
     display: none;
   }
