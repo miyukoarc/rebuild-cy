@@ -266,7 +266,7 @@ export default {
             message: message,
             duration: 1000,
             onClose: () => {
-              this.$router.go(-1)
+              this.$router.push({path:'/media/article/listAll'})
               this.flag = false
             },
           })
@@ -288,17 +288,17 @@ export default {
             message: '操作成功',
             duration: 1000,
             onClose: () => {
-              this.$router.go(-1)
+              this.$router.push({path:'/media/article/listAll'})
               this.flag = false
             },
           })
         })
         .catch((err) => {
           console.error(err)
-          this.$message({
-            type: 'error',
-            message: err,
-          })
+        //   this.$message({
+        //     type: 'error',
+        //     message: err,
+        //   })
         })
     },
   },
