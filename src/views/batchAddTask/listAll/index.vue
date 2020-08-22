@@ -245,7 +245,30 @@ export default {
       });
     },
     handleContinue(val) {
-      console.log(val);
+      const uuid = this.batchTaskListmy[val].uuid;
+      this.$confirm("是否继续此任务", "Warning", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        // 等陈昊接口
+        jixvtianjiahaoyourenwu({
+          uuid,
+        })
+          .then((res) => {
+            this.$message({
+              type: "success",
+              message: "操作成功",
+            });
+            this.initDataList();
+          })
+          .catch((err) => {
+            this.$message({
+              type: "error",
+              message: err,
+            });
+          });
+      });
     },
     handleSearch(val) {
       const { creatorUuid, endtime, starttime, status } = val;
