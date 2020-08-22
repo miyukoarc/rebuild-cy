@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-13 00:01:31
- * @LastEditTime: 2020-08-21 19:40:09
+ * @LastEditTime: 2020-08-22 19:46:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\utils\request.js
@@ -19,7 +19,7 @@ import {
     removeToken
 } from '@/utils/auth'
 
-
+let cancel, promiseArr = {}
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
 // var loadinginstace
@@ -39,7 +39,13 @@ const service = axios.create({
     // request interceptor
 service.interceptors.request.use(
     config => {
-
+        //发起请求时，取消掉当前正在进行的相同请求
+        if (promiseArr[config.url]) {
+            promiseArr[config.url]('操作取消')
+            promiseArr[config.url] = cancel
+        } else {
+            promiseArr[config.url] = cancel
+        }
         // do something before request is sent
         config.cancelToken = source.token; // 全局添加cancelToken
         return config;
