@@ -275,6 +275,14 @@ $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
+#browser{
+    width: 300px;
+    height: 400px;
+    iframe{
+        display: block;
+    }
+}
+
 .login-container {
   min-height: 100%;
   width: 100%;

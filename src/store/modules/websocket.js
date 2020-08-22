@@ -276,21 +276,23 @@ const actions = {
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
                     state.isOpenedSidebar = true;// 侧边栏已打开
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
-                        dispatch('sendChaoyingMessage', state.sendMsgContent)
+                        dispatch('sendChaoyingMessage')
                     }
                     if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
                         console.log('sendMsgContent_autorep_media')
-                        // sendChaoyingMessage({
-                        //     sendChatMessage: state.sendMsgContent_autorep_media
-                        // })
-                        dispatch('sendChaoyingMessage', state.sendMsgContent_autorep_media)
+                        sendChaoyingMessage({
+                            sendChatMessage: state.sendMsgContent_autorep_media
+                        }).then(() => {
+                            state.sendMsgContent_autorep_media = null
+                        })
                     }
                     if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
                         console.log('sendMsgContent_autorep_text')
-                        // sendChaoyingMessage({
-                        //     sendChatMessage: state.sendMsgContent_autorep_text
-                        // })
-                        dispatch('sendChaoyingMessage', state.sendMsgContent_autorep_text)
+                        sendChaoyingMessage({
+                            sendChatMessage: state.sendMsgContent_autorep_text
+                        }).then(() => {
+                            state.sendMsgContent_autorep_text = null
+                        })
                     }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
                     $ipcRenderer.send('inputEnter', {
@@ -301,7 +303,7 @@ const actions = {
                     getExternalUserDetail(data.properties.userId).then(res => {
                         if (state.currentTask.externalUser.name == res.externalUserDetail.externalUserName) {
                             console.log('直接发送')
-                            dispatch('sendChaoyingMessage', state.sendMsgContent)
+                            dispatch('sendChaoyingMessage')
                         } else {
                             if (state.currentTask.externalUser.mobile) {
                                 $ipcRenderer.send('openChat', {
@@ -324,17 +326,19 @@ const actions = {
                             console.log('直接发送')
                             if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
                                 console.log('sendMsgContent_autorep_media')
-                                // sendChaoyingMessage({
-                                //     sendChatMessage: state.sendMsgContent_autorep_media
-                                // })
-                                dispatch('sendChaoyingMessage', state.sendMsgContent_autorep_media)
+                                sendChaoyingMessage({
+                                    sendChatMessage: state.sendMsgContent_autorep_media
+                                }).then(() => {
+                                    state.sendMsgContent_autorep_media = null
+                                })
                             }
                             if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
                                 console.log('sendMsgContent_autorep_text')
-                                // sendChaoyingMessage({
-                                //     sendChatMessage: state.sendMsgContent_autorep_text
-                                // })
-                                dispatch('sendChaoyingMessage', state.sendMsgContent_autorep_text)
+                                sendChaoyingMessage({
+                                    sendChatMessage: state.sendMsgContent_autorep_text
+                                }).then(() => {
+                                    state.sendMsgContent_autorep_text = null
+                                })
                             }
                         } else {
                             if (state.currentTask.data.properties.mobile) {
@@ -588,15 +592,12 @@ const actions = {
         })
     },
 
-    sendChaoyingMessage({ state }, sendMsgContent) {
-        console.log(111)
-        console(sendMsgContent)
-        console.log(222)
+    sendChaoyingMessage({ state }) {
         if (state.batchSendTaskDetail.media.type == 'ARTICLE' && state.sendMsgContent) {
             state.sendMsgContent.news.link = state.currentTask.contentUrl
         }
         sendChaoyingMessage({
-            sendChatMessage: sendMsgContent
+            sendChatMessage: state.sendMsgContent
         })
     },
 
