@@ -278,7 +278,7 @@
                           type="text"
                           v-show="item.editable"
                           class="ml-10"
-                          @click="handleEditTrend(item)"
+                          @click.native="handleEditTrend(item)"
                         >编辑</el-t-button>
                         <el-t-button
                           :popAuth="true"
@@ -287,7 +287,7 @@
                           type="text"
                           v-show="item.editable"
                           class="ml-10"
-                          @click="handleDeleteTrend(item)"
+                          @click.native="handleDeleteTrend(item)"
                         >删除</el-t-button>
                       </p>
                     </el-card>

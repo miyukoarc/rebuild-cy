@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-08-10 11:41:30
+ * @LastEditTime: 2020-08-21 13:54:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\contactWay.js
@@ -157,12 +157,12 @@ const actions = {
         commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
             contactWayAdd(payload).then(res => {
-                commit('TOGGLE_LOADING', false)
-                resolve()
+                resolve(res)
             }).catch(err => {
-                commit('TOGGLE_LOADING', false)
-
+                // commit('TOGGLE_LOADING', false)
                 reject(err)
+            }).finally(() => {
+                commit('TOGGLE_LOADING', false)
             })
         })
     },
@@ -224,7 +224,6 @@ const actions = {
                 resolve(res)
             }).catch(err => {
                 commit('TOGGLE_LOADING', false)
-
                 reject(err)
             })
         })

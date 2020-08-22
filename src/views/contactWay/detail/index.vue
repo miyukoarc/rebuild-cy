@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-11 11:15:45
- * @LastEditTime: 2020-08-14 11:17:54
+ * @LastEditTime: 2020-08-21 14:36:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\contactWay\detail.vue
@@ -289,7 +289,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import inputEdit from "@/components/inputEdit";
 
 export default {
-  name: "contactWay_detail",
+  // name: "contactWay_detail",
   components: {
     inputEdit,
   },
@@ -338,6 +338,21 @@ export default {
     };
   },
   watch: {
+    // $route: {
+    //   handler(newVal, oldVal) {
+    //     const uuid = newVal.params.uuid
+    //     if (-uuid) {
+    //       this.mode = 'UPDATE'
+    //       this.$set(this.form, 'uuid', uuid)
+    //       this.initDetail(uuid)
+    //     } else {
+    //       console.log('create')
+    //       Object.assign(this.$data, this.$options.data())
+    //       this.mode = 'CREATE'
+    //     }
+    //   },
+    //   immediate: true,
+    // },
     "ruleForm.welcomeContent": {
       handler(newVal, oldVal) {
         if (newVal.indexOf('<span class="nickName">客户昵称</span>') > -1) {

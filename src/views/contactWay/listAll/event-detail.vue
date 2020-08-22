@@ -4,7 +4,7 @@
       <div class="detail-left">
         <img :src="contactWayDetailRow.qrCode" alt />
         <p>{{ contactWayDetailRow.remark }}</p>
-        <el-t-button type="primary" size="mini" @click="downLoad(contactWayDetailRow)">下载活码</el-t-button>
+        <el-t-button type="primary" class="mb-5" size="mini" @click="downLoad(contactWayDetailRow)">下载活码</el-t-button>
         <el-t-button size="mini" @click="handleEdit(contactWayDetailRow)">修改</el-t-button>
       </div>
 
@@ -25,14 +25,18 @@
         </div>
         <div class="detail-item-title">
           <span class="item-title">客户标签：</span>
-          <ul class="tag-list">
+         <div>
+            <tags-drawer :tags="contactWayDetailRow.servicesTags"></tags-drawer>
+          </div>
+          <!-- <ul class="tag-list">
             <li
               v-for="(item,index) in contactWayDetailRow.servicesTags"
               :key="index"
               class="tag"
-            >{{ item.tagName }}</li>
-          </ul>
+            >{{ item.tags.tagName }}</li>
+          </ul> -->
         </div>
+         
         <div class="detail-item-title">
           <span class="item-title">自动通过好友：</span>
           <span>{{ contactWayDetailRow.skipVerify? '全天开启':'时间段' }}</span>
@@ -48,9 +52,11 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-
+import TagsDrawer from '@/components/TagsDrawer'
 export default {
-  components: {},
+  components: {
+    TagsDrawer
+  },
   data() {
     return {};
   },

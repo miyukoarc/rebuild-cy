@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-13 00:01:31
- * @LastEditTime: 2020-08-20 21:15:00
+ * @LastEditTime: 2020-08-21 19:40:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\utils\request.js
@@ -31,7 +31,7 @@ const source = CancelToken.source();
 const service = axios.create({
         baseURL: process.env.VUE_APP_WORK === 'offline' ? 'http://127.0.0.1:3000/api' : process.env.VUE_APP_BASE_API, // url = base url + request url
         withCredentials: true, // send cookies when cross-domain requests
-        timeout: 15000, // request timeout
+        timeout: 30000, // request timeout
         validateStatus: (status) => {
             return status < 500
         }
@@ -41,7 +41,7 @@ service.interceptors.request.use(
     config => {
 
         // do something before request is sent
-        // config.cancelToken = source.token; // 全局添加cancelToken
+        config.cancelToken = source.token; // 全局添加cancelToken
         return config;
         // if (store.getters.token) {
         // let each request carry token
@@ -90,7 +90,7 @@ service.interceptors.response.use(
             // })
 
             removeToken()
-                // source.cancel(); // 取消其他正在进行的请求
+            source.cancel(); // 取消其他正在进行的请求
             router.push({
                     path: '/login'
                 })
@@ -160,11 +160,11 @@ service.interceptors.response.use(
         // }
     },
     error => {
-        // if (axios.isCancel(error)) { // 取消请求的情况下，终端Promise调用链
-        //     return new Promise(() => {});
-        // } else {
-        return Promise.reject(error);
-        // }
+        if (axios.isCancel(error)) { // 取消请求的情况下，终端Promise调用链
+            return new Promise(() => {});
+        } else {
+            return Promise.reject(error);
+        }
         // loadinginstace.close()
         // store.commit('app/CLOSE_LOADING')
         // console.log('err' + error.response.status) // for debug

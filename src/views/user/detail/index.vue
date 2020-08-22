@@ -37,7 +37,8 @@
             style="float:right;"
             v-model="value"
             type="daterange"
-            :value-format="'yyyy-MM-dd HH-mm-ss'"
+            :picker-options="pickerOptions"
+            :value-format="'yyyy-MM-dd HH:mm:ss'"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -162,6 +163,29 @@ export default {
         new_apply_cnt: "主动添加客户数(人)",
         new_contact_cnt: "新增客户数(人)",
       },
+      pickerOptions: {
+        onPick: ({ minDate, maxDate }) => {
+          //当第一时间选中才设置禁用
+          console.log("3333111", minDate, maxDate);
+          if (minDate && maxDate) {
+            // this.value = [
+            //   dayjs(minDate).format("YYYY-MM-DD 00:00:00"),
+            //   dayjs(maxDate).format("YYYY-MM-DD 23:59:59"),
+            // ];
+            this.form.end = dayjs(maxDate).format("YYYY-MM-DD 23:59:59");
+            this.form.sta = dayjs(minDate).format("YYYY-MM-DD 00:00:00");
+            console.log("afadfasdfafsdf", this.form);
+            this.initBoard(this.form);
+          }
+          console.log(this.value, "this.value");
+        },
+        disabledDate: (time) => {
+          return (
+            time.getTime() > Date.now() - 24 * 60 * 60 * 1000 ||
+            time.getTime() < Date.now() - 30 * 24 * 60 * 60 * 1000
+          );
+        },
+      },
     };
   },
   watch: {
@@ -265,22 +289,28 @@ export default {
         });
     },
     handleChange() {
+      console.log("66666");
       if (this.value) {
         this.form.sta = this.value[0];
         this.form.end = this.value[1];
       } else {
         this.form.sta = dayjs()
           .subtract(this.date, "day")
-          .format("YYYY-MM-DD HH:mm:ss");
-        this.form.end = dayjs().format("YYYY-MM-DD HH:mm:ss");
+          .format("YYYY-MM-DD 00:00:00");
+        this.form.end = dayjs()
+          .subtract(1, "day")
+          .format("YYYY-MM-DD 23:59:59");
       }
+      console.log(this.form.sta, this.form.end, "66666");
       this.initBoard(this.form);
     },
     changeDate(val) {
+      console.log(val, "3333333");
       this.form.sta = dayjs()
         .subtract(val, "day")
-        .format("YYYY-MM-DD HH:mm:ss");
-      this.form.end = dayjs().format("YYYY-MM-DD HH:mm:ss");
+        .format("YYYY-MM-DD 00:00:00");
+      this.form.end = dayjs().subtract(1, "day").format("YYYY-MM-DD 23:59:59");
+      console.log(this.form.sta, this.form.end, "66666");
     },
     handleGroupChat(row) {
       console.log(row, "row", this.userDetail);

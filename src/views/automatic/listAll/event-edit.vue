@@ -1,13 +1,23 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-03 10:13:30
- * @LastEditTime: 2020-08-12 19:12:17
+ * @LastEditTime: 2020-08-21 14:29:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\listAll\event-detail.vue
 --> 
 <template>
-  <el-form :model="form" ref="form" :rules="rules" label-width="120px" label-position="left">
+  <el-form
+    :model="form"
+    ref="form"
+    :rules="rules"
+    label-width="120px"
+    label-position="left"
+    v-loading="loading"
+    element-loading-text="正在上传中..."
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
     <el-form-item label="规则名称" prop="rule" maxlength="15" show-word-limit>
       <el-input v-model.trim="form.rule" placeholder="请输入规则名称"></el-input>
     </el-form-item>
@@ -168,6 +178,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       fileList: [],
       // 回复内容
       form: {
@@ -308,6 +319,7 @@ export default {
     handleConfirm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          this.loading = true;
           if (this.form.autoReplyType != "FILE") {
             this.form.fileName = "";
           }
@@ -321,18 +333,21 @@ export default {
             const payload = this.form;
             this.$store
               .dispatch("automatic/automaticUpdate", payload)
-              .then(() => {
-                this.$message({
-                  type: "success",
-                  message: "新建成功",
-                });
-                this.handleCancel();
-                this.initDataList();
+              .then((res) => {
+                if (res) {
+                  this.loading = false;
+                  this.$message({
+                    type: "success",
+                    message: "编辑成功",
+                  });
+                  this.handleCancel();
+                  this.initDataList();
+                }
               })
               .catch((err) => {
                 this.$message({
                   type: "error",
-                  message: err || "新建失败",
+                  message: err || "编辑失败",
                 });
               });
           }

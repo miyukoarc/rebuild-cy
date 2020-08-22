@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-17 23:18:57
- * @LastEditTime: 2020-08-11 17:45:54
+ * @LastEditTime: 2020-08-21 14:27:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\modules\automatic.js
@@ -208,7 +208,6 @@ const actions = {
     automaticUpdate({
         commit
     }, payload) {
-
         return new Promise((resolve, reject) => {
             automaticUpdate(payload).then(res => {
                 resolve(res)
