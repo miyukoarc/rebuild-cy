@@ -31,7 +31,8 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import { removeToken } from '@/utils/auth'
+import { getToken,removeToken } from '@/utils/auth'
+import Watermark from '@/utils/watermark'
 
 export default {
   name: 'user-avatar',
@@ -42,10 +43,10 @@ export default {
     }),
   },
   methods: {
-    async logout() {
-      this.removeToken()
+     logout() {
+      removeToken()
       window.watermark.remove()
-      await this.$store.dispatch('auth/logout')
+      this.$store.dispatch('auth/logout')
       window.location.reload()
     //   this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
