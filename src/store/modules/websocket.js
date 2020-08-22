@@ -40,6 +40,8 @@ const state = {
     isChangeState: false, // 是否把“待发送”变为“发送中”，只需改一次即可
 
     isInProgress: false, // 当前是否处于任务执行期间：默认否
+
+    isLock: null,
 }
 
 
@@ -74,7 +76,7 @@ const actions = {
                     } else {
                         state.isInProgress = true;
                         // 锁屏开始执行任务
-                        // $ipcRenderer.send('LockScreen', {})
+                        $ipcRenderer.send('IsLock', {})
 
                         // 群发队列
                         if (state.currentTask.automationType == "BatchSendTask") {
@@ -110,46 +112,26 @@ const actions = {
             })
             state.sock.onopen = function () {
                 if (isElectron()) {
-                    // $ipcRenderer.on('reply-LockScreen', (event, arg) => {
-                    //     console.log('reply-LockScreen', arg)
-                    //     if (arg.err) {
-                    //         // 群发出错，任务状态设为“中断”
-                    //         if (state.currentTask.automationType == 'BatchSendTask') {
-                    //             batchSendTaskSuspend({
-                    //                 uuids: [state.batchSendTaskDetail.uuid]
-                    //             })
-                    //         }
-                    //         dispatch('clearTask')
-                    //         Message({
-                    //             message: arg.err.message,
-                    //             type: 'error'
-                    //         })
-                    //         return;
-                    //     } else {
-                    //         state.mouseX = arg.res.x
-                    //         state.mouseY = arg.res.y
-                    //     }
-                    // })
-                    // $ipcRenderer.on('reply-UnlockScreen', (event, arg) => {
-                    //     console.log('reply-UnlockScreen', arg)
-                    //     if (arg.err) {
-                    //         // 群发出错，任务状态设为“中断”
-                    //         if (state.currentTask.automationType == 'BatchSendTask') {
-                    //             batchSendTaskSuspend({
-                    //                 uuids: [state.batchSendTaskDetail.uuid]
-                    //             })
-                    //         }
-                    //         dispatch('clearTask')
-                    //         Message({
-                    //             message: arg.err.message,
-                    //             type: 'error'
-                    //         })
-                    //         return;
-                    //     } else {
-                    //         state.mouseX = arg.res.x
-                    //         state.mouseY = arg.res.y
-                    //     }
-                    // })
+                    $ipcRenderer.on('reply-IsLock', (event, arg) => {
+                        console.log('reply-IsLock', arg)
+                        state.isLock = arg.res
+                        console.log('state.isLock', state.isLock)
+                        console.log(rootState.user.userId)
+                        sendCustomizeMessage({
+                            toUserId: rootState.user.userId,
+                            clientGroup: "WORKSPACE",
+                            properties: {
+                                code: 'ISLOCK',
+                                isLock: state.isLock
+                            }
+                        })
+                    })
+                    $ipcRenderer.on('reply-LockScreen', (event, arg) => {
+                        console.log('reply-LockScreen', arg)
+                    })
+                    $ipcRenderer.on('reply-UnlockScreen', (event, arg) => {
+                        console.log('reply-UnlockScreen', arg)
+                    })
                     $ipcRenderer.on('reply-openChat', (event, arg) => {
                         if (arg.err) {
                             console.log('reply-openChat', arg)
@@ -363,6 +345,12 @@ const actions = {
                         automationType: "AUTOREP",
                         data: data,
                     })
+                } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'LOCKSCREEN') {
+                    $ipcRenderer.send('LockScreen', {})
+                } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'UNLOCKSCREEN') {
+                    $ipcRenderer.send('UnlockScreen', {})
+                } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'ISLOCK') {
+                    $ipcRenderer.send('IsLock', {})
                 }
             }
             state.sock.onclose = function () {
