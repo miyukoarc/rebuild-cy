@@ -75,13 +75,12 @@ const actions = {
                         console.log('任务队列全部执行完成，清空列表')
                         dispatch('clearTask')
                     } else {
-                        state.isInProgress = true;
-                        // 锁屏开始执行任务
                         if (state.isLock) {
-                            $ipcRenderer.send('UnlockScreen', {})
+                            $ipcRenderer.send("UnlockScreen", {})
                             state.isLockTemp = true
                         }
 
+                        state.isInProgress = true;
                         // 群发队列
                         if (state.currentTask.automationType == "BatchSendTask") {
                             dispatch('openChat')
@@ -130,9 +129,11 @@ const actions = {
                     })
                     $ipcRenderer.on('reply-LockScreen', (event, arg) => {
                         console.log('reply-LockScreen', arg)
+                        state.isLock = true
                     })
                     $ipcRenderer.on('reply-UnlockScreen', (event, arg) => {
                         console.log('reply-UnlockScreen', arg)
+                        state.isLock = false
                     })
                     $ipcRenderer.on('reply-openChat', (event, arg) => {
                         if (arg.err) {
@@ -593,8 +594,8 @@ const actions = {
 
     clearTask() {
         console.log('clearTask')
-        if (state.isLockTemp) {
-            $ipcRenderer.send('LockScreen', {})
+        if(state.isLockTemp){
+            $ipcRenderer.send("LockScreen",{})
         }
         // 初始化数据
         state.taskQueue.length = 0;

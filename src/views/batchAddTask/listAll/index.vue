@@ -110,6 +110,7 @@ import ToolBar from "@/components/ToolBar";
 import CustomerPagination from "@/components/CustomerPagination";
 import { mapState } from "vuex";
 import { cancelBatchAddTask } from "@/api/potentialCustomer";
+import { continueAdd } from "@/api/batchAddTask";
 
 export default {
   name: "batchAddTask_listAll",
@@ -252,7 +253,7 @@ export default {
         type: "warning",
       }).then(() => {
         // 等陈昊接口
-        jixvtianjiahaoyourenwu({
+        continueAdd({
           uuid,
         })
           .then((res) => {

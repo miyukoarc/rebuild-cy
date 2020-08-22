@@ -33,3 +33,15 @@ export const batchAddTaskHandleTask = (payload) => {
         data: payload
     })
 }
+
+/**
+ * 中断的任务，继续添加好友
+ * @param {object} payload 
+ */
+export const continueAdd = (payload) => {
+    return request({
+        url: '/batchAddTask/continueAdd',
+        method: 'post',
+        data: payload
+    })
+}
