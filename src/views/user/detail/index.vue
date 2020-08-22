@@ -267,12 +267,13 @@ export default {
             new_apply_cnt,
             negative_feedback_cnt,
           };
-          const {
+          let {
             chat_cnt,
             message_cnt,
             reply_percentage,
             avg_reply_time,
           } = this.customerStatistics;
+          reply_percentage = this.isDot(reply_percentage);
           this.message = {
             chat_cnt,
             message_cnt,
@@ -330,6 +331,19 @@ export default {
       this.$router.push({
         path: "/externalUser/detail/" + uuid,
       });
+    },
+    isDot(num) {
+      console.log(num, typeof num);
+      if (num) {
+        let result = num.toString().indexOf(".");
+        if (result != -1) {
+          return num.toFixed(2);
+        } else {
+          return num;
+        }
+      }else{
+        return 0
+      }
     },
   },
 };
