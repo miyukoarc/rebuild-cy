@@ -32,7 +32,6 @@ const mutations = {
     },
     SAVE_PUBLICVERSION(state, payload) {
         state.publicVersion = payload
-        console.log(state.publicVersion, '---')
     },
 }
 

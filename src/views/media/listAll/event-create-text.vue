@@ -187,18 +187,10 @@ export default {
       })
     },
     doConfirm(payload) {
-        console.log('!')
       return new Promise((resolve, reject) => {
         this.$store
           .dispatch('media/addArticleIsAudit', payload)
           .then(() => {
-            // const message = this.auditSetting['media'] ? '已提交审核' : '已完成'
-            // this.$message({
-            //   type: 'success',
-            //   message: message,
-            // })
-            //   this.handleCancel()
-            //   this.handleRefresh()
             resolve('添加成功')
           })
           .catch((err) => {
