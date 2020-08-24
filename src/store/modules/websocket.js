@@ -594,8 +594,8 @@ const actions = {
 
     clearTask() {
         console.log('clearTask')
-        if(state.isLockTemp){
-            $ipcRenderer.send("LockScreen",{})
+        if (state.isLockTemp) {
+            $ipcRenderer.send("LockScreen", {})
         }
         // 初始化数据
         state.taskQueue.length = 0;
@@ -612,6 +612,7 @@ const actions = {
         state.isLockTemp = false
         // 清除加载图标
         if (state.loadingInstance) {
+
             state.loadingInstance.close();
         }
         // 刷新移动端群发页面

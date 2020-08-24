@@ -10,21 +10,18 @@
                 <el-radio :label="'WX'">
                   企业微信群发
                   <el-tooltip placement="right">
-                    <div slot="content">添加成为用户后，将自动打上预设标签</div>
+                    <div slot="content">同一个企业每个自然月内仅可针对一个客户/客户群发4条消息，超过限制的用户将会被忽略。</div>
                     <i class="el-icon-question tip"></i>
                   </el-tooltip>
                 </el-radio>
                 <el-radio :label="'MY'">
                   超盈群发
-                  <el-tooltip placement="right">
+                  <!-- <el-tooltip placement="right">
                     <div slot="content">添加成为用户后，将自动打上预设标签</div>
                     <i class="el-icon-question tip"></i>
-                  </el-tooltip>
+                  </el-tooltip>-->
                 </el-radio>
               </el-radio-group>
-            </el-form-item>
-            <el-form-item label=" ">
-              <span>同一个企业每个自然月内仅可针对一个客户/客户群发4条消息，超过限制的用户将会被忽略。</span>
             </el-form-item>
             <el-form-item label="选择群发账号：" prop="userUuid">
               <el-select
