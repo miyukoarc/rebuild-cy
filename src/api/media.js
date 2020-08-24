@@ -51,6 +51,7 @@ export const addMediaIsAudit = (payload) => {
  * @param {object} payload 
  */
 export const addArticleIsAudit = (payload) => {
+    console.log('!')
     return request({
         url: '/media/addMediaIsAudit',
         method: 'post',
