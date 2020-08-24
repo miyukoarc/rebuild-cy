@@ -20,7 +20,7 @@
               <el-switch v-model="isReplySwitch" @change="handleClickReplySwitch"></el-switch>
             </div>
           </el-t-button>
-          <span class="mr-10 font-es">自动回复是针对客户的常见问题而设置的标准回复内容,可快速响应客户的问题。管理员可统一添加关键词和自动回复的消息</span>
+          <span class="mr-10 font-es">自动回复是针对客户的常见问题而设置的标准回复内容,可快速响应客户的问题。</span>
           <el-t-button
             type="primary"
             size="mini"
@@ -145,18 +145,18 @@
 <script>
 // import mHeadedr from "./header";
 
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from './tool-bar'
-import AsyncUserTag from '@/components/AsyncUserTag'
-import AsyncUserDrawer from '@/components/AsyncUserDrawer'
-import TagsDrawer from '@/components/TagsDrawer'
-import RoleDrawer from '@/components/RoleDrawer'
-import CustomerPagination from '@/components/CustomerPagination'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "./tool-bar";
+import AsyncUserTag from "@/components/AsyncUserTag";
+import AsyncUserDrawer from "@/components/AsyncUserDrawer";
+import TagsDrawer from "@/components/TagsDrawer";
+import RoleDrawer from "@/components/RoleDrawer";
+import CustomerPagination from "@/components/CustomerPagination";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: 'automatic_listAll',
+  name: "automatic_listAll",
   components: {
     ListHeader,
     FormDialog,
@@ -180,17 +180,17 @@ export default {
       query: {
         page: 0,
         size: 10,
-        ruleName: '',
-        keyWord: '',
-        replyWord: '',
+        ruleName: "",
+        keyWord: "",
+        replyWord: "",
         // userId: "",
         tagIds: [],
         flag: true,
-        startTime: '',
-        endTime: '',
+        startTime: "",
+        endTime: "",
       },
       rowSelects: [],
-    }
+    };
   },
   watch: {},
   computed: {
@@ -206,19 +206,19 @@ export default {
       return function (row) {
         if (row.replyWord.length > 20) {
           if (this.curly) {
-            return row.replyWord.substring(0, 20)
+            return row.replyWord.substring(0, 20);
           } else {
-            return row.replyWord
+            return row.replyWord;
           }
         } else {
-          return row.replyWord
+          return row.replyWord;
         }
-      }
+      };
     },
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   methods: {
     doExport(val) {},
@@ -227,53 +227,53 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('automatic/getListAll', payload)
+        .dispatch("automatic/getListAll", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1
-          this.pageConfig.total = this.page.total
-          this.isReplySwitch = this.replySwitch
+          this.pageConfig.pageNumber = this.page.pageNumber + 1;
+          this.pageConfig.total = this.page.total;
+          this.isReplySwitch = this.replySwitch;
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
     /**
      * 初始化筛选信息
      */
     initFilter() {
       this.$store
-        .dispatch('tag/getListSelect')
+        .dispatch("tag/getListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
 
       this.$store
-        .dispatch('user/getUserListSelect')
+        .dispatch("user/getUserListSelect")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
 
     handleClickReplySwitch() {
       let payload = {
         flag: this.isReplySwitch,
-      }
+      };
       this.$store
-        .dispatch('automatic/automaticSwitchReply', payload)
+        .dispatch("automatic/automaticSwitchReply", payload)
         .then(() => {})
-        .catch((err) => {})
+        .catch((err) => {});
     },
     // showMore(row) {
     //   console.log(row, "row");
@@ -288,17 +288,17 @@ export default {
     //   }
     // },
     handleEdit(row) {
-      const payload = row.uuid
-      console.log(row, 'row')
-      this.$refs['formDialog'].event = 'EditTemplate'
-      this.$refs['formDialog'].eventType = 'edit'
-      this.$refs['formDialog'].dialogVisible = true
+      const payload = row.uuid;
+      console.log(row, "row");
+      this.$refs["formDialog"].event = "EditTemplate";
+      this.$refs["formDialog"].eventType = "edit";
+      this.$refs["formDialog"].dialogVisible = true;
       this.$store
-        .dispatch('automatic/automaticDetail', payload)
+        .dispatch("automatic/automaticDetail", payload)
         .then((res) => {
-          this.$refs['formDialog'].transfer = res
+          this.$refs["formDialog"].transfer = res;
         })
-        .catch((err) => {})
+        .catch((err) => {});
       // this.$refs["formDialog"].transfer = row;
       // this.$router.push({
       //   path: "/user/detail",
@@ -314,61 +314,61 @@ export default {
         flag,
         startTime,
         endTime,
-      } = val
-      this.query.ruleName = ruleName ? ruleName : ''
-      this.query.keyWord = keyWord ? keyWord : ''
-      this.query.replyWord = replyWord ? replyWord : ''
-      this.query.tagIds = tagIds ? tagIds + '' : []
-      this.query.flag = flag ? true : false
-      this.query.startTime = startTime ? startTime : ''
-      this.query.endTime = endTime ? endTime : ''
-      this.query.page = 0
-      this.initDataList(this.query)
+      } = val;
+      this.query.ruleName = ruleName ? ruleName : "";
+      this.query.keyWord = keyWord ? keyWord : "";
+      this.query.replyWord = replyWord ? replyWord : "";
+      this.query.tagIds = tagIds ? tagIds + "" : [];
+      this.query.flag = flag ? true : false;
+      this.query.startTime = startTime ? startTime : "";
+      this.query.endTime = endTime ? endTime : "";
+      this.query.page = 0;
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     handleClickSetAutoReplay() {
-      this.$refs['formDialog'].event = 'CreateSetTemplate'
-      this.$refs['formDialog'].eventType = 'createSet'
-      this.$refs['formDialog'].dialogVisible = true
+      this.$refs["formDialog"].event = "CreateSetTemplate";
+      this.$refs["formDialog"].eventType = "createSet";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     handleCreate() {
-      this.$refs['formDialog'].event = 'CreateTemplate'
-      this.$refs['formDialog'].eventType = 'create'
-      this.$refs['formDialog'].dialogVisible = true
+      this.$refs["formDialog"].event = "CreateTemplate";
+      this.$refs["formDialog"].eventType = "create";
+      this.$refs["formDialog"].dialogVisible = true;
     },
     handleDelete(row) {
-      const payload = { uuid: row.uuid }
-      this.$confirm('是否删除当前自动回复', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
+      const payload = { uuid: row.uuid };
+      this.$confirm("是否删除当前自动回复", "Warning", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       })
         .then(async () => {
           await this.$store
-            .dispatch('automatic/doDelete', payload)
+            .dispatch("automatic/doDelete", payload)
             .then(() => {
               this.$message({
-                type: 'success',
-                message: '操作成功',
-              })
-              this.initDataList(this.query)
+                type: "success",
+                message: "操作成功",
+              });
+              this.initDataList(this.query);
             })
             .catch((err) => {
               this.$message({
-                type: 'error',
+                type: "error",
                 message: err,
-              })
-            })
+              });
+            });
         })
-        .catch((err) => {})
+        .catch((err) => {});
     },
     // handleEdit(index) {
     //   let {
@@ -405,30 +405,30 @@ export default {
     handleBatchChange() {
       if (this.rowSelects.length) {
         let sensitiveUuid = this.rowSelects.map((item) => {
-          return item.uuid
-        })
+          return item.uuid;
+        });
         // sensitiveUuid = JSON.parse(JSON.stringify(sensitiveUuid))
-        const transfer = { sensitiveUuid }
-        this.$refs['formDialog'].event = 'ChangeTemplate'
-        this.$refs['formDialog'].eventType = 'change'
-        this.$refs['formDialog'].dialogVisible = true
-        this.$refs['formDialog'].transfer = transfer
+        const transfer = { sensitiveUuid };
+        this.$refs["formDialog"].event = "ChangeTemplate";
+        this.$refs["formDialog"].eventType = "change";
+        this.$refs["formDialog"].dialogVisible = true;
+        this.$refs["formDialog"].transfer = transfer;
       } else {
         this.$message({
-          type: 'warning',
-          message: '请至少选择一项',
-        })
+          type: "warning",
+          message: "请至少选择一项",
+        });
       }
     },
     handleSelectionChange(val) {
-      this.rowSelects = val
+      this.rowSelects = val;
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
