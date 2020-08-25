@@ -5,7 +5,12 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar
+        :hasRefresh="true"
+        @handleRefresh="handleRequest"
+        @handleExport="doExport"
+        :msg="`共${pageConfig.total}个客户`"
+      >
         <div slot="right">
           <el-t-button
             type="primary"
@@ -205,6 +210,9 @@ export default {
     })
   },
   methods: {
+    handleRequest() {
+      this.initDataList(this.query)
+    },
     doExport(val) {},
     /**
      * 初始化筛选信息

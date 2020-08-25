@@ -5,16 +5,15 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport">
+      <tool-bar :hasRefresh="true" @handleRefresh="handleRequest" @handleExport="doExport">
         <div slot="right">
           <el-t-button
-          v-permission="'externalUser,externalUser_redistributionExUser'"
+            v-permission="'externalUser,externalUser_redistributionExUser'"
             type="primary"
             @click="handleDistribute"
             :popAuth="true"
             :auth="'externalUser,externalUser_redistributionExUser'"
           >分配客户资源</el-t-button>
-
         </div>
       </tool-bar>
     </el-card>
@@ -165,9 +164,8 @@ export default {
     })
   },
   methods: {
-    doExport(val) {
-      
-    },
+    handleRequest() {},
+    doExport(val) {},
     /**
      * 初始化筛选信息
      */

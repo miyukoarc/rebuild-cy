@@ -246,3 +246,11 @@ export const moveMedieToGroup = (payload) => {
         data: payload
     })
 }
+
+export const getMediaListMy = (payload) => {
+    return request({
+        url: '/media/listMy',
+        method: 'get',
+        params: payload
+    })
+}

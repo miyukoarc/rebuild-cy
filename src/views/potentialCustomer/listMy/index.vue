@@ -5,13 +5,18 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar
+        :hasRefresh="true"
+        @handleRefresh="handleRequest"
+        @handleExport="doExport"
+        :msg="`共${pageConfig.total}个客户`"
+      >
         <div slot="right">
           <el-t-button
             type="primary"
             :popAuth="true"
-            v-permission="'potentialCustomer,potentialCustomer_add'"
-            :auth="'potentialCustomer,potentialCustomer_add'"
+            v-permission="'batchAddTask,batchAddTask_add'"
+            :auth="'batchAddTask,batchAddTask_add'"
             @click.native="addBatchTask"
           >批量添加好友</el-t-button>
           <el-t-button
@@ -141,7 +146,7 @@ import CustomerPagination from '@/components/CustomerPagination'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-    name: 'potentialCustomer_listMy',
+  name: 'potentialCustomer_listMy',
   components: {
     ListHeader,
     FormDialog,
@@ -200,6 +205,9 @@ export default {
     this.$bus.$off('handleRefresh')
   },
   methods: {
+    handleRequest() {
+      this.initDataList(this.query)
+    },
     doExport(val) {},
     /**
      * 初始化筛选信息
@@ -215,15 +223,15 @@ export default {
           })
         })
 
-    //   this.$store
-    //     .dispatch('department/getDepartmentListAll')
-    //     .then(() => {})
-    //     .catch((err) => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: err || '初始化失败',
-    //       })
-    //     })
+      //   this.$store
+      //     .dispatch('department/getDepartmentListAll')
+      //     .then(() => {})
+      //     .catch((err) => {
+      //       this.$message({
+      //         type: 'error',
+      //         message: err || '初始化失败',
+      //       })
+      //     })
 
       this.$store
         .dispatch('user/getUserListSelect')

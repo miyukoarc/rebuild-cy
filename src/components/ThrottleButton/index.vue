@@ -110,9 +110,13 @@ export default {
     //   return this.auth
     // },
   },
-  created() {},
+  created() {
+    //   const flag = !!(this.permissionMap[this.module] && this.permissionMap[this.module][this.permission])
+    //   this.filtedArr = this.resolveAuth(this.auth)
+    // console.log(flag,this.auth)
+  },
   updated() {
-    this.filtedArr = this.resolveAuth(this.auth)
+    // this.filtedArr = this.resolveAuth(this.auth)
   },
   methods: {
     authData(module, permission) {
@@ -150,7 +154,7 @@ export default {
         }
 
         if (key === 'needAudit') {
-          arr[3] = obj['needAudit'] ? '审核：需要审核' : '审核：不需要审核'
+          arr[3] = obj['needAudit'] ? '审核：--' : '审核：--'
           // arr.push()
         }
 

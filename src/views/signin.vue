@@ -10,7 +10,7 @@
           <webview ref="webview" id="webview"></webview>
         </div>
       </transition>
-      
+
       <div v-if="tipsFlag" class="text-align-center">
         <h3 class="tips">选择单位获取登录二维码</h3>
       </div>
@@ -24,11 +24,13 @@
           >{{item.name}}</el-radio>
         </div>
         <div class="text-align-center">
-          <el-button type="primary" size="small" @click="handleLogin">确定</el-button>
+          <el-button ref="btn" type="primary" size="small" @click="handleLogin">获取二维码</el-button>
         </div>
       </div>
       <div class="version-warp display-flex align-items-center">
-        <img :src="leftLine" alt=""><span class="ml-5 mr-5">超盈SCRM·国信{{publicVersion?publicVersion:''}}</span> <img :src="rightLine" alt="">
+        <img :src="leftLine" alt />
+        <span class="ml-5 mr-5">超盈SCRM·国信{{publicVersion?publicVersion:''}}</span>
+        <img :src="rightLine" alt />
       </div>
     </div>
   </div>
@@ -62,6 +64,15 @@ export default {
       },
       immediate: true,
     },
+    tenantId:{
+        handler(newVal,oldVal){
+
+            this.$refs.btn.handleClick()
+            // console.log()
+
+            // this.getQrCode(newVal, 'browser')
+        }
+    }
   },
   computed: {
     ...mapState({
@@ -74,6 +85,10 @@ export default {
       .then(() => {
         const tenantId = this.loginList[0].tenantId;
         this.tenantId = this.loginList[0].tenantId;
+
+        const id = this.tenantId
+
+
       })
       .catch((err) => {
         console.error(err);
@@ -81,10 +96,9 @@ export default {
     this.getpublicVersion();
   },
   mounted() {
-    if (this.tenantId) {
-      console.log(this.tenantId);
+
       //   this.getQrCode(this.tenantId, 'browser')
-    }
+    
     // if (this.$isElectron()) {
     //   const ipcRenderer = window.electron.ipcRenderer
     //   ipcRenderer.on('getUrl', (event, payload) => {
@@ -276,12 +290,12 @@ $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
-#browser{
-    width: 300px;
-    height: 400px;
-    iframe{
-        display: block;
-    }
+#browser {
+  width: 300px;
+  height: 400px;
+  iframe {
+    display: block;
+  }
 }
 
 .login-container {

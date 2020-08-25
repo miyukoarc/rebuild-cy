@@ -103,6 +103,9 @@ export default {
       userListSelect: (state) => state.user.listSelect,
     }),
   },
+  created(){
+      this.initFilter()
+  },
   methods: {
     initFilter() {
       this.$store
