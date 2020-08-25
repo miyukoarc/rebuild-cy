@@ -217,13 +217,14 @@ $cursor: #fff;
   align-items: center;
   -webkit-app-region: drag;
   .login-warp {
+    min-width: 25%;
+    min-height: 35%;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     border-radius: 16px;
-    width: 500px;
-    height: 600px;
     background-color: rgba(255, 255, 255, 0.8);
     text-align: center;
     color: #333;

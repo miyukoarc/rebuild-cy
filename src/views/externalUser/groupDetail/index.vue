@@ -112,11 +112,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
-  name: 'externalUser_groupDetail',
+  // name: "externalUser_groupDetail",
   data() {
-    return {}
+    return {};
   },
   computed: {
     ...mapState({
@@ -142,60 +142,61 @@ export default {
     // },
     $route: {
       handler(newVal, oldVal) {
-        const payload = newVal.params.uuid
-        if (payload) this.initDetail(payload)
+        if (newVal.params.uuid) {
+          const payload = newVal.params.uuid;
+          if (payload != 'undefined') this.initGroupDetail(payload);
+        }
       },
       immediate: true,
     },
   },
 
   created() {
-    if (this.$route.params.uuid) {
-      this.initDetail(this.$route.params.uuid)
-    }
+    // if (this.$route.params.uuid) {
+    //   this.initGroupDetail(this.$route.params.uuid)
+    // }
   },
   methods: {
-    initDetail(payload) {
+    initGroupDetail(payload) {
       this.$store
-        .dispatch('externalUser/getGroupDetail', payload)
+        .dispatch("externalUser/getGroupDetail", payload)
         .then(() => {})
         .catch((err) => {
-          console.error(err)
+          console.error(err);
           this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
     handleDetail(row) {
       if (row.type == 1) {
-        const uuid = row.uuid
+        const uuid = row.uuid;
         this.$router.push({
-          path: '/user/detail/' + uuid,
-        })
+          path: "/user/detail/" + uuid,
+        });
       }
       if (row.type == 2) {
-        const uuid = row.uuid
+        const uuid = row.uuid;
         this.$router.push({
-          path: '/externalUser/detail/' + uuid,
-        })
+          path: "/externalUser/detail/" + uuid,
+        });
       }
     },
     toGroupChat() {
-      console.log(this.groupDetail.chatId, '4444')
-      let userId = this.groupDetail.chatId
+      let userId = this.groupDetail.chatId;
       const query = {
         uuid: this.groupDetail.owner.uuid,
         userId,
-        type: 'user',
-      }
+        type: "user",
+      };
       this.$router.push({
-        path: '/message/singleListAll',
+        path: "/message/singleListAll",
         query,
-      })
+      });
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -241,7 +242,7 @@ export default {
         }
       }
       .data-item::after {
-        content: '';
+        content: "";
         width: 1px;
         height: 38px;
         background: #e9e9e9;
