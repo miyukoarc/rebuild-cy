@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="handleExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
+      <tool-bar :hasRefresh="true" @handleRefresh="handleRefresh" @handleExport="handleExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
     </el-card>
     <el-card class="content-spacing">
       <div>
@@ -224,6 +224,9 @@ export default {
       //   : this.query.contractWayId;
       console.log(val, "handleSearch", this.query);
       this.initDataList(this.query);
+    },
+    handleRequest(){
+        this.initDataList(this.query)
     },
     handleRefresh() {
       console.log("handleRefresh");

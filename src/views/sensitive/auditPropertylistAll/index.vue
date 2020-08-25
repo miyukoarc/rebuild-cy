@@ -1,16 +1,22 @@
 <template>
   <div class="app-container">
     <el-card class="content-spacing">
-      <tool-bar :hasExport="true" :hasImport="false" @handleExport="doExport">
+      <tool-bar
+        :hasExport="false"
+        :hasRefresh="true"
+        @handleRefresh="handleRefresh"
+        :hasImport="false"
+        @handleExport="doExport"
+      >
         <div slot="left">
-          <span class="font-l">{{corpInfo.name}}</span>
-          <el-t-button
+          <!-- <span class="font-l">{{corpInfo.name}}</span> -->
+          <!-- <el-t-button
             :popAuth="true"
             v-permission="'role,role_add'"
             :auth="'role,role_add'"
             size="small"
             type="text"
-          >切换企业</el-t-button>
+          >切换企业</el-t-button>-->
         </div>
       </tool-bar>
     </el-card>
@@ -51,8 +57,8 @@
               type="text"
               size="mini"
               :popAuth="true"
-              v-permission="'role,role_update'"
-              :auth="'role,role_update'"
+              v-permission="'riskManagement,riskManagement_auditPropertyDetail'"
+              :auth="'riskManagement,riskManagement_auditPropertyDetail'"
               @click.stop.native="handleDetail(row)"
             >详情</el-t-button>
 
@@ -60,8 +66,8 @@
               type="text"
               size="mini"
               :popAuth="true"
-              v-permission="'role,role_update'"
-              :auth="'role,role_update'"
+              v-permission="'riskManagement,riskManagement_setAuditCloseOrOpen'"
+              :auth="'riskManagement,riskManagement_setAuditCloseOrOpen'"
               @click.stop.native="handleSetting(row)"
             >设置流程</el-t-button>
 
@@ -69,8 +75,8 @@
               type="text"
               size="mini"
               :popAuth="true"
-              v-permission="'role,role_delete'"
-              :auth="'role,role_delete'"
+              v-permission="'riskManagement,riskManagement_setAuditCloseOrOpen'"
+              :auth="'riskManagement,riskManagement_setAuditCloseOrOpen'"
               @click.stop.native="handleChange($index)"
             >
               <span v-if="row.openState" class="color-danger">关闭</span>
@@ -87,7 +93,7 @@
 
 <script>
 import FormDialog from './dialog'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 import AuditUser from './components/audit-user'
 import AuditorDrawer from './components/auditor-drawer'
 import AsyncUserTag from '@/components/AsyncUserTag'
@@ -154,6 +160,9 @@ export default {
     })
   },
   methods: {
+    handleRefresh() {
+      this.initDataList(this.query)
+    },
     doExport() {},
     /**
      * 初始化表格信息

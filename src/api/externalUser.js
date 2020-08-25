@@ -72,6 +72,14 @@ export const getExternalUserListAll = (payload) => {
     })
 }
 
+export const getExternalUserListAllPermissionLess = (payload)=>{
+    return request({
+        url: '/externalUser/listAllForBeatchSend',
+        method: 'get',
+        params: payload
+    })
+}
+
 /**
  * 根据用户uuid查询对应的客户
  * @param {object} payload 

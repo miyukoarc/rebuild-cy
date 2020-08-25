@@ -15,7 +15,9 @@ function checkPermission(el, binding) {
 
   if (arr && arr instanceof Array) {
     if (arr.length > 0) {
-      const permissionFlag = permissionMap[module] && permissionMap[module][permission]
+      const permissionFlag = !!(permissionMap[module] && permissionMap[module][permission])
+
+    //   console.log(permissionFlag)
       //       const permissionRoles = value
 
       //       const hasPermission = roles.some(role => {

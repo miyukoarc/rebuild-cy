@@ -180,9 +180,9 @@
                     :auth="'message,message_singleLastListAll'"
                     v-permission="'message,message_singleLastListAll'"
                     @click.native="handleDetail(scope.row)"
-                    v-if="scope.row.lastMsgTime !== null"
+                    
                   >聊天记录</el-t-button>
-                  <span v-else class="color-info">聊天记录</span>
+                  <!-- <span v-else class="color-info">聊天记录</span> -->
                 </template>
               </el-table-column>
             </el-table>

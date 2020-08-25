@@ -7,7 +7,12 @@
 
     <!-- </el-header> -->
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个群`"></tool-bar>
+      <tool-bar
+        :hasRefresh="true"
+        @handleRefresh="handleRequest"
+        @handleExport="doExport"
+        :msg="`共${pageConfig.total}个群`"
+      ></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -113,8 +118,10 @@ export default {
     this.initFilter()
   },
   mounted() {},
-  beforeDestroy() {},
   methods: {
+    handleRequest() {
+      this.initDataList(this.query)
+    },
     doExport(val) {},
     initFilter() {
       this.$store

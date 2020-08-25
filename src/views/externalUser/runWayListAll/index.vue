@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
+      <tool-bar :hasRefresh="true" @handleRefresh="handleRequest" @handleExport="doExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -148,6 +148,9 @@ export default {
     this.initFilter();
   },
   methods: {
+      handleRequest(){
+          this.initDataList(this.query)
+      },
     /**
      * 初始化表格信息
      */

@@ -92,7 +92,7 @@ router.beforeEach(async (to, from, next) => {
           }
 
         }).catch(() => {
-          removeToken()
+        //   removeToken()
           Message({
             type: 'error',
             message: '未登录'

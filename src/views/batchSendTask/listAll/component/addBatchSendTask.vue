@@ -232,7 +232,7 @@
 import { mapState } from "vuex";
 import inputEdit from "@/components/inputEdit";
 import TagMultiSelect from "@/components/TagMultiSelect";
-import { getExternalUserListAll } from "@/api/externalUser";
+import { getExternalUserListAll,getExternalUserListAllPermissionLess } from "@/api/externalUser";
 export default {
   inject: ["reload"],
   components: { inputEdit, TagMultiSelect },
@@ -360,7 +360,7 @@ export default {
       this.form.batchTaskNumber = 0;
       this.form.externalUserUuids = [];
 
-      getExternalUserListAll(query).then((res) => {
+      getExternalUserListAllPermissionLess(query).then((res) => {
         this.form.batchTaskNumber = res.total;
         res.items.map((obj) => {
           this.form.externalUserUuids.push(obj.externalUuid);

@@ -137,7 +137,7 @@ const actions = {
                     resolve(res)
 
                 }else{
-                    reject('未登录')
+                    reject()
                 }
 
                 

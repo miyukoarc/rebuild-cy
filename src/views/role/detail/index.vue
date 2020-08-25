@@ -41,7 +41,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import ToolBar from './tool-bar'
+import ToolBar from '@/components/ToolBar'
 export default {
   name: 'role-detail',
   components: {
