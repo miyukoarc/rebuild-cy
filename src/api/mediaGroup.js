@@ -48,6 +48,18 @@ export const getMediaGroupListAll = (payload) => {
 
     })
 }
+/**
+ * 素材组列表
+ * @param {object} payload 
+ */
+export const getMediaGroupList = (payload) => {
+    return request({
+        url: '/media/mediaGroup/listMy',
+        method: 'get',
+        params: payload
+
+    })
+}
 
 /**
  * 更改素材组

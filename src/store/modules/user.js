@@ -132,9 +132,16 @@ const actions = {
         return new Promise((resolve, reject) => {
             getMyInfo().then((res) => {
 
-                commit('SET_USERINFO', res)
+                if(!!res.name){
+                    commit('SET_USERINFO', res)
+                    resolve(res)
 
-                resolve(res)
+                }else{
+                    reject('未登录')
+                }
+
+                
+
             }).catch(err => {
                 console.error(err)
                 reject(err)

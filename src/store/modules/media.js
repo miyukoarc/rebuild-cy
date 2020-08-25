@@ -15,6 +15,7 @@ import {
 } from '@/api/media'
 
 import {
+  getMediaGroupList,
   getMediaGroupListAll,
   addGroup,
   rename,
@@ -39,6 +40,10 @@ const state = {
    * 所有文章列表无分页
    */
   articleListSelect: [],
+  /**
+   * 所有文章列表无分页
+   */
+  mediaGroupSelect: [],
   /**
    * 素材组
    */
@@ -100,6 +105,14 @@ const mutations = {
    */
   SAVE_ARTICLELISTSELECT(state, payload) {
     state.articleListSelect = payload
+  },
+  /**
+   * 保存文章列表无分页
+   * @param {*} state 
+   * @param {*} payload 
+   */
+  SAVE_MEDIAGROUPSELECT(state, payload) {
+    state.mediaGroupSelect = payload
   },
   /**
    * 切换loading状态
@@ -202,6 +215,27 @@ const actions = {
     return new Promise((resolve, reject) => {
       getArticleListSelect().then(res => {
         commit('SAVE_ARTICLELISTSELECT', res.items)
+        commit('TOGGLE_LOADING', false)
+        resolve()
+      }).catch(err => {
+        commit('TOGGLE_LOADING', false)
+
+        reject(err)
+      })
+    })
+  },
+  /**
+   * 素材库列表
+   * @param {*} param0 
+   * @param {object} payload 
+   */
+  getMediaGroupList({
+    commit
+  }) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      getMediaGroupList().then(res => {
+        commit('SAVE_MEDIAGROUPSELECT', res.items)
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {

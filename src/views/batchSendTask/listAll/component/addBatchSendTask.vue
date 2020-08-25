@@ -10,21 +10,12 @@
                 <el-radio :label="'WX'">
                   企业微信群发
                   <el-tooltip placement="right">
-                    <div slot="content">添加成为用户后，将自动打上预设标签</div>
+                    <div slot="content">同一个企业每个自然月内仅可针对一个客户/客户群发4条消息，超过限制的用户将会被忽略。</div>
                     <i class="el-icon-question tip"></i>
                   </el-tooltip>
                 </el-radio>
-                <el-radio :label="'MY'">
-                  超盈群发
-                  <el-tooltip placement="right">
-                    <div slot="content">添加成为用户后，将自动打上预设标签</div>
-                    <i class="el-icon-question tip"></i>
-                  </el-tooltip>
-                </el-radio>
+                <el-radio :label="'MY'">超盈群发</el-radio>
               </el-radio-group>
-            </el-form-item>
-            <el-form-item label=" ">
-              <span>同一个企业每个自然月内仅可针对一个客户/客户群发4条消息，超过限制的用户将会被忽略。</span>
             </el-form-item>
             <el-form-item label="选择群发账号：" prop="userUuid">
               <el-select
@@ -91,14 +82,6 @@
             <div class="set-welcome-message">
               <el-form-item label="文字消息：">
                 <div class="msg-textarea-box full-w">
-                  <div class="insert-btn">
-                    <el-button
-                      type="text"
-                      class="clickable no-select"
-                      :disabled="!insertName"
-                      @click="insertionMemberName(memberNick)"
-                    >[插入客户昵称]</el-button>
-                  </div>
                   <inputEdit ref="chatInput" v-model="form.text" style="height:200px" />
                 </div>
               </el-form-item>
@@ -110,7 +93,7 @@
                   <div class="message-box-content">
                     <el-radio-group v-model="form.tempMediaType">
                       <el-radio :label="'IMAGE'">图片</el-radio>
-                      <el-radio :label="'VIDEO'">视频</el-radio>
+                      <!-- <el-radio :label="'VIDEO'">视频</el-radio> -->
                       <el-radio :label="'FILE'">文件</el-radio>
                       <el-radio :label="'ARTICLE'">文章</el-radio>
                     </el-radio-group>
@@ -145,35 +128,6 @@
                       </div>
                     </section>
 
-                    <!-- 上传视频 -->
-                    <section
-                      class="message-content display-flex"
-                      v-show="form.tempMediaType == 'VIDEO'"
-                    >
-                      <div class="img-warp">
-                        <el-upload
-                          class="avatar-uploader"
-                          action="/api/upload"
-                          :show-file-list="false"
-                          :on-success="handleSetMessageVideo"
-                          :before-upload="beforeUploadVideo"
-                        >
-                          <video
-                            v-if="messageVideo"
-                            controls="controls"
-                            :src="messageVideo"
-                            class="avatar"
-                          ></video>
-                          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <i
-                          class="el-icon-circle-close close"
-                          v-if="messageVideo"
-                          @click.stop="handleDelMessageVideo"
-                        ></i>
-                      </div>
-                    </section>
-
                     <!-- 上传文件 -->
                     <section
                       class="message-content display-flex"
@@ -194,6 +148,15 @@
                     </section>
 
                     <div class="message-content" v-show="form.tempMediaType == 'ARTICLE'">
+                      <el-select v-model="groupUuid" placeholder="素材库分组" @change="getArticle">
+                        <el-option
+                          v-for="item in mediaGroupSelect"
+                          :key="item.uuid"
+                          :label="item.groupName"
+                          :value="item.uuid"
+                        ></el-option>
+                      </el-select>
+
                       <el-select
                         :popper-append-to-body="false"
                         v-model="form.mediaUuid"
@@ -214,7 +177,6 @@
                           <img
                             style="width:24px;height:24px"
                             :src="'/api/public/file/'+welcomecontentT.imgId"
-                            alt
                           />
                           <div class="input-title">
                             <span>{{welcomecontentT.title}}</span>
@@ -304,27 +266,17 @@ export default {
         sendTime: "",
       },
 
-      insertName: true,
       messageImage: "",
-      messageVideo: "",
       messageFile: "",
 
       mediaId: "",
       welcomecontentT: {},
       memberNick: "客户昵称",
+
+      groupUuid: null,
     };
   },
   watch: {
-    "form.text": {
-      handler(newVal, oldVal) {
-        if (newVal.indexOf('<span class="nickName">客户昵称</span>') > -1) {
-          this.insertName = false;
-        } else {
-          this.insertName = true;
-        }
-      },
-      immediate: true,
-    },
     "query.tagIds": {
       handler(newVal, oldVal) {
         this.form.tagUuids = newVal;
@@ -346,11 +298,13 @@ export default {
       tagListSelect: (state) => state.tag.tagListSelect,
       userListAll: (state) => state.user.listSelect,
       articleListSelect: (state) => state.media.articleListSelect,
+
+      mediaGroupSelect: (state) => state.media.mediaGroupSelect,
     }),
   },
   created() {
     this.$store
-      .dispatch("media/getArticleListSelect")
+      .dispatch("media/getMediaGroupList")
       .then(() => {})
       .catch((err) => {
         this.$message({
@@ -385,6 +339,9 @@ export default {
   },
 
   methods: {
+    getArticle() {
+      alert(this.groupUuid);
+    },
     changeUser(userUuid) {
       console.log("这个后：" + userUuid);
       for (let index = 0; index < this.userListAll.length; index++) {
@@ -457,10 +414,6 @@ export default {
       this.messageImage = URL.createObjectURL(file.raw);
       this.form.tempMediaKey = res.id;
     },
-    handleSetMessageVideo(res, file) {
-      this.messageVideo = URL.createObjectURL(file.raw);
-      this.form.tempMediaKey = res.id;
-    },
     handleSetMessageFile(res, file) {
       this.messageFile = URL.createObjectURL(file.raw);
       this.form.tempMediaKey = res.id;
@@ -478,18 +431,6 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
-    },
-    beforeUploadVideo(file) {
-      const isMP4 = file.type === "video/mp4";
-      const isLt50M = file.size / 1024 / 1024 < 50;
-
-      if (!isMP4) {
-        this.$message.error("上传视频只能是 MP4 格式!");
-      }
-      if (!isLt50M) {
-        this.$message.error("上传视频大小不能超过 50MB!");
-      }
-      return isMP4 && isLt50M;
     },
     beforeUploadFile(file) {
       const isLt50M = file.size / 1024 / 1024 < 50;
@@ -510,10 +451,6 @@ export default {
       this.messageImage = "";
       this.form.tempMediaKey = null;
     },
-    handleDelMessageVideo() {
-      this.messageVideo = "";
-      this.form.tempMediaKey = null;
-    },
     handleDelMessageFile() {
       this.messageFile = "";
       this.form.tempMediaKey = null;
@@ -529,11 +466,6 @@ export default {
     handleClear() {
       this.form.mediaUuid = "";
       this.welcomecontentT = {};
-    },
-    insertionMemberName(memberNick) {
-      this.insertName = false;
-      this.form.text =
-        this.form.text + `<span class="nickName">${memberNick}</span>&#8203;`;
     },
     handleRefresh() {
       this.$bus.$emit("handleRefresh");
