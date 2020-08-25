@@ -11,7 +11,8 @@ import {
   batchDeleteMedia,
   moveMedieToGroup,
   browsingRecords,
-  getArticleListSelect
+  getArticleListSelect,
+  getMediaListMy
 } from '@/api/media'
 
 import {
@@ -72,6 +73,8 @@ const state = {
     pageSize: 0,
     total: 0
   },
+
+  mediaListMy: [],
 }
 
 const mutations = {
@@ -175,6 +178,9 @@ const mutations = {
     state.recordsPage.pageSize = pageSize
     state.recordsPage.total = total
 
+  },
+  SAVE_MEDIALISTMY(state, payload) {
+    state.mediaListMy = payload
   }
 
 }
@@ -505,8 +511,23 @@ const actions = {
         commit('TOGGLE_LOADING', false)
       })
     })
-  }
+  },
 
+  getMediaListMy({
+    commit
+  }, payload) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      getMediaListMy(payload).then(res => {
+        commit('SAVE_MEDIALISTMY', res.items)
+        commit('TOGGLE_LOADING', false)
+        resolve()
+      }).catch(err => {
+        commit('TOGGLE_LOADING', false)
+        reject(err)
+      })
+    })
+  },
 }
 
 
