@@ -44,12 +44,12 @@ export default {
   },
   methods: {
     async logout() {
-      removeToken()
       if(window.watermark){
 
           window.watermark.remove()
       }
       await this.$store.dispatch('auth/logout').then(()=>{
+       removeToken()
 
           this.$router.push(`/login?redirect=${this.$route.fullPath}`)
       })

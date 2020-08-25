@@ -111,9 +111,9 @@ export default {
     // },
   },
   created() {
-      const flag = !!(this.permissionMap[this.module] && this.permissionMap[this.module][this.permission])
+    //   const flag = !!(this.permissionMap[this.module] && this.permissionMap[this.module][this.permission])
     //   this.filtedArr = this.resolveAuth(this.auth)
-    console.log(flag,this.auth)
+    // console.log(flag,this.auth)
   },
   updated() {
     // this.filtedArr = this.resolveAuth(this.auth)

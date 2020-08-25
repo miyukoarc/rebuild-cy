@@ -66,8 +66,8 @@
               type="text"
               size="mini"
               :popAuth="true"
-              v-permission="'riskManagement,riskManagement_setAuditCloseOrOpen'"
-              :auth="'riskManagement,riskManagement_setAuditCloseOrOpen'"
+              v-permission="'riskManagement,riskManagement_setAuditUser'"
+              :auth="'riskManagement,riskManagement_setAuditUser'"
               @click.stop.native="handleSetting(row)"
             >设置流程</el-t-button>
 
@@ -160,10 +160,11 @@ export default {
     })
   },
   methods: {
+    doExport() {},
     handleRefresh() {
       this.initDataList(this.query)
     },
-    doExport() {},
+
     /**
      * 初始化表格信息
      */
