@@ -148,58 +148,63 @@
                     </section>
 
                     <div class="message-content" v-show="form.tempMediaType == 'ARTICLE'">
-                      <el-select v-model="groupUuid" placeholder="素材库分组" @change="getArticle">
-                        <el-option
-                          v-for="item in mediaGroupSelect"
-                          :key="item.uuid"
-                          :label="item.groupName"
-                          :value="item.uuid"
-                        ></el-option>
-                      </el-select>
-
-                      <el-select
-                        :popper-append-to-body="false"
-                        v-model="form.mediaUuid"
-                        clearable
-                        filterable
-                        placeholder="请选择"
-                        style="width:80%"
-                        popper-class="selectinfo"
-                        @change="handleChoseLink"
-                        @clear="handleClear"
-                        class="label-warp"
-                      >
-                        <div
-                          class="display-flex align-items-center label-input"
-                          slot="prefix"
-                          v-if="form.mediaUuid"
-                        >
-                          <img
-                            style="width:24px;height:24px"
-                            :src="'/api/public/file/'+welcomecontentT.imgId"
-                          />
-                          <div class="input-title">
-                            <span>{{welcomecontentT.title}}</span>
-                            <div class="input-content text-over">{{welcomecontentT.description}}</div>
-                          </div>
-                        </div>
-                        <el-option
-                          v-for="(item,index) in articleListSelect"
-                          :key="index"
-                          :label="item.title"
-                          :value="item.uuid"
-                        >
-                          <div class="option-warp flex-between-alinecenter">
-                            <div class="link-img">
-                              <img class="option-img" :src="'/api/public/file/'+item.imgId" />
+                      <el-row :gutter="20">
+                        <el-col :span="6">
+                          <el-select v-model="groupUuid" placeholder="素材库分组" @change="getArticle">
+                            <el-option
+                              v-for="item in mediaGroupSelect"
+                              :key="item.uuid"
+                              :label="item.groupName"
+                              :value="item.uuid"
+                            ></el-option>
+                          </el-select>
+                        </el-col>
+                        <el-col :span="18">
+                          <el-select
+                            :popper-append-to-body="false"
+                            v-model="form.mediaUuid"
+                            clearable
+                            filterable
+                            placeholder="请选择"
+                            style="width:100%"
+                            popper-class="selectinfo"
+                            @change="handleChoseLink"
+                            @clear="handleClear"
+                            class="label-warp"
+                          >
+                            <div
+                              class="display-flex align-items-center label-input"
+                              slot="prefix"
+                              v-if="form.mediaUuid"
+                            >
+                              <img
+                                style="width:24px;height:24px"
+                                :src="'/api/public/file/'+welcomecontentT.imgId"
+                              />
+                              <div class="input-title">
+                                <span>{{welcomecontentT.title}}</span>
+                                <div class="input-content text-over">{{welcomecontentT.description}}</div>
+                              </div>
                             </div>
-                            <div class="option-content flex-1">
-                              <p>{{ item.title }}</p>
-                              <p>{{ item.description}}</p>
-                            </div>
-                          </div>
-                        </el-option>
-                      </el-select>
+                            <el-option
+                              v-for="(item,index) in mediaListMy"
+                              :key="index"
+                              :label="item.title"
+                              :value="item.uuid"
+                            >
+                              <div class="option-warp flex-between-alinecenter">
+                                <div class="link-img">
+                                  <img class="option-img" :src="'/api/public/file/'+item.imgId" />
+                                </div>
+                                <div class="option-content flex-1">
+                                  <p>{{ item.title }}</p>
+                                  <p>{{ item.description}}</p>
+                                </div>
+                              </div>
+                            </el-option>
+                          </el-select>
+                        </el-col>
+                      </el-row>
                     </div>
                   </div>
                 </div>
@@ -297,9 +302,11 @@ export default {
 
       tagListSelect: (state) => state.tag.tagListSelect,
       userListAll: (state) => state.user.listSelect,
-      articleListSelect: (state) => state.media.articleListSelect,
+      mediaListMy: (state) => state.media.mediaListMy,
 
-      mediaGroupSelect: (state) => state.media.mediaGroupSelect,
+      mediaGroupSelect: (state) => {
+        return state.media.mediaGroupSelect.filter((obj) => obj.uuid != 1);
+      },
     }),
   },
   created() {
@@ -340,7 +347,17 @@ export default {
 
   methods: {
     getArticle() {
-      alert(this.groupUuid);
+      this.form.mediaUuid = null;
+      this.welcomecontentT = this.$options.data().welcomecontentT;
+      this.$store
+        .dispatch("media/getMediaListMy", { groupUuid: this.groupUuid })
+        .then(() => {})
+        .catch((err) => {
+          this.$message({
+            type: "error",
+            message: err,
+          });
+        });
     },
     changeUser(userUuid) {
       console.log("这个后：" + userUuid);
@@ -456,7 +473,7 @@ export default {
       this.form.tempMediaKey = null;
     },
     handleChoseLink(val) {
-      this.welcomecontentT = this.articleListSelect.find((item) => {
+      this.welcomecontentT = this.mediaListMy.find((item) => {
         return item.uuid === val;
       });
       if (this.welcomecontentT && this.welcomecontentT.uuid) {

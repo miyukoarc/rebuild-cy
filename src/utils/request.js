@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-13 00:01:31
- * @LastEditTime: 2020-08-22 19:46:02
+ * @LastEditTime: 2020-08-24 18:57:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\utils\request.js
@@ -19,9 +19,17 @@ import {
     removeToken
 } from '@/utils/auth'
 
-let cancel, promiseArr = {}
-const CancelToken = axios.CancelToken;
-const source = CancelToken.source();
+let pending = []; //声明一个数组用于存储每个ajax请求的取消函数和ajax标识
+let cancelToken = axios.CancelToken;
+let removeRepeatUrl = (ever) => {
+    for (let p in pending) {
+        if (pending[p].u === ever.url + '&' + ever.method) { //当当前请求在数组中存在时执行函数体
+            pending[p].f(); //执行取消操作
+            pending.splice(p, 1); //把这条记录从数组中移除
+        }
+    }
+}
+
 // var loadinginstace
 
 // create an axios instance
@@ -39,15 +47,18 @@ const service = axios.create({
     // request interceptor
 service.interceptors.request.use(
     config => {
-        //发起请求时，取消掉当前正在进行的相同请求
-        if (promiseArr[config.url]) {
-            promiseArr[config.url]('操作取消')
-            promiseArr[config.url] = cancel
-        } else {
-            promiseArr[config.url] = cancel
-        }
+
+        // 拦截重复请求(即当前正在进行的相同请求)
+        removeRepeatUrl(config);
+        config.cancelToken = new cancelToken((c) => {
+            // 自定义唯一标识
+            pending.push({
+                u: config.url + '&' + config.method,
+                f: c
+            });
+        });
+
         // do something before request is sent
-        config.cancelToken = source.token; // 全局添加cancelToken
         return config;
         // if (store.getters.token) {
         // let each request carry token
@@ -84,8 +95,10 @@ service.interceptors.response.use(
      * You can also judge the status by HTTP Status Code
      */
     response => {
-        const res = response.data
 
+        removeRepeatUrl(response.config); //在一个ajax响应后再执行一下取消操作，把已经完成的请求从pending中移除
+
+        const res = response.data
         if (response.status == 401) {
             // alert('to/login')
             //   if (res.status === 4000) {
