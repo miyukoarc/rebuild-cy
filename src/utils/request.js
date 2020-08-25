@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-13 00:01:31
- * @LastEditTime: 2020-08-24 18:57:58
+ * @LastEditTime: 2020-08-25 16:41:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\utils\request.js
@@ -109,7 +109,7 @@ service.interceptors.response.use(
             // })
 
             removeToken()
-            source.cancel(); // 取消其他正在进行的请求
+                // source.cancel(); // 取消其他正在进行的请求
             router.push({
                     path: '/login'
                 })

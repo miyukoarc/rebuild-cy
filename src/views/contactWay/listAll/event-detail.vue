@@ -39,7 +39,7 @@
          
         <div class="detail-item-title">
           <span class="item-title">自动通过好友：</span>
-          <span>{{ contactWayDetailRow.skipVerify? '全天开启':'时间段' }}</span>
+          <span>{{ contactWayDetailRow.skipVerify? '开启':'关闭' }}</span>
         </div>
         <!-- <div class="detail-item-title">
             <span class="item-title">欢迎语1：</span>

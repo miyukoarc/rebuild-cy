@@ -103,7 +103,11 @@
           </template>
         </el-table-column>
         <el-table-column label="添加时间" prop="createtime" align="left"></el-table-column>
-        <el-table-column label="上次对话时间" prop="updatedAt" align="left"></el-table-column>
+        <el-table-column label="上次对话时间" align="left">
+          <template v-slot="scope">
+            <div>{{ scope.row.lastMsgTime ? scope.row.lastMsgTime  : "--" }}</div>
+          </template>
+        </el-table-column>
         <el-table-column label="添加渠道" align="left">
           <template v-slot="scope">
             <div>{{ scope.row.source ? source : "--" }}</div>
@@ -117,8 +121,10 @@
               v-permission="'externalUser,externalUser_detail'"
               :auth="'externalUser,externalUser_detail'"
               size="mini"
+              v-if="scope.row.lastMsgTime"
               @click.stop.native="handleGroupChat(scope.row)"
             >聊天记录</el-t-button>
+            <span v-else class="color-info">聊天记录</span>
             <el-t-button
               type="text"
               :popAuth="true"
@@ -142,7 +148,7 @@
 import { mapState } from "vuex";
 import dayjs from "dayjs";
 export default {
-  name: "user_detail",
+  // name: "user_detail",
   data() {
     return {
       value: [],
@@ -157,8 +163,8 @@ export default {
       reflect: {
         chat_cnt: "聊天总数(条)",
         message_cnt: "发送消息总数(条)",
-        reply_percentage: "已回复聊天占比",
-        avg_reply_time: "平均首次回复时长",
+        reply_percentage: "已回复聊天占比(%)",
+        avg_reply_time: "平均首次回复时长(分)",
         negative_feedback_cnt: "拉黑/删除某人(人)",
         new_apply_cnt: "主动添加客户数(人)",
         new_contact_cnt: "新增客户数(人)",

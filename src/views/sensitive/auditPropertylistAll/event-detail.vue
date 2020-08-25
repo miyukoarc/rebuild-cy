@@ -27,7 +27,7 @@
               :key="user.uuid"
               :uuid="user.uuid"
             >
-              <i class="el-icon-user-solid"></i>
+              <i class="el-icon-user-solid color-primary"></i>
               {{user.name}}
             </async-user-tag>
           </div>

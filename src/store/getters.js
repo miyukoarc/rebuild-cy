@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-07-09 17:37:44
+ * @LastEditTime: 2020-08-25 16:50:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\store\getters.js
@@ -13,6 +13,7 @@ const getters = {
     avatar: state => state.user.avatar,
     name: state => state.user.name,
     roleCode: state => state.user.roleCode,
+    roleName: state => state.user.roleName,
     userId: state => state.user.userId, // zeness 添加 
     uuid: state => state.user.uuid, // zeness 添加
     rebuildRoutes: state => state.menu.rebuildMenuList, //菜单+contractRoutes

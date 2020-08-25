@@ -21,6 +21,7 @@ const getDefaultState = () => {
         token: getToken(),
         name: '',
         roleCode: '',
+        roleName: '',
         avatar: '',
         userId: '',
         uuid: '',
@@ -64,12 +65,14 @@ const mutations = {
             name,
             avatar,
             roleCode,
+            roleName,
             userId,
             uuid
         } = payload
         state.name = name
         state.avatar = avatar
         state.roleCode = roleCode
+        state.roleName = roleName
         state.userId = userId
         state.uuid = uuid
     },
@@ -132,15 +135,15 @@ const actions = {
         return new Promise((resolve, reject) => {
             getMyInfo().then((res) => {
 
-                if(!!res.name){
+                if (!!res.name) {
                     commit('SET_USERINFO', res)
                     resolve(res)
 
-                }else{
+                } else {
                     reject('未登录')
                 }
 
-                
+
 
             }).catch(err => {
                 console.error(err)
@@ -170,7 +173,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             getAllUserList(payload).then(res => {
                 commit('SAVE_USERLISTALL', res.items)
-                // console.log(res)
+                    // console.log(res)
                 resolve(res.items)
             }).catch(err => {
                 reject(err)
@@ -233,7 +236,7 @@ const actions = {
         })
     },
 
-    user_update({ }, payload) {
+    user_update({}, payload) {
         return new Promise((resolve, reject) => {
             postUserUpdate(payload).then(res => {
                 resolve(res)
@@ -242,23 +245,23 @@ const actions = {
             })
         })
     },
-    postUserUpdate({commit},payload){
-       return new Promise((resolve,reject)=>{
-           postUserUpdate(payload).then(res=>{
-               resolve(res)
-           }).catch(err=>{
-               reject(err)
-           })
-       })
+    postUserUpdate({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            postUserUpdate(payload).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+            })
+        })
     },
-    userMaintain({commit},payload){
-       return new Promise((resolve,reject)=>{
-           userMaintain(payload).then(res=>{
-               resolve(res)
-           }).catch(err=>{
-               reject(err)
-           })
-       })
+    userMaintain({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            userMaintain(payload).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+            })
+        })
     }
 
 }

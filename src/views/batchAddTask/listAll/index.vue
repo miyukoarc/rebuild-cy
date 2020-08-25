@@ -35,7 +35,8 @@
           <el-table-column label="生效时间" prop="startTime" align="left"></el-table-column>
           <el-table-column label="创建员工" align="left">
             <template v-slot="scoped">
-              <div v-if="Object.keys(scoped.row.creator).length">{{scoped.row.creator.name}}</div>
+              <async-user-drawer :hasPop="true" :users="[scoped.row.creator]"></async-user-drawer>
+              <!-- <div v-if="Object.keys(scoped.row.creator).length">{{scoped.row.creator.name}}</div> -->
             </template>
           </el-table-column>
           <el-table-column label="创建日期" prop="createdAt" align="left"></el-table-column>
@@ -107,6 +108,7 @@
 import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
 import ToolBar from "@/components/ToolBar";
+import AsyncUserDrawer from "@/components/AsyncUserDrawer";
 import CustomerPagination from "@/components/CustomerPagination";
 import { mapState } from "vuex";
 import { cancelBatchAddTask } from "@/api/potentialCustomer";
@@ -118,6 +120,7 @@ export default {
     ListHeader,
     FormDialog,
     ToolBar,
+    AsyncUserDrawer,
     CustomerPagination,
   },
   data() {

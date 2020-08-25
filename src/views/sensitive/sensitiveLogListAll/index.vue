@@ -28,7 +28,7 @@
           <el-table-column label="触发员工" align="left">
             <template v-slot="{row}">
               <async-user-tag size="small" type="info" :uuid="row.triggerUser.uuid">
-                <i class="el-icon-user-solid"></i>
+                <i class="el-icon-user-solid color-primary"></i>
                 {{row.triggerUser.name}}
               </async-user-tag>
             </template>

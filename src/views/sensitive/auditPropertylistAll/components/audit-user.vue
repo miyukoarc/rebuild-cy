@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-29 21:41:51
+ * @LastEditTime: 2020-08-25 13:49:02
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \rebuild-cy\src\views\sensitive\auditPropertylistAll\components\audit-user.vue
+-->
 <template>
   <div>
     <div v-for="level in alterAuditUsers" :key="level.level">
@@ -13,7 +21,7 @@
             :key="item.uuid"
             :uuid="item.uuid"
           >
-            <i class="el-icon-user-solid"></i>
+            <i class="el-icon-user-solid color-primary"></i>
             {{item.name}}
           </async-user-tag>
         </el-col>

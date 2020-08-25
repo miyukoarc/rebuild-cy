@@ -23,7 +23,11 @@
           header-row-class-name="el-table-header"
         >
           <!-- <el-table-column type="selection"></el-table-column> -->
-          <el-table-column prop="name" label="群名称" align="left"></el-table-column>
+          <el-table-column prop="name" label="群名称" align="left">
+            <template v-slot="scoped">
+              <div>{{groupName(scoped.row)}}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="群主" align="left">
             <template v-slot="scoped">
               <div v-if="scoped.row.owner">{{scoped.row.owner.name}}</div>
@@ -66,14 +70,14 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import { mapState, mapMutations, mapActions } from "vuex";
 
-import ToolBar from '@/components/ToolBar'
-import CustomerPagination from '@/components/CustomerPagination'
+import ToolBar from "@/components/ToolBar";
+import CustomerPagination from "@/components/CustomerPagination";
 
 export default {
-  name: 'externalUser_groupChatListAll',
+  name: "externalUser_groupChatListAll",
   components: {
     ListHeader,
     ToolBar,
@@ -90,10 +94,10 @@ export default {
       query: {
         page: 0,
         size: 10,
-        name: '',
-        userId: '',
+        name: "",
+        userId: "",
       },
-    }
+    };
   },
   watch: {},
   computed: {
@@ -107,10 +111,30 @@ export default {
 
       permissionMap: (state) => state.permission.permissionMap,
     }),
+    groupName() {
+      return function (row) {
+        if (row.name != "") {
+          return row.name;
+        } else {
+          if (row.users.length > 0) {
+            let name = row.users.map((user) => {
+              return user.name;
+            });
+            if (name.join().length > 10) {
+              return name.join().substring(0, 10) + "...";
+            } else {
+              return name.join();
+            }
+          } else {
+            return row.owner.name;
+          }
+        }
+      };
+    },
   },
   created() {
-    this.initDataList(this.query)
-    this.initFilter()
+    this.initDataList(this.query);
+    this.initFilter();
   },
   mounted() {},
   beforeDestroy() {},
@@ -118,58 +142,58 @@ export default {
     doExport(val) {},
     initFilter() {
       this.$store
-        .dispatch('externalUser/getListOwner')
+        .dispatch("externalUser/getListOwner")
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getListGroup', payload)
+        .dispatch("externalUser/getListGroup", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.listGroupPage.pageNumber + 1
-          this.pageConfig.total = this.listGroupPage.total
+          this.pageConfig.pageNumber = this.listGroupPage.pageNumber + 1;
+          this.pageConfig.total = this.listGroupPage.total;
         })
         .catch((err) => {
           this.$message({
-            type: 'error',
-            message: '初始化失败',
-          })
-        })
+            type: "error",
+            message: "初始化失败",
+          });
+        });
     },
     handleDetail(row) {
-      const uuid = row.uuid
+      const uuid = row.uuid;
       this.$router.push({
-        path: '/externalUser/groupDetail/' + uuid,
-      })
+        path: "/externalUser/groupDetail/" + uuid,
+      });
     },
     handleSearch(val) {
-      const { name, userId } = val
-      this.query.name = name ? name : ''
-      this.query.userId = userId ? userId : ''
-      this.query.page = 0
-      this.initDataList(this.query)
+      const { name, userId } = val;
+      this.query.name = name ? name : "";
+      this.query.userId = userId ? userId : "";
+      this.query.page = 0;
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

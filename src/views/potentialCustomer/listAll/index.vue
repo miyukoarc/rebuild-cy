@@ -63,7 +63,7 @@
             <template v-slot="{row}">
               <div v-if="Object.keys(row.belong).length">
                 <async-user-tag :uuid="row.belong.uuid" size="small" type="info">
-                  <i class="el-icon-user-solid"></i>
+                  <i class="el-icon-user-solid color-primary"></i>
                   {{row.belong.name}}
                 </async-user-tag>
               </div>
@@ -77,7 +77,7 @@
             <template v-slot="{row}">
               <div v-if="Object.keys(row.creator).length">
                 <async-user-tag :uuid="row.creator.uuid" size="small" type="info">
-                  <i class="el-icon-user-solid"></i>
+                  <i class="el-icon-user-solid color-primary"></i>
                   {{row.creator.name}}
                 </async-user-tag>
               </div>

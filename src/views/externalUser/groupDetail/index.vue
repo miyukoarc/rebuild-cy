@@ -10,7 +10,7 @@
             </div>
 
             <div class="group-item-info">
-              <div>{{ groupDetail.name?groupDetail.name:'--' }}</div>
+              <div class="group-name">{{groupName(groupDetail)}}</div>
               <div class="group-item-content display-flex align-items-center">
                 <span>群主：</span>
                 <!-- <img :src="defaultAvatar" alt /> -->
@@ -124,6 +124,27 @@ export default {
       loading: (state) => state.externalUser.loading,
       permissionMap: (state) => state.permission.permissionMap,
     }),
+    groupName() {
+      return function (groupDetail) {
+        console.log(groupDetail,'999999')
+        if (groupDetail.name != "") {
+          return groupDetail.name;
+        } else {
+          if (groupDetail.member_list.length > 0) {
+            let name = groupDetail.member_list.map((user) => {
+              return user.name;
+            });
+            if (name.join().length > 10) {
+              return name.join().substring(0, 10) + "...";
+            } else {
+              return name.join();
+            }
+          } else {
+            return groupDetail.owner.name;
+          }
+        }
+      };
+    },
     // uuid() {
     //   console.log(this.$route.params.uuid, "666666");
     //   return this.$route.params.uuid;
@@ -283,6 +304,9 @@ export default {
         font-size: 12px;
         line-height: 20px;
         > p {
+          height: 20px;
+        }
+        .group-name{
           height: 20px;
         }
         span,

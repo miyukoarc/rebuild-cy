@@ -45,11 +45,11 @@
             </el-row>
           </div>
         </div>
-        <el-tag v-bind="$attrs">
+        <el-tag v-bind="$attrs" effect="plain">
           <slot></slot>
         </el-tag>
       </el-tooltip>
-      <el-tag v-else v-bind="$attrs">
+      <el-tag v-else v-bind="$attrs" effect="plain">
         <slot></slot>
       </el-tag>
     </div>

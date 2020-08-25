@@ -6,7 +6,20 @@
       </div>
       <el-form label-width="100px">
         <el-form-item label="创建人：">
-          <user-tag :hasPop="false" :user="detail.creator"></user-tag>
+          <div v-if="Object.keys(detail.creator).length">
+            <async-user-tag
+              size="small"
+              v-for="(item,index) in [detail.creator]"
+              type="info"
+              :key="index"
+              :hasPop="false"
+              effect="plain"
+            >
+              <i class="el-icon-user-solid color-primary"></i>
+              {{item.name}}
+            </async-user-tag>
+          </div>
+          <!-- <user-tag :hasPop="false" :user="detail.creator"></user-tag> -->
         </el-form-item>
         <el-form-item label="开始时间：">{{detail.startTime}}</el-form-item>
         <el-form-item label="邀请消息：">{{detail.content}}</el-form-item>
@@ -47,12 +60,14 @@
         <el-table-column label="入库时间" prop="createdAt"></el-table-column>
         <el-table-column label="所属员工">
           <template slot-scope="scope">
-            <user-tag :hasPop="false" :user="scope.row.potentialCustomer.belong"></user-tag>
+            <async-user-drawer :hasPop="true" :users="[scope.row.potentialCustomer.belong]"></async-user-drawer>
+            <!-- <user-tag :hasPop="false" :user="scope.row.potentialCustomer.belong"></user-tag> -->
           </template>
         </el-table-column>
         <el-table-column label="添加员工">
           <template slot-scope="scope">
-            <user-tag :hasPop="false" :user="scope.row.potentialCustomer.creator"></user-tag>
+            <async-user-drawer :hasPop="true" :users="[scope.row.potentialCustomer.creator]"></async-user-drawer>
+            <!-- <user-tag :hasPop="false" :user="scope.row.potentialCustomer.creator"></user-tag> -->
           </template>
         </el-table-column>
         <el-table-column label="状态">
@@ -69,35 +84,39 @@
 import EventDialog from "./dialog";
 import headerDetail from "./header-detail";
 import UserTag from "@/components/UserTag";
+import AsyncUserTag from "@/components/AsyncUserTag";
+import AsyncUserDrawer from "@/components/AsyncUserDrawer";
 import TagsDrawer from "@/components/TagsDrawer";
 import {
   getBatchAddTaskDetail,
-  getBatchAddTaskResult
+  getBatchAddTaskResult,
 } from "@/api/potentialCustomer";
 import { mapState } from "vuex";
 
 export default {
-    name:'batchAddTask_detail',
+  name: "batchAddTask_detail",
   components: {
     EventDialog,
     UserTag,
+    AsyncUserTag,
+    AsyncUserDrawer,
     headerDetail,
-    TagsDrawer
+    TagsDrawer,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 1,
-        pageSize: 20
+        pageSize: 20,
       },
       detail: {
         creator: {
           name: "",
           uuid: "",
-          userId: ""
+          userId: "",
         },
-        startTime: ""
+        startTime: "",
       },
       query: {
         mobile: null,
@@ -105,8 +124,8 @@ export default {
         page: null,
         size: null,
         status: null,
-        uuid: null
-      }
+        uuid: null,
+      },
     };
   },
   created() {
@@ -117,15 +136,15 @@ export default {
   },
   computed: {
     ...mapState({
-      userDetail: state => state.userManage.userDetail,
-      loading: state => state.externalUser.loading,
-      batchAddTaskEnum: state => state.enum.batchAddTask,
+      userDetail: (state) => state.userManage.userDetail,
+      loading: (state) => state.externalUser.loading,
+      batchAddTaskEnum: (state) => state.enum.batchAddTask,
 
-      result_list: state => state.externalUser.result_list,
-      result_page: state => state.externalUser.result_page
+      result_list: (state) => state.externalUser.result_list,
+      result_page: (state) => state.externalUser.result_page,
     }),
     addStatus() {
-      return function(val) {
+      return function (val) {
         switch (val) {
           case "NOTSTARTED":
             return "color-primary";
@@ -139,7 +158,7 @@ export default {
             return "";
         }
       };
-    }
+    },
   },
   mounted() {
     this.$bus.$on("handleRefresh", () => {
@@ -159,16 +178,16 @@ export default {
           this.pageConfig.pageNumber = this.result_page.pageNumber + 1;
           this.pageConfig.total = this.result_page.total;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.$message({
             type: "error",
-            message: "初始化失败"
+            message: "初始化失败",
           });
         });
     },
     getDetail() {
-      getBatchAddTaskDetail(this.$route.params.uuid).then(res => {
+      getBatchAddTaskDetail(this.$route.params.uuid).then((res) => {
         this.detail = res;
       });
     },
@@ -186,8 +205,8 @@ export default {
 
       console.log(val, "handleSearch");
       this.initDataList(this.query);
-    }
-  }
+    },
+  },
 };
 </script>
 

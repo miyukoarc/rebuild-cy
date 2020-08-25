@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-16 20:20:12
- * @LastEditTime: 2020-08-05 11:37:10
- * @LastEditors: your name
+ * @LastEditTime: 2020-08-25 17:13:10
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\potentialCustomer\listMy\dialog.vue
 -->
@@ -73,7 +73,7 @@ export default {
       //   }
 
       if (this.eventType === "distribute") {
-        return "分配部门";
+        return "分配员工";
       } else if (this.eventType === "AddBatchTask") {
         return "批量添加好友";
       }

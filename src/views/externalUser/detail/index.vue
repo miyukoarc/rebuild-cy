@@ -120,6 +120,7 @@
               v-loading="loading"
               :data="externalUserDetail.externalUserDetailUsersList"
               style="width: 100%"
+              row-key="getRowKey"
               stripe
               lazy
               highlight-current-row
@@ -669,6 +670,9 @@ export default {
           console.log(err);
         });
     },
+    getRowKey(row){
+         return row.userId;
+    }, 
     load() {
       let a = Math.ceil(this.page.total / this.page.pageSize);
       this.query.page++;
