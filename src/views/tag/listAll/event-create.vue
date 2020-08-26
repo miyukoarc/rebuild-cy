@@ -38,9 +38,9 @@
         <el-t-button size="small" @click="handleCancel">取 消</el-t-button>
         <el-t-button
           :throttle="true"
-          v-permission="'tag,tag_add'"
+          v-permission="'tag,tag_addTagIsAudit'"
           :popAuth="true"
-          :auth="'tag,tag_add'"
+          :auth="'tag,tag_addTagIsAudit'"
           size="small"
           type="primary"
           @click="handleApply"

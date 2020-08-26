@@ -13,8 +13,8 @@
         type="text"
         size="mini"
         :popAuth="true"
-        :auth="'automatic,automatic_defaultDetail'"
-        v-permission="'automatic,automatic_defaultDetail'"
+        :auth="'automatic,automatic_addDefault'"
+        v-permission="'automatic,automatic_addDefault'"
         @click.stop="setAutoRepaly"
       >配置</el-t-button>
       <!-- <span class="color-primary mr-10 set-auto-replay" ></span> -->

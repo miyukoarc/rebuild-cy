@@ -58,6 +58,12 @@ export default {
         permissionUuids: [],
       },
 
+      depends: {},
+
+      depsArr: [],
+
+      //   dependsMap: {},
+
       renderMap: {},
     }
   },
@@ -86,12 +92,38 @@ export default {
           for (let key in res) {
             res[key].forEach((item) => {
               this.checked[key].push(item.uuid)
+
+              let deps = this.grouping(item.dependsOn) //分组后的依赖权限
+
+              if (Object.keys(deps).length) {
+                // console.log(deps)
+
+                this.depsArr.push(deps)
+              }
             })
 
             if (res[key].length == this.list[key].length) {
               this.checkAll[key] = true
             }
+
+            // console.log(this.depends[key])
           }
+
+          this.depsArr.forEach((deps) => {
+            for (let key in deps) {
+              // console.log(deps[key])
+
+              deps[key].forEach((item) => {
+                console.log(this.depends[key][item], item)
+
+                let dependItem = this.list[key].find((unit) => {
+                  return unit.code === item
+                })
+
+                this.depends[key][item].push(dependItem.uuid)
+              }) //建立depend依赖表，(与dependsOn提供的相反)
+            }
+          })
         })
         .catch((err) => {
           this.$message({
@@ -111,8 +143,15 @@ export default {
               // const arr = new Array(res[key].length).fill(0)
               this.$set(this.checked, key, [])
 
+              this.$set(this.depends, key, {})
+
+              //   this.$set(this.dependsMap, key, {})
+
               // const arr = res[key].map(item=)
               this.$set(this.list, key, res[key])
+              res[key].forEach((item) => {
+                this.$set(this.depends[key], item.code, [])
+              })
             }
             this.renderMap = res
             resolve(res)
@@ -161,9 +200,13 @@ export default {
       if (!flag) {
         //正选
         console.log('正选')
+        /*
+        deps:{
+            user: ['user_detail']
+        }*/
 
         for (let key in deps) {
-          // console.log(deps[key], this.list[key])
+          //   console.log(deps[key])
           let uuids = this.list[key]
             .filter((item) => {
               return deps[key].includes(item.code)
@@ -171,6 +214,18 @@ export default {
             .map((_) => {
               return _.uuid
             }) //依赖permission的uuid数组
+
+          deps[key].forEach((item) => {
+            let dependItem = this.list[key].find((unit) => {
+              return unit.code === item
+            })
+
+            this.depends[key][item].push(dependItem.uuid)
+
+            // console.log(this.depends[key][item])
+          }) //建立depend依赖表，(与dependsOn提供的相反)
+
+          // this.depends[key]
 
           let temp = Array.from(new Set(this.checked[key].concat(uuids))) //已选+当前组依赖permission
 
@@ -195,9 +250,17 @@ export default {
             )
           )
 
-          this.checked[key].splice(0,this.checked[key].length)
+          deps[key].forEach((item) => {
+            this.depends[key][item].splice(0, 1) //删除depends中的依赖
 
-          this.checked[key].splice(0, temp.length, ...temp)
+            // console.log(this.depends[key][item])
+            if (this.depends[key][item].length == 0) {
+              console.log('反选成功')
+              this.checked[key].splice(0, this.checked[key].length)
+
+              this.checked[key].splice(0, temp.length, ...temp)
+            }
+          }) //检索depends依赖表，(与dependsOn提供的相反)
         }
       }
     },
