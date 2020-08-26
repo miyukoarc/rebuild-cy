@@ -9,20 +9,20 @@ function resolve(dir) {
 }
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
-const api_host =     
-//  'http://10.10.10.198' // 本地接口url 骋浩 
-//  'http://47.114.117.126:9000' // 测试IP
- 'http://10.10.10.39' // 杜亮
-// 'http://10.10.10.4:9000' // 光
-//  "http://sidebar.cyscrm.com:9000"// 线上
-// 'http://47.111.161.128:9000/'// 线上IP
+const api_host =
+    //  'http://10.10.10.198' // 本地接口url 骋浩 
+    //  'http://47.114.117.126:9000' // 测试IP
+    'http://10.10.10.247' // 杜亮
+    // 'http://10.10.10.4:9000' // 光
+    //  "http://sidebar.cyscrm.com:9000"// 线上
+    // 'http://47.111.161.128:9000/'// 线上IP
 
 
-    // If your port is set to 80,
-    // use administrator privileges to execute the command line.
-    // For example, Mac: sudo npm run
-    // You can change the port by the following methods:
-    // port = 9528 npm run dev OR npm run dev --port = 9528
+// If your port is set to 80,
+// use administrator privileges to execute the command line.
+// For example, Mac: sudo npm run
+// You can change the port by the following methods:
+// port = 9528 npm run dev OR npm run dev --port = 9528
 const port = process.env.port || process.env.npm_config_port || 9528 // dev port
 
 console.log(process.env.VUE_APP_WORK, process.env.NODE_ENV)
