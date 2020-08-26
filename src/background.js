@@ -7,6 +7,7 @@ const {
   BrowserView,
   Tray,
   Menu,
+  shell,
   ipcMain
 } = require('electron')
 const {
@@ -216,6 +217,10 @@ ipcMain.on('closeWindow', e => {
   win.close()
 })
 
+//下载监听
+ipcMain.on('open-url', (event, url) => {
+    shell.openExternal(url);
+});
 
 
 ipcMain.on('qrcode-window', (event, args) => {
