@@ -8,10 +8,10 @@
       <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个标签`">
         <div slot="right">
           <el-t-button
-            v-permission="'tag,tag_add'"
+            v-permission="'tag,tag_addTagIsAudit'"
             @click.stop="handleCreate"
             :popAuth="true"
-            :auth="'tag,tag_add'"
+            :auth="'tag,tag_addTagIsAudit'"
             type="primary"
           >添加标签组</el-t-button>
         </div>
@@ -54,8 +54,9 @@
               >审核中</span>
               <el-t-button
                 v-if="scope.row.auditStateForOperation!=='UNDER_REVCIEW'"
+                v-permission="'tag,tag_updateIsAudit'"
                 :popAuth="true"
-                :auth="'tag,tag_update'"
+                :auth="'tag,tag_updateIsAudit'"
                 type="text"
                 size="mini"
                 @click.stop.native="handleEdit(scope.$index,scope.row)"
