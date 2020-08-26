@@ -123,7 +123,7 @@ export default {
       const payload = { departmentsUuid: uuid }
       this.loading = true
       this.$store
-        .dispatch('user/getAllUserList', payload)
+        .dispatch('user/listSelectAll', payload)
         .then((res) => {
           this.list = res
           this.loading = false
