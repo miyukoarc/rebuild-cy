@@ -54,9 +54,9 @@
               >审核中</span>
               <el-t-button
                 v-if="scope.row.auditStateForOperation!=='UNDER_REVCIEW'"
-                v-permission="'tag,tag_updateIsAudit'"
+                v-permission="'tag,tag_updateTagIsAudit'"
                 :popAuth="true"
-                :auth="'tag,tag_updateIsAudit'"
+                :auth="'tag,tag_updateTagIsAudit'"
                 type="text"
                 size="mini"
                 @click.stop.native="handleEdit(scope.$index,scope.row)"
