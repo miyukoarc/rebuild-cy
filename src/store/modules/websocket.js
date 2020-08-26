@@ -258,8 +258,19 @@ const actions = {
             state.sock.onmessage = function (e) {
                 const data = JSON.parse(e.data)
                 if (data.type == 'CONTROL_MANAGER') {
+                    // MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
+                    //     title: "确认发送",
+                    //     cancelButtonText: '放弃'
+                    // }).then(() => {
+                    //     state.loadingInstance = Loading.service({
+                    //         text: "请保持鼠标静止状态，否则任务会中断。"
+                    //     });
+                    //     dispatch('getDetail', data)
+                    // }).catch(() => {
+                    //     return false
+                    // })
                     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
-                        title: "确认发送",
+                        title: `${state.countDown}秒后自动发送`,
                         cancelButtonText: '放弃'
                     }).then(() => {
                         state.loadingInstance = Loading.service({
@@ -267,8 +278,20 @@ const actions = {
                         });
                         dispatch('getDetail', data)
                     }).catch(() => {
+                        state.isStopSending = true
                         return false
                     })
+
+                    state.countDownTimer = setInterval(() => {
+                        console.log(state.countDown)
+                        state.countDown--;
+                        if (state.countDown <= 0) {
+                            console.log('之前')
+                            clearInterval(state.countDownTimer)
+                            console.log('之后')
+                            state.countDown = 5;
+                        }
+                    }, 1000);
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
                     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
                         title: `${state.countDown}秒后自动发送`,
@@ -284,6 +307,7 @@ const actions = {
                     })
 
                     state.countDownTimer = setInterval(() => {
+                        console.log(state.countDown)
                         state.countDown--;
                         if (state.countDown <= 0) {
                             console.log('之前')
