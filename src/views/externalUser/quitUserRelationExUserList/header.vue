@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 16:41:29
- * @LastEditTime: 2020-08-26 15:02:28
+ * @LastEditTime: 2020-08-26 15:38:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\quitUserRelationExUserList\header.vue
@@ -97,6 +97,7 @@ export default {
     handleRefresh() {
       this.$emit('handleRefresh')
       this.query = this.$options.data().query
+      this.value = this.$options.data().value
     },
   },
 }
