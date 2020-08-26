@@ -178,8 +178,8 @@
                     size="mini"
                     type="text"
                     :popAuth="true"
-                    :auth="'externalUser,externalUser_detail'"
-                    v-permission="'externalUser,externalUser_detail'"
+                    :auth="'message,message_singleListAll'"
+                    v-permission="'message,message_singleListAll'"
                     @click.native="handleDetail(scope.row)"
                     v-if="scope.row.lastMsgTime"
                   >聊天记录</el-t-button>

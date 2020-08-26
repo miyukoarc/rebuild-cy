@@ -114,7 +114,7 @@ export default {
               // console.log(deps[key])
 
               deps[key].forEach((item) => {
-                console.log(this.depends[key][item], item)
+                // console.log(this.depends[key][item], item)
 
                 let dependItem = this.list[key].find((unit) => {
                   return unit.code === item
