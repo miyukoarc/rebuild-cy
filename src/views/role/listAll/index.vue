@@ -52,6 +52,7 @@
                 :popAuth="true"
                 :auth="'role,role_update'"
                 v-permission="'role,role_update'"
+                v-if="roleCode=='super'"
               >配置权限</el-t-button>
               <el-t-button
                 type="text"
@@ -110,6 +111,7 @@ export default {
       //   corpInfo: (state) => state.auth.corpInfo,
       permissionMap: (state) => state.permission.permissionMap,
       listSelect: (state) => state.department.listSelect,
+      roleCode: state => state.user.roleCode
     }),
   },
   created() {

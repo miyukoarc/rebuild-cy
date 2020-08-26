@@ -93,6 +93,8 @@
         size="small"
         @click="handleAudit(action='reject')"
         v-permission="'audit,audit_batchAuditTagConfirmation'"
+        :popAuth="true"
+        :auth="'audit,audit_batchAuditTagConfirmation'"
       >拒绝</el-t-button>
       <el-t-button
         v-if="detail.auditState==='TO_BE_REVIEWED'&&!currentUserState(detail.auditUsers)"
@@ -100,12 +102,14 @@
         size="small"
         @click="handleAudit(action='access')"
         v-permission="'audit,audit_batchAuditTagConfirmation'"
+        :popAuth="true"
+        :auth="'audit,audit_batchAuditTagConfirmation'"
       >通过</el-t-button>
-      <el-button
+      <!-- <el-button
         v-if="detail.auditState!=='TO_BE_REVIEWED'||currentUserState(detail.auditUsers)"
         size="small"
         @click="handleCancel"
-      >取消</el-button>
+      >取消</el-button> -->
     </div>
   </el-form>
 </template>

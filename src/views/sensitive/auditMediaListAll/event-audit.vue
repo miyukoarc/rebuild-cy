@@ -144,19 +144,25 @@
       <el-t-button
         v-if="detail.auditState==='TO_BE_REVIEWED'&&!currentUserState(detail.auditUsers)"
         size="small"
+        v-permission="'audit,audit_batchAuditMediaConfirmation'"
+        :auth="'audit,audit_batchAuditMediaConfirmation'"
+        :popAuth="true"
         @click="handleAudit(action='reject')"
       >拒绝</el-t-button>
       <el-t-button
         v-if="detail.auditState==='TO_BE_REVIEWED'&&!currentUserState(detail.auditUsers)"
         type="primary"
         size="small"
+        v-permission="'audit,audit_batchAuditMediaConfirmation'"
+        :auth="'audit,audit_batchAuditMediaConfirmation'"
+        :popAuth="true"
         @click="handleAudit(action='access')"
       >通过</el-t-button>
-      <el-button
-        v-if="detail.auditState!=='TO_BE_REVIEWED'||currentUserState(detail.auditUsers)"
+      <!-- v-if="detail.auditState!=='TO_BE_REVIEWED'||currentUserState(detail.auditUsers)" -->
+      <!-- <el-button
         size="small"
         @click="handleCancel"
-      >取消</el-button>
+      >取消</el-button>-->
     </div>
   </el-form>
 </template>
@@ -422,11 +428,10 @@ export default {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'error',
+          }).finally(() => {
+            this.handleRefresh()
+            this.handleCancel()
           })
-            .finally(()=>{
-                this.handleRefresh()
-                this.handleCancel()
-            })
         })
     },
     handleRefresh() {
