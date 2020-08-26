@@ -42,7 +42,11 @@ const state = {
     isInProgress: false, // 当前是否处于任务执行期间：默认否
 
     isLock: null,
-    isLockTemp: false
+    isLockTemp: false,
+
+    countDown: 5,
+    countDownTimer: null,
+    isStopSending: false
 }
 
 
@@ -267,7 +271,7 @@ const actions = {
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
                     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
-                        title: "确认发送",
+                        title: `${state.countDown}秒后自动发送`,
                         cancelButtonText: '放弃'
                     }).then(() => {
                         state.loadingInstance = Loading.service({
@@ -275,8 +279,20 @@ const actions = {
                         });
                         dispatch('getDetail', data)
                     }).catch(() => {
+                        state.isStopSending = true
                         return false
                     })
+
+                    state.countDownTimer = setInterval(() => {
+                        state.countDown--;
+                        if (state.countDown <= 0) {
+                            console.log('之前')
+                            clearInterval(state.countDownTimer)
+                            console.log('之后')
+                            state.countDown = 5;
+                        }
+                    }, 1000);
+
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
                     state.isOpenedSidebar = true;// 侧边栏已打开
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
