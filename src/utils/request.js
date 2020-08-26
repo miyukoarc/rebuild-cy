@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-13 00:01:31
- * @LastEditTime: 2020-08-25 18:29:43
+ * @LastEditTime: 2020-08-26 10:34:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\utils\request.js
@@ -20,15 +20,16 @@ import {
 } from '@/utils/auth'
 
 let pending = []; //声明一个数组用于存储每个ajax请求的取消函数和ajax标识
-let cancelToken = axios.CancelToken;
-let removeRepeatUrl = (ever) => {
-    for (let p in pending) {
-        if (pending[p].u === ever.url + '&' + ever.method) { //当当前请求在数组中存在时执行函数体
-            pending[p].f(); //执行取消操作
-            pending.splice(p, 1); //把这条记录从数组中移除
-        }
-    }
-}
+let CancelToken = axios.CancelToken;
+const source = CancelToken.source();
+// let removeRepeatUrl = (ever) => {
+//     for (let p in pending) {
+//         if (pending[p].u === ever.url + '&' + ever.method) { //当当前请求在数组中存在时执行函数体
+//             pending[p].f(); //执行取消操作
+//             pending.splice(p, 1); //把这条记录从数组中移除
+//         }
+//     }
+// }
 
 // var loadinginstace
 
@@ -49,14 +50,15 @@ service.interceptors.request.use(
     config => {
 
         // 拦截重复请求(即当前正在进行的相同请求)
-        removeRepeatUrl(config);
-        config.cancelToken = new cancelToken((c) => {
-            // 自定义唯一标识
-            pending.push({
-                u: config.url + '&' + config.method,
-                f: c
-            });
-        });
+        // removeRepeatUrl(config);
+        config.cancelToken = source.token; // 全局添加cancelToken
+        // config.cancelToken = new cancelToken((c) => {
+        //     // 自定义唯一标识
+        //     pending.push({
+        //         u: config.url + '&' + config.method,
+        //         f: c
+        //     });
+        // });
 
         // do something before request is sent
         return config;
@@ -96,7 +98,7 @@ service.interceptors.response.use(
      */
     response => {
 
-        removeRepeatUrl(response.config); //在一个ajax响应后再执行一下取消操作，把已经完成的请求从pending中移除
+        // removeRepeatUrl(response.config); //在一个ajax响应后再执行一下取消操作，把已经完成的请求从pending中移除
 
         const res = response.data
         if (response.status == 401) {
@@ -109,7 +111,10 @@ service.interceptors.response.use(
             // })
 
             // removeToken()
-            // source.cancel(); // 取消其他正在进行的请求
+
+            // 登录失效
+            source.cancel(); // 取消其他正在进行的请求
+
             router.push({
                     path: '/login'
                 })

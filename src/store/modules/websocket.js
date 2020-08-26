@@ -364,10 +364,35 @@ const actions = {
                 } else if (data.type == 'ADDTASK') {
                     dispatch('listSelectMobil', data)
                 } else if (data.type == 'AUTOREP') {
-                    state.taskQueue.push({
-                        automationType: "AUTOREP",
-                        data: data,
-                    })
+                    if (data.properties.content) {
+                        state.taskQueue.push({
+                            automationType: "AUTOREP",
+                            data: {
+                                toUserId: data.toUserId,
+                                properties: {
+                                    ...data.properties,
+                                    autoReplyType: null,
+                                    mediaId: null,
+                                },
+                                title: data.title,
+                                text: data.text,
+                            },
+                        })
+                    }
+                    if (data.properties.autoReplyType != 'CONTENT') {
+                        state.taskQueue.push({
+                            automationType: "AUTOREP",
+                            data: {
+                                toUserId: data.toUserId,
+                                properties: {
+                                    ...data.properties,
+                                    content: null,
+                                },
+                                title: data.title,
+                                text: data.text,
+                            },
+                        })
+                    }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'LOCKSCREEN') {
                     $ipcRenderer.send('LockScreen', {})
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'UNLOCKSCREEN') {
