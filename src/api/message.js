@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-24 10:23:46
- * @LastEditTime: 2020-08-20 11:12:13
+ * @LastEditTime: 2020-08-26 20:42:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\api\message.js
@@ -55,6 +55,7 @@ export const downloadFile = (url) => {
         url: url,
         method: 'get',
         responseType: "blob",
+        responseEncoding: 'utf8'
     })
 }
 
