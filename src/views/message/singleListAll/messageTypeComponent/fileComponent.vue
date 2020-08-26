@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:48:28
- * @LastEditTime: 2020-08-26 21:05:15
+ * @LastEditTime: 2020-08-26 22:10:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\fileComponent.vue
@@ -114,47 +114,67 @@ export default {
     },
   },
   methods: {
-    async handleDownload(url, fileName, mime) {
+    handleDownload(url, fileName, mime) {
+      // alert(url);
+      if (this.$isElectron()) {
+        //electron客户端
+        const { shell } = window.electron;
+        shell.openExternal(url);
+      } else {
+        window.open(url, fileName);
+      }
+      // if(this.$isElectron()){
+      //   const {shell} = window.electron
+      //   shell.openExternal(url)
+      // }else{
+      //   window.open(url,fileName)
+      // }
       // 下载附件
-      await downloadFile(url)
-        .then((res) => {
-          const blob = res;
-          console.log(blob,res,'3333')
-          // 注: mime类型必须整正确, 否则下载的文件会损坏
-          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            // 兼容IE
-            window.navigator.msSaveOrOpenBlob(blob, element.original_name);
-          } else {
-            const downloadElement = document.createElement("a");
-            downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
-            downloadElement.download = fileName;
-            downloadElement.click();
-            window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-      // axios
-      //   .get(url, { responseType: "blob" })
-      //   .then(res => {
-      //     let blob = new Blob([res.data], { type: mime });
+      // await downloadFile(url)
+      //   .then((res) => {
+      //     const blob = res;
+      //     console.log(blob, res, "3333");
       //     // 注: mime类型必须整正确, 否则下载的文件会损坏
       //     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
       //       // 兼容IE
       //       window.navigator.msSaveOrOpenBlob(blob, element.original_name);
       //     } else {
-      //       let downloadElement = document.createElement("a");
-      //       downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
-      //       downloadElement.download = fileName;
-      //       downloadElement.click();
-      //       window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
+      //       window.open(blob,fileName)
+      //       // const downloadElement = document.createElement("a");
+      //       // downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
+      //       // downloadElement.download = fileName;
+      //       // document.body.appendChild(downloadElement);
+      //       // var evt = document.createEvent("MouseEvents");
+      //       // evt.initEvent("click", false, false);
+      //       // downloadElement.dispatchEvent(evt); //释放URL 对象
+      //       // document.body.removeChild(downloadElement);
+      //       // downloadElement.click();
+      //       // window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
       //     }
       //   })
-      //   .catch(error => {
+      //   .catch((error) => {
       //     console.error(error);
       //   });
+
+      // // axios
+      // //   .get(url, { responseType: "blob" })
+      // //   .then(res => {
+      // //     let blob = new Blob([res.data], { type: mime });
+      // //     // 注: mime类型必须整正确, 否则下载的文件会损坏
+      // //     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      // //       // 兼容IE
+      // //       window.navigator.msSaveOrOpenBlob(blob, element.original_name);
+      // //     } else {
+      // //       let downloadElement = document.createElement("a");
+      // //       downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
+      // //       downloadElement.download = fileName;
+      // //       downloadElement.click();
+      // //       window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
+      // //     }
+      // //   })
+      // //   .catch(error => {
+      // //     console.error(error);
+      // //   });
     },
     getFileSize(fileByte) {
       var fileSizeByte = fileByte;
