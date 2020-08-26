@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-08-25 17:10:16
+ * @LastEditTime: 2020-08-26 21:07:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -478,6 +478,7 @@ export default {
             this.currnetMember = item;
             this.chatType = item.chatType;
             this.query.toUserId = item._id;
+            this.query.page = 0
             // let payload = {
             //   type: "externalUser",
             //   uuid: this.$route.query.uuid,
@@ -498,7 +499,6 @@ export default {
     },
 
     handleClickChatType() {
-      console.log("点击右侧类型", this.chatActiveName);
       if (this.chatSideData.length > 0) {
         let payload = {
           type: this.$route.query.type,

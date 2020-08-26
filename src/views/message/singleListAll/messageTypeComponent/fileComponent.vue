@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:48:28
- * @LastEditTime: 2020-08-26 18:53:59
+ * @LastEditTime: 2020-08-26 21:05:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\fileComponent.vue
@@ -18,7 +18,7 @@
             style="margin-left:20px"
           >{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-          <div class="display-flex align-items-center" style="cursor: pointer;">
+          <div class="display-flex align-items-center">
             <div class="file-warp">
               <div class="file-bg flex-between-alinecenter">
                 <div>
@@ -41,6 +41,7 @@
             </div>
             <i
               class="el-icon-download ml-10"
+              style="cursor: pointer;"
               @click="handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt,item.revokeType)"
             ></i>
           </div>
@@ -53,9 +54,10 @@
         <div class="right">
           <div class="chat-name" style="text-align:right;margin-right:20px">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-          <div class="display-flex align-items-center" style="cursor: pointer;">
+          <div class="display-flex align-items-center">
             <i
               class="el-icon-download mr-10"
+              style="cursor: pointer;"
               @click="handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
             ></i>
             <div class="file-warp">
@@ -116,7 +118,8 @@ export default {
       // 下载附件
       await downloadFile(url)
         .then((res) => {
-          const blob = new Blob([res.data], { type: mime });
+          const blob = res;
+          console.log(blob,res,'3333')
           // 注: mime类型必须整正确, 否则下载的文件会损坏
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             // 兼容IE
@@ -198,7 +201,6 @@ export default {
     max-width: 50%;
     margin-top: 5px;
     .file-warp {
-      cursor: pointer;
       margin-left: 20px;
       position: relative;
       width: 260px;
@@ -210,7 +212,6 @@ export default {
     max-width: 50%;
     top: 5px;
     .file-warp {
-      cursor: pointer;
       margin-right: 20px;
       position: relative;
       width: 260px;
