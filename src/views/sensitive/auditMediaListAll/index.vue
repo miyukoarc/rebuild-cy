@@ -238,7 +238,7 @@ export default {
   },
   created() {
     this.initDataList(this.query)
-    this.initFilter()
+    // this.initFilter()
   },
   mounted() {
     //刷新eventBUs
@@ -259,6 +259,7 @@ export default {
         .dispatch('user/getUserListSelect')
         .then(() => {})
         .catch((err) => {
+            console.error(err)
           this.$message({
             type: 'error',
             message: '初始化失败',
@@ -277,6 +278,7 @@ export default {
           this.pageConfig.total = this.page.total
         })
         .catch((err) => {
+            console.error(err)
           this.$message({
             type: 'error',
             message: '初始化失败',

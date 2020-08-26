@@ -482,7 +482,16 @@ export default {
     },
     handleDownload() {
       const url = this.detail.auditAddMedia[0].localId
-      window.location.href = `/api/public/file/${url}`
+      if (this.$isElectron()) {
+          //electron客户端
+        const { shell } = window.electron
+
+        shell.openExternal(`http://sidebar.cyscrm.com/api/public/file/${url}`);
+
+      } else {
+          //浏览器下下载
+        window.location.href = `/api/public/file/${url}`
+      }
     },
   },
 }
