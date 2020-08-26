@@ -5,7 +5,13 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :hasRefresh="true" @handleRefresh="" :hasExport="false" @handleExport="doExport" :msg="`共${pageConfig.total}个活码`">
+      <tool-bar
+        :hasRefresh="true"
+        @handleRefresh="handleRequest"
+        :hasExport="false"
+        @handleExport="doExport"
+        :msg="`共${pageConfig.total}个活码`"
+      >
         <div slot="right">
           <el-t-button
             type="primary"
@@ -187,6 +193,9 @@ export default {
     this.initFilter()
   },
   methods: {
+    handleRequest() {
+        this.initDataList(this.query)
+    },
     doExport(val) {
       console.log(val)
     },

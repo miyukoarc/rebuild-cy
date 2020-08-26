@@ -87,14 +87,13 @@
       </div>
     </el-card>
 
-    <form-dialog ref="formDialog"></form-dialog>
+    <!-- <form-dialog ref="formDialog"></form-dialog> -->
   </div>
 </template>
 
 <script>
-import UserDetail from "./detail.vue";
+
 import ListHeader from "./header.vue";
-import FormDialog from "./dialog";
 import ToolBar from "@/components/ToolBar";
 
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
@@ -110,7 +109,6 @@ export default {
     AsyncUserDrawer,
     ListHeader,
     UserDetail,
-    FormDialog,
     ToolBar,
     UserDrawer,
     TagsDrawerObj
@@ -239,7 +237,7 @@ export default {
       this.initDataList(this.query);
     },
     handleExport(val) {
-      ;
+      
     }
   }
 };

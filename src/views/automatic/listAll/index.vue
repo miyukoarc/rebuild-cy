@@ -25,8 +25,8 @@
             type="primary"
             size="mini"
             :popAuth="true"
-            v-permission="'automatic,automatic_addDefault'"
-            :auth="'automatic,automatic_addDefault'"
+            v-permission="'automatic,automatic_add'"
+            :auth="'automatic,automatic_add'"
             @click.stop="handleClickSetAutoReplay"
           >设置</el-t-button>
         </div>
