@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
     <el-form-item label="客户名称：">
-      <el-input v-model.trim="query.name" clearable placeholder="请输入客户名称"></el-input>
+      <el-input v-model.trim="query.name" clearable placeholder="请输入客户名称" @clear="handleClearable('name')"></el-input>
     </el-form-item>
 
     <!-- <el-form-item label="添加渠道：">
@@ -125,9 +125,14 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      this.query.startTime = this.value[0];
-      this.query.endTime = this.value[1];
-      this.$emit("handleSearch", this.query);
+      console.log(val,'val')
+      if (val) {
+        this.query.startTime = this.value[0];
+        this.query.endTime = this.value[1];
+      } else {
+        this.query.startTime = "";
+        this.query.endTime = "";
+      }
     },
     handleChangeSecond(val) {
       // if (this.timer) {
@@ -137,10 +142,15 @@ export default {
       //   this.$emit("handleSearch", this.query);
       // }, 1000);
     },
-    handleSelectedChange(val) {
-      this.$emit("handleSearch", this.query);
+    handleClearable(val) {
+      this.query[val] = "";
+      // this.$emit("handleSearch", this.query);
     },
+    // handleSelectedChange(val) {
+    //   this.$emit("handleSearch", this.query);
+    // },
     handleSearch() {
+      console.log(this.query,'query')
       this.$emit("handleSearch", this.query);
     },
     handleRefresh() {

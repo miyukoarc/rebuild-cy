@@ -176,17 +176,18 @@ export default {
       this.$parent.$parent.dialogVisible = false;
     },
     refresh() {
-      this.$store
-        .dispatch("potentialCustomer/getListMy")
-        .then(() => {
-          this.reload();
-        })
-        .catch((err) => {
-          this.$message({
-            type: "error",
-            message: err,
-          });
-        });
+     this.$bus.$emit('handleRefresh')
+      // this.$store
+      //   .dispatch("potentialCustomer/getList")
+      //   .then(() => {
+      //     this.reload();
+      //   })
+      //   .catch((err) => {
+      //     this.$message({
+      //       type: "error",
+      //       message: err,
+      //     });
+      //   });
     },
   },
 };

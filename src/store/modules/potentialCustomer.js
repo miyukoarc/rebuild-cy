@@ -147,7 +147,7 @@ const actions = {
             getList(payload).then((res) => {
                 commit('SAVE_LISTALL', res.items)
                 commit('SET_LISTALLPAGE', res)
-                resolve()
+                resolve(res)
             }).catch(err => {
 
                 reject(err)
