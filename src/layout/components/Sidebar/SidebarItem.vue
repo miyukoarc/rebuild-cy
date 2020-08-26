@@ -5,7 +5,10 @@
     >
       <el-tooltip v-if="showAuth&&popAuth&&onlyOneChild.meta" placement="left">
         <div slot="content">
-          <div v-for="(item, index) in resolveAuth(onlyOneChild.meta.auth||{})" :key="index">{{item}}</div>
+          <div
+            v-for="(item, index) in resolveAuth(onlyOneChild.meta.auth||{})"
+            :key="index"
+          >{{item}}</div>
         </div>
         <app-link :to="resolvePath(onlyOneChild.path)">
           <el-menu-item
@@ -68,20 +71,20 @@ export default {
     // route object
     item: {
       type: Object,
-      required: true
+      required: true,
     },
     isNest: {
       type: Boolean,
-      default: false
+      default: false,
     },
     basePath: {
       type: String,
-      default: ''
+      default: '',
     },
     popAuth: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
@@ -93,19 +96,19 @@ export default {
         title: '',
         module: '',
         needAudit: false,
-        code: ''
-      }
+        code: '',
+      },
     }
   },
   computed: {
     showAuth() {
       return settings.showAuth
-    }
+    },
   },
   created() {},
   methods: {
     hasOneShowingChild(children = [], parent) {
-      const showingChildren = children.filter(item => {
+      const showingChildren = children.filter((item) => {
         if (item.hidden) {
           return false
         } else {
@@ -145,48 +148,37 @@ export default {
     },
     resolveAuth(obj) {
       const arr = []
-      for (let key in obj) {
-        // arr[4] = '角色：'
-        if (key === 'roles') {
-          arr[4] =
-            '角色：' +
-            obj['roles']
-              .map(item => {    
-                return item.name
-              })
-              .join(',')
-        }
-        if (key === 'module') {
-          // arr.push()
-          arr[2] = '模块：' + obj['module']
-        }
-        if (key === 'needAudit') {
-          arr[3] = obj['needAudit'] ? '审核：需要审核' : '审核：不需要审核'
-          // arr.push()
-        }
 
-        if (key === 'code') {
-          arr[1] = 'code：' + obj['code']
-          // arr.push()
-        }
-        if (key === 'title') {
-          arr[0] = '名称：' + obj['title']
-          // arr.push()
-        }
-      }
+      let roles = Object.keys(obj.roles||{}).length ? obj.roles : []
+      let str = roles
+        .map((item) => {
+          return item.name
+        })
+        .join(' ')
+
+      arr[4] = `角色：${str}`
+
+      arr[2] = '模块：' + obj['module']
+
+      arr[3] = obj['needAudit'] ? '审核：--' : '审核：--'
+
+      arr[1] = 'code：' + obj['code']
+
+      arr[0] = '名称：' + obj['title']
+
       return arr
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss">
-.el-submenu__title{
-    user-select: none;
+.el-submenu__title {
+  user-select: none;
 }
 
-.el-menu-item{
-    user-select: none;
+.el-menu-item {
+  user-select: none;
 }
 </style>
 

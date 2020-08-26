@@ -9,13 +9,13 @@ function resolve(dir) {
 }
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
-const api_host =
-    //  'http://10.10.10.198' // 本地接口url 骋浩 
-    //  'http://47.114.117.126:9000' // 测试IP
-    'http://10.10.10.247' // 杜亮
-    // 'http://10.10.10.4:9000' // 光
-    //  "http://sidebar.cyscrm.com:9000"// 线上
-    // 'http://47.111.161.128:9000/'// 线上IP
+const api_host =     
+//  'http://10.10.10.198' // 本地接口url 骋浩 
+//  'http://47.114.117.126:9000' // 测试IP
+ 'http://10.10.10.247' // 杜亮
+// 'http://10.10.10.4:9000' // 光
+//  "http://sidebar.cyscrm.com:9000"// 线上
+// 'http://47.111.161.128:9000/'// 线上IP
 
 
 // If your port is set to 80,

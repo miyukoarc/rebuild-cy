@@ -181,7 +181,7 @@ export default {
     initNodeData() {
       const payload = { departmentsUuid: 3 }
       this.$store
-        .dispatch('user/getAllUserList', payload)
+        .dispatch('user/listSelectAll', payload)
         .then((res) => {})
         .catch((err) => {
           this.$message({

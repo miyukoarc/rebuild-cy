@@ -41,8 +41,8 @@
                 type="text"
                 @click.stop.native="handleEdit(scope.$index)"
                 :popAuth="true"
-                :auth="'media,media_article_update'"
-                v-permission="'media,media_article_update'"
+                :auth="'media,media_article/update'"
+                v-permission="'media,media_article/update'"
               >编辑</el-t-button>
 
               <el-t-button

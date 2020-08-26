@@ -49,25 +49,13 @@ export default {
   computed: {
     ...mapState({
       listSelect: (state) => state.department.listSelect,
-    //   departmentList: (state) => state.department.departmentList,
       auditSetting: (state) => state.sensitive.auditSetting,
     }),
   },
   created() {
-    this.initData()
+
   },
   methods: {
-    initData() {
-      this.$store
-        .dispatch('department/getDepartmentListAll')
-        .then(() => {})
-        .catch((err) => {
-          this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
-    },
     handleConfirm() {
       if (this.section === 'department') {
         this.$set(

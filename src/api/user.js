@@ -133,3 +133,11 @@ export const userMaintain = (payload) => {
         params: payload
     })
 }
+
+export const listSelectAll = (payload)=>{
+    return request({
+        url: '/user/listSelectAll',
+        method: 'get',
+        params: payload
+    })
+}
