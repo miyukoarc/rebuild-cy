@@ -118,8 +118,8 @@
             <el-t-button
               type="text"
               :popAuth="true"
-              v-permission="'externalUser,message_singleListAll'"
-              :auth="'externalUser,message_singleListAll'"
+              v-permission="'externalUser,externalUser_detail'"
+              :auth="'externalUser,externalUser_detail'"
               size="mini"
               v-if="scope.row.lastMsgTime"
               @click.stop.native="handleGroupChat(scope.row)"

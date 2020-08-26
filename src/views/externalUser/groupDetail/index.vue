@@ -23,8 +23,8 @@
           <el-t-button
             type="primary"
             :popAuth="true"
-            :auth="'message,message_singleListAll'"
-            v-permission="'message,message_singleListAll'"
+            :auth="'externalUser,externalUser_detail'"
+            v-permission="'externalUser,externalUser_detail'"
             size="mini"
             @click.native="toGroupChat"
           >聊天记录</el-t-button>
