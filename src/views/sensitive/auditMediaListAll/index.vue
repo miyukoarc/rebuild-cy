@@ -147,6 +147,7 @@
 
                   <span v-else>详细</span>
                 </el-t-button>
+                
               </div>
             </template>
           </el-table-column>
