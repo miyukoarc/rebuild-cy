@@ -39,6 +39,7 @@ router.beforeEach(async (to, from, next) => {
     if (to.path == '/login') {
       //if is logged in, redirect to the home page
       //   alert('login')
+      removeToken()
       next({
         path: '/'
       })
@@ -92,7 +93,7 @@ router.beforeEach(async (to, from, next) => {
           }
 
         }).catch(() => {
-          removeToken()
+        //   removeToken()
           Message({
             type: 'error',
             message: '未登录'

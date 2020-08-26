@@ -79,7 +79,6 @@ const actions = {
                             $ipcRenderer.send("UnlockScreen", {})
                             state.isLockTemp = true
                         }
-
                         state.isInProgress = true;
                         // 群发队列
                         if (state.currentTask.automationType == "BatchSendTask") {
@@ -100,10 +99,6 @@ const actions = {
                         return state.currentTask;
                     }
                 }
-                // unshift() {
-                //     console.log("自定义的unshift");
-                //     super.unshift();
-                // }
             }
 
             state.taskQueue = new Queue()
@@ -136,8 +131,8 @@ const actions = {
                         state.isLock = false
                     })
                     $ipcRenderer.on('reply-openChat', (event, arg) => {
+                        console.log('reply-openChat', arg)
                         if (arg.err) {
-                            console.log('reply-openChat', arg)
                             // 群发出错，任务状态设为“中断”
                             if (state.currentTask.automationType == 'BatchSendTask') {
                                 batchSendTaskSuspend({
@@ -153,11 +148,33 @@ const actions = {
                         } else {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
+
+                            if (arg.val.type == 'DirectMessaging') {
+                                if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
+                                    dispatch('sendChaoyingMessage')
+                                }
+                                if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
+                                    console.log('sendMsgContent_autorep_media')
+                                    sendChaoyingMessage({
+                                        sendChatMessage: state.sendMsgContent_autorep_media
+                                    }).then(() => {
+                                        state.sendMsgContent_autorep_media = null
+                                    })
+                                }
+                                if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
+                                    console.log('sendMsgContent_autorep_text')
+                                    sendChaoyingMessage({
+                                        sendChatMessage: state.sendMsgContent_autorep_text
+                                    }).then(() => {
+                                        state.sendMsgContent_autorep_text = null
+                                    })
+                                }
+                            }
                         }
                     })
                     $ipcRenderer.on('reply-inputEnter', (event, arg) => {
+                        console.log('reply-inputEnter', arg)
                         if (arg.err) {
-                            console.log('reply-inputEnter', arg)
                             if (state.currentTask.automationType == 'BatchSendTask') {
                                 // 群发出错，任务状态设为“中断”
                                 batchSendTaskSuspend({
@@ -174,6 +191,8 @@ const actions = {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
                         }
+
+                        console.log(state.currentTask)
                         if (state.currentTask.automationType == 'BatchSendTask') {
                             // 设置状态为已发送
                             sendResultHasSend({ uuids: [state.currentTask.uuid] }).then(() => {
@@ -280,6 +299,7 @@ const actions = {
                         })
                     }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
+                    console.log('CONTENT_READY')
                     $ipcRenderer.send('inputEnter', {
                         x: state.mouseX,
                         y: state.mouseY
@@ -506,6 +526,15 @@ const actions = {
     },
     beforeAutoRep({ state, dispatch }) {
         let data = state.currentTask.data;
+        if (!data.properties.mobile) {
+            Message({
+                message: '请为客户设置手机号后重试',
+                type: 'error'
+            })
+            dispatch('clearTask')
+            return false
+        }
+
         if (data.properties.content) {
             state.sendMsgContent_autorep_text = {
                 msgtype: "text",
@@ -544,31 +573,53 @@ const actions = {
     openChat_autorep({ state, dispatch }) {
         isOnline('SIDEBAR').then(res => {
             console.log('是否在线：' + res)
-            if (res) {
-                sendCustomizeMessage({
-                    toUserId: state.currentTask.data.toUserId,
-                    clientGroup: "SIDEBAR",
-                    properties: {
-                        code: 'WHOSE_WINDOW_DO_YO_OPEN_AUTOREP'
-                    }
-                })
-            } else {
-                state.isOpenedSidebar = false;
-                if (isElectron() && state.currentTask.data.properties.mobile) {
-                    console.log('打开侧边栏了')
-                    $ipcRenderer.send('openChat', {
-                        mobile: state.currentTask.data.properties.mobile.split(',')[0],
-                        x: state.mouseX,
-                        y: state.mouseY,
-                    })
-                } else {
-                    Message({
-                        message: '请为客户设置手机号后重试',
-                        type: 'error'
-                    })
-                    dispatch('clearTask')
-                }
+            // if (res) {
+            //     // sendCustomizeMessage({
+            //     //     toUserId: state.currentTask.data.toUserId,
+            //     //     clientGroup: "SIDEBAR",
+            //     //     properties: {
+            //     //         code: 'WHOSE_WINDOW_DO_YO_OPEN_AUTOREP'
+            //     //     }
+            //     // })
+            //     // if (isElectron()) {
+            //     //     console.log('打开侧边栏了')
+            //     //     $ipcRenderer.send('openChat', {
+            //     //         mobile: state.currentTask.data.properties.mobile.split(',')[0],
+            //     //         x: state.mouseX,
+            //     //         y: state.mouseY,
+            //     //         type: "DirectMessaging"
+            //     //     })
+            //     // }
+            // } else {
+            //     state.isOpenedSidebar = false;
+            //     if (isElectron()) {
+            //         console.log('打开侧边栏了')
+            //         $ipcRenderer.send('openChat', {
+            //             mobile: state.currentTask.data.properties.mobile.split(',')[0],
+            //             x: state.mouseX,
+            //             y: state.mouseY,
+            //         })
+            //     }
+            //     console.log('开始倒计时')
+            //     setTimeout(() => {
+            //         if (state.isOpenedSidebar == false) {
+            //             Message({
+            //                 message: '请打开侧边栏后重试',
+            //                 type: 'error'
+            //             })
+            //             dispatch('clearTask')
+            //         }
+            //     }, 10000);
+            // }
 
+            if (isElectron()) {
+                state.isOpenedSidebar = res;
+                $ipcRenderer.send('openChat', {
+                    mobile: state.currentTask.data.properties.mobile.split(',')[0],
+                    x: state.mouseX,
+                    y: state.mouseY,
+                    type: res ? "DirectMessaging" : null
+                })
                 console.log('开始倒计时')
                 setTimeout(() => {
                     if (state.isOpenedSidebar == false) {

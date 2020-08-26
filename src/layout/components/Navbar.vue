@@ -19,7 +19,6 @@ import { mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 import WindowButton from './WindowButton'
-import { removeToken } from "@/utils/auth";
 export default {
   components: {
     Breadcrumb,
@@ -32,10 +31,6 @@ export default {
   methods: {
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
-    },
-
-    removeToken() {
-      return removeToken();
     }
   }
 };
