@@ -141,8 +141,13 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      this.query.startTime = this.value[0];
-      this.query.endTime = this.value[1];
+      if (val) {
+        this.query.startTime = this.value[0];
+        this.query.endTime = this.value[1];
+      } else {
+        this.query.startTime = "";
+        this.query.endTime = "";
+      }
     //   this.$emit("handleSearch", this.query);
     },
     handleChangeSecond(val) {

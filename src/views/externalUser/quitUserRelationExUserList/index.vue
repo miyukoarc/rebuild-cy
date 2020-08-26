@@ -203,8 +203,8 @@ export default {
       const { name, status, startTime, endTime } = val
       this.query.name = name ? name : this.query.name
       this.query.status = status ? status : this.query.status
-      this.query.startTime = startTime ? startTime : this.query.startTime
-      this.query.endTime = endTime ? endTime : this.query.endTime
+      this.query.startTime = startTime ? startTime : ""
+      this.query.endTime = endTime ? endTime : ""
       this.query.page = 0
       this.initDataList(this.query)
     },

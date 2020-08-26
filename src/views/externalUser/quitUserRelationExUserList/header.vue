@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 16:41:29
- * @LastEditTime: 2020-08-10 11:24:38
- * @LastEditors: your name
+ * @LastEditTime: 2020-08-26 15:38:25
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\externalUser\quitUserRelationExUserList\header.vue
 -->
@@ -83,8 +83,13 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      this.query.startTime = this.value[0]
-      this.query.endTime = this.value[1]
+      if (val) {
+        this.query.startTime = this.value[0];
+        this.query.endTime = this.value[1];
+      } else {
+        this.query.startTime = "";
+        this.query.endTime = "";
+      }
     },
     handleSearch() {
       this.$emit('handleSearch', this.query)
@@ -92,6 +97,7 @@ export default {
     handleRefresh() {
       this.$emit('handleRefresh')
       this.query = this.$options.data().query
+      this.value = this.$options.data().value
     },
   },
 }

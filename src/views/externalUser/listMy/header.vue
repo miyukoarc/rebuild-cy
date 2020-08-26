@@ -1,7 +1,12 @@
 <template>
   <el-form ref="searchForm" inline label-width="120px" class="external-user-list-all-header">
     <el-form-item label="客户名称：">
-      <el-input v-model.trim="query.name" clearable placeholder="请输入客户名称"></el-input>
+      <el-input
+        v-model.trim="query.name"
+        clearable
+        placeholder="请输入客户名称"
+        @clear="handleClearable('name')"
+      ></el-input>
     </el-form-item>
 
     <!-- <el-form-item label="添加渠道：">
@@ -35,8 +40,8 @@
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        @change="handleSelectedTime"
         :default-time="['00:00:00', '23:59:59']"
+        @change="handleSelectedTime"
       ></el-date-picker>
     </el-form-item>
 
@@ -46,7 +51,7 @@
           :popper-append-to-body="false"
           v-model="query.tagIds"
           clearable
-          @change="handleChangeSecond"
+          @change="handleSelectedThrottle"
           size="mini"
           multiple
         >
@@ -125,11 +130,15 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      this.query.startTime = this.value[0];
-      this.query.endTime = this.value[1];
-      this.$emit("handleSearch", this.query);
+      if (val) {
+        this.query.startTime = this.value[0];
+        this.query.endTime = this.value[1];
+      } else {
+        this.query.startTime = "";
+        this.query.endTime = "";
+      }
     },
-    handleChangeSecond(val) {
+    handleSelectedThrottle(val) {
       // if (this.timer) {
       //   clearTimeout(this.timer);
       // }
@@ -137,9 +146,10 @@ export default {
       //   this.$emit("handleSearch", this.query);
       // }, 1000);
     },
-    handleSelectedChange(val) {
-      this.$emit("handleSearch", this.query);
-    },
+    
+    // handleSelectedChange(val) {
+    //   this.$emit("handleSearch", this.query);
+    // },
     handleSearch() {
       this.$emit("handleSearch", this.query);
     },
@@ -147,6 +157,10 @@ export default {
       this.$emit("handleRefresh");
       this.value = this.$options.data().value;
       this.query = this.$options.data().query;
+    },
+    handleClearable(val) {
+      this.query[val] = "";
+      // this.$emit("handleSearch", this.query);
     },
   },
 };

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-28 13:56:22
- * @LastEditTime: 2020-08-12 19:24:37
+ * @LastEditTime: 2020-08-26 15:03:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\header.vue
@@ -56,9 +56,13 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      this.query.startTime = this.value[0];
-      this.query.endTime = this.value[1];
-      this.$emit("handleSearch", this.query);
+      if (val) {
+        this.query.startTime = this.value[0];
+        this.query.endTime = this.value[1];
+      } else {
+        this.query.startTime = "";
+        this.query.endTime = "";
+      }
     },
     handleChangeFirst(val) {
       this.$emit("handleSearch", this.query);

@@ -122,10 +122,13 @@ export default {
   },
   methods: {
     handleSelectedTime(val) {
-      ;
-      this.query.startTime = this.value[0];
-      this.query.endTime = this.value[1];
-      this.$emit("handleSearch", this.query);
+      if (val) {
+        this.query.startTime = this.value[0];
+        this.query.endTime = this.value[1];
+      } else {
+        this.query.startTime = "";
+        this.query.endTime = "";
+      }
     },
     handleChangeSecond(val) {
       // if (this.timer) {

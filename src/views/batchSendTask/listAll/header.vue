@@ -103,8 +103,8 @@ export default {
       userListSelect: (state) => state.user.listSelect,
     }),
   },
-  created(){
-      this.initFilter()
+  created() {
+    this.initFilter();
   },
   methods: {
     initFilter() {
@@ -134,6 +134,7 @@ export default {
     handleRefresh() {
       this.$emit("handleRefresh");
       this.query = this.$options.data().query;
+      this.value = this.$options.data().value;
     },
   },
 };

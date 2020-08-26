@@ -93,9 +93,10 @@ export default {
       this.$emit("handleSearch", this.query);
     },
     handleRefresh() {
-      this.query = this.$options.data().query;
-      this.datePicker = [];
       this.$emit("handleRefresh");
+      this.query = this.$options.data().query;
+      this.datePicker = this.$options.data().datePicker;
+      
     },
   },
 };

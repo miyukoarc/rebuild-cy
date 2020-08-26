@@ -103,6 +103,7 @@ export default {
     },
     handleRefresh() {
       this.$emit("handleRefresh");
+      this.datePicker = this.$options.data().datePicker;
       this.query = this.$options.data().query;
     },
   },

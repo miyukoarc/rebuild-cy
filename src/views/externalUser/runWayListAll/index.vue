@@ -224,8 +224,8 @@ export default {
       this.query.name = name ? name : this.query.name;
       this.query.tagIds = tagIds ? tagIds + "" : this.query.tagIds;
       this.query.userUuid = userUuid ? userUuid : this.query.userUuid;
-      this.query.startTime = startTime ? startTime : this.query.startTime;
-      this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.query.startTime = startTime ? startTime : "";
+      this.query.endTime = endTime ? endTime : "";
       this.query.page = 0;
       // this.query.delFollow = delFollow ? delFollow : this.query.delFollow;
       //   console.log(val, "handleSearch");

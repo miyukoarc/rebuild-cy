@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-15 10:50:46
- * @LastEditTime: 2020-07-17 15:42:39
+ * @LastEditTime: 2020-08-26 15:09:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\index-back.vue
@@ -203,8 +203,8 @@ export default {
     handleSearch(val) {
       const { content, startTime, endTime } = val;
       this.query.content = content ? content : this.query.content;
-      this.query.startTime = startTime ? startTime : this.query.startTime;
-      this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.query.startTime = startTime ? startTime : "";
+      this.query.endTime = endTime ? endTime : "";
       console.log(val, "handleSearch");
       this.initDataList(this.query);
     },

@@ -174,8 +174,8 @@ export default {
       this.query.state = state ? state : this.query.state;
       this.query.sendType = sendType ? sendType : this.query.sendType;
       this.query.senderUuid = senderUuid ? senderUuid : this.query.senderUuid;
-      this.query.startTime = startTime ? startTime : this.query.startTime;
-      this.query.endTime = endTime ? endTime : this.query.endTime;
+      this.query.startTime = startTime ? startTime : "";
+      this.query.endTime = endTime ? endTime : "";
       this.query.page = 0;
       this.initDataList(this.query);
     },
