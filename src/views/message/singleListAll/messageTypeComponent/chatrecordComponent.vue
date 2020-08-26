@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-25 17:44:32
- * @LastEditTime: 2020-08-10 19:48:58
+ * @LastEditTime: 2020-08-26 20:08:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\chatrecordComponent.vue
@@ -17,7 +17,7 @@
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="chat-record-title">{{item.title}}的聊天记录</div>
           <ul>
-            <li v-for="(msg,index) in item.messageMedias" class="display-flex">
+            <li v-for="(msg,index) in item.messageMedias" :key="index" class="display-flex">
               <span>：</span>
               <p
                 class="text-over-2"
@@ -37,7 +37,7 @@
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div class="chat-record-title">{{item.title}}的聊天记录</div>
           <ul>
-            <li v-for="(msg,index) in item.messageMedias" class="display-flex">
+            <li v-for="(msg,index) in item.messageMedias" :key="index" class="display-flex">
               <span>：</span>
               <p
                 class="text-over-2"
