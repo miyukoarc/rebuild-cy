@@ -181,9 +181,9 @@
                     :auth="'externalUser,externalUser_detail'"
                     v-permission="'externalUser,externalUser_detail'"
                     @click.native="handleDetail(scope.row)"
-                    
+                    v-if="scope.row.lastMsgTime"
                   >聊天记录</el-t-button>
-                  <!-- <span v-else class="color-info">聊天记录</span> -->
+                  <span v-else class="color-info">聊天记录</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -370,7 +370,7 @@ export default {
         if (str != 'undefined') {
           this.query.uuid = str
           // this.$once("hook:created", () => {
-            this.initExternalUserDetail(str);
+            this.initExternalUserData(str);
           // });
         }
       },
@@ -518,7 +518,7 @@ export default {
     },
     // 聊天
     handleDetail(row) {
-      if (!row.lastMsgTime) return;
+      // if (!row.lastMsgTime) return;
       const userId = row.userId;
       const query = {
         uuid: this.query.uuid,
