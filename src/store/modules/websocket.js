@@ -46,7 +46,10 @@ const state = {
 
     countDown: 5,
     countDownTimer: null,
-    isStopSending: false
+}
+
+const getters = {
+    countDown: (state) => state.countDown
 }
 
 
@@ -55,7 +58,7 @@ const mutations = {
 }
 
 const actions = {
-    createWebsocket({ state, dispatch, rootState }) {
+    createWebsocket({ state, getters, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
             class Queue extends Array {
                 constructor(...args) {
@@ -258,27 +261,29 @@ const actions = {
             state.sock.onmessage = function (e) {
                 const data = JSON.parse(e.data)
                 if (data.type == 'CONTROL_MANAGER') {
-                    // MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
-                    //     title: "确认发送",
-                    //     cancelButtonText: '放弃'
-                    // }).then(() => {
-                    //     state.loadingInstance = Loading.service({
-                    //         text: "请保持鼠标静止状态，否则任务会中断。"
-                    //     });
-                    //     dispatch('getDetail', data)
-                    // }).catch(() => {
-                    //     return false
-                    // })
                     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
-                        title: `${state.countDown}秒后自动发送`,
-                        cancelButtonText: '放弃'
+                        title: '即将为您自动群发',
+                        cancelButtonText: '放弃',
+                        customClass: "auto_close",
+                        distinguishCancelAndClose: true
                     }).then(() => {
                         state.loadingInstance = Loading.service({
                             text: "请保持鼠标静止状态，否则任务会中断。"
                         });
                         dispatch('getDetail', data)
-                    }).catch(() => {
-                        state.isStopSending = true
+                        Message({
+                            message: '正为您自动群发中...',
+                            type: 'success'
+                        })
+                    }).catch(action => {
+                        clearInterval(state.countDownTimer);
+                        state.countDown = 5;
+                        if (action == 'cancel') {
+                            Message({
+                                message: '您已取消自动群发中...',
+                                type: 'error'
+                            })
+                        }
                         return false
                     })
 
@@ -286,23 +291,41 @@ const actions = {
                         console.log(state.countDown)
                         state.countDown--;
                         if (state.countDown <= 0) {
-                            console.log('之前')
+                            dispatch('getDetail', data)
                             clearInterval(state.countDownTimer)
-                            console.log('之后')
                             state.countDown = 5;
+                            // 自动关闭 MessageBox
+                            document.querySelector('.auto_close').querySelector('button').click()
+                            Message({
+                                message: '正为您自动群发中...',
+                                type: 'success'
+                            })
                         }
                     }, 1000);
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
                     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
-                        title: `${state.countDown}秒后自动发送`,
-                        cancelButtonText: '放弃'
+                        title: '即将为您自动群发',
+                        cancelButtonText: '放弃',
+                        customClass: "auto_close",
+                        distinguishCancelAndClose: true
                     }).then(() => {
                         state.loadingInstance = Loading.service({
                             text: "请保持鼠标静止状态，否则任务会中断。"
                         });
                         dispatch('getDetail', data)
-                    }).catch(() => {
-                        state.isStopSending = true
+                        Message({
+                            message: '正为您自动群发中...',
+                            type: 'success'
+                        })
+                    }).catch(action => {
+                        clearInterval(state.countDownTimer);
+                        state.countDown = 5;
+                        if (action == 'cancel') {
+                            Message({
+                                message: '您已取消自动群发中...',
+                                type: 'error'
+                            })
+                        }
                         return false
                     })
 
@@ -310,10 +333,15 @@ const actions = {
                         console.log(state.countDown)
                         state.countDown--;
                         if (state.countDown <= 0) {
-                            console.log('之前')
+                            dispatch('getDetail', data)
                             clearInterval(state.countDownTimer)
-                            console.log('之后')
                             state.countDown = 5;
+                            // 自动关闭 MessageBox
+                            document.querySelector('.auto_close').querySelector('button').click()
+                            Message({
+                                message: '正为您自动群发中...',
+                                type: 'success'
+                            })
                         }
                     }, 1000);
 
@@ -434,15 +462,20 @@ const actions = {
                         })
                     }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'LOCKSCREEN') {
-                    $ipcRenderer.send('LockScreen', {})
+                    if (!state.isLock) {
+                        $ipcRenderer.send('LockScreen', {})
+                    }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'UNLOCKSCREEN') {
-                    $ipcRenderer.send('UnlockScreen', {})
+                    if (state.isLock) {
+                        $ipcRenderer.send('UnlockScreen', {})
+                    }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'ISLOCK') {
                     $ipcRenderer.send('IsLock', {})
                 }
             }
             state.sock.onclose = function () {
                 console.log('websocket关闭')
+                dispatch('clearTask')
                 // 登陆的时候再自动重连
                 setTimeout(() => {
                     dispatch('createWebsocket')
@@ -768,6 +801,7 @@ const actions = {
 export default {
     namespaced: true,
     state,
+    getters,
     mutations,
     actions
 }
