@@ -387,19 +387,6 @@ export default {
     handleCancel() {
       this.$parent.$parent.dialogVisible = false;
     },
-    refresh() {
-      this.$store
-        .dispatch("batchSendTask/getBatchSendTaskListAll")
-        .then(() => {
-          this.reload();
-        })
-        .catch((err) => {
-          this.$message({
-            type: "error",
-            message: "初始化失败",
-          });
-        });
-    },
     submit() {
       this.$refs["form"].validate((valid) => {
         if (valid) {

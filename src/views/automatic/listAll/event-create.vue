@@ -380,7 +380,7 @@ export default {
                     message: "新建成功",
                   });
                   this.handleCancel();
-                  this.initDataList();
+                  this.$bus.$emit('handleRefresh')
                 }
               })
               .catch((err) => {
@@ -493,17 +493,6 @@ export default {
     // 标签绑定事件
     handleChange() {},
     // 刷新
-    initDataList() {
-      this.$store
-        .dispatch("automatic/getListAll")
-        .then(() => {})
-        .catch((err) => {
-          this.$message({
-            type: "error",
-            message: err || "初始化失败",
-          });
-        });
-    },
   },
 };
 </script>

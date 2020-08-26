@@ -347,22 +347,7 @@ export default {
     // 取消配置默认自动回复
     handleCancel() {
       this.$parent.$parent.dialogVisible = false;
-    },
-
-    // 刷新
-    refresh() {
-      this.$store
-        .dispatch("sensitive/getSensitiveListAll")
-        .then(() => {
-          this.reload();
-        })
-        .catch((err) => {
-          this.$message({
-            type: "error",
-            message: err,
-          });
-        });
-    },
+    }
   },
 };
 </script>

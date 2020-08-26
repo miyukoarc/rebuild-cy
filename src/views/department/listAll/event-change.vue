@@ -154,21 +154,7 @@ export default {
     },
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
-    },
-    refresh() {
-      const payload = this.$route.params.org
-      this.$store
-        .dispatch('department/getDepartmentListAll', payload)
-        .then(() => {
-          //   this.reload()
-        })
-        .catch((err) => {
-          this.$message({
-            type: 'error',
-            message: err,
-          })
-        })
-    },
+    }
   },
 }
 </script>

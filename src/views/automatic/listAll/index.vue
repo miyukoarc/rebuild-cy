@@ -220,6 +220,14 @@ export default {
     this.initDataList(this.query);
     this.initFilter();
   },
+  mounted(){
+      this.$bus.$on('handleRefresh',()=>{
+          this.initDataList(this.query)
+      })
+      this.$once('hook:beforeDestroy',()=>{
+          this.$bus.$off('handleRefresh')
+      })
+  },
   methods: {
     doExport(val) {},
     /**
