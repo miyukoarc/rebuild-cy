@@ -546,19 +546,6 @@ export default {
         }
       })
     },
-    refresh() {
-      this.$store
-        .dispatch('department/getDepartmentListAll')
-        .then(() => {
-          //   this.reload()
-        })
-        .catch((err) => {
-          this.$message({
-            type: 'error',
-            message: err,
-          })
-        })
-    },
   },
 }
 </script>

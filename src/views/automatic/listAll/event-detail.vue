@@ -388,7 +388,7 @@ export default {
                 message: "新建成功",
               });
               this.handleCancel();
-              this.refresh();
+              this.$bus.$emit('handleRefresh')
             })
             .catch((err) => {
               this.$message({

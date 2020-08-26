@@ -142,17 +142,6 @@ export default {
     handleCancel() {
       this.$parent.$parent.dialogVisible = false
     },
-    refresh() {
-      this.$store
-        .dispatch('media/getMediaGroupListAll')
-        .then(() => {})
-        .catch((err) => {
-          this.$message({
-            type: 'error',
-            message: err,
-          })
-        })
-    },
     onSuccess(res, file, list) {
       this.uploadFilesLength++
       const message = this.auditSetting['media'] ? '已提交审核' : '已完成'
