@@ -5,7 +5,12 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :hasRefresh="true" @handleRefresh="handleRefresh" @handleExport="handleExport" :msg="`共${pageConfig.total}个客户`"></tool-bar>
+      <tool-bar
+        :hasRefresh="true"
+        @handleRefresh="handleRefresh"
+        @handleExport="handleExport"
+        :msg="`共${pageConfig.total}个客户`"
+      ></tool-bar>
     </el-card>
     <el-card class="content-spacing">
       <div>
@@ -29,8 +34,16 @@
                   style="width:32px;height:32px;margin-right:10px"
                 ></el-image>
                 <div class="client-info">
-                  <div>{{scope.row.wxNickName}}<span class="ml-5" :class="scope.row.wxType == 'WX'?'wx-color':'other-color'">{{scope.row.wxType == 'WX'?'@微信':'@企业微信'}}</span></div>
-                  <span class="remark">昵称：{{scope.row.remarkName?scope.row.remarkName:scope.row.wxNickName}}</span>
+                  <div>
+                    {{scope.row.wxNickName}}
+                    <span
+                      class="ml-5"
+                      :class="scope.row.wxType == 'WX'?'wx-color':'other-color'"
+                    >{{scope.row.wxType == 'WX'?'@微信':'@企业微信'}}</span>
+                  </div>
+                  <span
+                    class="remark"
+                  >昵称：{{scope.row.remarkName?scope.row.remarkName:scope.row.wxNickName}}</span>
                 </div>
               </div>
             </template>
@@ -92,61 +105,58 @@
 </template>
 
 <script>
-
-import ListHeader from "./header.vue";
-import ToolBar from "@/components/ToolBar";
+import ListHeader from './header.vue'
+import ToolBar from '@/components/ToolBar'
 
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
-import UserDrawer from "@/components/UserDrawer";
-import TagsDrawerObj from "@/components/TagsDrawerObj";
+import UserDrawer from '@/components/UserDrawer'
+import TagsDrawerObj from '@/components/TagsDrawerObj'
 
-
-import { mapState, mapMutations, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-    name: 'externalUser_listMy',
+  name: 'externalUser_listMy',
   components: {
     AsyncUserDrawer,
     ListHeader,
-    UserDetail,
     ToolBar,
     UserDrawer,
-    TagsDrawerObj
+    TagsDrawerObj,
   },
   data() {
     return {
       pageConfig: {
         total: 0,
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
       },
 
       query: {
         page: 0,
         size: 10,
         flag: true,
-        name: "",
+        name: '',
         tagIds: [],
-        userId: "",
-        startTime: "",
-        endTime: "",
-        contractWayId: ""
-      }
-    };
+        userId: '',
+        startTime: '',
+        endTime: '',
+        contractWayId: '',
+      },
+    }
   },
   watch: {},
   computed: {
     ...mapState({
-      tagListAll: state => state.tag.tagListAll,
-      loading: state => state.externalUser.loading,
-      list: state => state.externalUser.list,
-      page: state => state.externalUser.page,
-      permissionMap: state => state.permission.permissionMap
-    })
+      tagListAll: (state) => state.tag.tagListAll,
+      loading: (state) => state.externalUser.loading,
+      list: (state) => state.externalUser.list,
+      page: (state) => state.externalUser.page,
+      permissionMap: (state) => state.permission.permissionMap,
+    }),
   },
   created() {
-    this.initDataList(this.query);
-    this.initFilter();
+    this.initDataList(this.query)
+    this.initFilter()
   },
   mounted() {},
   methods: {
@@ -155,18 +165,18 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch("externalUser/getExternalUserListMy", payload)
+        .dispatch('externalUser/getExternalUserListMy', payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.page.pageNumber + 1;
-          this.pageConfig.total = this.page.total;
+          this.pageConfig.pageNumber = this.page.pageNumber + 1
+          this.pageConfig.total = this.page.total
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message:  err||"初始化失败"
-          });
-        });
+            type: 'error',
+            message: err || '初始化失败',
+          })
+        })
     },
 
     /**
@@ -174,32 +184,32 @@ export default {
      */
     initFilter() {
       this.$store
-        .dispatch("tag/getListSelect")
+        .dispatch('tag/getListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
 
       this.$store
-        .dispatch("user/getUserListSelect")
+        .dispatch('user/getUserListSelect')
         .then(() => {})
-        .catch(err => {
+        .catch((err) => {
           this.$message({
-            type: "error",
-            message: "初始化失败"
-          });
-        });
+            type: 'error',
+            message: '初始化失败',
+          })
+        })
     },
 
     handleDetail(row) {
-      console.log(row, "row");
-      const uuid = row.externalUuid;
+      console.log(row, 'row')
+      const uuid = row.externalUuid
       this.$router.push({
-        path: "/externalUser/detail/" + uuid
-      });
+        path: '/externalUser/detail/' + uuid,
+      })
     },
     handleSearch(val) {
       const {
@@ -209,38 +219,36 @@ export default {
         startTime,
         endTime,
         contractWayId,
-        flag
-      } = val;
-      this.query.tagIds = tagIds ? tagIds + "" : this.query.tagIds;
-      this.query.name = name ? name : '';
-      this.query.userId = userId ? userId : "";
-      this.query.startTime = startTime ? startTime : "";
-      this.query.flag = flag ? true : false;
-      this.query.endTime = endTime ? endTime : "";
+        flag,
+      } = val
+      this.query.tagIds = tagIds ? tagIds + '' : this.query.tagIds
+      this.query.name = name ? name : ''
+      this.query.userId = userId ? userId : ''
+      this.query.startTime = startTime ? startTime : ''
+      this.query.flag = flag ? true : false
+      this.query.endTime = endTime ? endTime : ''
       this.query.page = 0
       // this.query.contractWayId = contractWayId
       //   ? contractWayId
       //   : this.query.contractWayId;
-      this.initDataList(this.query);
+      this.initDataList(this.query)
     },
-    handleRequest(){
-        this.initDataList(this.query)
+    handleRequest() {
+      this.initDataList(this.query)
     },
     handleRefresh() {
-      console.log("handleRefresh");
-      this.query = this.$options.data().query;
-      this.initDataList(this.query);
+      console.log('handleRefresh')
+      this.query = this.$options.data().query
+      this.initDataList(this.query)
     },
     changePage(key) {
-      this.query.page = key - 1;
-      this.pageConfig.pageNumber = key - 1;
-      this.initDataList(this.query);
+      this.query.page = key - 1
+      this.pageConfig.pageNumber = key - 1
+      this.initDataList(this.query)
     },
-    handleExport(val) {
-      
-    }
-  }
-};
+    handleExport(val) {},
+  },
+}
 </script>
 
 <style lang="scss" scoped>
