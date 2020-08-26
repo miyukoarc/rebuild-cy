@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:48:28
- * @LastEditTime: 2020-08-10 19:53:40
+ * @LastEditTime: 2020-08-26 18:53:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\fileComponent.vue
@@ -13,29 +13,36 @@
       <div class="display-flex">
         <el-avatar :src="item.fromAvatar" />
         <div class="left">
-          <div class="chat-name" style="margin-left:20px">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
-          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
           <div
-            class="file-warp"
-            @dblclick="handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt,item.revokeType)"
-          >
-            <div class="file-bg flex-between-alinecenter">
-              <div>
-                <div
-                  v-if="item.messageMedias[0].fileName"
-                  class="file-name text-over-2"
-                >{{ item.messageMedias[0].fileName }}</div>
-                <p class="file-size">{{ getFileSize (item.messageMedias[0].fileFileSize) }}</p>
+            class="chat-name"
+            style="margin-left:20px"
+          >{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
+          <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
+          <div class="display-flex align-items-center" style="cursor: pointer;">
+            <div class="file-warp">
+              <div class="file-bg flex-between-alinecenter">
+                <div>
+                  <div
+                    v-if="item.messageMedias[0].fileName"
+                    class="file-name text-over-2"
+                  >{{ item.messageMedias[0].fileName }}</div>
+                  <p class="file-size">{{ getFileSize (item.messageMedias[0].fileFileSize) }}</p>
+                </div>
+
+                <svg-icon :icon-class="item.messageMedias[0].fileExt | classFilter" class="excel" />
               </div>
 
-              <svg-icon :icon-class="item.messageMedias[0].fileExt | classFilter" class="excel" />
-            </div>
-            <!-- <div
+              <!-- <div
               class="down-load"
               @click=" handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
             >
               <el-icon class="download-icon el-icon-download" />
-            </div>-->
+              </div>-->
+            </div>
+            <i
+              class="el-icon-download ml-10"
+              @click="handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt,item.revokeType)"
+            ></i>
           </div>
         </div>
       </div>
@@ -46,24 +53,27 @@
         <div class="right">
           <div class="chat-name" style="text-align:right;margin-right:20px">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-          <div
-            class="file-warp"
-            @dblclick="handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
-          >
-            <div class="file-bg flex-between-alinecenter">
-              <div>
-                <div
-                  v-if="item.messageMedias[0].fileName"
-                  class="file-name text-over-2"
-                >{{fileNameLength}}</div>
-                <p class="file-size">{{ getFileSize (item.messageMedias[0].fileFileSize) }}</p>
-              </div>
+          <div class="display-flex align-items-center" style="cursor: pointer;">
+            <i
+              class="el-icon-download mr-10"
+              @click="handleDownload(item.messageMedias[0].file, item.messageMedias[0].fileName, item.messageMedias[0].fileExt)"
+            ></i>
+            <div class="file-warp">
+              <div class="file-bg flex-between-alinecenter">
+                <div>
+                  <div
+                    v-if="item.messageMedias[0].fileName"
+                    class="file-name text-over-2"
+                  >{{fileNameLength}}</div>
+                  <p class="file-size">{{ getFileSize (item.messageMedias[0].fileFileSize) }}</p>
+                </div>
 
-              <svg-icon :icon-class="item.messageMedias[0].fileExt | classFilter" class="excel" />
-            </div>
-            <!-- <a :href="item.messageMedias[0].file" download>
+                <svg-icon :icon-class="item.messageMedias[0].fileExt | classFilter" class="excel" />
+              </div>
+              <!-- <a :href="item.messageMedias[0].file" download>
               <el-icon class="download-icon el-icon-download" />
-            </a>-->
+              </a>-->
+            </div>
           </div>
         </div>
         <el-avatar :src="item.fromAvatar" />
@@ -103,47 +113,45 @@ export default {
   },
   methods: {
     async handleDownload(url, fileName, mime) {
-      
-        // 下载附件
-        await downloadFile(url)
-          .then((res) => {
-            const blob = new Blob([res.data], { type: mime });
-            // 注: mime类型必须整正确, 否则下载的文件会损坏
-            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-              // 兼容IE
-              window.navigator.msSaveOrOpenBlob(blob, element.original_name);
-            } else {
-              const downloadElement = document.createElement("a");
-              downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
-              downloadElement.download = fileName;
-              downloadElement.click();
-              window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+      // 下载附件
+      await downloadFile(url)
+        .then((res) => {
+          const blob = new Blob([res.data], { type: mime });
+          // 注: mime类型必须整正确, 否则下载的文件会损坏
+          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            // 兼容IE
+            window.navigator.msSaveOrOpenBlob(blob, element.original_name);
+          } else {
+            const downloadElement = document.createElement("a");
+            downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
+            downloadElement.download = fileName;
+            downloadElement.click();
+            window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
-        // axios
-        //   .get(url, { responseType: "blob" })
-        //   .then(res => {
-        //     let blob = new Blob([res.data], { type: mime });
-        //     // 注: mime类型必须整正确, 否则下载的文件会损坏
-        //     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        //       // 兼容IE
-        //       window.navigator.msSaveOrOpenBlob(blob, element.original_name);
-        //     } else {
-        //       let downloadElement = document.createElement("a");
-        //       downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
-        //       downloadElement.download = fileName;
-        //       downloadElement.click();
-        //       window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
-        //     }
-        //   })
-        //   .catch(error => {
-        //     console.error(error);
-        //   });
-      
+      // axios
+      //   .get(url, { responseType: "blob" })
+      //   .then(res => {
+      //     let blob = new Blob([res.data], { type: mime });
+      //     // 注: mime类型必须整正确, 否则下载的文件会损坏
+      //     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      //       // 兼容IE
+      //       window.navigator.msSaveOrOpenBlob(blob, element.original_name);
+      //     } else {
+      //       let downloadElement = document.createElement("a");
+      //       downloadElement.href = window.URL.createObjectURL(blob); // 创建一个DOMString
+      //       downloadElement.download = fileName;
+      //       downloadElement.click();
+      //       window.URL.revokeObjectURL(blob); // 释放 DOMString  ,解除内存占用
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.error(error);
+      //   });
     },
     getFileSize(fileByte) {
       var fileSizeByte = fileByte;

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-13 00:01:31
- * @LastEditTime: 2020-08-26 10:34:26
+ * @LastEditTime: 2020-08-26 17:04:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\utils\request.js
@@ -51,7 +51,7 @@ service.interceptors.request.use(
 
         // 拦截重复请求(即当前正在进行的相同请求)
         // removeRepeatUrl(config);
-        config.cancelToken = source.token; // 全局添加cancelToken
+        // config.cancelToken = source.token; // 全局添加cancelToken
         // config.cancelToken = new cancelToken((c) => {
         //     // 自定义唯一标识
         //     pending.push({
@@ -113,7 +113,7 @@ service.interceptors.response.use(
             // removeToken()
 
             // 登录失效
-            source.cancel(); // 取消其他正在进行的请求
+            // source.cancel(); // 取消其他正在进行的请求
 
             router.push({
                     path: '/login'
@@ -184,11 +184,11 @@ service.interceptors.response.use(
         // }
     },
     error => {
-        if (axios.isCancel(error)) { // 取消请求的情况下，终端Promise调用链
-            return new Promise(() => {});
-        } else {
-            return Promise.reject(error);
-        }
+        // if (axios.isCancel(error)) { // 取消请求的情况下，终端Promise调用链
+        //     return new Promise(() => {});
+        // } else {
+        return Promise.reject(error);
+        // }
         // loadinginstace.close()
         // store.commit('app/CLOSE_LOADING')
         // console.log('err' + error.response.status) // for debug

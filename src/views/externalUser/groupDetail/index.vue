@@ -20,7 +20,14 @@
               </div>
             </div>
           </div>
-          <el-button type="primary" size="mini" @click="toGroupChat">聊天记录</el-button>
+          <el-t-button
+            type="primary"
+            :popAuth="true"
+            :auth="'message,message_singleListAll'"
+            v-permission="'message,message_singleListAll'"
+            size="mini"
+            @click.native="toGroupChat"
+          >聊天记录</el-t-button>
         </div>
         <div class="data-box display-flex">
           <div class="data-item flex-1">
@@ -126,7 +133,7 @@ export default {
     }),
     groupName() {
       return function (groupDetail) {
-        console.log(groupDetail,'999999')
+        console.log(groupDetail, "999999");
         if (groupDetail.name != "") {
           return groupDetail.name;
         } else {
@@ -165,7 +172,7 @@ export default {
       handler(newVal, oldVal) {
         if (newVal.params.uuid) {
           const payload = newVal.params.uuid;
-          if (payload != 'undefined') this.initGroupDetail(payload);
+          if (payload != "undefined") this.initGroupDetail(payload);
         }
       },
       immediate: true,
@@ -306,7 +313,7 @@ export default {
         > p {
           height: 20px;
         }
-        .group-name{
+        .group-name {
           height: 20px;
         }
         span,
