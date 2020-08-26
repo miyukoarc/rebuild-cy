@@ -10,7 +10,7 @@
               :auth="'role,role_update'"
               :popAuth="true"
               @click.stop="handleConfirm"
-            >{{auditSetting['permission']?'提交审核':'完成'}}</el-t-button>
+            >{{auditSetting['permission']?'提交审核':'提交'}}</el-t-button>
           </div>
         </tool-bar>
       </el-card>
@@ -224,6 +224,7 @@ export default {
           })
           const roleCode = this.$route.query.code
           this.initDetail({ roleCode })
+          this.$store.dispatch('permission/getPermissionListMy')
         })
         .catch((err) => {
           this.$message({

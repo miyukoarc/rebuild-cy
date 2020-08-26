@@ -72,12 +72,12 @@
             <div>
               <div style="margin-bottom:20px;">
                 <h3 style="display:inline-block;">文章详情</h3>
-                <el-t-button
+                <!-- <el-t-button
                   style="margin-left:50px"
                   size="mini"
                   type="primary"
                   @click="handleEdit"
-                >编辑</el-t-button>
+                >编辑</el-t-button> -->
               </div>
               <h4 style="margin-bottom:20px;">
                 <span>标题：</span>
