@@ -138,15 +138,6 @@ export default {
           });
         });
 
-    //   this.$store
-    //     .dispatch("user/getAllUserList")
-    //     .then(() => {})
-    //     .catch((err) => {
-    //       this.$message({
-    //         type: "error",
-    //         message: "初始化失败",
-    //       });
-    //     });
     },
     /**
      * 初始化表格信息

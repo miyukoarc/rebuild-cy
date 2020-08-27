@@ -178,14 +178,13 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-import EventDialog from './dialog'
+
 import memberComponent from './components/member'
 import clientComponent from './components/client'
 
 export default {
   name: 'batchSendTask_detail',
   components: {
-    EventDialog,
     memberComponent,
     clientComponent,
   },

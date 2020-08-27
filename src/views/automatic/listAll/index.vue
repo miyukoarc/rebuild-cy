@@ -135,6 +135,7 @@
           @current-change="changePage"
           @size-change="changeSize"
         ></customer-pagination>
+        
       </div>
     </el-card>
 
@@ -147,7 +148,7 @@
 
 import ListHeader from "./header.vue";
 import FormDialog from "./dialog";
-import ToolBar from "./tool-bar";
+import ToolBar from "@/components/ToolBar";
 import AsyncUserTag from "@/components/AsyncUserTag";
 import AsyncUserDrawer from "@/components/AsyncUserDrawer";
 import TagsDrawer from "@/components/TagsDrawer";
