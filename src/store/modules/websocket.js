@@ -392,39 +392,45 @@ const actions = {
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID_AUTOREP') {
                     getExternalUserDetail(data.properties.userId).then(res => {
-                        if (state.currentTask.data.properties.fromUser == res.externalUserDetail.externalUserId) {
-                            console.log('直接发送')
-                            if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
-                                console.log('sendMsgContent_autorep_media')
-                                sendChaoyingMessage({
-                                    sendChatMessage: state.sendMsgContent_autorep_media
-                                }).then(() => {
-                                    state.sendMsgContent_autorep_media = null
-                                })
-                            }
-                            if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
-                                console.log('sendMsgContent_autorep_text')
-                                sendChaoyingMessage({
-                                    sendChatMessage: state.sendMsgContent_autorep_text
-                                }).then(() => {
-                                    state.sendMsgContent_autorep_text = null
-                                })
-                            }
-                        } else {
-                            if (state.currentTask.data.properties.mobile) {
-                                $ipcRenderer.send('openChat', {
-                                    mobile: state.currentTask.data.properties.mobile.split(',')[0],
-                                    x: state.mouseX,
-                                    y: state.mouseY,
-                                })
-                            } else {
-                                Message({
-                                    message: '请先填写对面手机号便于查找用户',
-                                    type: 'error'
-                                })
-                                dispatch('clearTask')
-                            }
-                        }
+                        $ipcRenderer.send('openChat', {
+                            mobile: state.currentTask.data.properties.mobile.split(',')[0],
+                            x: state.mouseX,
+                            y: state.mouseY,
+                            isOnline: state.currentTask.data.properties.fromUser == res.externalUserDetail.externalUserId
+                        })
+                        // if (state.currentTask.data.properties.fromUser == res.externalUserDetail.externalUserId) {
+                        //     console.log('直接发送')
+                        //     if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
+                        //         console.log('sendMsgContent_autorep_media')
+                        //         sendChaoyingMessage({
+                        //             sendChatMessage: state.sendMsgContent_autorep_media
+                        //         }).then(() => {
+                        //             state.sendMsgContent_autorep_media = null
+                        //         })
+                        //     }
+                        //     if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
+                        //         console.log('sendMsgContent_autorep_text')
+                        //         sendChaoyingMessage({
+                        //             sendChatMessage: state.sendMsgContent_autorep_text
+                        //         }).then(() => {
+                        //             state.sendMsgContent_autorep_text = null
+                        //         })
+                        //     }
+                        // } else {
+                        //     if (state.currentTask.data.properties.mobile) {
+                        //         $ipcRenderer.send('openChat', {
+                        //             mobile: state.currentTask.data.properties.mobile.split(',')[0],
+                        //             x: state.mouseX,
+                        //             y: state.mouseY,
+                        //         })
+                        //     } else {
+                        //         Message({
+                        //             message: '请先填写对面手机号便于查找用户',
+                        //             type: 'error'
+                        //         })
+                        //         dispatch('clearTask')
+                        //     }
+                        // }
                     })
                 } else if (data.type == 'ADDTASK') {
                     dispatch('listSelectMobil', data)
@@ -670,12 +676,22 @@ const actions = {
             console.log('是否在线：' + res)
             if (isElectron()) {
                 state.isOpenedSidebar = res;
-                $ipcRenderer.send('openChat', {
-                    mobile: state.currentTask.data.properties.mobile.split(',')[0],
-                    x: state.mouseX,
-                    y: state.mouseY,
-                    isOnline: res
+                console.log('aaaaaaaaaaaa')
+                console.log(state.currentTask.data.toUserId)
+                sendCustomizeMessage({
+                    toUserId: state.currentTask.data.toUserId,
+                    clientGroup: "SIDEBAR",
+                    properties: {
+                        code: 'WHOSE_WINDOW_DO_YO_OPEN_AUTOREP'
+                    }
                 })
+
+                // $ipcRenderer.send('openChat', {
+                //     mobile: state.currentTask.data.properties.mobile.split(',')[0],
+                //     x: state.mouseX,
+                //     y: state.mouseY,
+                //     isOnline: res
+                // })
                 console.log('开始倒计时')
                 setTimeout(() => {
                     if (state.isOpenedSidebar == false) {
