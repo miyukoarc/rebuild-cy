@@ -156,13 +156,9 @@ const actions = {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
 
-                            // if (arg.val.type == 'DirectMessaging') {
                             if (arg.val.isOnline) {
-                                if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
-                                    dispatch('sendChaoyingMessage')
-                                }
                                 if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
-                                    console.log('sendMsgContent_autorep_media')
+                                    console.log('最新的sendMsgContent_autorep_media')
                                     sendChaoyingMessage({
                                         sendChatMessage: state.sendMsgContent_autorep_media
                                     }).then(() => {
@@ -170,7 +166,7 @@ const actions = {
                                     })
                                 }
                                 if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
-                                    console.log('sendMsgContent_autorep_text')
+                                    console.log('最新的sendMsgContent_autorep_text')
                                     sendChaoyingMessage({
                                         sendChatMessage: state.sendMsgContent_autorep_text
                                     }).then(() => {
@@ -678,7 +674,6 @@ const actions = {
                     mobile: state.currentTask.data.properties.mobile.split(',')[0],
                     x: state.mouseX,
                     y: state.mouseY,
-                    // type: res ? "DirectMessaging" : null
                     isOnline: res
                 })
                 console.log('开始倒计时')
