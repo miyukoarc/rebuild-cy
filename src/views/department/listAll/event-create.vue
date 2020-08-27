@@ -151,38 +151,37 @@
         label-width="150px"
         label-position="left"
       >
+        <el-form-item label="上级" prop="parentUuid">
+          <el-select-tree
+            :default-expand-all="true"
+            :multiple="false"
+            :placeholder="'请选择组织/部门'"
+            :popover-min-width="100"
+            :data="departmentList"
+            :props="{value:'uuid',children:'children',label:'name'}"
+            :check-strictly="true"
+            :disabledValues="disabledValues"
+            :disabled="true"
+            v-model="form.parentUuid"
+          ></el-select-tree>
+        </el-form-item>
 
-          <el-form-item label="上级" prop="parentUuid">
-            <el-select-tree
-              :default-expand-all="true"
-              :multiple="false"
-              :placeholder="'请选择组织/部门'"
-              :popover-min-width="100"
-              :data="departmentList"
-              :props="{value:'uuid',children:'children',label:'name'}"
-              :check-strictly="true"
-              :disabledValues="disabledValues"
-              :disabled="true"
-              v-model="form.parentUuid"
-            ></el-select-tree>
-          </el-form-item>
+        <el-form-item label="创建类型">
+          <el-select v-model="form.type" placeholder="请选择" disabled>
+            <el-option
+              v-for="item in orgTypes"
+              :key="item.code"
+              :label="item.label"
+              :value="item.code"
+            ></el-option>
+          </el-select>
+        </el-form-item>
 
-          <el-form-item label="创建类型">
-            <el-select v-model="form.type" placeholder="请选择" disabled>
-              <el-option
-                v-for="item in orgTypes"
-                :key="item.code"
-                :label="item.label"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model.trim="form.name" disabled></el-input>
+        </el-form-item>
 
-          <el-form-item label="名称" prop="name">
-            <el-input v-model.trim="form.name" disabled></el-input>
-          </el-form-item>
-
-          <el-form-item label="角色模板" v-if="form.type!=='DEPT'">
+        <!-- <el-form-item label="角色模板" v-if="form.type!=='DEPT'">
             <el-select multiple v-model="formRole.roleUuidSet" disabled>
               <el-option
                 v-for="item in alterRoleTemplates"
@@ -191,7 +190,7 @@
                 :label="item.name"
               ></el-option>
             </el-select>
-          </el-form-item>
+        </el-form-item>-->
 
         <!-- <multi-tree-select v-model="selects" :section="'user'" :multiple="true"></multi-tree-select> -->
       </el-form>
@@ -206,14 +205,20 @@
         label-width="150px"
       >
         <el-form-item label="角色模板">
-          <el-select multiple v-model="formRole.roleUuidSet">
+          <p>
+            <span class="color-info">
+              <i class="el-icon-circle-alert"></i>
+              建立完成后系统将自动分配预置角色。
+            </span>
+          </p>
+          <!-- <el-select multiple v-model="formRole.roleUuidSet">
             <el-option
               v-for="item in roleListSelect"
               :key="item.uuid"
               :value="item.uuid"
               :label="item.name"
             ></el-option>
-          </el-select>
+          </el-select>-->
         </el-form-item>
       </el-form>
     </transition-group>
@@ -336,26 +341,29 @@ export default {
         if (newVal == 'DEPT') {
           this.form.orgNode = false
           this.mode = 'NONE'
-        //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
-        //     return item.code.includes('DEPT')
-        //   })
+          //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+          //     return item.code.includes('DEPT')
+          //   })
           this.disabledValues = []
         }
         if (newVal == 'BRANCH') {
           //分公司初始化
           this.form.orgNode = true
+          this.form.parentUuid = this.flattenDepartments.find(item=>{
+              return item.type=='HEAD'
+          }).uuid
           this.mode = 'SIMPLE'
-        //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
-        //     return item.code.includes('BRANCH')
-        //   })
+          //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+          //     return item.code.includes('BRANCH')
+          //   })
         }
         if (newVal == 'BUSINESS') {
           //营业部初始化
           this.form.orgNode = true
           this.mode = 'SIMPLE'
-        //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
-        //     return item.code.includes('BUSINESS')
-        //   })
+          //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
+          //     return item.code.includes('BUSINESS')
+          //   })
 
           this.disabledValues = this.businessBanded
         }
@@ -374,7 +382,7 @@ export default {
       listSelect: (state) => state.department.listSelect, //list
       departmentList: (state) => state.department.departmentList, //tree
       roleTemplates: (state) => state.roleTemplate.listAll,
-      roleListSelect: state => state.roleListSelect
+      roleListSelect: (state) => state.roleListSelect,
     }),
     parentUuid() {
       return this.form.parentUuid
@@ -577,6 +585,6 @@ export default {
 
 <style lang="scss">
 .form-container .el-input.is-disabled .el-input__inner {
-    color: #606266;
+  color: #606266;
 }
 </style>
