@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import ComplexSelect from "@/components/ComplexSelect";
 import { mapState } from "vuex";
 export default {
   inject: ["reload"],
@@ -52,9 +51,6 @@ export default {
         return {};
       },
     },
-  },
-  components: {
-    ComplexSelect,
   },
   data() {
     return {

@@ -415,27 +415,27 @@ export default {
     //   this.$refs["formDialog"].dialogVisible = true;
     //   this.$refs["formDialog"].transfer = transfer;
     // },
-    handleBatchChange() {
-      if (this.rowSelects.length) {
-        let sensitiveUuid = this.rowSelects.map((item) => {
-          return item.uuid;
-        });
-        // sensitiveUuid = JSON.parse(JSON.stringify(sensitiveUuid))
-        const transfer = { sensitiveUuid };
-        this.$refs["formDialog"].event = "ChangeTemplate";
-        this.$refs["formDialog"].eventType = "change";
-        this.$refs["formDialog"].dialogVisible = true;
-        this.$refs["formDialog"].transfer = transfer;
-      } else {
-        this.$message({
-          type: "warning",
-          message: "请至少选择一项",
-        });
-      }
-    },
-    handleSelectionChange(val) {
-      this.rowSelects = val;
-    },
+    // handleBatchChange() {
+    //   if (this.rowSelects.length) {
+    //     let sensitiveUuid = this.rowSelects.map((item) => {
+    //       return item.uuid;
+    //     });
+    //     // sensitiveUuid = JSON.parse(JSON.stringify(sensitiveUuid))
+    //     const transfer = { sensitiveUuid };
+    //     this.$refs["formDialog"].event = "ChangeTemplate";
+    //     this.$refs["formDialog"].eventType = "change";
+    //     this.$refs["formDialog"].dialogVisible = true;
+    //     this.$refs["formDialog"].transfer = transfer;
+    //   } else {
+    //     this.$message({
+    //       type: "warning",
+    //       message: "请至少选择一项",
+    //     });
+    //   }
+    // },
+    // handleSelectionChange(val) {
+    //   this.rowSelects = val;
+    // },
     changeSize(val) {
       this.query.size = val;
       this.initDataList(this.query);

@@ -21,11 +21,10 @@
 
 <script>
 import { mapState } from 'vuex'
-import ComplexSelect from '@/components/ComplexSelect'
 import MultiTreeSelect from '@/components/MultiTreeSelect'
 export default {
   inject: ['reload'],
-  components: { ComplexSelect, MultiTreeSelect },
+  components: {  MultiTreeSelect },
   data() {
     return {
       section: 'department',
