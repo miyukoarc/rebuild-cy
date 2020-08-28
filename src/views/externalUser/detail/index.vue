@@ -420,18 +420,6 @@ export default {
     }),
     memberInfo() {
       return function (item) {
-        // if (item.value) {
-        //   if (item.label == "生日") {
-        //     this.age = dayjs().year() - dayjs(item.value).year() + 1;
-        //     return item.value;
-        //   } else if (item.label == "年龄") {
-        //     return this.age;
-        //   } else {
-        //     return item.value;
-        //   }
-        // } else {
-        //   return "--";
-        // }
         if (item.label == "生日" && item.value) {
           this.age = dayjs().year() - dayjs(item.value).year() + 1;
           return item.value ? item.value : "--";
