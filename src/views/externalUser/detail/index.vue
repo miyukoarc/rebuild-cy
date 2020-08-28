@@ -82,44 +82,47 @@
                     :key="key"
                     @click.native.stop
                   >
-                    <div
-                      style="display:flex;justify-content:space-between;"
-                      @mouseenter="mouseEnter(item,key)"
-                    >
+                    <div class="display-flex align-items-center" @mouseenter="mouseEnter(item,key)">
                       <span class="label">{{ item.label }}：</span>
-                      <div v-if="currentInput ===item.label">
-                        <el-date-picker
-                          style="width:100%"
-                          v-model="birthdayTime"
-                          :picker-options="pickerOptions"
-                          :value-format="'yyyy-MM-dd'"
-                          type="date"
-                          size="mini"
-                          placeholder="选择日期"
-                          v-if="currentInput =='生日'"
-                        ></el-date-picker>
-                        <el-input
-                          v-else
-                          size="mini"
-                          style="width:100%"
-                          :placeholder="item.value"
-                          v-model="inputValue"
-                        ></el-input>
+                      <div class="flex-between-alinecenter">
+                        <div class="flex-1">
+                          <div v-if="currentInput ===item.label">
+                            <el-date-picker
+                              style="width:100%"
+                              v-model="birthdayTime"
+                              :picker-options="pickerOptions"
+                              :value-format="'yyyy-MM-dd'"
+                              type="date"
+                              size="mini"
+                              placeholder="选择日期"
+                              v-if="currentInput =='生日'"
+                            ></el-date-picker>
+                            <el-input
+                              v-else
+                              size="mini"
+                              style="width:100%"
+                              :placeholder="item.value"
+                              v-model="inputValue"
+                            ></el-input>
+                          </div>
+                          <span class="value" v-else>{{memberInfo(item)}}</span>
+                        </div>
+                        <div>
+                          <el-t-button
+                            :popAuth="true"
+                            :auth="'property,property_updateExternalUserProperty'"
+                            v-permission="'property,property_updateExternalUserProperty'"
+                            type="text"
+                            class="edit-info"
+                            v-if="(item.label == currentIndex) || currentInput===item.label"
+                            @click.native.stop="editInfo(item,key)"
+                          >
+                            <span v-if="currentInput===item.label">保存</span>
+                            <i class="el-icon-edit" v-else></i>
+                          </el-t-button>
+                          <div v-else style="width:44px"></div>
+                        </div>
                       </div>
-                      <span class="value" v-else>{{memberInfo(item)}}</span>
-
-                      <el-t-button
-                        :popAuth="true"
-                        :auth="'property,property_updateExternalUserProperty'"
-                        v-permission="'property,property_updateExternalUserProperty'"
-                        type="text"
-                        class="edit-info"
-                        v-if="(item.label == currentIndex) || currentInput===item.label"
-                        @click.native.stop="editInfo(item,key)"
-                      >
-                        <span v-if="currentInput===item.label">保存</span>
-                        <i class="el-icon-edit" v-else></i>
-                      </el-t-button>
                     </div>
                   </el-col>
                 </el-row>
@@ -374,12 +377,10 @@ export default {
         endTime: "",
       },
       tempRoute: {},
-      age: null,
+      age: "",
       pickerOptions: {
         disabledDate: (time) => {
-          return (
-            time.getTime() > Date.now() 
-          );
+          return time.getTime() > Date.now();
         },
       },
     };
@@ -397,7 +398,6 @@ export default {
       },
       immediate: true,
     },
-
     // uuid: {
     //   handler(newVal, oldVal) {
     //     if (newVal != 'undefined') {
@@ -420,11 +420,24 @@ export default {
     }),
     memberInfo() {
       return function (item) {
+        // if (item.value) {
+        //   if (item.label == "生日") {
+        //     this.age = dayjs().year() - dayjs(item.value).year() + 1;
+        //     return item.value;
+        //   } else if (item.label == "年龄") {
+        //     return this.age;
+        //   } else {
+        //     return item.value;
+        //   }
+        // } else {
+        //   return "--";
+        // }
         if (item.label == "生日" && item.value) {
           this.age = dayjs().year() - dayjs(item.value).year() + 1;
-          return item.value;
+          return item.value ? item.value : "--";
         } else if (item.label == "年龄") {
-          return this.age;
+          console.log(this.age, "222222");
+          return this.age ? this.age : "--";
         } else {
           return item.value ? item.value : "--";
         }
@@ -497,6 +510,12 @@ export default {
       });
       this.$store.dispatch("tagsView/updateVisitedView", route);
     },
+    // changeBirthdayTime(val){
+    //   console.log(val,'333')
+    //   if(!val){
+    //     this.age = ''
+    //   }
+    // },
     // 初始化客户动态数据
     initExternalUserTrendsListAll(payload) {
       this.$store
@@ -607,6 +626,7 @@ export default {
             .then((res) => {
               this.currentInput = "";
               this.inputValue = "";
+              this.age = "";
               this.$message({
                 type: "success",
                 message: "操作成功",
@@ -627,7 +647,7 @@ export default {
               {
                 propertyUuid: value.propertyUuid,
                 sort: 0,
-                value: this.birthdayTime,
+                value: this.birthdayTime ? this.birthdayTime : "",
               },
             ],
           };
@@ -637,8 +657,12 @@ export default {
               payload
             )
             .then((res) => {
-              this.currentInput = "";
-              this.inputValue = "";
+              this.$nextTick(() => {
+                this.currentInput = "";
+                this.inputValue = "";
+                this.age = "";
+              });
+
               this.$message({
                 type: "success",
                 message: "操作成功",
@@ -654,7 +678,7 @@ export default {
             });
         } else {
           console.log(this.birthdayTime, "333333");
-
+          this.age = "";
           this.currentInput = "";
           this.inputValue = "";
         }
@@ -824,10 +848,10 @@ export default {
   margin-top: 20px;
   font-size: 14px;
   .el-input {
-    width: 60%;
+    // width: 60%;
   }
   .edit-info {
-    margin-right: 20px;
+    // margin-right: 20px;
     line-height: 28px;
     cursor: pointer;
   }
@@ -838,10 +862,10 @@ export default {
     line-height: 28px;
   }
   .value {
-    flex: 1;
+    // width: 75%;
     text-align: left;
-    height: 28px;
-    line-height: 28px;
+    // height: 28px;
+    // line-height: 28px;
   }
 }
 

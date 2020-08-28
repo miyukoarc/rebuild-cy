@@ -657,7 +657,6 @@ const actions = {
     getExternalUserDetail({
         commit
     }, payload) {
-        console.log(payload, 'payload')
         commit('TOGGLE_LOADING', true)
         return new Promise((resolve, reject) => {
             getExternalUserDetail(payload).then(res => {
