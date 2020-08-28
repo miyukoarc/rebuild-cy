@@ -10,8 +10,8 @@ function resolve(dir) {
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
 const api_host =
-    'http://10.10.10.199' // 本地接口url 骋浩 
-    // 'http://47.114.117.126:9000' // 测试IP
+    // 'http://10.10.10.199' // 本地接口url 骋浩 
+    'http://47.114.117.126:9000' // 测试IP
     //  'http://10.10.10.247' // 杜亮
     // 'http://10.10.10.4:9000' // 光
     //  "http://sidebar.cyscrm.com:9000"// 线上
@@ -75,17 +75,17 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
         //     target: api_host,
         //     changeOrigin: true,
         // },
-        // [process.env.VUE_APP_BASE_API]: {
-        //     headers: {
-        //         Host: 'sidebar.cyscrm.com'
-        //     },
-        //     target: api_host,
-        //     secure: false,
-        //     // ws: true,
-        //     pathRewrite: {
-        //         "^/api": ""
-        //     }
-        // },
+        [process.env.VUE_APP_BASE_API]: {
+            headers: {
+                Host: 'sidebar.cyscrm.com'
+            },
+            target: api_host,
+            secure: false,
+            // ws: true,
+            pathRewrite: {
+                "^/api": ""
+            }
+        },
         "/api": {
             headers: {
                 Host: 'sidebar.cyscrm.com'

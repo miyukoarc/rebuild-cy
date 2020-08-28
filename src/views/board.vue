@@ -2,14 +2,6 @@
   <div>
     <div>
       <!-- <el-t-button>123</el-t-button> -->
-      <union-checkbox
-        v-for="(item,index) in items"
-        :key="index"
-        :code="item.code"
-        :deps="item.deps"
-        v-model="use[index]"
-        @change="handleUnionCheck"
-      >12312</union-checkbox>
       <!-- <union-checkbox
         :code="'media_add'"
         :deps="'media_detail,user_detail,user_edit'"

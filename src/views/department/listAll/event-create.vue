@@ -60,10 +60,10 @@
             :data="departmentList"
             :props="{value:'uuid',children:'children',label:'name'}"
             :check-strictly="true"
-            :disabledValues="disabledValues"
-            :disabled="form.type=='BRANCH'"
             v-model="form.parentUuid"
           ></el-select-tree>
+            <!-- :disabledValues="disabledValues" -->
+            <!-- :disabled="form.type=='BRANCH'" -->
         </el-form-item>
 
         <el-form-item label="创建类型">
@@ -344,14 +344,14 @@ export default {
           //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
           //     return item.code.includes('DEPT')
           //   })
-          this.disabledValues = []
+        //   this.disabledValues = []
         }
         if (newVal == 'BRANCH') {
           //分公司初始化
           this.form.orgNode = true
-          this.form.parentUuid = this.flattenDepartments.find(item=>{
-              return item.type=='HEAD'
-          }).uuid
+        //   this.form.parentUuid = this.flattenDepartments.find(item=>{
+        //       return item.type=='HEAD'
+        //   }).uuid
           this.mode = 'SIMPLE'
           //   this.alterRoleTemplates = this.roleTemplates.filter((item) => {
           //     return item.code.includes('BRANCH')
@@ -365,7 +365,7 @@ export default {
           //     return item.code.includes('BUSINESS')
           //   })
 
-          this.disabledValues = this.businessBanded
+        //   this.disabledValues = this.businessBanded
         }
       },
       immediate: true,

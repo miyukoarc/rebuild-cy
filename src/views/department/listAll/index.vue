@@ -83,23 +83,18 @@
       </el-table>
     </el-card>
 
-    <!-- <el-card class="content-spacing">
-        <Cascader :options="departmentList" :props="{childre:'children',department:'nodes'}"></Cascader>
-    </el-card>-->
-
     <form-dialog ref="formDialog"></form-dialog>
   </div>
 </template>
 
 <script>
-// import mHeadedr from "./header";
-import UserDetail from "./detail.vue";
-import ListHeader from "./header.vue";
-import FormDialog from "./dialog";
-import ToolBar from "./tool-bar";
-import Cascader from "@/components/Cascader";
+import UserDetail from "./detail.vue"
+import ListHeader from "./header.vue"
+import FormDialog from "./dialog"
+import ToolBar from "@/components/ToolBar"
+import Cascader from "@/components/Cascader"
 
-import { mapState, mapMutations, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex"
 
 export default {
   name: 'department_listAll',
@@ -115,7 +110,6 @@ export default {
       total: 0,
     };
   },
-  watch: {},
   computed: {
     ...mapState({
       departmentList: (state) => state.department.departmentList,
