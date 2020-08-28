@@ -378,7 +378,7 @@ export default {
       pickerOptions: {
         disabledDate: (time) => {
           return (
-            time.getTime() > Date.now() - 24 * 60 * 60 * 1000 
+            time.getTime() > Date.now() 
           );
         },
       },
@@ -420,13 +420,10 @@ export default {
     }),
     memberInfo() {
       return function (item) {
-        console.log(item, "222223344555");
         if (item.label == "生日" && item.value) {
           this.age = dayjs().year() - dayjs(item.value).year() + 1;
-          console.log(this.age, "age");
           return item.value;
         } else if (item.label == "年龄") {
-          console.log(this.age, "222222");
           return this.age;
         } else {
           return item.value ? item.value : "--";
