@@ -3,20 +3,20 @@
     <el-form :model="form" ref="form" :rules="rules" label-width="100px">
       <div>已选择{{transfer.length}}名用户，查看列表</div>
       <br />
+
+      <el-form-item label="消息内容：" prop="content">
+        <el-input type="textarea" v-model="form.content"></el-input>
+      </el-form-item>
+
       <el-form-item label="开始时间：" prop="startTime">
         <el-date-picker
+          popper-class="addBatchTaskDatePicker"
           v-model="form.startTime"
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="选择日期时间"
           :picker-options="pickerOptions"
         ></el-date-picker>
-      </el-form-item>
-
-      
-
-      <el-form-item label="消息内容：" prop="content">
-        <el-input type="textarea" v-model="form.content"></el-input>
       </el-form-item>
 
       <div class="text-align-center">
@@ -51,6 +51,7 @@ export default {
         ],
       },
       pickerOptions: {
+        disabledDate: (time) => time.getTime() < Date.now() - 8.64e7,
         shortcuts: [
           {
             text: "15秒后",
@@ -121,4 +122,7 @@ export default {
 </script>
 
 <style>
+.addBatchTaskDatePicker .el-picker-panel__footer .el-button--text {
+  display: none;
+}
 </style>

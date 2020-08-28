@@ -519,7 +519,8 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getMediaListMy(payload).then(res => {
-        commit('SAVE_MEDIALISTMY', res.items)
+        let listFilter = res.items.filter(item => item.type == 'ARTICLE')
+        commit('SAVE_MEDIALISTMY', listFilter)
         commit('TOGGLE_LOADING', false)
         resolve()
       }).catch(err => {
