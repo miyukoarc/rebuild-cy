@@ -87,13 +87,25 @@
                       @mouseenter="mouseEnter(item,key)"
                     >
                       <span class="label">{{ item.label }}：</span>
-                      <el-input
-                        size="mini"
-                        :placeholder="item.value"
-                        v-if="currentInput ===item.label"
-                        v-model="inputValue"
-                      ></el-input>
-                      <span class="value" v-else>{{ item.value ? item.value : "--" }}</span>
+                      <div v-if="currentInput ===item.label">
+                        <el-date-picker
+                          style="width:100%"
+                          v-model="birthdayTime"
+                          :value-format="'yyyy-MM-dd'"
+                          type="date"
+                          size="mini"
+                          placeholder="选择日期"
+                          v-if="currentInput =='生日'"
+                        ></el-date-picker>
+                        <el-input
+                          v-else
+                          size="mini"
+                          style="width:100%"
+                          :placeholder="item.value"
+                          v-model="inputValue"
+                        ></el-input>
+                      </div>
+                      <span class="value" v-else>{{memberInfo(item)}}</span>
 
                       <el-t-button
                         :popAuth="true"
@@ -319,7 +331,7 @@
 import defaultAvatar from "@/assets/2.jpg";
 import FormDialog from "./dialog";
 import { mapState } from "vuex";
-
+import dayjs from "dayjs";
 import { isMobilePhone } from "@/utils/validate.js";
 
 export default {
@@ -329,6 +341,7 @@ export default {
   data() {
     return {
       // 客户资料
+      birthdayTime: "",
       reflect: {
         source: "来源",
         qq: "QQ",
@@ -360,17 +373,17 @@ export default {
         endTime: "",
       },
       tempRoute: {},
+      age: null,
     };
   },
-
   watch: {
     $route: {
       handler(newVal, oldVal) {
         const str = `${newVal.params.uuid}`;
-        if (str != 'undefined') {
-          this.query.uuid = str
+        if (str != "undefined") {
+          this.query.uuid = str;
           // this.$once("hook:created", () => {
-            this.initExternalUserData(str);
+          this.initExternalUserData(str);
           // });
         }
       },
@@ -397,6 +410,21 @@ export default {
       permissionMap: (state) => state.permission.permissionMap,
       externalUserAddwayType: (state) => state.enum.externalUserAddwayType,
     }),
+    memberInfo() {
+      return function (item) {
+        console.log(item, "222223344555");
+        if (item.label == "生日" && item.value) {
+          this.age = dayjs().year() - dayjs(item.value).year() + 1;
+          console.log(this.age, "age");
+          return item.value;
+        } else if (item.label == "年龄") {
+          console.log(this.age, "222222");
+          return this.age;
+        } else {
+          return item.value ? item.value : "--";
+        }
+      };
+    },
     // uuid() {
     //   return this.$route.params.uuid
     // },
@@ -537,9 +565,13 @@ export default {
       });
     },
     mouseEnter(value, key) {
-      this.currentIndex = value.label;
+      if (value.label == "年龄") {
+        this.currentIndex = "";
+      } else {
+        this.currentIndex = value.label;
+      }
     },
-    editInfo(value, key, index) {
+    editInfo(value, key) {
       if (this.currentIndex == this.currentInput) {
         if (value.label == "手机号") {
           if (!isMobilePhone(this.inputValue)) {
@@ -550,7 +582,8 @@ export default {
             return;
           }
         }
-        if (this.inputValue != value.value) {
+
+        if (this.inputValue != value.value && this.currentIndex != "生日") {
           const payload = {
             externalUserUuid: this.query.uuid,
             propertyDtoList: [
@@ -582,7 +615,41 @@ export default {
                 message: err,
               });
             });
+        } else if (this.currentIndex == "生日") {
+          const payload = {
+            externalUserUuid: this.query.uuid,
+            propertyDtoList: [
+              {
+                propertyUuid: value.propertyUuid,
+                sort: 0,
+                value: this.birthdayTime,
+              },
+            ],
+          };
+          this.$store
+            .dispatch(
+              "externalUser/propertyUpdateExternalUserProperty",
+              payload
+            )
+            .then((res) => {
+              this.currentInput = "";
+              this.inputValue = "";
+              this.$message({
+                type: "success",
+                message: "操作成功",
+              });
+              this.initExternalUserDetail(this.query.uuid);
+            })
+            .catch((err) => {
+              console.log(err);
+              this.$message({
+                type: "error",
+                message: err,
+              });
+            });
         } else {
+          console.log(this.birthdayTime, "333333");
+
           this.currentInput = "";
           this.inputValue = "";
         }
@@ -610,7 +677,6 @@ export default {
       const payload = {
         uuid: item.uuid,
       };
-
       this.$confirm("是否删除当前动态", "Warning", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -670,9 +736,9 @@ export default {
           console.log(err);
         });
     },
-    getRowKey(row){
-         return row.userId;
-    }, 
+    getRowKey(row) {
+      return row.userId;
+    },
     load() {
       let a = Math.ceil(this.page.total / this.page.pageSize);
       this.query.page++;

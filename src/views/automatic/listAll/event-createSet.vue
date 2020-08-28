@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-31 11:00:20
- * @LastEditTime: 2020-08-22 18:07:34
+ * @LastEditTime: 2020-08-28 14:30:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\event-creatSet.vue
@@ -307,7 +307,7 @@ export default {
         .dispatch("automatic/automaticDefaultDetail")
         .then((res) => {
           this.repeat = res.replyInterval === true;
-          this.repeatTime = res.replyIntervalTime?res.replyIntervalTime:'30';
+          this.repeatTime = res.replyIntervalTime?res.replyIntervalTime+'':'30';
         })
         .catch((err) => {});
     },
