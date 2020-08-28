@@ -35,7 +35,7 @@
         @handleExport="doExport"
         :msg="`共${pageConfig.total}条记录`"
         :hasRefresh="true"
-        @handleRefresh="handleRefresh"
+        @handleRefresh="handleRequest"
       >
         <div slot="right">
           <el-t-button
@@ -333,6 +333,10 @@ export default {
       this.query.endTime = endTime ? endTime : "";
       this.query.page = 0;
       this.initDataList(this.query);
+    },
+    handleRequest(){
+      this.initDataList(this.query);
+
     },
     handleRefresh() {
       this.query = this.$options.data().query;

@@ -25,7 +25,6 @@ const api_host =
 // port = 9528 npm run dev OR npm run dev --port = 9528
 const port = process.env.port || process.env.npm_config_port || 9528 // dev port
 
-console.log(process.env.VUE_APP_WORK, process.env.NODE_ENV)
 
 
 const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
@@ -72,21 +71,21 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
                 ['^' + process.env.VUE_APP_BASE_API]: ''
             }
         },
-        '/public': {
-            target: api_host,
-            changeOrigin: true,
-        },
-        [process.env.VUE_APP_BASE_API]: {
-            headers: {
-                Host: 'sidebar.cyscrm.com'
-            },
-            target: api_host,
-            secure: false,
-            // ws: true,
-            pathRewrite: {
-                "^/api": ""
-            }
-        },
+        // '/public': {
+        //     target: api_host,
+        //     changeOrigin: true,
+        // },
+        // [process.env.VUE_APP_BASE_API]: {
+        //     headers: {
+        //         Host: 'sidebar.cyscrm.com'
+        //     },
+        //     target: api_host,
+        //     secure: false,
+        //     // ws: true,
+        //     pathRewrite: {
+        //         "^/api": ""
+        //     }
+        // },
         "/api": {
             headers: {
                 Host: 'sidebar.cyscrm.com'
@@ -98,13 +97,13 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
                 "^/api": ""
             }
         },
-        '/file': {
-            target: `http://192.168.1.198:9000/file`,
-            changeOrigin: true,
-            pathRewrite: {
-                '^/file': '',
-            },
-        },
+        // '/file': {
+        //     target: `http://192.168.1.198:9000/file`,
+        //     changeOrigin: true,
+        //     pathRewrite: {
+        //         '^/file': '',
+        //     },
+        // },
         // '/ws': {
         //     target: `http://47.111.161.128:80`,
         //     changeOrigin: true,

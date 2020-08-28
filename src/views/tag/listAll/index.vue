@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个标签`">
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个标签`" :hasRefresh="true" @handleRefresh="handleRequest">
         <div slot="right">
           <el-t-button
             v-permission="'tag,tag_addTagIsAudit'"

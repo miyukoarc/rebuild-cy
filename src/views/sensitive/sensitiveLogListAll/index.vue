@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}条记录`"></tool-bar>
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}条记录`" :hasRefresh="true" @handleRefresh="handleRequest"></tool-bar>
     </el-card>
 
     <el-card class="content-spacing">
@@ -134,6 +134,9 @@ export default {
         path: '/user/detail',
         query: { uuid: payload },
       })
+    },
+    handleRequest(){
+        this.initDataList(this.query)
     },
     handleSearch(val) {
       const { startTime, endTime, userUuid, word } = val
