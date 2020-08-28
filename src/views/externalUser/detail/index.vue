@@ -84,7 +84,7 @@
                   >
                     <div class="display-flex align-items-center" @mouseenter="mouseEnter(item,key)">
                       <span class="label">{{ item.label }}：</span>
-                      <div class="flex-between-alinecenter">
+                      <div class="flex-between-alinecenter flex-100">
                         <div class="flex-1">
                           <div v-if="currentInput ===item.label">
                             <el-date-picker
@@ -856,7 +856,7 @@ export default {
     cursor: pointer;
   }
   .label {
-    min-width: 80px;
+    min-width: 70px;
     display: inline-block;
     height: 28px;
     line-height: 28px;
