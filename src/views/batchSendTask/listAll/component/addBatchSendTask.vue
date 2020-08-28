@@ -213,14 +213,14 @@
 
             <el-form-item label="群发时间：">
               <el-radio v-model="isSendImmediately" :label="true">立即发送</el-radio>
-              <el-radio v-model="isSendImmediately" :label="false">定时发送</el-radio>
+              <!-- <el-radio v-model="isSendImmediately" :label="false">定时发送</el-radio> 
               <el-date-picker
                 v-model="form.sendTime"
                 :disabled="isSendImmediately"
                 type="datetime"
                 placeholder="选择日期时间"
                 :default-time="['00:00:00', '23:59:59']"
-              ></el-date-picker>
+              ></el-date-picker>-->
             </el-form-item>
 
             <el-form-item>
@@ -237,7 +237,10 @@
 import { mapState } from "vuex";
 import inputEdit from "@/components/inputEdit";
 import TagMultiSelect from "@/components/TagMultiSelect";
-import { getExternalUserListAll,getExternalUserListAllPermissionLess } from "@/api/externalUser";
+import {
+  getExternalUserListAll,
+  getExternalUserListAllPermissionLess,
+} from "@/api/externalUser";
 export default {
   inject: ["reload"],
   components: { inputEdit, TagMultiSelect },

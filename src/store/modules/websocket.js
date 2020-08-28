@@ -676,32 +676,33 @@ const actions = {
             console.log('是否在线：' + res)
             if (isElectron()) {
                 state.isOpenedSidebar = res;
-                console.log('aaaaaaaaaaaa')
-                console.log(state.currentTask.data.toUserId)
-                sendCustomizeMessage({
-                    toUserId: state.currentTask.data.toUserId,
-                    clientGroup: "SIDEBAR",
-                    properties: {
-                        code: 'WHOSE_WINDOW_DO_YO_OPEN_AUTOREP'
-                    }
-                })
+                if (res) {
+                    console.log('自动回复：你打开的是哪个客户的侧边栏')
+                    sendCustomizeMessage({
+                        toUserId: state.currentTask.data.toUserId,
+                        clientGroup: "SIDEBAR",
+                        properties: {
+                            code: 'WHOSE_WINDOW_DO_YO_OPEN_AUTOREP'
+                        }
+                    })
+                } else {
+                    $ipcRenderer.send('openChat', {
+                        mobile: state.currentTask.data.properties.mobile.split(',')[0],
+                        x: state.mouseX,
+                        y: state.mouseY,
+                        isOnline: false
+                    })
 
-                // $ipcRenderer.send('openChat', {
-                //     mobile: state.currentTask.data.properties.mobile.split(',')[0],
-                //     x: state.mouseX,
-                //     y: state.mouseY,
-                //     isOnline: res
-                // })
-                console.log('开始倒计时')
-                setTimeout(() => {
-                    if (state.isOpenedSidebar == false) {
-                        Message({
-                            message: '请打开侧边栏后重试',
-                            type: 'error'
-                        })
-                        dispatch('clearTask')
-                    }
-                }, 10000);
+                    setTimeout(() => {
+                        if (state.isOpenedSidebar == false) {
+                            Message({
+                                message: '请打开侧边栏后重试',
+                                type: 'error'
+                            })
+                            dispatch('clearTask')
+                        }
+                    }, 10000);
+                }
             }
         })
     },
