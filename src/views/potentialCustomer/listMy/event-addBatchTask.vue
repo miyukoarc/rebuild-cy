@@ -9,9 +9,12 @@
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="选择日期时间"
-          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptions"
         ></el-date-picker>
       </el-form-item>
+
+      
+
       <el-form-item label="消息内容：" prop="content">
         <el-input type="textarea" v-model="form.content"></el-input>
       </el-form-item>
@@ -29,24 +32,52 @@ export default {
   props: {
     transfer: {
       type: Array,
-      default: []
-    }
+      default: [],
+    },
   },
   data() {
     return {
       form: {
         // customerUuids: [],
         startTime: "",
-        content: ""
+        content: "",
       },
       rules: {
         startTime: [
-          { required: true, message: "请输入正确的时间格式", trigger: "blur" }
+          { required: true, message: "请输入正确的时间格式", trigger: "blur" },
         ],
         content: [
-          { required: true, message: "消息内容为必填项", trigger: "blur" }
-        ]
-      }
+          { required: true, message: "消息内容为必填项", trigger: "blur" },
+        ],
+      },
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "15秒后",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() + 1000 * 15);
+              picker.$emit("pick", date);
+            },
+          },
+          {
+            text: "30秒后",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() + 1000 * 30);
+              picker.$emit("pick", date);
+            },
+          },
+          {
+            text: "1分钟后",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() + 1000 * 60);
+              picker.$emit("pick", date);
+            },
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -59,7 +90,7 @@ export default {
         customerUuids[index] = obj.uuid;
       });
       const payload = { ...this.form, customerUuids };
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           console.log(payload);
           this.$store
@@ -67,25 +98,25 @@ export default {
             .then(() => {
               this.$message({
                 type: "success",
-                message: "操作成功"
+                message: "操作成功",
               });
               this.handleCancel();
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message({
                 type: "error",
-                message: "操作失败"
+                message: "操作失败",
               });
             });
         } else {
           this.$message({
             type: "error",
-            message: "请检查输入"
+            message: "请检查输入",
           });
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
