@@ -91,6 +91,7 @@
                         <el-date-picker
                           style="width:100%"
                           v-model="birthdayTime"
+                          :picker-options="pickerOptions"
                           :value-format="'yyyy-MM-dd'"
                           type="date"
                           size="mini"
@@ -374,6 +375,13 @@ export default {
       },
       tempRoute: {},
       age: null,
+      pickerOptions: {
+        disabledDate: (time) => {
+          return (
+            time.getTime() > Date.now() - 24 * 60 * 60 * 1000 
+          );
+        },
+      },
     };
   },
   watch: {
