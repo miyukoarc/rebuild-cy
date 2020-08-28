@@ -73,7 +73,6 @@
 
 <script>
 import { mapState } from "vuex";
-import ComplexSelect from "@/components/ComplexSelect";
 import AsyncUserTag from "@/components/AsyncUserTag";
 import TagMultiSelect from "@/components/TagMultiSelect";
 import MultiTreeSelect from "@/components/MultiTreeSelect";
@@ -82,7 +81,6 @@ export default {
   inject: ["reload"],
   components: {
     AsyncUserTag,
-    ComplexSelect,
     TagMultiSelect,
     MultiTreeSelect,
   },

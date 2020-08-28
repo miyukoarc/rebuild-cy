@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`">
+      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个客户`" :hasRefresh="true" @handleRefresh="handleRequest">
         <div slot="right">
           <el-t-button
             type="primary"
@@ -214,6 +214,9 @@ export default {
       this.$refs['formDialog'].eventType = 'audit'
       this.$refs['formDialog'].transfer = { uuid }
       this.$refs['formDialog'].dialogVisible = true
+    },
+    handleRequest(){
+        this.initDataList(this.query)
     },
     handleSearch(val) {
       const { auditConfirmation, handlerId, submitterId } = val

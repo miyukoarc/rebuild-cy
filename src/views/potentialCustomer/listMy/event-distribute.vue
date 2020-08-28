@@ -40,16 +40,12 @@
 
 <script>
 import { mapState } from "vuex";
-import ComplexSelect from "@/components/ComplexSelect";
 export default {
   props: {
     transfer: {
       type: Object,
       default: () => {}
     }
-  },
-  components: {
-    ComplexSelect
   },
   data() {
     return {

@@ -9,7 +9,7 @@
         @handleExport="doExport"
         :msg="`共${pageConfig.total}个敏感词`"
         :hasRefresh="true"
-        @handleRefresh="handleRefresh"
+        @handleRefresh="handleRequest"
       >
         <div slot="right">
           <el-t-button
@@ -259,6 +259,9 @@ export default {
       this.query.word = word ? word : this.query.word;
       console.log(val, "handleSearch");
       this.initDataList(this.query);
+    },
+    handleRequest(){
+        this.initDataList(this.query)
     },
     handleRefresh() {
       console.log("handleRefresh");

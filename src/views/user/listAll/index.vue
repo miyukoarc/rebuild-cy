@@ -5,12 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar
-        :hasRefresh="true"
-        @handleRefresh="handleUpdateList"
-        :usersNumber="userPage.total"
-        @handleExport="doExport"
-      >
+      <tool-bar :msg="`共${pageConfig.total}条记录`" :hasRefresh="true" @handleRefresh="handleRequest">
         <div slot="right">
           <!-- <el-t-button
             type="primary"
@@ -328,6 +323,9 @@ export default {
         path: '/user/detail/' + uuid,
         // query: { uuid: payload }
       })
+    },
+    handleRequest (){
+        this.initDataList(this.query)
     },
     handleSearch(val) {
       const {

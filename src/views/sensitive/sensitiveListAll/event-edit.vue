@@ -49,7 +49,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import ComplexSelect from '@/components/ComplexSelect'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import TagSelect from '@/components/TagSelect'
 import TagMultiSelect from '@/components/TagMultiSelect'
@@ -66,7 +65,6 @@ export default {
   },
   components: {
     AsyncUserTag,
-    ComplexSelect,
     TagSelect,
     TagMultiSelect,
   },

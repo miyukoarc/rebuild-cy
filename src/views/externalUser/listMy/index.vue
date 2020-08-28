@@ -7,7 +7,7 @@
     <el-card class="content-spacing">
       <tool-bar
         :hasRefresh="true"
-        @handleRefresh="handleRefresh"
+        @handleRefresh="handleRequest"
         @handleExport="handleExport"
         :msg="`共${pageConfig.total}个客户`"
       ></tool-bar>

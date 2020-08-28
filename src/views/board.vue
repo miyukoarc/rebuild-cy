@@ -105,15 +105,13 @@ import UserDrawer from '@/components/UserDrawer'
 import Cascader from '@/components/Cascader'
 import AsyncUserTag from '@/components/AsyncUserTag'
 import AsyncUserDrawer from '@/components/AsyncUserDrawer'
-import ComplexSelect from '@/components/ComplexSelect'
 import TagSelect from '@/components/TagSelect'
 import TagMultiSelect from '@/components/TagMultiSelect'
 import MultiTreeSelect from '@/components/MultiTreeSelect'
-import UnionCheckbox from '@/components/UnionCheckbox'
+
 import { mapState } from 'vuex'
 export default {
   components: {
-    UnionCheckbox,
     TagsDrawer,
     UserDrawer,
     Cascader,
@@ -121,7 +119,6 @@ export default {
     UserTag,
     AsyncUserDrawer,
     IconTooltip,
-    ComplexSelect,
     TagSelect,
     TagMultiSelect,
     MultiTreeSelect,
