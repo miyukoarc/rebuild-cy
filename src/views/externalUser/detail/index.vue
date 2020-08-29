@@ -105,7 +105,7 @@
                               v-model="inputValue"
                             ></el-input>
                           </div>
-                          <span class="value" v-else>{{memberInfo(item)}}</span>
+                          <span class="value" v-else>{{item.label==='年龄' ? isBirthday : item.value}}</span>
                         </div>
                         <div>
                           <el-t-button
@@ -418,18 +418,13 @@ export default {
       permissionMap: (state) => state.permission.permissionMap,
       externalUserAddwayType: (state) => state.enum.externalUserAddwayType,
     }),
-    memberInfo() {
-      return function (item) {
-        if (item.label == "生日" && item.value) {
-          this.age = dayjs().year() - dayjs(item.value).year() + 1;
-          return item.value ? item.value : "--";
-        } else if (item.label == "年龄") {
-          console.log(this.age, "222222");
-          return this.age ? this.age : "--";
-        } else {
-          return item.value ? item.value : "--";
-        }
-      };
+    isBirthday() {
+      const birthday = this.externalUserDetail.externalUserDetailPublic.find(
+        (item) => item.label === "生日"
+      );
+      return birthday.value
+        ? dayjs().year() - dayjs(birthday.value).year() + 1
+        : birthday.value;
     },
     // uuid() {
     //   return this.$route.params.uuid
