@@ -53,7 +53,7 @@
           <el-table-column type="selection"></el-table-column>
           <el-table-column label="客户名" align="left" prop="name" width="150"></el-table-column>
           <el-table-column label="手机号" align="left" prop="mobile" width="150"></el-table-column>
-          <el-table-column align="left">
+          <!-- <el-table-column align="left">
             <template slot="header">
               <span>
                 预设标签
@@ -68,7 +68,7 @@
             <template v-slot="{row}">
               <tags-drawer :tags="row.potentialCustomerTags"></tags-drawer>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="批量添加次数" align="left" prop="tryCount"></el-table-column>
 
           <el-table-column label="所属员工" align="left">

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-29 21:41:51
- * @LastEditTime: 2020-08-25 13:49:02
+ * @LastEditTime: 2020-08-31 11:42:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\sensitive\auditPropertylistAll\components\audit-user.vue
@@ -37,51 +37,52 @@
 </template>
 
 <script>
-import AsyncUserTag from '@/components/AsyncUserTag'
-import toChinesNum from '@/utils/common'
+import AsyncUserTag from "@/components/AsyncUserTag";
+import { toChineseNum } from "@/utils/common";
 export default {
   props: {
     auditUsers: {
       type: Array,
       default: () => {
-        return []
-      }
-    }
+        return [];
+      },
+    },
   },
   components: {
-    AsyncUserTag
+    AsyncUserTag,
   },
   data() {
     return {
-      curly: false
-    }
+      curly: false,
+    };
   },
   watch: {
     auditUsers: {
       handler(newVal, oldVal) {
         if (newVal.length > 2) {
-          this.curly = true
+          this.curly = true;
         } else {
-          this.curly = false
+          this.curly = false;
         }
-      },immediate: true
+      },
+      immediate: true,
     },
   },
-  computed:{
-      alterAuditUsers(){
-        if(this.curly){
-            return this.auditUsers.slice(0,2)
-        }else{
-            return this.auditUsers
-        }
+  computed: {
+    alterAuditUsers() {
+      if (this.curly) {
+        return this.auditUsers.slice(0, 2);
+      } else {
+        return this.auditUsers;
       }
+    },
   },
   methods: {
-      toChinesNum(num){
-          return toChinesNum(num)
-      }
-  }
-}
+    toChineseNum(num) {
+      return toChineseNum(num);
+    },
+  },
+};
 </script>
 
 <style>

@@ -422,8 +422,9 @@ export default {
       const birthday = this.externalUserDetail.externalUserDetailPublic.find(
         (item) => item.label === "生日"
       );
+      // console.log(dayjs().diff(dayjs(birthday.value),'years')+1,'88888',dayjs().year() - dayjs(birthday.value).year() + 1)
       return birthday.value
-        ? dayjs().year() - dayjs(birthday.value).year() + 1
+        ? dayjs().diff(dayjs(birthday.value),'years')+1
         : birthday.value;
     },
     // uuid() {

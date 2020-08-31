@@ -7,7 +7,7 @@
       <el-input v-model="form.mobile" disabled></el-input>
     </el-form-item>
 
-    <el-form-item label="预设标签">
+    <!-- <el-form-item label="预设标签">
       <label slot="label" class="tag-label">
         预设标签
         <el-tooltip class="item" effect="dark" content="添加成为用户后，将自动打上预设标签" placement="right">
@@ -23,7 +23,7 @@
         :packUp="true"
         :isShow="true"
       ></tags-selected>
-    </div>
+    </div> -->
 
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
