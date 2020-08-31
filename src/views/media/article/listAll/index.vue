@@ -6,7 +6,7 @@
 
     <el-card class="content-spacing">
       <tool-bar         
-      :msg="`共${pageConfig.total}条记录`"
+      :msg="`共${pageConfig.total}篇文章`"
         :hasRefresh="true"
         @handleRefresh="handleRequest" >
         <div slot="right">

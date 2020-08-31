@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar :msg="`共${pageConfig.total}条记录`" :hasRefresh="true" @handleRefresh="handleUpdateList">
+      <tool-bar :msg="`共${pageConfig.total}位员工`" :hasRefresh="true" @handleRefresh="handleUpdateList">
         <div slot="right">
           <!-- <el-t-button
             type="primary"
