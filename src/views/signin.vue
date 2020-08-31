@@ -1,78 +1,87 @@
 <template>
-  <div class="login-container">
-    <div class="login-warp">
-      <transition name="fade">
-        <div v-if="!tipsFlag" class="qrcode-container">
-          <div v-if="loading" class="loading">
-            <i class="el-icon-loading color-info"></i>
-          </div>
-          <div id="browser"></div>
-          <webview ref="webview" id="webview"></webview>
-        </div>
-      </transition>
+  
 
-      <div v-if="tipsFlag" class="text-align-center">
-        <h3 class="tips">选择单位获取登录二维码</h3>
-      </div>
-      <div class="container">
-        <div class="choice" v-for="item in loginList" :key="item.tenantId">
-          <el-radio
-            v-model="tenantId"
-            size="small"
-            @change="changeCorp(item)"
-            :label="item.tenantId"
-          >{{item.name}}</el-radio>
+    <div class="login-container">
+            <div class="btn-container">
+      <close-button></close-button>
+    </div>
+      <div class="login-warp">
+        <transition name="fade">
+          <div v-if="!tipsFlag" class="qrcode-container">
+            <div v-if="loading" class="loading">
+              <i class="el-icon-loading color-info"></i>
+            </div>
+            <div id="browser"></div>
+            <webview ref="webview" id="webview"></webview>
+          </div>
+        </transition>
+
+        <div v-if="tipsFlag" class="text-align-center">
+          <h3 class="tips">选择单位获取登录二维码</h3>
         </div>
-        <div class="text-align-center">
-          <el-button ref="btn" type="primary" size="small" @click="handleLogin">获取二维码</el-button>
+        <div class="container">
+          <div class="choice" v-for="item in loginList" :key="item.tenantId">
+            <el-radio
+              v-model="tenantId"
+              size="small"
+              @change="changeCorp(item)"
+              :label="item.tenantId"
+            >{{item.name}}</el-radio>
+          </div>
+          <div class="text-align-center">
+            <el-button ref="btn" type="primary" size="small" @click="handleLogin">获取二维码</el-button>
+          </div>
         </div>
-      </div>
-      <div class="version-warp display-flex align-items-center">
-        <img :src="leftLine" alt />
-        <span class="ml-5 mr-5">超盈SCRM·国信{{publicVersion?publicVersion:''}}</span>
-        <img :src="rightLine" alt />
+        <div class="version-warp display-flex align-items-center">
+          <span class="left-liner"></span>
+          <span class="ml-5 mr-5">超盈SCRM·国信{{publicVersion?publicVersion:''}}</span>
+          <span class="right-liner"></span>
+        </div>
       </div>
     </div>
-  </div>
+  
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 import leftLine from '@/assets/left-line.png'
 import rightLine from '@/assets/right-line.png'
+import CloseButton from '@/components/CloseButton'
 export default {
-  name: "Login",
+  name: 'Login',
+  components: {
+    CloseButton,
+  },
   data() {
     return {
-      leftLine:leftLine,
-      rightLine:rightLine,
+      leftLine: leftLine,
+      rightLine: rightLine,
       redirect: undefined,
       otherQuery: {},
-      tenantId: "",
+      tenantId: '',
       tipsFlag: true,
       loading: false,
-    };
+    }
   },
   watch: {
     $route: {
       handler: function (route) {
-        const query = route.query;
+        const query = route.query
         if (query) {
-          this.redirect = query.redirect;
-          this.otherQuery = this.getOtherQuery(query);
+          this.redirect = query.redirect
+          this.otherQuery = this.getOtherQuery(query)
         }
       },
       immediate: true,
     },
-    tenantId:{
-        handler(newVal,oldVal){
+    tenantId: {
+      handler(newVal, oldVal) {
+        this.$refs.btn.handleClick()
+        // console.log()
 
-            this.$refs.btn.handleClick()
-            // console.log()
-
-            // this.getQrCode(newVal, 'browser')
-        }
-    }
+        // this.getQrCode(newVal, 'browser')
+      },
+    },
   },
   computed: {
     ...mapState({
@@ -83,52 +92,40 @@ export default {
   created() {
     this.initDataList()
       .then(() => {
-        const tenantId = this.loginList[0].tenantId;
-        this.tenantId = this.loginList[0].tenantId;
+        const tenantId = this.loginList[0].tenantId
+        this.tenantId = this.loginList[0].tenantId
 
         const id = this.tenantId
-
-
       })
       .catch((err) => {
-        console.error(err);
-      });
-    this.getpublicVersion();
+        console.error(err)
+      })
+    this.getpublicVersion()
   },
-  mounted() {
-
-      //   this.getQrCode(this.tenantId, 'browser')
-    
-    // if (this.$isElectron()) {
-    //   const ipcRenderer = window.electron.ipcRenderer
-    //   ipcRenderer.on('getUrl', (event, payload) => {
-    //     console.log(payload)
-    //   })
-    // }
-  },
+  mounted() {},
   methods: {
     getpublicVersion() {
       this.$store
-        .dispatch("auth/publicVersion")
+        .dispatch('auth/publicVersion')
         .then(() => {})
         .catch((err) => {
           this.$message({
-            type: "error",
-            message: err || "初始化错误",
-          });
-        });
+            type: 'error',
+            message: err || '初始化错误',
+          })
+        })
     },
     getQrCode(id, target) {
       this.$nextTick(() => {
         return new WwLogin({
           id: target,
-          appid: "wwa266cd2b968ae008",
-          agentid: "1000019",
+          appid: 'wwa266cd2b968ae008',
+          agentid: '1000019',
           redirect_uri: `http://sidebar.cyscrm.com/api/wxlogin/${id}`,
-          state: "123456",
-          href: "",
-        });
-      });
+          state: '123456',
+          href: '',
+        })
+      })
     },
     // getWxlogin(payload) {
     //   this.$nextTick(async () => {
@@ -142,43 +139,43 @@ export default {
     //   })
     // },
     addStr(str, style) {
-      const arr = str.split("</head>");
-      return `${arr[0]}${style}</head>${arr[1]}`;
+      const arr = str.split('</head>')
+      return `${arr[0]}${style}</head>${arr[1]}`
     },
 
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== "redirect") {
-          acc[cur] = query[cur];
+        if (cur !== 'redirect') {
+          acc[cur] = query[cur]
         }
-        return acc;
-      }, {});
+        return acc
+      }, {})
     },
     changeCorp(val) {
-      window.localStorage.setItem("corp", JSON.stringify(val));
+      window.localStorage.setItem('corp', JSON.stringify(val))
     },
     initDataList() {
       return new Promise((resolve, reject) => {
         this.$store
-          .dispatch("auth/getLoginList")
+          .dispatch('auth/getLoginList')
           .then(() => {
-            resolve();
+            resolve()
           })
           .catch((err) => {
             this.$message({
-              type: "error",
-              message: err || "初始化错误",
-            });
-            reject(err);
-          });
-      });
+              type: 'error',
+              message: err || '初始化错误',
+            })
+            reject(err)
+          })
+      })
     },
     handleLogin() {
       if (this.tenantId) {
-        this.tipsFlag = false;
-        const tenantId = this.tenantId + "";
+        this.tipsFlag = false
+        const tenantId = this.tenantId + ''
 
-        this.loading = true;
+        this.loading = true
 
         // if (this.$isElectron()) {
         //   const ipcRenderer = window.electron.ipcRenderer
@@ -186,18 +183,18 @@ export default {
 
         //   this.loading = false
         // } else {
-        this.getQrCode(tenantId, "browser");
-        this.loading = false;
+        this.getQrCode(tenantId, 'browser')
+        this.loading = false
         // }
       } else {
         this.$message({
-          type: "warning",
-          message: "请选择组织！",
-        });
+          type: 'warning',
+          message: '请选择组织！',
+        })
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
@@ -242,6 +239,7 @@ $cursor: #fff;
     background-color: rgba(255, 255, 255, 0.8);
     text-align: center;
     color: #333;
+    -webkit-app-region: no-drag;
     .version-warp {
       margin: 20px 0;
       font-size: 14px;
@@ -249,6 +247,9 @@ $cursor: #fff;
     }
   }
   #webview {
+    -webkit-app-region: no-drag;
+  }
+  .qrcode-container {
     -webkit-app-region: no-drag;
   }
   .container {
@@ -290,6 +291,27 @@ $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
+.left-liner {
+  width: 30px;
+  height: 2px;
+  display: inline-block;
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.1),
+    #909090
+  );
+}
+
+.right-liner {
+  width: 30px;
+  height: 2px;
+  display: inline-block;
+  background-image: linear-gradient(
+    to right,
+    #909090,
+    rgba(255, 255, 255, 0.1)
+  );
+}
 #browser {
   width: 300px;
   height: 400px;
@@ -298,12 +320,28 @@ $light_gray: #eee;
   }
 }
 
+.outer {
+  -webkit-app-region: drag;
+}
+
 .login-container {
   min-height: 100%;
   width: 100%;
   background-color: $bg;
   // background: url(../assets/2.jpg) repeat center;
   overflow: hidden;
+  height: 100%;
+  background-color: #2d3a4b;
+  position: relative;
+  top: 0;
+  left: 0;
+
+  .btn-container {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    -webkit-app-region: no-drag;
+  }
 
   .login-form {
     position: relative;
