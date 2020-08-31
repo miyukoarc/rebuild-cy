@@ -52,7 +52,8 @@ function createWindow() {
     // show: false,
 
     webPreferences: {
-      sanbox: true, //微信扫码登录
+    //   devTools: false,
+      sanbox: true, //微信扫码登录  
       nodeIntegration: true,
       preload: path.resolve('./src/preload.js')
       //   path.join(__dirname, 'preload.js')
@@ -94,7 +95,7 @@ function createWindow() {
     //   if(url.match('sidebar.cysrcrm.com')){
     const str = JSON.stringify(url)
     win.webContents.send('login-navigate', str)
-    
+
     //   }
 
   })
@@ -112,6 +113,9 @@ function createWindow() {
 
     console.log(loginFlag)
   })
+  win.webContents.on('devtools-opened', (event) => {
+    event.preventDefault()
+  })
 
   win.on('maximize', (event, args) => {
 
@@ -121,6 +125,7 @@ function createWindow() {
   win.on('unmaximize', (event, args) => {
     win.webContents.send('unmaximizeWindow', false)
   })
+
 
 
 
@@ -219,7 +224,7 @@ ipcMain.on('closeWindow', e => {
 
 //下载监听
 ipcMain.on('open-url', (event, url) => {
-    shell.openExternal(url);
+  shell.openExternal(url);
 });
 
 
@@ -249,7 +254,7 @@ ipcMain.on('qrcode-window', (event, args) => {
   newWin.webContents.on('will-navigate', (event, url) => {
     newWin.webContents.send('getUrl', url)
     ses = win.webContents.session
-    
+
   })
 
 })
