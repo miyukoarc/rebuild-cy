@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-29 21:41:51
- * @LastEditTime: 2020-08-25 13:49:02
+ * @LastEditTime: 2020-08-31 11:28:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\sensitive\auditPropertylistAll\components\audit-user.vue
@@ -38,7 +38,7 @@
 
 <script>
 import AsyncUserTag from '@/components/AsyncUserTag'
-import toChinesNum from '@/utils/common'
+import {toChinesNum} from '@/utils/common'
 export default {
   props: {
     auditUsers: {
