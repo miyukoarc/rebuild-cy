@@ -19,22 +19,21 @@
       <el-input v-model="form.mobile"></el-input>
     </el-form-item>
 
-    <el-form-item label="预设标签">
+    <!-- <el-form-item label="预设标签">
       <label slot="label" class="tag-label">
         预设标签
         <el-tooltip class="item" effect="dark" content="添加成为用户后，将自动打上预设标签" placement="right">
           <i class="el-icon-question tip"></i>
         </el-tooltip>
       </label>
-    </el-form-item>
-    <div>
+    </el-form-item> -->
+    <!-- <div>
       <tags-selected
         @change="handleCheckedTagsChange"
         :tagListSelect="tagListSelect"
         :checkboxGroup="form.tagId"
       ></tags-selected>
-      <!-- <tag-select v-model="form.tagsUuid" :options="tagListSelect"></tag-select> -->
-    </div>
+    </div> -->
 
     <div class="text-align-center">
       <el-button size="small" @click="handleCancel">取消</el-button>
