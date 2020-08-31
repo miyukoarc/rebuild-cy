@@ -193,6 +193,7 @@ const actions = {
                             return;
                         } else {
                             state.mouseX = arg.res.x
+
                             state.mouseY = arg.res.y
                         }
 
