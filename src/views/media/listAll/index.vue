@@ -41,7 +41,7 @@
             <el-table-column prop="groupName"></el-table-column>
             <el-table-column align="right">
               <template v-slot="scope">
-                <div>
+                <div v-if="scope.row.groupName!=='默认分组'">
                   <el-t-button
                     type="text"
                     size="mini"
