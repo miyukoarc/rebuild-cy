@@ -32,7 +32,7 @@
           header-row-class-name="el-table-header"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection"></el-table-column>
+          <el-table-column type="selection" :selectable="selectable"></el-table-column>
           <el-table-column label="离职员工" align="left">
             <template v-slot="scope">
               <div class="user-card">
@@ -105,14 +105,14 @@
 </template>
 
 <script>
-import ListHeader from './header.vue'
-import FormDialog from './dialog'
-import ToolBar from '@/components/ToolBar'
-import CustomerPagination from '@/components/CustomerPagination'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import ListHeader from "./header.vue";
+import FormDialog from "./dialog";
+import ToolBar from "@/components/ToolBar";
+import CustomerPagination from "@/components/CustomerPagination";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: 'externalUser_quitUserRelationExUserList',
+  name: "externalUser_quitUserRelationExUserList",
   components: {
     ListHeader,
     FormDialog,
@@ -130,14 +130,14 @@ export default {
       query: {
         page: 0,
         size: 10,
-        status: '',
-        name: '',
-        startTime: '',
-        endTime: '',
+        status: "",
+        name: "",
+        startTime: "",
+        endTime: "",
       },
       // 选择勾选
       selectedAllData: [],
-    }
+    };
   },
   watch: {},
   computed: {
@@ -152,16 +152,16 @@ export default {
     }),
   },
   created() {
-    this.initDataList(this.query)
+    this.initDataList(this.query);
   },
   mounted() {
-    this.$bus.$on('handleRefresh', () => {
-      this.initDataList(this.query)
-    })
+    this.$bus.$on("handleRefresh", () => {
+      this.initDataList(this.query);
+    });
 
-    this.$once('hook:beforeDestroy', () => {
-      this.$bus.$off('handleRefresh')
-    })
+    this.$once("hook:beforeDestroy", () => {
+      this.$bus.$off("handleRefresh");
+    });
   },
   methods: {
     handleRequest() {},
@@ -185,82 +185,91 @@ export default {
      */
     initDataList(payload) {
       this.$store
-        .dispatch('externalUser/getQuitUserRelationExUserList', payload)
+        .dispatch("externalUser/getQuitUserRelationExUserList", payload)
         .then(() => {
           //初始化分页
-          this.pageConfig.pageNumber = this.quitListPage.pageNumber + 1
-          this.pageConfig.total = this.quitListPage.total
+          this.pageConfig.pageNumber = this.quitListPage.pageNumber + 1;
+          this.pageConfig.total = this.quitListPage.total;
         })
         .catch((err) => {
-          console.error(err)
+          console.error(err);
           this.$message({
-            type: 'error',
-            message: err || '初始化失败',
-          })
-        })
+            type: "error",
+            message: err || "初始化失败",
+          });
+        });
     },
     handleSearch(val) {
-      const { name, status, startTime, endTime } = val
-      this.query.name = name ? name : this.query.name
-      this.query.status = status ? status : this.query.status
-      this.query.startTime = startTime ? startTime : ""
-      this.query.endTime = endTime ? endTime : ""
-      this.query.page = 0
-      this.initDataList(this.query)
+      const { name, status, startTime, endTime } = val;
+      this.query.name = name ? name : this.query.name;
+      this.query.status = status ? status : this.query.status;
+      this.query.startTime = startTime ? startTime : "";
+      this.query.endTime = endTime ? endTime : "";
+      this.query.page = 0;
+      this.initDataList(this.query);
     },
     handleRefresh() {
-      console.log('handleRefresh')
-      this.query = this.$options.data().query
-      this.initDataList(this.query)
+      console.log("handleRefresh");
+      this.query = this.$options.data().query;
+      this.initDataList(this.query);
     },
     handleDetail(row) {
-      console.log(row, 'row')
-      const uuid = row.uuid
+      console.log(row, "row");
+      const uuid = row.uuid;
       this.$router.push({
-        path: '/user/detail/' + uuid,
+        path: "/user/detail/" + uuid,
         // query: { uuid: payload }
-      })
+      });
     },
     handleDistribute() {
       if (this.selectedAllData.length) {
-        this.$refs['formDialog'].event = 'DistributeTemplate'
-        this.$refs['formDialog'].eventType = 'distribute'
-        this.$refs['formDialog'].dialogVisible = true
-        this.$refs['formDialog'].selectedAllData = this.selectedAllData
+        console.log(this.selectedAllData, "7777777777");
+        this.$refs["formDialog"].event = "DistributeTemplate";
+        this.$refs["formDialog"].eventType = "distribute";
+        this.$refs["formDialog"].dialogVisible = true;
+        this.$refs["formDialog"].selectedAllData = this.selectedAllData;
       } else {
         this.$message({
-          type: 'warning',
-          message: '请至少选择一个客户',
-        })
+          type: "warning",
+          message: "请至少选择一个客户",
+        });
       }
     },
     handleDistributeSingle(row) {
-      this.$refs.multipleTable.clearSelection()
-      this.handleSelectionChange([row])
+      console.log(row, "row");
+      this.$refs.multipleTable.clearSelection();
+      this.handleSelectionChange([row]);
       this.selectedAllData.forEach((row) => {
-        this.$refs.multipleTable.toggleRowSelection(row)
-      })
-      const payload = {}
-      this.$refs['formDialog'].event = 'DistributeTemplate'
-      this.$refs['formDialog'].eventType = 'distribute'
-      this.$refs['formDialog'].dialogVisible = true
-      this.$refs['formDialog'].transfer = payload
-      this.$store.commit('externalUser/SAVE_QUITUSERCURRENTROW', row)
+        this.$refs.multipleTable.toggleRowSelection(row);
+      });
+      this.$refs["formDialog"].event = "DistributeTemplate";
+      this.$refs["formDialog"].eventType = "distribute";
+      this.$refs["formDialog"].dialogVisible = true;
+      this.$refs["formDialog"].selectedAllData = this.selectedAllData;
+      // this.$store.commit('externalUser/SAVE_QUITUSERCURRENTROW', row)
     },
     changePage(key) {
-      this.query.page = key - 1
-      this.pageConfig.pageNumber = key - 1
-      this.initDataList(this.query)
+      this.query.page = key - 1;
+      this.pageConfig.pageNumber = key - 1;
+      this.initDataList(this.query);
     },
     handleSelectionChange(val) {
-      this.selectedAllData = val
+      this.selectedAllData = val;
     },
     changeSize(val) {
-      this.query.size = val
-      this.initDataList(this.query)
+      this.query.size = val;
+      this.initDataList(this.query);
+    },
+    //设置表格中勾选框是否是禁用状态
+    selectable(row, index) {
+      if (row.userStatus === "ALLOCATED") {
+        return false; //禁用状态
+      } else {
+        return true; //非禁用状态
+      }
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

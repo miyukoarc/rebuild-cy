@@ -545,10 +545,9 @@ const actions = {
         return new Promise((resolve, reject) => {
             redistributionExUser(payload).then(res => {
                 commit('TOGGLE_LOADING', false)
-                resolve()
+                resolve(res)
             }).catch(err => {
                 commit('TOGGLE_LOADING', false)
-
                 reject(err)
             })
         })
