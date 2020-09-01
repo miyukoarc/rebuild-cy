@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-11 11:15:45
- * @LastEditTime: 2020-08-21 14:36:03
+ * @LastEditTime: 2020-08-31 19:42:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\contactWay\detail.vue
@@ -406,10 +406,14 @@ export default {
             this.messageImage = res.welcomeMediaContent;
           }
           if (res.welComeMediaType == "LINK") {
-            this.ruleForm.link = Number(res.welcomeMediaContent);
-            this.welcomecontentT = this.articleListSelect.find((item) => {
-              return item.uuid === this.ruleForm.link;
-            });
+            if (res.welcomeMediaContent) {
+              this.ruleForm.link = Number(res.welcomeMediaContent);
+              this.welcomecontentT = this.articleListSelect.find((item) => {
+                return item.uuid === this.ruleForm.link;
+              });
+            }else{
+              this.welcomecontentT = ''
+            }
           }
           res.serviceUsers.map((item) => {
             this.ruleForm.member.push(item.userId);
@@ -481,6 +485,27 @@ export default {
             params.welcomeContent = "";
             params.welComeMediaType = "IMG";
           } else {
+            console.log(
+              !this.ruleForm.welcomeContent &&
+                !this.mediaId &&
+                !this.ruleForm.welcomeContent &&
+                !this.mediaUuid,
+              this.ruleForm.welcomeContent,
+              this.mediaId,
+              this.mediaUuid
+            );
+            if (
+              !this.ruleForm.welcomeContent &&
+              !this.mediaId &&
+              !this.ruleForm.welcomeContent &&
+              !this.mediaUuid
+            ) {
+              this.$message({
+                type: "warning",
+                message: "欢迎语1或欢迎语2(图片/链接)内容不能为空",
+              });
+              return;
+            }
             // if (!this.insertName) {
             //   // let welcomeContent = this.ruleForm.welcomeContent.replace(
             //   //   this.memberNick,
@@ -555,6 +580,7 @@ export default {
     },
     handleDelMessageImage() {
       this.messageImage = "";
+      this.mediaId = "";
     },
     handleCheckedTagsChange(tag, index) {},
     handleSetMessageImage(res, file) {
@@ -597,10 +623,14 @@ export default {
       // );
     },
     handleChoseLink(val) {
-      this.welcomecontentT = this.articleListSelect.find((item) => {
-        return item.uuid === val;
-      });
-      this.mediaUuid = this.welcomecontentT.uuid;
+      if (val) {
+        this.welcomecontentT = this.articleListSelect.find((item) => {
+          return item.uuid === val;
+        });
+        this.mediaUuid = this.welcomecontentT.uuid;
+      } else {
+        this.mediaUuid = "";
+      }
     },
   },
 };
@@ -860,6 +890,9 @@ img.option-img {
   }
   .el-checkbox-button__inner {
     border: 1px solid #dcdfe6;
+  }
+  .el-checkbox-button:first-child .el-checkbox-button__inner {
+    border-radius: 0;
   }
   .el-checkbox-button:last-child .el-checkbox-button__inner {
     border-radius: 0px;

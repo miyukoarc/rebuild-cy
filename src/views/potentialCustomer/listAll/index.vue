@@ -350,7 +350,7 @@ export default {
       }
     },
     handleAllocation(row) {
-      console.log(row, "dddadfasdfasd======");
+      console.log(row.uuid, "dddadfasdfasd======");
       row.uuid = [row.uuid];
       this.$refs.multipleTable.clearSelection();
       this.handleSelectionChange([row]);
