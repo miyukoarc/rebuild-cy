@@ -116,9 +116,9 @@ export default {
       this.getpublicVersion()
     }
     //正式发布就把如下代码注释
-    // if (isDevelopment) {
-    //   this.isElectron = true
-    // }
+    if (isDevelopment) {
+      this.isElectron = true
+    }
   },
   methods: {
     getpublicVersion() {

@@ -29,6 +29,7 @@
           stripe
           lazy
           highlight-current-row
+          :header-cell-class-name="cellClass"
           header-row-class-name="el-table-header"
           @selection-change="handleSelectionChange"
         >
@@ -76,6 +77,7 @@
                 v-permission="'externalUser,externalUser_redistributionExUser'"
                 :auth="'externalUser,externalUser_redistributionExUser'"
                 @click.stop.native="handleDistributeSingle(scope.row)"
+                :enable="scope.row.userStatus != 'ALLOCATED'"
               >分配</el-t-button>
 
               <el-t-button
@@ -164,6 +166,17 @@ export default {
     });
   },
   methods: {
+    // 如果都已经分配 全选按钮 隐藏
+    cellClass(row) {
+      if (this.quitUserRelationExUserList.length > 0) {
+        let isAllocated = this.quitUserRelationExUserList.every((item) => {
+          return item.userStatus == "ALLOCATED";
+        });
+        if (isAllocated) {
+          return "disabledCheck";
+        }
+      }
+    },
     handleRequest() {},
     doExport(val) {},
     /**
@@ -223,7 +236,6 @@ export default {
     },
     handleDistribute() {
       if (this.selectedAllData.length) {
-        console.log(this.selectedAllData, "7777777777");
         this.$refs["formDialog"].event = "DistributeTemplate";
         this.$refs["formDialog"].eventType = "distribute";
         this.$refs["formDialog"].dialogVisible = true;
@@ -236,7 +248,7 @@ export default {
       }
     },
     handleDistributeSingle(row) {
-      console.log(row, "row");
+      if (row.userStatus == "ALLOCATED") return;
       this.$refs.multipleTable.clearSelection();
       this.handleSelectionChange([row]);
       this.selectedAllData.forEach((row) => {
@@ -262,11 +274,7 @@ export default {
     },
     //设置表格中勾选框是否是禁用状态
     selectable(row, index) {
-      if (row.userStatus === "ALLOCATED") {
-        return false; //禁用状态
-      } else {
-        return true; //非禁用状态
-      }
+      return row.userStatus != "ALLOCATED";
     },
   },
 };
@@ -286,6 +294,18 @@ export default {
 .pager {
   padding: 20px 0;
   text-align: center;
+}
+
+.el-table /deep/.disabledCheck > .cell .el-checkbox__inner {
+  display: none !important;
+  position: relative;
+}
+.el-table /deep/.disabledCheck > .cell::before {
+  display: block;
+  content: "";
+  position: absolute;
+  text-align: center;
+  width: 100%;
 }
 
 // .app-container {
