@@ -1,52 +1,52 @@
 <template>
-  
-
-    <div class="login-container">
-            <div class="btn-container">
+  <div v-if="isElectron" class="login-container">
+    <div class="btn-container">
       <close-button></close-button>
     </div>
-      <div class="login-warp">
-        <transition name="fade">
-          <div v-if="!tipsFlag" class="qrcode-container">
-            <div v-if="loading" class="loading">
-              <i class="el-icon-loading color-info"></i>
-            </div>
-            <div id="browser"></div>
-            <webview ref="webview" id="webview"></webview>
+    <div class="login-warp">
+      <transition name="fade">
+        <div v-if="!tipsFlag" class="qrcode-container">
+          <div v-if="loading" class="loading">
+            <i class="el-icon-loading color-info"></i>
           </div>
-        </transition>
+          <div id="browser"></div>
+          <webview ref="webview" id="webview"></webview>
+        </div>
+      </transition>
 
-        <div v-if="tipsFlag" class="text-align-center">
-          <h3 class="tips">选择单位获取登录二维码</h3>
+      <div v-if="tipsFlag" class="text-align-center">
+        <h3 class="tips">选择单位获取登录二维码</h3>
+      </div>
+      <div class="container">
+        <div class="choice" v-for="item in loginList" :key="item.tenantId">
+          <el-radio
+            v-model="tenantId"
+            size="small"
+            @change="changeCorp(item)"
+            :label="item.tenantId"
+          >{{item.name}}</el-radio>
         </div>
-        <div class="container">
-          <div class="choice" v-for="item in loginList" :key="item.tenantId">
-            <el-radio
-              v-model="tenantId"
-              size="small"
-              @change="changeCorp(item)"
-              :label="item.tenantId"
-            >{{item.name}}</el-radio>
-          </div>
-          <div class="text-align-center">
-            <el-button ref="btn" type="primary" size="small" @click="handleLogin">获取二维码</el-button>
-          </div>
-        </div>
-        <div class="version-warp display-flex align-items-center">
-          <span class="left-liner"></span>
-          <span class="ml-5 mr-5">超盈SCRM·国信{{publicVersion?publicVersion:''}}</span>
-          <span class="right-liner"></span>
+        <div class="text-align-center">
+          <el-button ref="btn" type="primary" size="small" @click="handleLogin">获取二维码</el-button>
         </div>
       </div>
+      <div class="version-warp display-flex align-items-center">
+        <span class="left-liner"></span>
+        <span class="ml-5 mr-5">超盈SCRM·国信{{publicVersion?publicVersion:''}}</span>
+        <span class="right-liner"></span>
+      </div>
     </div>
-  
+  </div>
+  <div v-else>
+    <div style="height:100vh;text-align:center;line-height:100vh;">请下载客户端</div>
+  </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import leftLine from '@/assets/left-line.png'
-import rightLine from '@/assets/right-line.png'
 import CloseButton from '@/components/CloseButton'
+
+const isDevelopment = process.env.NODE_ENV !== 'production'
 export default {
   name: 'Login',
   components: {
@@ -54,13 +54,12 @@ export default {
   },
   data() {
     return {
-      leftLine: leftLine,
-      rightLine: rightLine,
       redirect: undefined,
       otherQuery: {},
       tenantId: '',
       tipsFlag: true,
       loading: false,
+      isElectron: false,
     }
   },
   watch: {
@@ -76,10 +75,9 @@ export default {
     },
     tenantId: {
       handler(newVal, oldVal) {
-        this.$refs.btn.handleClick()
-        // console.log()
-
-        // this.getQrCode(newVal, 'browser')
+        if (newVal) {
+          this.$refs?.btn?.handleClick()
+        }
       },
     },
   },
@@ -90,19 +88,38 @@ export default {
     }),
   },
   created() {
-    this.initDataList()
-      .then(() => {
-        const tenantId = this.loginList[0].tenantId
-        this.tenantId = this.loginList[0].tenantId
+    if (isDevelopment) {
+      this.initDataList()
+        .then(() => {
+          const tenantId = this.loginList[0].tenantId
+          this.tenantId = this.loginList[0].tenantId
 
-        const id = this.tenantId
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-    this.getpublicVersion()
+          const id = this.tenantId
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+      this.getpublicVersion()
+    }
+    if (this.$isElectron()) {
+      this.isElectron = true
+      this.initDataList()
+        .then(() => {
+          const tenantId = this.loginList[0].tenantId
+          this.tenantId = this.loginList[0].tenantId
+
+          const id = this.tenantId
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+      this.getpublicVersion()
+    }
+    //正式发布就把如下代码注释
+    // if (isDevelopment) {
+    //   this.isElectron = true
+    // }
   },
-  mounted() {},
   methods: {
     getpublicVersion() {
       this.$store
