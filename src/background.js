@@ -52,7 +52,7 @@ function createWindow() {
     // show: false,
 
     webPreferences: {
-    //   devTools: false,
+      devTools: isDevelopment,
       sanbox: true, //微信扫码登录  
       nodeIntegration: true,
       preload: path.resolve('./src/preload.js')
