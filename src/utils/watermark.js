@@ -46,6 +46,8 @@ export default class Watermark {
     this.container.style.background = 'url(' + this.paper.toDataURL('image/png') + ') left top repeat'
     document.body.appendChild(this.container)
 
+    // console.log('挂载水印')
+
   }
 
   /**
@@ -60,7 +62,12 @@ export default class Watermark {
     }, 500)
 
     window.onresize = () => {
-      this.draw()
+        // console.log(window.watermark)
+        if(window.watermark){
+            this.draw()
+            
+
+        }
     }
   }
 
@@ -71,15 +78,10 @@ export default class Watermark {
 
     clearInterval(this.timer)
 
-    window.addEventListener('DOMContentLoaded', () => {
+    document.querySelector(`#${this.id}`)?.parentNode?.removeChild(document.querySelector(`#${this.id}`))
 
-      document.querySelector(`#${this.id}`).parentNode.removeChild(document.querySelector(`#${this.id}`))
+    window.watermark = null
 
-      window.removeEventListener(
-        'DOMContentLoaded'
-      )
-    })
 
-    // document.querySelector(`#${this.id}`).parentNode.removeChild(document.querySelector(`#${this.id}`))
   }
 }

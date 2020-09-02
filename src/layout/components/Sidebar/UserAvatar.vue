@@ -51,7 +51,14 @@ export default {
       await this.$store.dispatch('auth/logout').then(() => {
         removeToken()
 
-        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+        this.$store.commit('user/RESET_STATE')
+
+        if(window.watermark){
+            console.log('watermark')
+            watermark.remove()
+        }
+
+        this.$router.push(`/`)
       })
       //   window.location.reload()
     },
