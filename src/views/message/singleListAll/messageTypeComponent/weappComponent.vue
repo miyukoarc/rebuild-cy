@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 14:24:40
- * @LastEditTime: 2020-08-10 20:17:18
+ * @LastEditTime: 2020-09-02 19:26:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\text.vue
@@ -108,6 +108,7 @@ export default {
             line-height: 16px;
             span {
               padding: 5px 10px;
+              display: inline-block;
             }
           }
           .weapp-icon {
