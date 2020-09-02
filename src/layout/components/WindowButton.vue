@@ -18,73 +18,73 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       strategy: {
-        handleMinimize: 'minimizeWindow',
-        handleMaximize: 'maximizeWindow',
-        handleClose: 'closeWindow',
-        handleRestore: 'restoreWindow'
+        handleMinimize: "minimizeWindow",
+        handleMaximize: "maximizeWindow",
+        handleClose: "closeWindow",
+        handleRestore: "restoreWindow",
       },
-      maximumFlag: false
-    }
+      maximumFlag: false,
+    };
   },
   computed: {
     ...mapState({
-    //   maximumFlag: state => state.app.maximumFlag
-    })
+      //   maximumFlag: state => state.app.maximumFlag
+    }),
   },
-  created(){
-      if(this.$isElectron()){
-          const {ipcRenderer} = window.electron
-          ipcRenderer.on('maximizeWindow',(e,args)=>{
-              console.log(args)
-              this.maximumFlag = args
-          })
-          ipcRenderer.on('unmaximizeWindow',(e,args)=>{
-              console.log(args)
-              this.maximumFlag = args
-          })
-          this.$once('hook:beforeDestroy',()=>{
-              ipcRenderer.removeListener('maximizeWindow')
-              ipcRenderer.removeListener('unmaximizeWindow')
-          })
-      }
+  created() {
+    if (this.$isElectron()) {
+      const { ipcRenderer } = window.electron;
+      ipcRenderer.on("maximizeWindow", (e, args) => {
+        console.log(args);
+        this.maximumFlag = args;
+      });
+      ipcRenderer.on("unmaximizeWindow", (e, args) => {
+        console.log(args);
+        this.maximumFlag = args;
+      });
+      this.$once("hook:beforeDestroy", () => {
+        ipcRenderer.removeListener("maximizeWindow");
+        ipcRenderer.removeListener("unmaximizeWindow");
+      });
+    }
   },
   methods: {
     handleMinimize() {
-      const event = this.strategy['handleMinimize']
-      this.handleIpcRenderer(event)
+      const event = this.strategy["handleMinimize"];
+      this.handleIpcRenderer(event);
     },
     handleMaximize() {
-        this.maximumFlag = !this.maximumFlag
-      const event = this.strategy['handleMaximize']
-      this.handleIpcRenderer(event)
+      this.maximumFlag = !this.maximumFlag;
+      const event = this.strategy["handleMaximize"];
+      this.handleIpcRenderer(event);
     },
     handleClose() {
-      const event = this.strategy['handleClose']
-      this.handleIpcRenderer(event)
+      const event = this.strategy["handleClose"];
+      this.handleIpcRenderer(event);
     },
     handleRestore() {
-        this.maximumFlag = !this.maximumFlag
-      const event = this.strategy['handleRestore']
-      this.handleIpcRenderer(event)
+      this.maximumFlag = !this.maximumFlag;
+      const event = this.strategy["handleRestore"];
+      this.handleIpcRenderer(event);
     },
     handleIpcRenderer(event) {
       if (this.$isElectron()) {
-        const { ipcRenderer } = window.electron
-        ipcRenderer.send(event)
+        const { ipcRenderer } = window.electron;
+        ipcRenderer.send(event);
       } else {
         this.$message({
-          type: 'warning',
-          message: '需要electron环境'
-        })
+          type: "warning",
+          message: "需要electron环境",
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
