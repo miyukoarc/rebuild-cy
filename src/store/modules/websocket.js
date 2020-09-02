@@ -58,7 +58,7 @@ const mutations = {
 }
 
 const actions = {
-    createWebsocket({ state, getters, dispatch, rootState }) {
+    createWebsocket({ state, dispatch, rootState }) {
         return new Promise((resolve, reject) => {
             class Queue extends Array {
                 constructor(...args) {
@@ -193,7 +193,6 @@ const actions = {
                             return;
                         } else {
                             state.mouseX = arg.res.x
-
                             state.mouseY = arg.res.y
                         }
 
@@ -284,7 +283,6 @@ const actions = {
                         }
                         return false
                     })
-
                     state.countDownTimer = setInterval(() => {
                         console.log(state.countDown)
                         state.countDown--;
