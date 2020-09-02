@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+      
     <el-card class="content-spacing">
       <list-header @handleSearch="handleSearch" @handleRefresh="handleRefresh"></list-header>
     </el-card>
@@ -116,7 +117,6 @@ export default {
   },
   beforeRouteEnter(to,from,next){
       next(vm=>{
-          console.log(from,vm)
           if(from.name==='media_article_detail'){
               vm.$nextTick(()=>{
                   vm.initDataList(vm.query)

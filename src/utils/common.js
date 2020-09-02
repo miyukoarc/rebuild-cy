@@ -4,15 +4,15 @@
  */
 export function setPermissionMap(obj) {
 
-    let temp = {}
+  let temp = {}
 
-    for (let key in obj) {
-        temp[key] = {}
-        obj[key].map(item => {
-            temp[key][item.code] = item
-        })
-    }
-    return temp
+  for (let key in obj) {
+    temp[key] = {}
+    obj[key].map(item => {
+      temp[key][item.code] = item
+    })
+  }
+  return temp
 }
 
 
@@ -21,31 +21,31 @@ export function setPermissionMap(obj) {
  * @param {array} arr 
  */
 export function classifyTag(arr) {
-    let tempId = ""
-    let temp = []
+  let tempId = ""
+  let temp = []
 
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i].groupId !== tempId) {
-            temp.push({
-                groupName: arr[i].groupName,
-                groupId: arr[i].groupId,
-                sort: arr[i].sort,
-                auditStateForOperation: arr[i].auditStateForOperation,
-                tags: []
-            })
-            tempId = arr[i].groupId
-        }
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].groupId !== tempId) {
+      temp.push({
+        groupName: arr[i].groupName,
+        groupId: arr[i].groupId,
+        sort: arr[i].sort,
+        auditStateForOperation: arr[i].auditStateForOperation,
+        tags: []
+      })
+      tempId = arr[i].groupId
     }
+  }
 
-    arr.forEach(item => {
-        temp.forEach(group => {
-            if (group.groupId === item.groupId) {
-                group.tags.push(item)
-            }
-        })
+  arr.forEach(item => {
+    temp.forEach(group => {
+      if (group.groupId === item.groupId) {
+        group.tags.push(item)
+      }
     })
+  })
 
-    return temp
+  return temp
 }
 
 /**
@@ -54,34 +54,34 @@ export function classifyTag(arr) {
  */
 export function flatten(data) {
 
-    return data.reduce((arr, {
-            createdAt,
-            deleted,
-            name,
-            parent,
-            sort,
-            updatedAt,
-            users,
-            uuid,
-            version,
-            wxDepartmentId,
-            children = []
-        }) =>
+  return data.reduce((arr, {
+      createdAt,
+      deleted,
+      name,
+      parent,
+      sort,
+      updatedAt,
+      users,
+      uuid,
+      version,
+      wxDepartmentId,
+      children = []
+    }) =>
 
-        arr.concat([{
-            createdAt,
-            deleted,
-            name,
-            parent,
-            sort,
-            updatedAt,
-            users,
-            uuid,
-            version,
-            wxDepartmentId,
-        }], flatten(children))
+    arr.concat([{
+      createdAt,
+      deleted,
+      name,
+      parent,
+      sort,
+      updatedAt,
+      users,
+      uuid,
+      version,
+      wxDepartmentId,
+    }], flatten(children))
 
-        , [])
+    , [])
 
 }
 
@@ -91,9 +91,9 @@ export function flatten(data) {
  * @param {string} target 
  */
 export function classifyMedia(arr, target) {
-    return arr.filter(item => {
-        return item.type === target
-    })
+  return arr.filter(item => {
+    return item.type === target
+  })
 }
 
 /**
@@ -103,38 +103,38 @@ export function classifyMedia(arr, target) {
  * @return {*}
  */
 export function debounce(func, wait, immediate) {
-    let timeout, args, context, timestamp, result
+  let timeout, args, context, timestamp, result
 
-    const later = function() {
-        // 据上一次触发时间间隔
-        const last = +new Date() - timestamp
+  const later = function () {
+    // 据上一次触发时间间隔
+    const last = +new Date() - timestamp
 
-        // 上次被包装函数被调用时间间隔 last 小于设定时间间隔 wait
-        if (last < wait && last > 0) {
-            timeout = setTimeout(later, wait - last)
-        } else {
-            timeout = null
-                // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
-            if (!immediate) {
-                result = func.apply(context, args)
-                if (!timeout) context = args = null
-            }
-        }
+    // 上次被包装函数被调用时间间隔 last 小于设定时间间隔 wait
+    if (last < wait && last > 0) {
+      timeout = setTimeout(later, wait - last)
+    } else {
+      timeout = null
+      // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
+      if (!immediate) {
+        result = func.apply(context, args)
+        if (!timeout) context = args = null
+      }
+    }
+  }
+
+  return function (...args) {
+    context = this
+    timestamp = +new Date()
+    const callNow = immediate && !timeout
+    // 如果延时不存在，重新设定延时
+    if (!timeout) timeout = setTimeout(later, wait)
+    if (callNow) {
+      result = func.apply(context, args)
+      context = args = null
     }
 
-    return function(...args) {
-        context = this
-        timestamp = +new Date()
-        const callNow = immediate && !timeout
-            // 如果延时不存在，重新设定延时
-        if (!timeout) timeout = setTimeout(later, wait)
-        if (callNow) {
-            result = func.apply(context, args)
-            context = args = null
-        }
-
-        return result
-    }
+    return result
+  }
 }
 
 /**
@@ -142,16 +142,16 @@ export function debounce(func, wait, immediate) {
  */
 
 export function throttle(func, wait = 1000) {
-    let timeout;
-    let context
-    return function(event) {
-        console.log(context)
-        context = this
-        clearTimeout(timeout)
-        timeout = setTimeout(() => {
-            func.call(context, event)
-        }, wait)
-    }
+  let timeout;
+  let context
+  return function (event) {
+    console.log(context)
+    context = this
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      func.call(context, event)
+    }, wait)
+  }
 }
 /**
  * 截取树
@@ -160,20 +160,20 @@ export function throttle(func, wait = 1000) {
  * @param {array} arr 
  */
 export function intercept(key, value, arr) {
-    let temp = []
-    const deep = (key, value, arr) => {
-        arr.forEach(item => {
-            if (item[key] === value) {
-                temp.push(item)
-            } else {
-                if (item.children) {
-                    deep(key, value, item.children)
-                }
-            }
-        })
-    }
-    deep(key, value, arr)
-    return temp
+  let temp = []
+  const deep = (key, value, arr) => {
+    arr.forEach(item => {
+      if (item[key] === value) {
+        temp.push(item)
+      } else {
+        if (item.children) {
+          deep(key, value, item.children)
+        }
+      }
+    })
+  }
+  deep(key, value, arr)
+  return temp
 }
 
 /**
@@ -181,34 +181,34 @@ export function intercept(key, value, arr) {
  */
 export function myFilter(arr) {
 
-    let temp = []
-    return arr.reduce((sum, curr) => {
-        if (!temp.includes(curr.uuid)) {
-            sum.push(curr)
-            temp.push(curr.uuid)
-        }
-        return sum
-    }, [])
+  let temp = []
+  return arr.reduce((sum, curr) => {
+    if (!temp.includes(curr.uuid)) {
+      sum.push(curr)
+      temp.push(curr.uuid)
+    }
+    return sum
+  }, [])
 }
 
 export function toChineseNum(num) {
-    let changeNum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
-    let unit = ["", "十", "百", "千", "万"];
-    num = parseInt(num);
-    let getWan = (temp) => {
-        let strArr = temp.toString().split("").reverse();
-        let newNum = "";
-        for (var i = 0; i < strArr.length; i++) {
-            newNum = (i == 0 && strArr[i] == 0 ? "" : (i > 0 && strArr[i] == 0 && strArr[i - 1] == 0 ? "" : changeNum[strArr[i]] + (strArr[i] == 0 ? unit[0] : unit[i]))) + newNum;
-        }
-        return newNum;
+  let changeNum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+  let unit = ["", "十", "百", "千", "万"];
+  num = parseInt(num);
+  let getWan = (temp) => {
+    let strArr = temp.toString().split("").reverse();
+    let newNum = "";
+    for (var i = 0; i < strArr.length; i++) {
+      newNum = (i == 0 && strArr[i] == 0 ? "" : (i > 0 && strArr[i] == 0 && strArr[i - 1] == 0 ? "" : changeNum[strArr[i]] + (strArr[i] == 0 ? unit[0] : unit[i]))) + newNum;
     }
-    let overWan = Math.floor(num / 10000);
-    let noWan = num % 10000;
-    if (noWan.toString().length < 4) {
-        noWan = "0" + noWan;
-    }
-    return overWan ? getWan(overWan) + "万" + getWan(noWan) : getWan(num);
+    return newNum;
+  }
+  let overWan = Math.floor(num / 10000);
+  let noWan = num % 10000;
+  if (noWan.toString().length < 4) {
+    noWan = "0" + noWan;
+  }
+  return overWan ? getWan(overWan) + "万" + getWan(noWan) : getWan(num);
 }
 
 /**
@@ -278,49 +278,49 @@ export function modifyListAll(obj) {
  */
 export const upgrade = (arr) => {
 
-    let _inner = []
+  let _inner = []
 
-    let _temp = []
+  let _temp = []
 
-    for (let i = 0; i < arr.length; i++) {
-        _inner.push(arr[i])
-        if (_inner.length === 4) {
-            _temp.push(JSON.parse(JSON.stringify(_inner)))
-            _inner.splice(0, 4)
-        } else {
-            if (i === arr.length - 1) {
-                //   console.log(4-_inner.length)
-                const emptyArr = new Array(4 - _inner.length).fill({})
-                const __temp = _inner.concat(emptyArr)
-                _temp.push(__temp)
-            }
-        }
+  for (let i = 0; i < arr.length; i++) {
+    _inner.push(arr[i])
+    if (_inner.length === 4) {
+      _temp.push(JSON.parse(JSON.stringify(_inner)))
+      _inner.splice(0, 4)
+    } else {
+      if (i === arr.length - 1) {
+        //   console.log(4-_inner.length)
+        const emptyArr = new Array(4 - _inner.length).fill({})
+        const __temp = _inner.concat(emptyArr)
+        _temp.push(__temp)
+      }
     }
+  }
 
-    return _temp
+  return _temp
 
 }
 
 
 export const queue = (tasks, callback) => {
-    let promise = Promise.resolve()
-    tasks.reduce((arr, task) => {
-        return arr.then(() => {
-            return new Promise((resolve, reject) => {
-                // Promise.resolve(task).then(res=>{
-                //     if(typeof callback=='function'){
-                //         callback(res)                   
-                //     }
-                //     resolve()
-                // })
-                setTimeout(() => {
+  let promise = Promise.resolve()
+  tasks.reduce((arr, task) => {
+    return arr.then(() => {
+      return new Promise((resolve, reject) => {
+        // Promise.resolve(task).then(res=>{
+        //     if(typeof callback=='function'){
+        //         callback(res)                   
+        //     }
+        //     resolve()
+        // })
+        setTimeout(() => {
 
-                    Promise.resolve(task)
-                    resolve()
-                }, 500)
-            })
-        })
-    }, promise)
+          Promise.resolve(task)
+          resolve()
+        }, 500)
+      })
+    })
+  }, promise)
 }
 
 
@@ -329,26 +329,40 @@ export const queue = (tasks, callback) => {
  */
 
 export const findTree = (arr, uuid) => {
-    if (arr == null) return null
-    for (let obj of arr) {
-        if (obj.uuid == uuid) {
-            return obj
-        }
-        let ret = findTree(obj.children, uuid)
-        if (ret) return ret
+  if (arr == null) return null
+  for (let obj of arr) {
+    if (obj.uuid == uuid) {
+      return obj
     }
-    return null
+    let ret = findTree(obj.children, uuid)
+    if (ret) return ret
+  }
+  return null
 }
 
 export const flattenTree = (data) => {
-    return data.reduce((arr, {
-        type,
-        name,
-        uuid,
-        children = []
-    }) => arr.concat([{
-        type,
-        name,
-        uuid
-    }], flattenTree(children)), [])
+  return data.reduce((arr, {
+    type,
+    name,
+    uuid,
+    children = []
+  }) => arr.concat([{
+    type,
+    name,
+    uuid
+  }], flattenTree(children)), [])
+}
+
+//flatten tree
+export const flattenDept = (data) => {
+  return data.reduce((arr, {
+    uuid,
+    name,
+    children = []
+  }) => {
+    return arr.concat([{
+      uuid,
+      name
+    }], flattenDept(children))
+  }, [])
 }

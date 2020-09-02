@@ -1,13 +1,7 @@
 <template>
   <div>
     <div>
-      <!-- <el-t-button>123</el-t-button> -->
-      <!-- <union-checkbox
-        :code="'media_add'"
-        :deps="'media_detail,user_detail,user_edit'"
-        v-model="uni"
-        @change="handleUnionCheck"
-      >12312</union-checkbox>-->
+      <triple-select v-model="departs"></triple-select>
     </div>
 
     <div>
@@ -34,25 +28,6 @@
     <div>
       <async-user-drawer :hasPop="true" :users="users"></async-user-drawer>
     </div>
-
-    <!-- <div>
-      <Cascader :options="tree"></Cascader>
-    </div>-->
-
-    <div>
-      <async-user-tag
-        size="small"
-        v-for="item in users"
-        type="info"
-        :key="item.uuid"
-        :uuid="item.uuid"
-      >
-        <i class="el-icon-user-solid"></i>
-        {{item.name}}
-      </async-user-tag>
-    </div>
-
-    <div></div>
 
     <div>
       <!-- <select-tree  :options="options" :props="defaultProps" v-model="selected"></select-tree> -->
@@ -100,6 +75,7 @@ import AsyncUserDrawer from '@/components/AsyncUserDrawer'
 import TagSelect from '@/components/TagSelect'
 import TagMultiSelect from '@/components/TagMultiSelect'
 import MultiTreeSelect from '@/components/MultiTreeSelect'
+import TripleSelect from '@/components/TripleSelect'
 
 import { mapState } from 'vuex'
 export default {
@@ -114,9 +90,11 @@ export default {
     TagSelect,
     TagMultiSelect,
     MultiTreeSelect,
+    TripleSelect,
   },
   data() {
     return {
+      departs: [],
       items: [
         {
           code: 'user_detail',
@@ -540,7 +518,7 @@ export default {
   mounted() {},
   methods: {
     handleUnionCheck(val) {
-    //   console.log(val)
+      //   console.log(val)
     },
     handleDetail(uuid) {
       console.log(uuid)
