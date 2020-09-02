@@ -15,7 +15,7 @@
     </el-form-item>
 
     <el-form-item label="关键词" prop="keyword">
-      <el-input v-model.trim="form.keyword">
+      <el-input v-model.trim="form.keyword" maxlength="20" show-word-limit>
         <el-select v-model="form.keyType" slot="prepend" placeholder="请选择" style="width:100px">
           <el-option label="包含" value="CONTAIN"></el-option>
           <el-option label="完全匹配" value="COMPLETE"></el-option>

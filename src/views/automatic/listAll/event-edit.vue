@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-03 10:13:30
- * @LastEditTime: 2020-08-21 14:29:23
+ * @LastEditTime: 2020-09-02 16:12:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\automatic\listAll\event-detail.vue
@@ -23,7 +23,7 @@
     </el-form-item>
 
     <el-form-item label="关键词" prop="keyword">
-      <el-input v-model.trim="form.keyword">
+      <el-input v-model.trim="form.keyword" maxlength="20" show-word-limit>
         <el-select v-model="form.keyType" slot="prepend" placeholder="请选择" style="width:100px">
           <el-option label="包含" value="CONTAIN"></el-option>
           <el-option label="完全匹配" value="COMPLETE"></el-option>
