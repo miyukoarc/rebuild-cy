@@ -15,14 +15,12 @@
 
 <script>
 import { mapState } from 'vuex'
-import Animation from '@/utils/animation'
 
 
 export default {
   data() {
     return {
       // tenantId:''
-      animation: new Animation(),
     }
   },
   computed: {},
