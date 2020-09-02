@@ -239,11 +239,11 @@ export default {
     }
 
     this.$nextTick(()=>{
-        window.watermark.remove()
-    })
-    this.$once('hook:beforeDestroy',()=>{
         window.watermark.create()
     })
+    // this.$once('hook:beforeDestroy',()=>{
+    //     window.watermark.create()
+    // })
   },
   methods: {
     handleEnter() {
