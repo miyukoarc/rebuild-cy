@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-09-03 14:30:06
+ * @LastEditTime: 2020-09-03 19:23:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -119,28 +119,33 @@
                   :label="tab.label"
                   :name="tab.name"
                 >
-                  <div
-                    v-show="singleListAllData.length>0"
-                    style="overflow-y:scroll;height:65vh"
-                  >
-                    <div
-                      v-for="(list,listIndex) in singleListAllData"
-                      :key="listIndex"
-                      class="allChat clearfix"
+                  <div v-show="singleListAllData.length>0">
+                    <el-main
+                      v-loading="loading"
+                      element-loading-text="加载中"
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(255, 255, 255, 1)"
+                      
                     >
-                      <!-- <keep-alive> -->
-                      <!-- :is="list.msgType+'Component'" -->
-                      <!-- :is="currentView" -->
-                      <component
-                        :is="list.msgType+'Component'"
+                      <div
+                        v-for="(list,listIndex) in singleListAllData"
                         :key="listIndex"
-                        :item="list"
-                        :to-user-id="query.toUserId"
-                        :from-user-id="query.fromUserId"
-                        @handleClickViewMore="handleClickViewMore"
-                      />
-                      <!-- </keep-alive> -->
-                    </div>
+                        class="allChat clearfix"
+                      >
+                        <!-- <keep-alive> -->
+                        <!-- :is="list.msgType+'Component'" -->
+                        <!-- :is="currentView" -->
+                        <component
+                          :is="list.msgType+'Component'"
+                          :key="listIndex"
+                          :item="list"
+                          :to-user-id="query.toUserId"
+                          :from-user-id="query.fromUserId"
+                          @handleClickViewMore="handleClickViewMore"
+                        />
+                        <!-- </keep-alive> -->
+                      </div>
+                    </el-main>
                   </div>
                   <div
                     v-show="singleListAllData.length<=0"
@@ -223,7 +228,7 @@ export default {
   },
   data() {
     return {
-      // loading: true,
+      loading: true,
       currentView: "locationComponent",
       pageConfig: {
         total: 0,
@@ -370,6 +375,7 @@ export default {
       this.$store
         .dispatch("message/getMessageSingleListAll", payload)
         .then((res) => {
+          this.loading = false;
           this.singleListAllData = res.item;
           this.pageConfig.pageNumber = this.singleListPage.pageNumber + 1;
           this.pageConfig.total = this.singleListPage.total;
@@ -382,6 +388,7 @@ export default {
       this.$store
         .dispatch("message/getMessageGroupListAll", payload)
         .then((res) => {
+          this.loading = false;
           console.log(res, "res====");
           this.singleListAllData = res.item;
           this.pageConfig.pageNumber = this.groupListAll.pageNumber + 1;
@@ -459,6 +466,7 @@ export default {
     },
 
     handleSidebarItem(item, index, tab) {
+      this.loading = true;
       console.log(item, index, tab, "item, index, tab");
       let payload = {
         type: this.$route.query.type,
@@ -497,6 +505,7 @@ export default {
             } else {
               this.getsinglelist(this.query);
             }
+            this.loading = false;
           }
         })
         .catch((err) => {});
@@ -727,7 +736,7 @@ export default {
     }
     .el-tabs__content {
       background-color: #fff;
-      overflow-y: scroll;
+      // overflow-y: scroll;
     }
   }
 }
