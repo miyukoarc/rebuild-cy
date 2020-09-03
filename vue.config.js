@@ -149,16 +149,16 @@ module.exports = {
     },
 
     chainWebpack(config) {
-        // config.optimization.minimizer([new TerserPlugin({
-        //     terserOptions: {
-        //         mangle: true, // 混淆，默认也是开的，mangle也是可以配置很多选项的，具体看后面的链接
-        //         compress: {
-        //             drop_console: false, //传true就是干掉所有的console.*这些函数的调用.
-        //             drop_debugger: false, //干掉那些debugger;
-        //             pure_funcs: [] // 如果你要干掉特定的函数比如console.info ，又想删掉后保留其参数中的副作用，那用pure_funcs来处理
-        //         }
-        //     }
-        // })])
+        config.optimization.minimizer([new TerserPlugin({
+            terserOptions: {
+                mangle: true, // 混淆，默认也是开的，mangle也是可以配置很多选项的，具体看后面的链接
+                compress: {
+                    drop_console: true, //传true就是干掉所有的console.*这些函数的调用.
+                    drop_debugger: true, //干掉那些debugger;
+                    pure_funcs: ['console.log'] // 如果你要干掉特定的函数比如console.info ，又想删掉后保留其参数中的副作用，那用pure_funcs来处理
+                }
+            }
+        })])
 
         config.plugins.delete('preload') // TODO: need test
         config.plugins.delete('prefetch') // TODO: need test
