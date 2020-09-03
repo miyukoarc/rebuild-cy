@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-08-26 21:07:07
+ * @LastEditTime: 2020-09-03 14:30:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -110,50 +110,54 @@
           <!-- 右侧顶部按钮-->
           <div class="right">
             <chat-information :currnetMember="currnetMember"></chat-information>
-            <keep-alive>
-              <div class="chat-content chat-tab-bar">
-                <el-tabs v-model="chatActiveName" @tab-click="handleClickChatType">
-                  <el-tab-pane
-                    v-for="(tab,index) in chatTypeTabs"
-                    :key="index"
-                    :label="tab.label"
-                    :name="tab.name"
+
+            <div class="chat-content chat-tab-bar">
+              <el-tabs v-model="chatActiveName" @tab-click="handleClickChatType">
+                <el-tab-pane
+                  v-for="(tab,index) in chatTypeTabs"
+                  :key="index"
+                  :label="tab.label"
+                  :name="tab.name"
+                >
+                  <div
+                    v-show="singleListAllData.length>0"
+                    style="overflow-y:scroll;height:65vh"
                   >
-                    <div v-show="singleListAllData.length>0" style="overflow-y:scroll;height:65vh">
-                      <div
-                        v-for="(list,listIndex) in singleListAllData"
-                        :key="listIndex"
-                        class="allChat clearfix"
-                      >
-                        <!-- :is="list.msgType+'Component'" -->
-                        <!-- :is="currentView" -->
-                        <component
-                          :is="list.msgType+'Component'"
-                          :key="listIndex"
-                          :item="list"
-                          :to-user-id="query.toUserId"
-                          :from-user-id="query.fromUserId"
-                          @handleClickViewMore="handleClickViewMore"
-                        />
-                      </div>
-                    </div>
                     <div
-                      v-show="singleListAllData.length<=0"
-                      class="no-chat-data user-select-none"
-                    >暂无数据</div>
-                  </el-tab-pane>
-                </el-tabs>
-                <customer-pagination
-                  v-show=" singleListAllData.length>0"
-                  :pageConfig="pageConfig"
-                  @current-change="changePage"
-                  @size-change="changeSize"
-                ></customer-pagination>
-                <div class="search-form" style="margin-top:5px">
-                  <chat-search @handleSearch="handleSearch" @handleRefresh="handleRefresh"></chat-search>
-                </div>
+                      v-for="(list,listIndex) in singleListAllData"
+                      :key="listIndex"
+                      class="allChat clearfix"
+                    >
+                      <!-- <keep-alive> -->
+                      <!-- :is="list.msgType+'Component'" -->
+                      <!-- :is="currentView" -->
+                      <component
+                        :is="list.msgType+'Component'"
+                        :key="listIndex"
+                        :item="list"
+                        :to-user-id="query.toUserId"
+                        :from-user-id="query.fromUserId"
+                        @handleClickViewMore="handleClickViewMore"
+                      />
+                      <!-- </keep-alive> -->
+                    </div>
+                  </div>
+                  <div
+                    v-show="singleListAllData.length<=0"
+                    class="no-chat-data user-select-none"
+                  >暂无数据</div>
+                </el-tab-pane>
+              </el-tabs>
+              <customer-pagination
+                v-show=" singleListAllData.length>0"
+                :pageConfig="pageConfig"
+                @current-change="changePage"
+                @size-change="changeSize"
+              ></customer-pagination>
+              <div class="search-form" style="margin-top:5px">
+                <chat-search @handleSearch="handleSearch" @handleRefresh="handleRefresh"></chat-search>
               </div>
-            </keep-alive>
+            </div>
           </div>
         </div>
       </div>
@@ -219,6 +223,7 @@ export default {
   },
   data() {
     return {
+      // loading: true,
       currentView: "locationComponent",
       pageConfig: {
         total: 0,
@@ -331,20 +336,19 @@ export default {
         .then((res) => {
           if (res) {
             this.chatSideData = res.allMessageList;
-
             res.allMessageList.forEach((item, index) => {
               if (this.$route.query.userId == item._id) {
-                this.$nextTick(() => {
-                  this.activeIdx = index;
-                  this.currnetMember = item;
-                  console.log(item, "item====", this.currnetMember);
-                  this.chatType = item.chatType;
-                });
+                // this.$nextTick(() => {
+                this.activeIdx = index;
+                this.currnetMember = item;
+                console.log(item, "item====", this.currnetMember);
+                this.chatType = item.chatType;
+                // });
               }
             });
-            if ((this.currnetMember = "{}")) {
+            if (this.currnetMember == "{}") {
               this.currnetMember = res.allMessageList[0];
-              console.log(this.currnetMember, "88888");
+              console.log(this.currnetMember, "88888==");
             }
             this.query.fromUserId = this.singleLastListAll.userId;
             if (this.currnetMember.fromUserId == res.userId) {
@@ -352,7 +356,7 @@ export default {
             } else {
               this.query.toUserId = this.currnetMember.fromUserId;
             }
-            console.log(this.query.toUserId, "this.query.toUserId");
+            console.log(this.query.toUserId, "this.query.toUserId", this.query);
             this.getsinglelist(this.query)
               .then(() => {})
               .catch((err) => {
@@ -478,7 +482,7 @@ export default {
             this.currnetMember = item;
             this.chatType = item.chatType;
             this.query.toUserId = item._id;
-            this.query.page = 0
+            this.query.page = 0;
             // let payload = {
             //   type: "externalUser",
             //   uuid: this.$route.query.uuid,
