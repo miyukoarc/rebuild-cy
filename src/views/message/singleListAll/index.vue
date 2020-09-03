@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-09-03 19:23:09
+ * @LastEditTime: 2020-09-03 19:56:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -466,6 +466,7 @@ export default {
     },
 
     handleSidebarItem(item, index, tab) {
+      this.singleListAllData = [];
       this.loading = true;
       console.log(item, index, tab, "item, index, tab");
       let payload = {
