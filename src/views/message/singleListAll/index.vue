@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-09-03 19:56:06
+ * @LastEditTime: 2020-09-03 20:36:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -125,7 +125,6 @@
                       element-loading-text="加载中"
                       element-loading-spinner="el-icon-loading"
                       element-loading-background="rgba(255, 255, 255, 1)"
-                      
                     >
                       <div
                         v-for="(list,listIndex) in singleListAllData"
@@ -341,7 +340,7 @@ export default {
         .then((res) => {
           if (res) {
             this.chatSideData = res.allMessageList;
-            res.allMessageList.forEach((item, index) => {
+            this.chatSideData.forEach((item, index) => {
               if (this.$route.query.userId == item._id) {
                 // this.$nextTick(() => {
                 this.activeIdx = index;
@@ -351,9 +350,12 @@ export default {
                 // });
               }
             });
-            if (this.currnetMember == "{}") {
+            console.log(
+              JSON.stringify(this.currnetMember) == "{}",
+              "666666666666666666666"
+            );
+            if (JSON.stringify(this.currnetMember) == "{}") {
               this.currnetMember = res.allMessageList[0];
-              console.log(this.currnetMember, "88888==");
             }
             this.query.fromUserId = this.singleLastListAll.userId;
             if (this.currnetMember.fromUserId == res.userId) {
@@ -361,12 +363,21 @@ export default {
             } else {
               this.query.toUserId = this.currnetMember.fromUserId;
             }
-            console.log(this.query.toUserId, "this.query.toUserId", this.query);
-            this.getsinglelist(this.query)
-              .then(() => {})
-              .catch((err) => {
-                console.log(err);
-              });
+            if (this.currnetMember.chatType == "ROOM") {
+              this.groupQuery.chatId = this.currnetMember._id
+              this.getGrouplist(this.groupQuery)
+            } else {
+              console.log(
+                this.query.toUserId,
+                "this.query.toUserId",
+                this.query
+              );
+              this.getsinglelist(this.query)
+                .then(() => {})
+                .catch((err) => {
+                  console.log(err);
+                });
+            }
           }
         })
         .catch((err) => {});
