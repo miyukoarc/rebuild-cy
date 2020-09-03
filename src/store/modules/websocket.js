@@ -195,7 +195,6 @@ const actions = {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
                         }
-
                         console.log(state.currentTask)
                         if (state.currentTask.automationType == 'BatchSendTask') {
                             // 设置状态为已发送
@@ -213,7 +212,7 @@ const actions = {
                                 }
                             })
                         }
-                        // 当前任务结束，状态：是否进行中-否
+                        // 当前任务结束，状态：是否进行中 - 否
                         state.isInProgress = false;
                         // 执行队列中的下一个任务
                         state.taskQueue.shift();
@@ -257,48 +256,52 @@ const actions = {
             }
             state.sock.onmessage = function (e) {
                 const data = JSON.parse(e.data)
-                if (data.type == 'CONTROL_MANAGER') {
-                    MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
-                        title: '即将为您自动群发',
-                        cancelButtonText: '放弃',
-                        customClass: "auto_close",
-                        distinguishCancelAndClose: true
-                    }).then(() => {
-                        state.loadingInstance = Loading.service({
-                            text: "请保持鼠标静止状态，否则任务会中断。"
-                        });
-                        dispatch('getDetail', data)
-                        Message({
-                            message: '正为您自动群发中...',
-                            type: 'success'
-                        })
-                    }).catch(action => {
-                        clearInterval(state.countDownTimer);
-                        state.countDown = 5;
-                        if (action == 'cancel') {
-                            Message({
-                                message: '您已取消自动群发中...',
-                                type: 'error'
-                            })
-                        }
-                        return false
-                    })
-                    state.countDownTimer = setInterval(() => {
-                        console.log(state.countDown)
-                        state.countDown--;
-                        if (state.countDown <= 0) {
-                            dispatch('getDetail', data)
-                            clearInterval(state.countDownTimer)
-                            state.countDown = 5;
-                            // 自动关闭 MessageBox
-                            document.querySelector('.auto_close').querySelector('button').click()
-                            Message({
-                                message: '正为您自动群发中...',
-                                type: 'success'
-                            })
-                        }
-                    }, 1000);
-                } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
+
+                // if (data.type == 'CONTROL_MANAGER') {
+                //     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
+                //         title: '即将为您自动群发',
+                //         cancelButtonText: '放弃',
+                //         customClass: "auto_close",
+                //         distinguishCancelAndClose: true
+                //     }).then(() => {
+                //         state.loadingInstance = Loading.service({
+                //             text: "请保持鼠标静止状态，否则任务会中断。"
+                //         });
+                //         dispatch('getDetail', data)
+                //         Message({
+                //             message: '正为您自动群发中...',
+                //             type: 'success'
+                //         })
+                //     }).catch(action => {
+
+                //         clearInterval(state.countDownTimer);
+                //         state.countDown = 5;
+                //         if (action == 'cancel') {
+                //             Message({
+                //                 message: '您已取消自动群发中...',
+                //                 type: 'error'
+                //             })
+                //         }
+                //         return false
+                //     })
+                //     state.countDownTimer = setInterval(() => {
+                //         console.log(state.countDown)
+                //         state.countDown--;
+                //         if (state.countDown <= 0) {
+                //             dispatch('getDetail', data)
+                //             clearInterval(state.countDownTimer)
+                //             state.countDown = 5;
+                //             // 自动关闭 MessageBox
+                //             document.querySelector('.auto_close').querySelector('button').click()
+                //             Message({
+                //                 message: '正为您自动群发中...',
+                //                 type: 'success'
+                //             })
+                //         }
+                //     }, 1000);
+                // } 
+                // else
+                if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
                     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
                         title: '即将为您自动群发',
                         cancelButtonText: '放弃',
@@ -363,7 +366,6 @@ const actions = {
                         })
                     }
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTENT_READY') {
-                    console.log('CONTENT_READY')
                     $ipcRenderer.send('inputEnter', {
                         x: state.mouseX,
                         y: state.mouseY
@@ -397,39 +399,6 @@ const actions = {
                             y: state.mouseY,
                             isOnline: state.currentTask.data.properties.fromUser == res.externalUserDetail.externalUserId
                         })
-                        // if (state.currentTask.data.properties.fromUser == res.externalUserDetail.externalUserId) {
-                        //     console.log('直接发送')
-                        //     if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
-                        //         console.log('sendMsgContent_autorep_media')
-                        //         sendChaoyingMessage({
-                        //             sendChatMessage: state.sendMsgContent_autorep_media
-                        //         }).then(() => {
-                        //             state.sendMsgContent_autorep_media = null
-                        //         })
-                        //     }
-                        //     if (state.sendMsgContent_autorep_text != null && Object.keys(state.sendMsgContent_autorep_text).length > 0) {
-                        //         console.log('sendMsgContent_autorep_text')
-                        //         sendChaoyingMessage({
-                        //             sendChatMessage: state.sendMsgContent_autorep_text
-                        //         }).then(() => {
-                        //             state.sendMsgContent_autorep_text = null
-                        //         })
-                        //     }
-                        // } else {
-                        //     if (state.currentTask.data.properties.mobile) {
-                        //         $ipcRenderer.send('openChat', {
-                        //             mobile: state.currentTask.data.properties.mobile.split(',')[0],
-                        //             x: state.mouseX,
-                        //             y: state.mouseY,
-                        //         })
-                        //     } else {
-                        //         Message({
-                        //             message: '请先填写对面手机号便于查找用户',
-                        //             type: 'error'
-                        //         })
-                        //         dispatch('clearTask')
-                        //     }
-                        // }
                     })
                 } else if (data.type == 'ADDTASK') {
                     dispatch('listSelectMobil', data)
@@ -449,7 +418,7 @@ const actions = {
                             },
                         })
                     }
-                    if (data.properties.autoReplyType != 'CONTENT') {
+                    if (data.properties.autoReplyType != 'CONTENT' && data.properties.mediaId) {
                         state.taskQueue.push({
                             automationType: "AUTOREP",
                             data: {

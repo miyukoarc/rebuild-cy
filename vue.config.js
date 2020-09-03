@@ -10,12 +10,12 @@ function resolve(dir) {
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
 const api_host =
-    // 'http://10.10.10.199' // 本地接口url 骋浩 
-    'http://47.114.117.126:9000' // 测试IP
-    //  'http://10.10.10.247' // 杜亮
-    // 'http://10.10.10.4:9000' // 光
-    //  "http://sidebar.cyscrm.com:9000"// 线上
-    // 'http://47.111.161.128:9000/'// 线上IP
+    'http://10.10.10.199' // 本地接口url 骋浩
+// 'http://47.114.117.126:9000' // 测试IP
+//  'http://10.10.10.247' // 杜亮
+// 'http://10.10.10.4:9000' // 光
+//  "http://sidebar.cyscrm.com:9000"// 线上
+// 'http://47.111.161.128:9000/'// 线上IP
 
 
 // If your port is set to 80,
@@ -54,66 +54,66 @@ const customizeDevServer = process.env.VUE_APP_WORK === 'offline' ? {
     // 21days 
     // before: require('./mock/mock-server.js')
 } : {
-    port: 80,
-    open: true,
-    overlay: {
-        warnings: false,
-        errors: true
-    },
-    // host: 'www.sdk.com',
-    disableHostCheck: true,
-    proxy: {
-        [process.env.VUE_APP_BASE_API]: {
-            target: api_host,
-            // ws: true,
-            changeOrigin: true,
-            pathRewrite: {
-                ['^' + process.env.VUE_APP_BASE_API]: ''
-            }
+        port: 80,
+        open: true,
+        overlay: {
+            warnings: false,
+            errors: true
         },
-        // '/public': {
-        //     target: api_host,
-        //     changeOrigin: true,
-        // },
-        [process.env.VUE_APP_BASE_API]: {
-            headers: {
-                Host: 'sidebar.cyscrm.com'
+        // host: 'www.sdk.com',
+        disableHostCheck: true,
+        proxy: {
+            [process.env.VUE_APP_BASE_API]: {
+                target: api_host,
+                // ws: true,
+                changeOrigin: true,
+                pathRewrite: {
+                    ['^' + process.env.VUE_APP_BASE_API]: ''
+                }
             },
-            target: api_host,
-            secure: false,
-            // ws: true,
-            pathRewrite: {
-                "^/api": ""
-            }
-        },
-        "/api": {
-            headers: {
-                Host: 'sidebar.cyscrm.com'
+            // '/public': {
+            //     target: api_host,
+            //     changeOrigin: true,
+            // },
+            [process.env.VUE_APP_BASE_API]: {
+                headers: {
+                    Host: 'sidebar.cyscrm.com'
+                },
+                target: api_host,
+                secure: false,
+                // ws: true,
+                pathRewrite: {
+                    "^/api": ""
+                }
             },
-            target: api_host,
-            secure: false,
-            // ws: true,
-            pathRewrite: {
-                "^/api": ""
-            }
-        },
-        // '/file': {
-        //     target: `http://192.168.1.198:9000/file`,
-        //     changeOrigin: true,
-        //     pathRewrite: {
-        //         '^/file': '',
-        //     },
-        // },
-        // '/ws': {
-        //     target: `http://47.111.161.128:80`,
-        //     changeOrigin: true,
-        //     ws: true,
-        // }
+            "/api": {
+                headers: {
+                    Host: 'sidebar.cyscrm.com'
+                },
+                target: api_host,
+                secure: false,
+                // ws: true,
+                pathRewrite: {
+                    "^/api": ""
+                }
+            },
+            // '/file': {
+            //     target: `http://192.168.1.198:9000/file`,
+            //     changeOrigin: true,
+            //     pathRewrite: {
+            //         '^/file': '',
+            //     },
+            // },
+            // '/ws': {
+            //     target: `http://47.111.161.128:80`,
+            //     changeOrigin: true,
+            //     ws: true,
+            // }
+        }
+
+
+
     }
-
-
-
-}
 
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
@@ -192,10 +192,10 @@ module.exports = {
             .end()
 
         config
-        // https://webpack.js.org/configuration/devtool/#development
+            // https://webpack.js.org/configuration/devtool/#development
             .when(process.env.NODE_ENV === 'development',
-            config => config.devtool('cheap-source-map')
-        )
+                config => config.devtool('cheap-source-map')
+            )
 
         config
             .when(process.env.NODE_ENV !== 'development',
