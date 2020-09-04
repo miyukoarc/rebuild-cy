@@ -48,11 +48,6 @@ const state = {
     countDownTimer: null,
 }
 
-const getters = {
-    countDown: (state) => state.countDown
-}
-
-
 const mutations = {
 
 }
@@ -67,10 +62,7 @@ const actions = {
                 push(...args) {
                     super.push(...args);
                     if (args.length == this.length && !state.isInProgress) {
-                        console.log('执行任务')
                         this.shift()
-                    } else {
-                        console.log('任务添加到队列中即可')
                     }
                 }
                 shift() {
@@ -156,7 +148,8 @@ const actions = {
                             state.mouseX = arg.res.x
                             state.mouseY = arg.res.y
 
-                            if (arg.val.isOnline) {
+                            // 自动回复
+                            if (arg.val.isOnline_autorep) {
                                 if (state.sendMsgContent_autorep_media != null && Object.keys(state.sendMsgContent_autorep_media).length > 0) {
                                     console.log('最新的sendMsgContent_autorep_media')
                                     sendChaoyingMessage({
@@ -174,6 +167,15 @@ const actions = {
                                     })
                                 }
                             }
+
+                            // 群发
+                            if (arg.val.isOnline_batchSendTask) {
+                                if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
+                                    dispatch('sendChaoyingMessage')
+                                }
+                            }
+
+
                         }
                     })
                     $ipcRenderer.on('reply-inputEnter', (event, arg) => {
@@ -256,51 +258,6 @@ const actions = {
             }
             state.sock.onmessage = function (e) {
                 const data = JSON.parse(e.data)
-
-                // if (data.type == 'CONTROL_MANAGER') {
-                //     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
-                //         title: '即将为您自动群发',
-                //         cancelButtonText: '放弃',
-                //         customClass: "auto_close",
-                //         distinguishCancelAndClose: true
-                //     }).then(() => {
-                //         state.loadingInstance = Loading.service({
-                //             text: "请保持鼠标静止状态，否则任务会中断。"
-                //         });
-                //         dispatch('getDetail', data)
-                //         Message({
-                //             message: '正为您自动群发中...',
-                //             type: 'success'
-                //         })
-                //     }).catch(action => {
-
-                //         clearInterval(state.countDownTimer);
-                //         state.countDown = 5;
-                //         if (action == 'cancel') {
-                //             Message({
-                //                 message: '您已取消自动群发中...',
-                //                 type: 'error'
-                //             })
-                //         }
-                //         return false
-                //     })
-                //     state.countDownTimer = setInterval(() => {
-                //         console.log(state.countDown)
-                //         state.countDown--;
-                //         if (state.countDown <= 0) {
-                //             dispatch('getDetail', data)
-                //             clearInterval(state.countDownTimer)
-                //             state.countDown = 5;
-                //             // 自动关闭 MessageBox
-                //             document.querySelector('.auto_close').querySelector('button').click()
-                //             Message({
-                //                 message: '正为您自动群发中...',
-                //                 type: 'success'
-                //             })
-                //         }
-                //     }, 1000);
-                // } 
-                // else
                 if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
                     MessageBox.confirm('检测到有群发任务！任务执行中请勿挪动鼠标。', {
                         title: '即将为您自动群发',
@@ -311,11 +268,8 @@ const actions = {
                         state.loadingInstance = Loading.service({
                             text: "请保持鼠标静止状态，否则任务会中断。"
                         });
+                        clearInterval(state.countDownTimer)
                         dispatch('getDetail', data)
-                        Message({
-                            message: '正为您自动群发中...',
-                            type: 'success'
-                        })
                     }).catch(action => {
                         clearInterval(state.countDownTimer);
                         state.countDown = 5;
@@ -327,23 +281,17 @@ const actions = {
                         }
                         return false
                     })
-
                     state.countDownTimer = setInterval(() => {
                         console.log(state.countDown)
                         state.countDown--;
                         if (state.countDown <= 0) {
-                            dispatch('getDetail', data)
                             clearInterval(state.countDownTimer)
+                            dispatch('getDetail', data)
                             state.countDown = 5;
                             // 自动关闭 MessageBox
                             document.querySelector('.auto_close').querySelector('button').click()
-                            Message({
-                                message: '正为您自动群发中...',
-                                type: 'success'
-                            })
                         }
                     }, 1000);
-
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
                     state.isOpenedSidebar = true;// 侧边栏已打开
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {
@@ -372,24 +320,12 @@ const actions = {
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID') {
                     getExternalUserDetail(data.properties.userId).then(res => {
-                        if (state.currentTask.externalUser.name == res.externalUserDetail.externalUserName) {
-                            console.log('直接发送')
-                            dispatch('sendChaoyingMessage')
-                        } else {
-                            if (state.currentTask.externalUser.mobile) {
-                                $ipcRenderer.send('openChat', {
-                                    mobile: state.currentTask.externalUser.mobile.split(',')[0],
-                                    x: state.mouseX,
-                                    y: state.mouseY,
-                                })
-                            } else {
-                                Message({
-                                    message: '请先填写对面手机号便于查找用户',
-                                    type: 'error'
-                                })
-                                dispatch('clearTask')
-                            }
-                        }
+                        $ipcRenderer.send('openChat', {
+                            mobile: state.currentTask.externalUser.mobile.split(',')[0],
+                            x: state.mouseX,
+                            y: state.mouseY,
+                            isOnline_batchSendTask: state.currentTask.externalUser.name == res.externalUserDetail.externalUserName
+                        })
                     })
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'OPENED_WINDOW_USERID_AUTOREP') {
                     getExternalUserDetail(data.properties.userId).then(res => {
@@ -397,7 +333,7 @@ const actions = {
                             mobile: state.currentTask.data.properties.mobile.split(',')[0],
                             x: state.mouseX,
                             y: state.mouseY,
-                            isOnline: state.currentTask.data.properties.fromUser == res.externalUserDetail.externalUserId
+                            isOnline_autorep: state.currentTask.data.properties.fromUser == res.externalUserDetail.externalUserId
                         })
                     })
                 } else if (data.type == 'ADDTASK') {
@@ -536,45 +472,49 @@ const actions = {
     },
 
     openChat({ state, dispatch }) {
+        if (!state.currentTask.externalUser.mobile) {
+            Message({
+                message: '请为客户设置手机号后重试',
+                type: 'error'
+            })
+            dispatch('clearTask')
+            return false
+        }
+
         // 每次群发只需判断当前聊天框状态(即只需判断一次)
         if (!state.isCheckOpenedSidebar) {
             isOnline('SIDEBAR').then(res => {
                 console.log('是否在线：' + res)
                 state.isCheckOpenedSidebar = true;
-                if (res) {
-                    sendCustomizeMessage({
-                        toUserId: state.batchSendTaskDetail.sender.userId,
-                        clientGroup: "SIDEBAR",
-                        properties: {
-                            code: 'WHOSE_WINDOW_DO_YO_OPEN'
-                        }
-                    })
-                } else {
-                    state.isOpenedSidebar = false;
-                    if (isElectron() && state.currentTask.externalUser.mobile) {
-                        console.log('打开侧边栏了')
+                state.isOpenedSidebar = res;
+                if (isElectron()) {
+                    if (res) {
+                        sendCustomizeMessage({
+                            toUserId: state.batchSendTaskDetail.sender.userId,
+                            clientGroup: "SIDEBAR",
+                            properties: {
+                                code: 'WHOSE_WINDOW_DO_YO_OPEN'
+                            }
+                        })
+                    } else {
                         $ipcRenderer.send('openChat', {
                             mobile: state.currentTask.externalUser.mobile.split(',')[0],
                             x: state.mouseX,
                             y: state.mouseY,
+                            isOnline_batchSendTask: false
                         })
-                    } else {
-                        Message({
-                            message: '请为客户设置手机号后重试',
-                            type: 'error'
-                        })
-                        dispatch('clearTask')
+
+                        console.log('开始倒计时')
+                        setTimeout(() => {
+                            if (state.isOpenedSidebar == false) {
+                                Message({
+                                    message: '请打开侧边栏后重试',
+                                    type: 'error'
+                                })
+                                dispatch('clearTask')
+                            }
+                        }, 10000);
                     }
-                    console.log('开始倒计时')
-                    setTimeout(() => {
-                        if (state.isOpenedSidebar == false) {
-                            Message({
-                                message: '请打开侧边栏后重试',
-                                type: 'error'
-                            })
-                            dispatch('clearTask')
-                        }
-                    }, 10000);
                 }
             })
         } else {
@@ -658,7 +598,7 @@ const actions = {
                         mobile: state.currentTask.data.properties.mobile.split(',')[0],
                         x: state.mouseX,
                         y: state.mouseY,
-                        isOnline: false
+                        isOnline_autorep: false
                     })
 
                     setTimeout(() => {
@@ -744,7 +684,6 @@ const actions = {
 export default {
     namespaced: true,
     state,
-    getters,
     mutations,
     actions
 }
