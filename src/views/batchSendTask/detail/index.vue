@@ -80,9 +80,7 @@
               <p class="desc">已发送成员</p>
             </div>
             <div class="flex-1">
-              <span
-                class="blod"
-              >{{statistics.HAS_SEND.length + statistics.HAS_READ_ARTICLE.length}} 人</span>
+              <span class="blod">{{statistics.HAS_SEND.length}} 人</span>
               <p class="desc">送达用户</p>
             </div>
           </el-col>
@@ -295,6 +293,11 @@ export default {
           Object.assign(this.$data.statistics, this.$options.data().statistics);
           this.batchSendTaskListAllDetail.results.map((obj) => {
             this.statistics[obj.sendResult].push(obj);
+
+            // 将已读纳入已发送中
+            if (obj.sendResult == "HAS_READ_ARTICLE") {
+              this.statistics.HAS_SEND.push(obj);
+            }
           });
           this.handleClickClient();
           this.handleClickMember();
