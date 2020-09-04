@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-25 17:44:32
- * @LastEditTime: 2020-08-26 20:08:22
+ * @LastEditTime: 2020-09-02 20:27:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \rebuild-cy\src\views\message\singleListAll\messageTypeComponent\chatrecordComponent.vue
@@ -122,6 +122,10 @@ export default {
         line-height: 24px;
         color: #666;
       }
+      .show-more:hover {
+        cursor: pointer;
+        color: #1890ff;
+      }
     }
   }
   .right-warp {
@@ -160,6 +164,10 @@ export default {
         line-height: 24px;
         color: #666;
       }
+      .show-more:hover {
+        cursor: pointer;
+        color: #1890ff;
+      }
     }
   }
 }
@@ -174,7 +182,7 @@ export default {
 
 .right:hover,
 .left:hover {
-  cursor: pointer;
+  // cursor: pointer;
   // background-color: #f2f3f5;
   &:before {
     // border-right: 8px solid #f2f3f5;

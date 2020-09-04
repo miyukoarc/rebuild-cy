@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-08-10 19:58:19
+ * @LastEditTime: 2020-09-03 14:54:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -109,18 +109,14 @@ export default {
       var amr = new BenzAMRRecorder();
       amr.initWithUrl(url).then(() => {
         // amr.isPlaying() 返回音频的播放状态 是否正在播放 返回boolean类型
-        console.log(amr.isPlaying(), "rrrr");
+    
         if (!amr.isPlaying()) {
-          console.log("2");
           amr.play();
           that.isPlayAudio = true;
-          console.log(amr.isPlaying(), "play");
         } else {
-          console.log("1");
           that.isPlayAudio = false;
           amr.stop();
         }
-        console.log(that.isPlayAudio, "4444", amr.isPlaying());
       });
       // amr.onIsPlaying(()=>{
       //   console.log('3')
@@ -128,13 +124,11 @@ export default {
       amr.onPlay(function () {
         console.log("开始播放");
         // amr.stop();
-        console.log(that.isPlayAudio, "5555");
         // this.isPlayAudio = true;
         // amr.play();
       });
       amr.onStop(function () {
         console.log("停止播放");
-        console.log(that.isPlayAudio, "66666");
         // this.isPlayAudio = false;
       });
       amr.onEnded(() => {

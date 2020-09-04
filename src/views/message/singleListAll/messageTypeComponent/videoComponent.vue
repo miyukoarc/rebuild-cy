@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:44:55
- * @LastEditTime: 2020-08-10 20:03:08
+ * @LastEditTime: 2020-09-02 19:31:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\videoComponent.vue
@@ -178,7 +178,7 @@ export default {
   .demo {
     display: inline-block;
     width: 400px;
-    height: 220px;
+    // height: 220px;
     text-align: center;
     line-height: 50px;
     border: 1px solid transparent;
