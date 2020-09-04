@@ -45,6 +45,13 @@
           <el-table-column label="内容" align="left" prop="textContent"></el-table-column>
           <el-table-column label="修改时间" align="left" prop="updatedAt"></el-table-column>
           <el-table-column label="创建时间" align="left" prop="createdAt"></el-table-column>
+          <el-table-column label="内容审查" align="left">
+            <template v-slot="{row}">
+              <el-button type="text" @click="handlePermissionLessDetail(row)">
+                  {{row.reviewed?'已审查':'未审查'}}
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="center" width="80px">
             <template slot-scope="scope">
               <el-t-button
@@ -197,6 +204,10 @@ export default {
       this.query.size = val
       this.initDataList(this.query)
     },
+    handlePermissionLessDetail(row){
+        const uuid = row.uuid
+        this.$router.push({path: '/batchSendTask/changeSendTaskReviewed',query:{uuid}})
+    }
   },
 }
 </script>

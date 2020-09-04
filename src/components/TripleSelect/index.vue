@@ -25,7 +25,7 @@
             check-on-click-node
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
-          >
+           >
             <div slot-scope="{node,data}">
               <span>{{node.label}}</span>
               <el-tag size="mini" type="info">{{data.orgNode?'组织':'部门'}}</el-tag>
@@ -104,9 +104,8 @@
       </div>
       <div class="part-container">
         <div class="cell">
-          <p class="color-info text-align-center">选中</p>
+          <p class="color-info text-align-center">当前</p>
           <ul>
-
             <li class="result" v-for="(item,index) in showOffUserList" :key="item.uuid">
               <div class="user-detail">
                 <i class="el-icon-user-solid color-primary"></i>
@@ -114,8 +113,6 @@
               </div>
               <div>
                   <i class="el-icon-close color-primary icon-button" @click="handleDelete(index)"></i>
-                <!-- <el-button size="small" type="text" @click="handleDelete(index)">
-                </el-button> -->
               </div>
             </li>
           </ul>

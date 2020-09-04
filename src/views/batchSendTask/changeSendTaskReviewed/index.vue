@@ -64,6 +64,10 @@
           <el-form-item label="群发对象：">
             <span>{{batchSendTaskListAllDetail.sender.name}}的{{batchSendTaskListAllDetail.results.length}}位客户</span>
           </el-form-item>
+          <el-form-item label="操作：">
+            <el-button @click="handleCheck(state=true)">审查通过</el-button>
+            <el-button type="danger" @click="handleCheck(state=false)">不予通过</el-button>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -177,12 +181,12 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-
 import memberComponent from './components/member'
 import clientComponent from './components/client'
+import { changeSendTaskReviewed } from '@/api/batchSendTask'
 
 export default {
-  name: 'batchSendTask_detail',
+  name: 'batchSendTask_changeSendTaskReviewed',
   components: {
     memberComponent,
     clientComponent,
@@ -264,10 +268,13 @@ export default {
     }
   },
   watch: {
-    '$route.params': {
+    '$route.query': {
       handler(newVal, oldVal) {
+        console.log(newVal)
         if (newVal.uuid) {
-          //   console.log(this.$route)
+          console.log(newVal)
+          //   const uuid = this.$route.query.uuid
+          //   console.log(uuid)
           this.initDetail(newVal.uuid)
         }
       },
@@ -298,7 +305,7 @@ export default {
     // 初始化详情数据
     initDetail(payload) {
       this.$store
-        .dispatch('batchSendTask/getBatchSendTaskDetail', payload)
+        .dispatch('batchSendTask/permissionlessDetail', payload)
         .then(() => {
           Object.assign(this.$data.statistics, this.$options.data().statistics)
           this.batchSendTaskListAllDetail.results.map((obj) => {
@@ -406,6 +413,17 @@ export default {
           })
         })
       }
+    },
+    handleCheck(state) {
+      const uuid = this.$route?.query?.uuid
+      const payload = {
+        reviewed: state,
+        uuid,
+      }
+
+      changeSendTaskReviewed(payload)
+        .then((res) => {})
+        .catch((err) => {})
     },
   },
 }

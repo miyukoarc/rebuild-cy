@@ -10,16 +10,39 @@
 
 import request from '@/utils/request'
 
+/**
+ * 任务详情，无权限
+ * @param {*} payload 
+ */
+export const permissionlessDetail = (payload) => {
+  return request({
+    url: '/batchSendTask/detailNoPermission/' + payload,
+    method: 'get',
+  })
+}
+
 
 /**
  * 任务详情
  * @param {string} payload 
  */
 export const getBatchSendTaskDetail = (payload) => {
-    return request({
-        url: '/batchSendTask/' + payload,
-        method: 'get',
-    })
+  return request({
+    url: '/batchSendTask/' + payload,
+    method: 'get',
+  })
+}
+
+/**
+ * 改变审查状态
+ * @param {object} payload 
+ */
+export const changeSendTaskReviewed = (payload) => {
+  return request({
+    url: '/batchSendTask/changeSendTaskReviewed',
+    method: 'post',
+    data: payload
+  })
 }
 
 /**
@@ -27,11 +50,11 @@ export const getBatchSendTaskDetail = (payload) => {
  * @param {object} payload 
  */
 export const add = (payload) => {
-    return request({
-        url: '/batchSendTask/add',
-        method: 'get',
-        data: payload
-    })
+  return request({
+    url: '/batchSendTask/add',
+    method: 'get',
+    data: payload
+  })
 }
 
 /**
@@ -39,11 +62,11 @@ export const add = (payload) => {
  * @param {object} payload 
  */
 export const addBatchSendTask = (payload) => {
-    return request({
-        url: '/batchSendTask/addBatchSendTask',
-        method: 'post',
-        data: payload
-    })
+  return request({
+    url: '/batchSendTask/addBatchSendTask',
+    method: 'post',
+    data: payload
+  })
 
 }
 
@@ -52,11 +75,11 @@ export const addBatchSendTask = (payload) => {
  * @param {object} uuid 
  */
 export const batchSendTaskSuspend = (payload) => {
-    return request({
-        url: '/batchSendTask/batchSendTaskSuspend',
-        method: 'post',
-        data: payload
-    })
+  return request({
+    url: '/batchSendTask/batchSendTaskSuspend',
+    method: 'post',
+    data: payload
+  })
 }
 
 /**
@@ -64,11 +87,11 @@ export const batchSendTaskSuspend = (payload) => {
  * @param {object} payload 
  */
 export const getBatchSendTaskListAll = (payload) => {
-    return request({
-        url: '/batchSendTask/listAll',
-        method: 'get',
-        params: payload
-    })
+  return request({
+    url: '/batchSendTask/listAll',
+    method: 'get',
+    params: payload
+  })
 }
 
 /**
@@ -76,11 +99,11 @@ export const getBatchSendTaskListAll = (payload) => {
  * @param {object} payload 
  */
 export const getListBatchSendTaskResult = (payload) => {
-    return request({
-        url: '/batchSendTask/listBatchSendTaskResult',
-        method: 'get',
-        params: payload
-    })
+  return request({
+    url: '/batchSendTask/listBatchSendTaskResult',
+    method: 'get',
+    params: payload
+  })
 }
 
 /**
@@ -88,11 +111,11 @@ export const getListBatchSendTaskResult = (payload) => {
  * @param {object} payload 
  */
 export const getListMy = (payload) => {
-    return request({
-        url: '/batchSendTask/listMy',
-        method: 'get',
-        params: payload
-    })
+  return request({
+    url: '/batchSendTask/listMy',
+    method: 'get',
+    params: payload
+  })
 }
 
 /**
@@ -100,11 +123,11 @@ export const getListMy = (payload) => {
  * @param {string} uuid 
  */
 export const sendResultHasSend = (payload) => {
-    return request({
-        url: '/batchSendTask/sendResultHasSend',
-        method: 'post',
-        data: payload
-    })
+  return request({
+    url: '/batchSendTask/sendResultHasSend',
+    method: 'post',
+    data: payload
+  })
 }
 
 /**
@@ -112,8 +135,8 @@ export const sendResultHasSend = (payload) => {
  * @param {string} uuid 
  */
 export const getDetail = (uuid) => {
-    return request({
-        url: `/batchSendTask/${uuid}`,
-        method: 'get',
-    })
+  return request({
+    url: `/batchSendTask/${uuid}`,
+    method: 'get',
+  })
 }

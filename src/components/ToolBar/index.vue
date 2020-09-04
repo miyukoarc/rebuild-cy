@@ -5,7 +5,7 @@
         <slot name="left"></slot>
       </div>
       <div class="middle-left">
-        <!-- <el-button :loading="loading" type="primary" @click="actionExport" v-if="hasExport" :disabled="true">导出Excel</el-button> -->
+        <el-button type="primary" @click="actionExport" v-if="hasExport">导出Excel</el-button>
         <el-button type="primary" @click="actionImport" v-if="hasImport">导入Excel</el-button>
         <el-t-button type="text" @click="actionRefresh" v-if="hasRefresh">更新数据</el-t-button>
         <span class="font-s color-info">{{msg}}</span>
@@ -22,24 +22,24 @@
 export default {
   props: {
     msg: {
-      type: String
+      type: String,
     },
     hasExport: {
       type: Boolean,
-      default: true
+      default: true,
     },
     hasImport: {
       type: Boolean,
-      default: false
+      default: false,
     },
     hasRefresh: {
       type: Boolean,
-      default: false
+      default: false,
     },
     loading: {
-        type: Boolean,
-        default: false
-    }
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     actionExport() {
@@ -48,10 +48,10 @@ export default {
     actionImport() {
       this.$emit('handleImport', '导入')
     },
-    actionRefresh(){
-        this.$emit('handleRefresh')
-    }
-  }
+    actionRefresh() {
+      this.$emit('handleRefresh')
+    },
+  },
 }
 </script>
 
@@ -62,6 +62,7 @@ export default {
   .left {
     display: flex;
     align-items: center;
+    margin-right: 10px;
   }
 
   .middle-left {

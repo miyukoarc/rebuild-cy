@@ -3,7 +3,8 @@ import {
   getBatchSendTaskDetail,
   getListBatchSendTaskResult,
   getListMy,
-  addBatchSendTask
+  addBatchSendTask,
+  permissionlessDetail
 } from '@/api/batchSendTask'
 
 function regFilter(str) {
@@ -187,6 +188,27 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return new Promise((resolve, reject) => {
       getBatchSendTaskDetail(payload).then(res => {
+        commit('SAVE_BATCHSENDTASKLISTALLDETAIL', res)
+        commit('TOGGLE_LOADING', false)
+        resolve()
+      }).catch(err => {
+
+        commit('TOGGLE_LOADING', false)
+        reject(err)
+      })
+    })
+  },
+  /**
+   * 群发列表详情,无权限
+   * @param {*} param0 
+   * @param {object} payload 
+   */
+  permissionlessDetail({
+    commit
+  }, payload) {
+    commit('TOGGLE_LOADING', true)
+    return new Promise((resolve, reject) => {
+      permissionlessDetail(payload).then(res => {
         commit('SAVE_BATCHSENDTASKLISTALLDETAIL', res)
         commit('TOGGLE_LOADING', false)
         resolve()

@@ -5,7 +5,26 @@
     </el-card>
 
     <el-card class="content-spacing">
-      <tool-bar @handleExport="doExport" :msg="`共${pageConfig.total}个标签`" :hasRefresh="true" @handleRefresh="handleRequest">
+      <tool-bar
+        @handleImport="doImport"
+        @handleExport="doExport"
+        :msg="`共${pageConfig.total}个标签`"
+        :hasExport="true"
+        :hasImport="false"
+        :hasRefresh="true"
+        @handleRefresh="handleRequest"
+      >
+        <div slot="left">
+          <el-upload
+            action="/api/tag/uploadTagExcell"
+            :show-file-list="false"
+            :on-success="onSuccess"
+            :before-upload="beforeUpload"
+          >
+            <el-button size="small" type="primary">导入Excel</el-button>
+            <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+          </el-upload>
+        </div>
         <div slot="right">
           <el-t-button
             v-permission="'tag,tag_addTagIsAudit'"
@@ -30,8 +49,9 @@
           highlight-current-row
           header-row-class-name="el-table-header"
           :default-sort="sortConfig"
+          @selection-change="handleSelection"
         >
-          <!-- <el-table-column type="selection"></el-table-column> -->
+          <el-table-column type="selection"></el-table-column>
           <el-table-column label="标签组名" align="left" prop="groupName" width="200"></el-table-column>
           <el-table-column label="标签" align="left">
             <template v-slot="scope">
@@ -77,11 +97,13 @@ import ListHeader from './header.vue'
 import FormDialog from './dialog'
 import ToolBar from '@/components/ToolBar'
 import { mapState, mapMutations, mapActions } from 'vuex'
+import { downloadTagExcel, uploadTagExcell } from '@/api/excel'
+import dayjs from 'dayjs'
 
 import Sortable from 'sortablejs'
 
 export default {
-    name: 'tag_listAll',
+  name: 'tag_listAll',
   inject: ['reload'],
   components: {
     ListHeader,
@@ -121,6 +143,8 @@ export default {
           },
         ],
       },
+
+      selections: [],
     }
   },
   watch: {},
@@ -146,7 +170,89 @@ export default {
     this.setSort()
   },
   methods: {
-    doExport(val) {},
+    onSuccess(res, file, list) {
+      if (res) {
+        this.$message({
+          type: 'success',
+          message: '上传成功',
+        })
+        this.handleRequest()
+      }
+    },
+    beforeUpload(file) {
+      const type = file.type
+      console.log(type)
+      return true
+    },
+    doImport() {
+      console.log('导入')
+    },
+    doExport(val) {
+      if (this.selections.length) {
+        const groupUuids = this.selections
+        downloadTagExcel({ groupUuids })
+          .then((res) => {
+            // this.selections = []
+            if (!res) {
+              return
+            }
+            let url = window.URL.createObjectURL(new Blob([res]))
+            let link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.download =
+              '导出标签 ' +
+              dayjs(new Date()).format('YYYY-MM-DD hh:mm:ss') +
+              '.xls'
+            document.body.appendChild(link)
+            link.click()
+            window.URL.revokeObjectURL(link.href)
+          })
+          .catch((err) => {
+            this.$message({
+              type: 'error',
+              message: err,
+            })
+          })
+      } else {
+        this.$confirm('点击确定将导出所有数据')
+          .then(() => {
+            const groupUuids = this.list
+              .map((item) => {
+                return item.groupId
+              })
+              .join(',')
+            downloadTagExcel({ groupUuids })
+              .then((res) => {
+                // console.log(res)
+                this.selections = []
+
+                if (!res) {
+                  return
+                }
+                let url = window.URL.createObjectURL(new Blob([res]))
+                let link = document.createElement('a')
+                link.style.display = 'none'
+                link.href = url
+                link.download =
+                  '导出标签 ' +
+                  dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss') +
+                  '.xls'
+                document.body.appendChild(link)
+                link.click()
+                window.URL.revokeObjectURL(link.href)
+                console.log(url)
+              })
+              .catch((err) => {
+                this.$message({
+                  type: 'error',
+                  message: err,
+                })
+              })
+          })
+          .catch((err) => {})
+      }
+    },
     /**
      * 初始化筛选信息
      */
@@ -281,6 +387,23 @@ export default {
             message: err,
           })
         })
+    },
+
+    //表格勾选
+    handleSelection(val) {
+      const uuids = val.map((item) => {
+        return item.groupId
+      })
+      const groupUuids = uuids.join(',')
+      console.log(groupUuids)
+
+      this.selections = groupUuids
+
+      //   downloadTagExcel({ groupUuids })
+      //     .then((res) => {})
+      //     .catch((err) => {
+      //       console.error(err)
+      //     })
     },
   },
 }

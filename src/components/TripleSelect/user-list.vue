@@ -5,13 +5,7 @@
   <ul class="user-list" v-else-if="userList.length&& !loading">
     <!-- <el-checkbox-group v-model="users" @change="handleCheck" > -->
     <label class="label">
-      <el-checkbox
-        ref="elbox"
-        :indeterminate="checkAll"
-        v-model="checkAllState"
-      >全选</el-checkbox>
-      <el-button type="text" size="mini">全选</el-button>
-      <el-button type="text" size="mini">反选</el-button>
+      <el-button type="text" size="mini" @click="handleClickChange">全选</el-button>
     </label>
     <el-divider></el-divider>
     <li v-for="(item) in userList" :key="item.uuid">
@@ -128,18 +122,18 @@ export default {
           return item.checked == false
         })
 
-        if(!emptyFlag){
-            this.checkAll = true
-            console.log('!!')
-        }else {
-            this.checkAll = false 
-        }
+        // if(!emptyFlag){
+        //     this.checkAll = true
+        //     console.log('!!')
+        // }else {
+        //     this.checkAll = false 
+        // }
 
         console.log(emptyFlag)
       })
     },
     handleClickChange() {
-      console.log(this.$refs['elbox'])
+    //   console.log(this.$refs['elbox'])
 
       const checkAllFlag = this.$refs['checkbox'].every((item) => {
         return item.checked == true
