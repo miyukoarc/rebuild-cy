@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-19 19:47:00
- * @LastEditTime: 2020-08-10 19:57:46
+ * @LastEditTime: 2020-09-03 22:40:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\messageTypeComponent\audioComponent.vue
@@ -15,7 +15,7 @@
         <div class="left">
           <div class="chat-name ml-20">{{item.fromUser != fromUserId?item.fromName:item.toName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-          <div style="height:42px;background-color:#fff">
+          <div style="height:42px;">
             <audio controls :src="item.messageMedias[0].file" class="audio-warp">您的浏览器不支持 audio 元素。</audio>
           </div>
           <!-- <div
@@ -36,7 +36,7 @@
         <div class="right">
           <div class="chat-name mr-20" style="text-align:right">{{item.fromName}}</div>
           <div class="revoke-content" v-show="item.revokeType">你撤回了一条消息：</div>
-          <div style="height:42px;background-color:#fff">
+          <div style="height:42px;">
             <audio controls :src="item.messageMedias[0].file" class="audio-warp">您的浏览器不支持 audio 元素。</audio>
           </div>
 
@@ -130,9 +130,11 @@ export default {
     width: 300px;
     height: 40px;
     margin-top: 1px;
+    box-shadow: 0 0 2px #999;
+    border-radius: 20px;
   }
   audio {
-    background-color: #fff;
+    // background-color: #fff;
   }
   .audio-left {
     // margin-top: 5px;

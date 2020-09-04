@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-12 15:34:16
- * @LastEditTime: 2020-09-03 20:36:14
+ * @LastEditTime: 2020-09-04 10:05:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \chaoying_web\src\views\message\listSingle.vue
@@ -118,36 +118,34 @@
                   :key="index"
                   :label="tab.label"
                   :name="tab.name"
+                  v-loading="loading"
+                  element-loading-text="加载中"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(255, 255, 255, 1)"
+                  style="height:100%"
                 >
-                  <div v-show="singleListAllData.length>0">
-                    <el-main
-                      v-loading="loading"
-                      element-loading-text="加载中"
-                      element-loading-spinner="el-icon-loading"
-                      element-loading-background="rgba(255, 255, 255, 1)"
-                    >
-                      <div
-                        v-for="(list,listIndex) in singleListAllData"
-                        :key="listIndex"
-                        class="allChat clearfix"
-                      >
-                        <!-- <keep-alive> -->
-                        <!-- :is="list.msgType+'Component'" -->
-                        <!-- :is="currentView" -->
-                        <component
-                          :is="list.msgType+'Component'"
-                          :key="listIndex"
-                          :item="list"
-                          :to-user-id="query.toUserId"
-                          :from-user-id="query.fromUserId"
-                          @handleClickViewMore="handleClickViewMore"
-                        />
-                        <!-- </keep-alive> -->
-                      </div>
-                    </el-main>
-                  </div>
+                  <!-- <div> -->
                   <div
-                    v-show="singleListAllData.length<=0"
+                    v-for="(list,listIndex) in singleListAllData"
+                    :key="listIndex"
+                    class="allChat clearfix"
+                  >
+                    <!-- <keep-alive> -->
+                    <!-- :is="list.msgType+'Component'" -->
+                    <!-- :is="currentView" -->
+                    <component
+                      :is="list.msgType+'Component'"
+                      :key="listIndex"
+                      :item="list"
+                      :to-user-id="query.toUserId"
+                      :from-user-id="query.fromUserId"
+                      @handleClickViewMore="handleClickViewMore"
+                    />
+                    <!-- </keep-alive> -->
+                  </div>
+                  <!-- </div> -->
+                  <div
+                    v-show="singleListAllData.length<=0 && !loading"
                     class="no-chat-data user-select-none"
                   >暂无数据</div>
                 </el-tab-pane>
@@ -364,8 +362,8 @@ export default {
               this.query.toUserId = this.currnetMember.fromUserId;
             }
             if (this.currnetMember.chatType == "ROOM") {
-              this.groupQuery.chatId = this.currnetMember._id
-              this.getGrouplist(this.groupQuery)
+              this.groupQuery.chatId = this.currnetMember._id;
+              this.getGrouplist(this.groupQuery);
             } else {
               console.log(
                 this.query.toUserId,
@@ -477,8 +475,8 @@ export default {
     },
 
     handleSidebarItem(item, index, tab) {
-      this.singleListAllData = [];
       this.loading = true;
+      this.singleListAllData = [];
       console.log(item, index, tab, "item, index, tab");
       let payload = {
         type: this.$route.query.type,
@@ -517,7 +515,6 @@ export default {
             } else {
               this.getsinglelist(this.query);
             }
-            this.loading = false;
           }
         })
         .catch((err) => {});
