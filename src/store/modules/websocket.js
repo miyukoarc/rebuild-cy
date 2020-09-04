@@ -256,6 +256,9 @@ const actions = {
                     })
                 }
             }
+
+
+
             state.sock.onmessage = function (e) {
                 const data = JSON.parse(e.data)
                 if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'CONTINUE_BATCHSENDTASK') {
@@ -281,6 +284,7 @@ const actions = {
                         }
                         return false
                     })
+
                     state.countDownTimer = setInterval(() => {
                         console.log(state.countDown)
                         state.countDown--;
@@ -292,6 +296,7 @@ const actions = {
                             document.querySelector('.auto_close').querySelector('button').click()
                         }
                     }, 1000);
+
                 } else if (data.type == 'CUSTOMIZE' && Object.keys(data.properties).length && data.properties.code == 'READY') {
                     state.isOpenedSidebar = true;// 侧边栏已打开
                     if (state.sendMsgContent != null && Object.keys(state.sendMsgContent).length > 0) {

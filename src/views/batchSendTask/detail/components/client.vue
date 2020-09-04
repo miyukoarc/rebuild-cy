@@ -20,11 +20,15 @@
               <div class="friends">
                 <el-tag v-if="item.sendResult=='NOT_SEND'">未发送</el-tag>
                 <el-tag v-if="item.sendResult=='HAS_SEND'">已送达</el-tag>
+                <el-tag v-if="item.sendResult=='HAS_READ_ARTICLE'">已读</el-tag>
                 <el-tag v-if="item.sendResult=='NOT_FRIEND_FAIL'">非好友</el-tag>
               </div>
             </div>
           </div>
-          <div v-if="item.sendResult=='HAS_SEND'" class="send-by-member">通过{{member.sender.name}}发送</div>
+          <div
+            v-if="item.sendResult=='HAS_SEND' || item.sendResult=='HAS_READ_ARTICLE'"
+            class="send-by-member"
+          >通过{{member.sender.name}}发送</div>
         </div>
         <!-- <div class="unvisible loading-hint full-w flex-row align-center">
           <div
