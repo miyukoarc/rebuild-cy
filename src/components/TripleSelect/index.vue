@@ -98,12 +98,28 @@
       <div class="part-container">
         <div class="cell">
           <keep-alive>
-            <user-list :uuid="currentDepart"></user-list>
+            <user-list ref="userList" :uuid="currentDepart" @change-user="outputUsers"></user-list>
           </keep-alive>
         </div>
       </div>
       <div class="part-container">
-        <div class="cell"></div>
+        <div class="cell">
+          <p class="color-info text-align-center">选中</p>
+          <ul>
+
+            <li class="result" v-for="(item,index) in showOffUserList" :key="item.uuid">
+              <div class="user-detail">
+                <i class="el-icon-user-solid color-primary"></i>
+                <span class="user-name">{{item.name}}</span>
+              </div>
+              <div>
+                  <i class="el-icon-close color-primary icon-button" @click="handleDelete(index)"></i>
+                <!-- <el-button size="small" type="text" @click="handleDelete(index)">
+                </el-button> -->
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -151,7 +167,7 @@ export default {
 
       //   showUser: false,//是否显示
       currentDepart: null,
-      userList: [], //query by departmentUuid
+      showOffUserList: [],
       loading: false,
     }
   },
@@ -161,7 +177,7 @@ export default {
     },
     value: {
       handler(newVal, oldVal) {},
-    }
+    },
   },
   computed: {
     alterValue() {
@@ -171,8 +187,26 @@ export default {
   created() {
     this.initFramework()
   },
-  mounted() {},
+  mounted() {
+    this.$bus.$on('transfer-users', (payload) => {
+    //   console.log(payload)
+      //   this.showOffUserList.splice(len,len,...payload)
+      //   const len = this.showOffUserList.length
+      // this.showOffUserList.splice(len,len,...payload)
+      //   this.showOffUserList = this.unique(this.showOffUserList.concat(payload))
+      this.showOffUserList = payload
+    })
+
+    this.$once('hook:beforeDestroy', () => {
+      this.$bus.$off('transfer-users')
+    })
+  },
   methods: {
+    //对象去重
+    unique(arr) {
+      const res = new Map()
+      return arr.filter((arr) => !res.has(arr.uuid) && res.set(arr.uuid, 1))
+    },
     /**
      * department logical
      */
@@ -227,6 +261,9 @@ export default {
         //
       }
     },
+    handleDelete(index) {
+      this.$refs['userList'].users.splice(index, 1)
+    },
 
     /**
      * user logical
@@ -240,11 +277,23 @@ export default {
       //   console.log(data,node)
       this.currentDepart = data.uuid
     },
+    outputUsers(payload) {
+      const uuids = payload.uuids
+      // console.log(uuids)
+      this.$emit('change', uuids)
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+.user-detail{
+    display: flex;
+    align-items: center;
+}
+.icon-button{
+    cursor: pointer;
+}
 .select-container {
   padding: 10px;
   border-radius: 4px;
@@ -260,7 +309,11 @@ export default {
   .cell:nth-child(2n-1) {
     margin: 0 5px 0 5px;
   }
-
+  .user-name {
+    line-height: 20px;
+    color: #606266;
+    margin-left: 5px;
+  }
   .board-container {
     display: flex;
     .part-container {
@@ -269,7 +322,12 @@ export default {
       flex-direction: column;
       .cell {
         flex: 1;
-        overflow: hidden;
+        max-height: 400px;
+        overflow-y: scroll;
+      }
+      .result {
+        display: flex;
+        justify-content: space-between;
       }
     }
   }

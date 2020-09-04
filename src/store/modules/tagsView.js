@@ -1,5 +1,15 @@
+const genViews = ()=>{
+    return [
+        {
+          name: 'Dashboard',
+          path: '/dashboard',
+          title: '首页',
+          meta: { icon: 'dashboard', title: '首页', affix: true },
+        }
+      ]
+}
 const state = {
-    visitedViews: [],
+    visitedViews: genViews(),
     cachedViews: []
   }
   

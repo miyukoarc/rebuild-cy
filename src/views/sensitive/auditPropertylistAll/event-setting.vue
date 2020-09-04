@@ -11,9 +11,9 @@
           <div class="audit-type">
             <el-radio v-model="item.range" :label="1">会签</el-radio>
             <el-radio v-model="item.range" :label="0">或签</el-radio>
-            <el-button v-if="index!==0" type="text" @click="handleDelete(index)">
+            <!-- <el-button v-if="index!==0" type="text" @click="handleDelete(index)">
               <span class="color-danger">删除</span>
-            </el-button>
+            </el-button> -->
           </div>
 
           <add-tag v-model="item.userList"></add-tag>
